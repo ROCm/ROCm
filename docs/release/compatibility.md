@@ -26,4 +26,11 @@ components provide interfaces compatible with 3rd party solutions.
 
 :::
 
+:::{grid-item-card} Backward Compatibility
+ROCm backward compatibility policy.
+
+- [Backward Compatibility](./backward_compatibility.md)
+
+:::
+
 :::::
