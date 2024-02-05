@@ -35,7 +35,7 @@ sub-directories are:
 * lib: Libraries including those required for target offload.
 * lib-debug: Debug versions of the above libraries.
 
-## OpenMP: usage
+## OpenMP: Usage
 
 The example programs can be compiled and run by pointing the environment
 variable `ROCM_PATH` to the ROCm install directory.
@@ -78,7 +78,7 @@ Obtain the value of `gpu-arch` by running the following command:
 [//]: # (dated link below, needs updating)
 
 See the complete list of compiler command-line references
-[here](https://github.com/RadeonOpenCompute/llvm-project/blob/amd-stg-open/clang/docs/CommandGuide/clang.rst).
+[here](https://github.com/ROCm/llvm-project/blob/amd-stg-open/clang/docs/CommandGuide/clang.rst).
 
 ### Using `rocprof` with OpenMP
 
@@ -158,25 +158,23 @@ For more details on tracing, refer to the {doc}`ROCProfilerV1 User Manual <rocpr
 | `OMPX_FORCE_SYNC_REGIONS` | To force the runtime to execute all operations synchronously, i.e., wait for an operation to complete immediately. This affects data transfers and kernel execution. While it is mainly designed for debugging, it may have a minor positive effect on performance in certain situations. |
 :::
 
-## OpenMP: features
+## OpenMP: Features
 
 The OpenMP programming model is greatly enhanced with the following new features
 implemented in the past releases.
 
-(openmp_usm)=
-
 ### Asynchronous behavior in OpenMP target regions
 
-* Controlling Asynchronous Behavior
+* Controlling asynchronous behavior
 
 The OpenMP offloading runtime executes in an asynchronous fashion by default, allowing multiple data transfers to start concurrently. However, if the data to be transferred becomes larger than the default threshold of 1MB, the runtime falls back to a synchronous data transfer. The buffers that have been locked already are always executed asynchronously.
 You can overrule this default behavior by setting `LIBOMPTARGET_AMDGPU_MAX_ASYNC_COPY_BYTES` and `OMPX_FORCE_SYNC_REGIONS`. See the [Environment Variables](#environment-variables) table for details.
 
-* Multithreaded Offloading on the Same Device
+* Multithreaded offloading on the same device
 
 The `libomptarget` plugin for GPU offloading allows creation of separate configurable HSA queues per chiplet, which enables two or more threads to concurrently offload to the same device.
 
-* Parallel Memory Copy Invocations
+* Parallel memory copy invocations
 
 Implicit asynchronous execution of single target region enables parallel memory copy invocations.
 
@@ -184,40 +182,40 @@ Implicit asynchronous execution of single target region enables parallel memory 
 
 Unified Shared Memory (USM) provides a pointer-based approach to memory
 management. To implement USM, fulfill the following system requirements along
-with Xnack capability.
+with XNACK capability.
 
 #### Prerequisites
 
 * Linux Kernel versions above 5.14
 * Latest KFD driver packaged in ROCm stack
-* Xnack, as USM support can only be tested with applications compiled with Xnack
+* XNACK, as USM support can only be tested with applications compiled with XNACK
   capability
 
-#### Xnack capability
+#### XNACK capability
 
-When enabled, Xnack capability allows GPU threads to access CPU (system) memory,
-allocated with OS-allocators, such as `malloc`, `new`, and `mmap`. Xnack must be
-enabled both at compile- and run-time. To enable Xnack support at compile-time,
+When enabled, XNACK capability allows GPU threads to access CPU (system) memory,
+allocated with OS-allocators, such as `malloc`, `new`, and `mmap`. XNACK must be
+enabled both at compile and run-time. To enable XNACK support at compile-time,
 use:
 
 ```bash
 --offload-arch=gfx908:xnack+
 ```
 
-Or use another functionally equivalent option Xnack-any:
+Or use another functionally equivalent option `xnack-any`:
 
 ```bash
 --offload-arch=gfx908
 ```
 
-To enable Xnack functionality at runtime on a per-application basis,
+To enable XNACK functionality at runtime on a per-application basis,
 use environment variable:
 
 ```bash
 HSA_XNACK=1
 ```
 
-When Xnack support is not needed:
+When XNACK support is not needed:
 
 * Build the applications to maximize resource utilization using:
 
@@ -306,7 +304,7 @@ The file `veccopy-ompt-target-tracing.c` simulates how a tool initiates device
 activity tracing. The file `callbacks.h` shows the callbacks registered and
 implemented by the tool.
 
-### Floating point atomic operations
+### Floating-point atomic operations
 
 The MI200-series GPUs support the generation of hardware floating-point atomics
 using the OpenMP atomic pragma. The support includes single- and
@@ -373,7 +371,7 @@ detect various errors ranging from spatial issues such as out-of-bound access to
 temporal issues such as use-after-free. The AOMP compiler supports ASan for AMD
 GPUs with applications written in both HIP and OpenMP.
 
-**Features supported on host platform (Target x86_64):**
+**Features supported on host platform (target x86_64):**
 
 * Use-after-free
 * Buffer overflows
@@ -389,9 +387,9 @@ GPUs with applications written in both HIP and OpenMP.
 * Heap buffer overflow
 * Global buffer overflow
 
-**Software (kernel/OS) requirements:** Unified Shared Memory support with Xnack
+**Software (kernel/OS) requirements:** Unified Shared Memory support with XNACK
 capability. See the section on [Unified Shared Memory](#unified-shared-memory)
-for prerequisites and details on Xnack.
+for prerequisites and details on XNACK.
 
 **Example:**
 
@@ -481,3 +479,93 @@ A no-loop kernel is not generated if the OpenMP teams construct uses a `num_team
 #### Cross-team optimized reduction kernel generation
 
 If the OpenMP construct has a reduction clause, the compiler attempts to generate optimized code by utilizing efficient cross-team communication. New APIs for cross-team reduction are implemented in the device runtime and are automatically generated by clang.
+
+### Shared memory support
+
+Unlike other discrete GPU systems that have distinct CPU (system) and GPU memory, MI300A architecture features a single physical storage per socket which is the main memory for both CPU and GPU.
+To support the optimal use of shared memory on MI300A, the ROCm OpenMP compiler and runtime are optimized to use “zero-copy” also known as “no-copy” behavior as the default execution model where the CPU and GPU threads use the same addresses to access the same physical storage. The zero or no-copy behavior also ensures that the OpenMP map constructs do not result in device memory allocation and copies between host and device memory, as there is no physical device storage.
+
+For demonstration purposes, we are using [vec_add.cpp](#sample-program) in the examples below.
+
+To enable zero-copy behavior by default in the programs running on MI300A, follow these options:
+
+* When using `unified_shared_memory` pragma in the program:
+
+  You can enable `unified_shared_memory` in your program using two options. One is to use `#pragma omp requires unified_shared_memory` construct in your source files and the other option is to use the compiler option `-fopenmp-force-usm` that enables `unified_shared_memory` without having to write it in the program. Building using each option is explained below but irrespective of the option chosen to enable `unified_shared_memory`, you must build and run the program in an XNACK-enabled environment.
+
+  Note that the implementation of `#pragma omp requires unified_shared_memory` in OpenMP compiler and runtime is already available for discrete GPU systems such as MI200.
+
+  See how to build a program with `unified_shared_memory` pragma and `xnack+` target feature:
+
+  ```bash
+  clang++ -fopenmp -offload-arch=gfx942:xnack+ -BUILD_WITH_USM vec_add.cpp -o vec_add
+  ```
+
+  You can also build using `xnack-any` which is the default when an XNACK target feature is not explicitly specified:
+
+  ```bash
+  clang++ -fopenmp -offload-arch=gfx942 -BUILD_WITH_USM vec_add.cpp -o vec_add
+  ```
+
+  Note that the `-BUILD_WITH_USM` macro has been defined in [vec_add.cpp](#sample-program) to enable `#pragma omp requires unified_shared_memory`.
+
+  Alternatively, see how to build using the ROCm compiler option `-fopenmp-force-usm`:
+
+  ```bash
+  clang++ -fopenmp -offload-arch=gfx942 -fopenmp-force-usm vec_add.cpp -o vec_add
+  ```
+
+  Execute the above-compiled program with XNACK-enabled as shown below:
+
+  ```bash
+  HSA_XNACK=1 ./vec_add
+  ```
+
+* When not using `unified_shared_memory` pragma in the program:
+
+  Build and run the program in an XNACK-enabled environment with `OMPX_APU_MAPS` environment variable set to 1 during execution. `OMPX_APU_MAPS` indicates to the OpenMP runtime that the system is an Accelerated Processing Unit (APU) and enables zero-copy mode.
+
+  See how to build a program that does not contain the `unified_shared_memory` pragma:
+
+  Using `xnack-any`:
+
+  ```bash
+  clang++ -fopenmp -offload-arch=gfx942 vec_add.cpp -o vec_add
+  ```
+
+  Using `xnack+`:
+
+  ```bash
+  clang++ -fopenmp -offload-arch=gfx942:xnack+ vec_add.cpp -o vec_add
+  ```
+
+  Execute the above-compiled program as shown below:
+
+  ```bash
+  OMPX_APU_MAPS=1 HSA_XNACK=1 ./vec_add
+  ```
+
+To debug portability issues between GPU and APU systems, enable the legacy behavior on MI300A by disabling XNACK thus allowing extra memory allocations and copies. For example:
+
+```bash
+HSA_XNACK=0 ./vec_add
+```
+
+#### Sample program
+
+Here is the `vec_add.cpp` program that is used in the examples above to demonstrate how to enable zero-copy behavior on MI300A.
+
+```bash
+#ifdef BUILD_WITH_USM
+#pragma omp requires unified_shared_memory
+#endif
+ 
+void vec_add(size_t n) {
+  int *a = new int[n];
+  int *b = new int[n];
+  init_vec(n, b); // init array b
+  
+  #pragma omp target teams loop
+  for (size_t I = 0; i < n; i++)
+    a[i] = b[i];
+}
