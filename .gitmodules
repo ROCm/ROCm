@@ -1,0 +1,171 @@
+[submodule "libs/ROCK-Kernel-Driver"]
+	path = libs/ROCK-Kernel-Driver
+	url = ../ROCK-Kernel-Driver
+[submodule "libs/ROCT-Thunk-Interface"]
+	path = libs/ROCT-Thunk-Interface
+	url = ../ROCT-Thunk-Interface
+[submodule "libs/ROCR-Runtime"]
+	path = libs/ROCR-Runtime
+	url = ../ROCR-Runtime
+[submodule "libs/amdsmi"]
+	path = libs/amdsmi
+	url = ../amdsmi
+[submodule "libs/rocm_smi_lib"]
+	path = libs/rocm_smi_lib
+	url = ../rocm_smi_lib
+[submodule "libs/rocm-core"]
+	path = libs/rocm-core
+	url = ../rocm-core
+[submodule "libs/rocm-cmake"]
+	path = libs/rocm-cmake
+	url = ../rocm-cmake
+[submodule "libs/rocminfo"]
+	path = libs/rocminfo
+	url = ../rocminfo
+[submodule "libs/rocm_bandwidth_test"]
+	path = libs/rocm_bandwidth_test
+	url = ../rocm_bandwidth_test
+[submodule "libs/rocprofiler"]
+	path = libs/rocprofiler
+	url = ../rocprofiler
+[submodule "libs/roctracer"]
+	path = libs/roctracer
+	url = ../roctracer
+[submodule "libs/clang-ocl"]
+	path = libs/clang-ocl
+	url = ../clang-ocl
+[submodule "libs/rdc"]
+	path = libs/rdc
+	url = ../rdc
+[submodule "libs/HIP"]
+	path = libs/HIP
+	url = ../HIP
+[submodule "libs/HIP-Examples"]
+	path = libs/HIP-Examples
+	url = ../HIP-Examples
+[submodule "libs/clr"]
+	path = libs/clr
+	url = ../clr
+[submodule "libs/hipother"]
+	path = libs/hipother
+	url = ../hipother
+[submodule "libs/HIPIFY"]
+	path = libs/HIPIFY
+	url = ../HIPIFY
+[submodule "libs/HIPCC"]
+	path = libs/HIPCC
+	url = ../HIPCC
+[submodule "libs/llvm-project"]
+	path = libs/llvm-project
+	url = ../llvm-project
+[submodule "libs/ROCm-Device-Libs"]
+	path = libs/ROCm-Device-Libs
+	url = ../ROCm-Device-Libs
+[submodule "libs/ROCm-CompilerSupport"]
+	path = libs/ROCm-CompilerSupport
+	url = ../ROCm-CompilerSupport
+[submodule "libs/half"]
+	path = libs/half
+	url = ../half
+[submodule "libs/ROCgdb"]
+	path = libs/ROCgdb
+	url = ../ROCgdb
+[submodule "libs/ROCdbgapi"]
+	path = libs/ROCdbgapi
+	url = ../ROCdbgapi
+[submodule "libs/rocr_debug_agent"]
+	path = libs/rocr_debug_agent
+	url = ../rocr_debug_agent
+[submodule "libs/rocBLAS"]
+	path = libs/rocBLAS
+	url = ../rocBLAS
+[submodule "libs/Tensile"]
+	path = libs/Tensile
+	url = ../Tensile
+[submodule "libs/hipTensor"]
+	path = libs/hipTensor
+	url = ../hipTensor
+[submodule "libs/hipBLAS"]
+	path = libs/hipBLAS
+	url = ../hipBLAS
+[submodule "libs/hipBLASLt"]
+	path = libs/hipBLASLt
+	url = ../hipBLASLt
+[submodule "libs/rocFFT"]
+	path = libs/rocFFT
+	url = ../rocFFT
+[submodule "libs/hipFFT"]
+	path = libs/hipFFT
+	url = ../hipFFT
+[submodule "libs/rocRAND"]
+	path = libs/rocRAND
+	url = ../rocRAND
+[submodule "libs/hipRAND"]
+	path = libs/hipRAND
+	url = ../hipRAND
+[submodule "libs/rocSPARSE"]
+	path = libs/rocSPARSE
+	url = ../rocSPARSE
+[submodule "libs/hipSPARSELt"]
+	path = libs/hipSPARSELt
+	url = ../hipSPARSELt
+[submodule "libs/rocSOLVER"]
+	path = libs/rocSOLVER
+	url = ../rocSOLVER
+[submodule "libs/hipSOLVER"]
+	path = libs/hipSOLVER
+	url = ../hipSOLVER
+[submodule "libs/hipSPARSE"]
+	path = libs/hipSPARSE
+	url = ../hipSPARSE
+[submodule "libs/rocALUTION"]
+	path = libs/rocALUTION
+	url = ../rocALUTION
+[submodule "libs/rocThrust"]
+	path = libs/rocThrust
+	url = ../rocThrust
+[submodule "libs/hipCUB"]
+	path = libs/hipCUB
+	url = ../hipCUB
+[submodule "libs/rocPRIM"]
+	path = libs/rocPRIM
+	url = ../rocPRIM
+[submodule "libs/rocWMMA"]
+	path = libs/rocWMMA
+	url = ../rocWMMA
+[submodule "libs/rccl"]
+	path = libs/rccl
+	url = ../rccl
+[submodule "libs/MIOpen"]
+	path = libs/MIOpen
+	url = ../MIOpen
+[submodule "libs/composable_kernel"]
+	path = libs/composable_kernel
+	url = ../composable_kernel
+[submodule "libs/MIVisionX"]
+	path = libs/MIVisionX
+	url = ../MIVisionX
+[submodule "libs/rpp"]
+	path = libs/rpp
+	url = ../rpp
+[submodule "libs/hipfort"]
+	path = libs/hipfort
+	url = ../hipfort
+[submodule "libs/AMDMIGraphX"]
+	path = libs/AMDMIGraphX
+	url = ../AMDMIGraphX
+[submodule "libs/ROCmValidationSuite"]
+	path = libs/ROCmValidationSuite
+	url = ../ROCmValidationSuite
+[submodule "libs/openmp-extras/aomp"]
+	path = libs/openmp-extras/aomp
+	url = ../aomp
+[submodule "libs/openmp-extras/aomp-extras"]
+	path = libs/openmp-extras/aomp-extras
+	url = ../aomp-extras
+[submodule "libs/openmp-extras/flang"]
+	path = libs/openmp-extras/flang
+	url = ../flang
+[submodule "libs/ROCm-OpenCL-Runtime/api/opencl/khronos/icd"]
+	path = libs/ROCm-OpenCL-Runtime/api/opencl/khronos/icd
+	url = git@github.com:KhronosGroup/OpenCL-ICD-Loader.git
