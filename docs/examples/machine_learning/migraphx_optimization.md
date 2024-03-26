@@ -24,7 +24,7 @@ MIGraphX is a graph compiler focused on accelerating the Machine Learning infere
 
 After doing all these transformations, MIGraphX emits code for the AMD GPU by calling to MIOpen or rocBLAS or creating HIP kernels for a particular operator. MIGraphX can also target CPUs using DNNL or ZenDNN libraries.
 
-MIGraphX provides easy-to-use APIs in C++ and Python to import machine models in ONNX or TensorFlow. Users can compile, save, load, and run these models using MIGraphX's C++ and Python APIs. Internally, MIGraphX parses ONNX or TensorFlow models into internal graph representation where each operator in the model gets mapped to an operator within MIGraphX. Each of these operators defines various attributes such as:
+MIGraphX provides easy-to-use APIs in C++ and Python to import machine models in ONNX or TensorFlow. Users can compile, save, load, and run these models using MIGraphX C++ and Python APIs. Internally, MIGraphX parses ONNX or TensorFlow models into internal graph representation where each operator in the model gets mapped to an operator within MIGraphX. Each of these operators defines various attributes such as:
 
 - Number of arguments
 
@@ -187,7 +187,7 @@ Follow these steps:
     }
     ```
 
-2. To compile this program, you can use CMake and you only need to link the `migraphx::c` library to use MIGraphX's C++ API. The following is the `CMakeLists.txt` file that can build the earlier example:
+2. To compile this program, you can use CMake and you only need to link the `migraphx::c` library to use the MIGraphX C++ API. The following is the `CMakeLists.txt` file that can build the earlier example:
 
     ```cmake
     cmake_minimum_required(VERSION 3.5)
@@ -327,7 +327,7 @@ To run generated `.mxr` files through `migraphx-driver`, use the following:
 ./path/to/migraphx-driver run --migraphx resnet50.mxr --enable-offload-copy
 ```
 
-Alternatively, you can use MIGraphX's C++ or Python API to generate `.mxr` file. Refer to {numref}`image018` for an example.
+Alternatively, you can use the MIGraphX C++ or Python API to generate `.mxr` file. Refer to {numref}`image018` for an example.
 
 ```{figure} ../../data/understand/deep_learning/image.018.png
 :name: image018

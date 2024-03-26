@@ -299,7 +299,7 @@ USE_ROCM=1 MAX_JOBS=4 python3 setup.py install --user
 ### Test the PyTorch Installation
 
 You can use PyTorch unit tests to validate a PyTorch installation. If using a
-prebuilt PyTorch Docker image from AMD ROCm DockerHub or installing an official
+prebuilt PyTorch Docker image from AMD ROCm Docker Hub or installing an official
 wheels package, these tests are already run on those configurations.
 Alternatively, you can manually run the unit tests to validate the PyTorch
 installation fully.

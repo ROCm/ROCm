@@ -5,7 +5,6 @@ The following table is a list of ROCm components with links to their respective 
 terms. These components may include third party components subject to
 additional licenses. Please review individual repositories for more information.
 The table shows ROCm components, the name of license and link to the license terms.
-The table is ordered to follow ROCm's manifest file.
 
 <!-- spellcheck-disable -->
 | Component                                                                                        | License                                                                                                                    |

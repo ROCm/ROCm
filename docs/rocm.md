@@ -18,7 +18,7 @@ integrated into ML frameworks such as PyTorch and TensorFlow. ROCm can be
 deployed in many ways, including through the use of containers such as Docker,
 Spack, and your own build from source.
 
-ROCm’s goal is to allow our users to maximize their GPU hardware investment.
+The goal of ROCm is to allow our users to maximize their GPU hardware investment.
 ROCm is designed to help develop, test and deploy GPU accelerated HPC, AI,
 scientific computing, CAD, and other applications in a free, open-source,
 integrated and secure software ecosystem.

@@ -5,9 +5,9 @@ Documentation is built using open source toolchains. Contributions to our
 documentation is encouraged and welcome. As a contributor, please familiarize
 yourself with our documentation toolchain.
 
-## ReadTheDocs
+## Read The Docs
 
-[ReadTheDocs](https://docs.readthedocs.io/en/stable/) is our front end for the
+[Read the Docs](https://docs.readthedocs.io/en/stable/) is our front end for the
 our documentation. By front end, this is the tool that serves our HTML based
 documentation to our end users.
 

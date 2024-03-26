@@ -4,7 +4,7 @@ Using CMake
 
 Most components in ROCm support CMake. Projects depending on header-only or
 library components typically require CMake 3.5 or higher whereas those wanting
-to make use of CMake's HIP language support will require CMake 3.21 or higher.
+to make use of the CMake HIP language support will require CMake 3.21 or higher.
 
 Finding Dependencies
 ====================
@@ -16,7 +16,7 @@ Finding Dependencies
    <https://cmake.org/cmake/help/latest/command/find_package.html>`_ and the
    `Using Dependencies Guide
    <https://cmake.org/cmake/help/latest/guide/using-dependencies/index.html>`_
-   to get an overview of CMake's related facilities.
+   to get an overview of CMake related facilities.
 
 In short, CMake supports finding dependencies in two ways:
 
@@ -28,7 +28,7 @@ In short, CMake supports finding dependencies in two ways:
    regards needed to consume it.
 
 ROCm predominantly relies on Config mode, one notable exception being the Module
-driving the compilation of HIP programs on Nvidia runtimes. As such, when
+driving the compilation of HIP programs on NVIDIA runtimes. As such, when
 dependencies are not found in standard system locations, one either has to
 instruct CMake to search for package config files in additional folders using
 the ``CMAKE_PREFIX_PATH`` variable (a semi-colon separated list of filesystem
@@ -55,8 +55,8 @@ to the installation guides in these docs (`Linux <../deploy/linux/index.html>`_)
 Using HIP in CMake
 ==================
 
-ROCm componenents providing a C/C++ interface support being consumed using any
-C/C++ toolchain that CMake knows how to drive. ROCm also supports CMake's HIP
+ROCm components providing a C/C++ interface support being consumed using any
+C/C++ toolchain that CMake knows how to drive. ROCm also supports the CMake HIP
 language features, allowing users to program using the HIP single-source
 programming model. When a program (or translation-unit) uses the HIP API without
 compiling any GPU device code, HIP can be treated in CMake as a simple C/C++
@@ -172,7 +172,7 @@ all the flags necessary for device compilation.
 .. note::
     Compiling for the GPU device requires at least C++11.
 
-This project can then be configured with for eg.
+This project can then be configured with the following CMake commands:
 
 -  Windows: ``cmake -D CMAKE_CXX_COMPILER:PATH=${env:HIP_PATH}\bin\clang++.exe``
 
@@ -186,7 +186,7 @@ When using the CXX language support to compile HIP device code, selecting the
 target GPU architectures is done via setting the ``GPU_TARGETS`` variable.
 ``CMAKE_HIP_ARCHITECTURES`` only exists when the HIP language is enabled. By
 default, this is set to some subset of the currently supported architectures of
-AMD ROCm. It can be set to eg. ``-D GPU_TARGETS="gfx1032;gfx1035"``.
+AMD ROCm. It can be set to the CMake option ``-D GPU_TARGETS="gfx1032;gfx1035"``.
 
 ROCm CMake Packages
 -------------------
@@ -251,9 +251,9 @@ options.
 
 IDEs supporting CMake (Visual Studio, Visual Studio Code, CLion, etc.) all came
 up with their own way to register command-line fragments of different purpose in
-a setup'n'forget fashion for quick assembly using graphical front-ends. This is
+a setup-and-forget fashion for quick assembly using graphical front-ends. This is
 all nice, but configurations aren't portable, nor can they be reused in
-Continuous Intergration (CI) pipelines. CMake has condensed existing practice
+Continuous Integration (CI) pipelines. CMake has condensed existing practice
 into a portable JSON format that works in all IDEs and can be invoked from any
 command-line. This is
 `CMake Presets <https://cmake.org/cmake/help/latest/manual/cmake-presets.7.html>`_
