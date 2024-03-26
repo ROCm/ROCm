@@ -40,6 +40,8 @@ subtrees:
       title: API libraries
     - file: reference/rocm-tools.md
       title: Tools
+    - file: reference/env-variables.rst
+      title: Environment variables
     - file: reference/gpu-arch.rst
       title: GPU architectures
       subtrees:

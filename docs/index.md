@@ -78,6 +78,7 @@ Our documentation is organized into the following categories:
   * Development
   * Performance analysis
   * System
+* [Enironment Variables](./reference/env-variables.rst)
 * [GPU architectures](./reference/gpu-arch.rst)
   * [GPU architecture hardware specification overview](./reference/gpu-arch/gpu-arch-spec-overview.rst)
 :::
