@@ -260,5 +260,5 @@ To run an OSU benchmark using multiple nodes, use the following code:
 .. code-block:: shell
 
     export LD_LIBRARY_PATH=$OMPI_DIR/lib:$OFI_DIR/lib64:/opt/rocm/lib
-    $OMPI_DIR/bin/mpirun -np 2 \
+    $OMPI_DIR/bin/mpirun --mca pml ob1 --mca btl_ofi_mode 2 -np 2 \
     ./c/mpi/pt2pt/standard/osu_bw D D
