@@ -1,5 +1,5 @@
 .. meta::
-   :description: AMD Instinct MI300X workload tuning
+   :description: Learn about workload tuning on AMD Instinct MI300X accelerators for optimal performance.
    :keywords: AMD, Instinct, MI300X, HPC, tuning, BIOS settings, NBIO, ROCm,
               environment variable, performance, HIP, Triton, PyTorch TunableOp, vLLM, RCCL,
               MIOpen, accelerator, GPU, resource utilization

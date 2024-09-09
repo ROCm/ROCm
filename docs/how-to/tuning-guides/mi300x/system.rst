@@ -1,3 +1,9 @@
+.. meta::
+   :description: Learn about AMD Instinct MI300X system settings and performance tuning.
+   :keywords: AMD, Instinct, MI300X, HPC, tuning, BIOS settings, NBIO, ROCm,
+              environment variable, performance, HIP, Triton, PyTorch TunableOp, vLLM, RCCL,
+              MIOpen, accelerator, GPU, resource utilization
+
 ***************************************
 AMD Instinct MI300X system optimization
 ***************************************
