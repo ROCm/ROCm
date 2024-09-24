@@ -1,0 +1,69 @@
+parameters:
+# ubuntu near-equivalent list of yum installs in https://github.com/ROCm/ROCm-docker/blob/master/dev/Dockerfile-centos-7-complete
+# plus additional packages found through iterative testing of pipeline
+- name: aptPackages
+  type: object
+  default:
+    - python3-dev
+    - python3-pip
+- name: pipModules
+  type: object
+  default:
+    - tox
+# list from https://github.com/pytorch/builder/blob/main/manywheel/build_rocm.sh
+- name: rocmDependencies
+  type: object
+  default:
+    - rocm-cmake
+    - llvm-project
+    - ROCR-Runtime
+    - clr
+    - rocminfo
+    - rocprofiler-register
+    - rocm_smi_lib
+    - rocm-core
+    - aomp
+    - aomp-extras
+    - hipBLAS-common
+    - hipBLASLt
+
+trigger: none
+pr: none
+
+jobs:
+- job: pipeline_debug
+  timeoutInMinutes: 120
+  variables:
+  - group: common
+  - template: /.azuredevops/variables-global.yml
+  - name: HIP_ROCCLR_HOME
+    value: $(Build.BinariesDirectory)/rocm
+  - name: TENSILE_ROCM_ASSEMBLER_PATH
+    value: $(Agent.BuildDirectory)/rocm/llvm/bin/clang
+  - name: CMAKE_CXX_COMPILER
+    value: $(Agent.BuildDirectory)/rocm/bin/hipcc
+  - name: TENSILE_ROCM_OFFLOAD_BUNDLER_PATH
+    value: $(Agent.BuildDirectory)/rocm/llvm/bin/clang-offload-bundler
+  pool:
+    vmImage: ${{ variables.BASE_BUILD_POOL }}
+  workspace:
+    clean: all
+  steps:
+# copy environment setup from https://github.com/pytorch/builder/blob/main/manywheel/Dockerfile
+# but instead of centos, use ubuntu environment
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+  - task: Bash@3
+    displayName: 'git clone Tensile'
+    inputs:
+      targetType: inline
+      script: git clone https://github.com/ROCm/Tensile --depth=1 --shallow-submodules
+      workingDirectory: $(Build.SourcesDirectory)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-aocl.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
+    parameters:
+      dependencyList: ${{ parameters.rocmDependencies }}
+      gpuTarget: gfx942
+      dependencySource: staging
