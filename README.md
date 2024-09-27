@@ -76,7 +76,7 @@ The Build time will reduce significantly if we limit the GPU Architecture/s agai
 
 mkdir -p ~/WORKSPACE/      # Or any folder name other than WORKSPACE
 cd ~/WORKSPACE/
-export ROCM_VERSION=6.2.1
+export ROCM_VERSION=6.2.0   # or 6.2.1 6.2.2
 ~/bin/repo init -u http://github.com/ROCm/ROCm.git -b roc-6.2.x -m tools/rocm-build/rocm-${ROCM_VERSION}.xml
 ~/bin/repo sync
 
