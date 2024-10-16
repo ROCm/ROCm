@@ -104,7 +104,7 @@ System Management
   ":doc:`AMD SMI <amdsmi:index>`", "C library for Linux that provides a user space interface for applications to monitor and control AMD devices"
   ":doc:`ROCm Data Center Tool <rdc:index>`", "Simplifies administration and addresses key infrastructure challenges in AMD GPUs in cluster and data-center environments"
   ":doc:`rocminfo <rocminfo:index>`", "Reports system information"
-  ":doc:`ROCm SMI <rocm_smi_lib:index>`", "C library for Linux that provides a user space interface for applications to monitor and control GPU applications"
+  ":doc:`ROCm SMI <rocm_smi_lib:index>`", "C++ library for Linux that provides a user space interface for applications to monitor and control GPU applications"
   ":doc:`ROCm Validation Suite <rocmvalidationsuite:index>`", "Detects and troubleshoots common problems affecting AMD GPUs running in a high-performance computing environment"
 
 Performance

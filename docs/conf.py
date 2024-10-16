@@ -87,6 +87,7 @@ article_pages = [
     {"file": "how-to/system-optimization/mi100", "os": ["linux"]},
     {"file": "how-to/system-optimization/w6000-v620", "os": ["linux"]},
     {"file": "how-to/tuning-guides/mi300x/index", "os": ["linux"]},
+    {"file": "how-to/tuning-guides/mi300x/performance-validation-vllm", "os": ["linux"]},
     {"file": "how-to/tuning-guides/mi300x/system", "os": ["linux"]},
     {"file": "how-to/tuning-guides/mi300x/workload", "os": ["linux"]},
     {"file": "how-to/system-debugging", "os": ["linux"]},

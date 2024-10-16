@@ -16,7 +16,7 @@ This section discusses how to implement `vLLM <https://docs.vllm.ai/en/latest>`_
 vLLM inference
 ==============
 
-vLLM is renowned for its paged attention algorithm that can reduce memory consumption and increase throughput thanks to
+vLLM is renowned for its PagedAttention algorithm that can reduce memory consumption and increase throughput thanks to
 its paging scheme. Instead of allocating GPU high-bandwidth memory (HBM) for the maximum output token lengths of the
 models, the paged attention of vLLM allocates GPU HBM dynamically for its actual decoding lengths. This paged attention
 is also effective when multiple requests share the same key and value contents for a large value of beam search or
@@ -140,7 +140,7 @@ Refer to :ref:`mi300x-vllm-optimization` for performance optimization tips.
 ROCm provides a prebuilt optimized Docker image for validating the performance of LLM inference with vLLM 
 on the MI300X accelerator. The Docker image includes ROCm, vLLM, PyTorch, and tuning files in the CSV 
 format. For more information, see the guide to 
-`LLM inference performance validation with vLLM on the AMD Instinct™ MI300X accelerator <https://github.com/ROCm/MAD/blob/develop/benchmark/vllm/README.md>`_ 
+`LLM inference performance validation with vLLM on the AMD Instinct MI300X accelerator <https://github.com/ROCm/MAD/blob/develop/benchmark/vllm/README.md>`_ 
 on the ROCm GitHub repository.
 
 .. _fine-tuning-llms-tgi:
