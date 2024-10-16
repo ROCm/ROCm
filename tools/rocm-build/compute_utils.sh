@@ -9,6 +9,7 @@ set -e
 set -o pipefail
 
 
+
 # Set a sensible default value for DASH_JAY in case none is provided
 DASH_JAY=${DASH_JAY:-"-j $(nproc)"}
 
@@ -370,3 +371,84 @@ if [ "${GEN_NINJA+defined}" != "defined" ] && command -v ninja >/dev/null ; then
     GEN_NINJA=-GNinja
 fi
 
+# Common usage message
+printUsage() {
+    echo
+    echo "Usage: $(basename "${BASH_SOURCE}") [options ...]"
+    echo
+    echo "Options:"
+    echo "  -c,  --clean              Clean output and delete all intermediate work"
+    echo "  -p,  --package <type>     Specify packaging format"
+    echo "  -r,  --release            Make a release build instead of a debug build"
+    echo "  -a,  --address_sanitizer  Enable address sanitizer"
+    echo "  -o,  --outdir <pkg_type>  Print path of output directory containing packages of type referred to by pkg_type"
+    echo "  -h,  --help               Prints this help"
+    echo
+    echo "Possible values for <type>:"
+    echo "  deb -> Debian format (default)"
+    echo "  rpm -> RPM format"
+    echo
+
+    return 0
+}
+#This function contains the option-handler-loop and the conflicts check
+#The variable IGNORE_STATIC must be be declared by caller.
+cmdOptionHandler(){
+	
+	local CLEAN_OR_OUT=0
+	while  [ 0 -lt $# ] ;
+	do
+    case "$1" in
+        (-h | --help)
+                printUsage ; exit 0;;
+        (-c | --clean)
+                TARGET="clean" ; ((CLEAN_OR_OUT|=1)) ; shift ;;
+        (-r | --release)
+                BUILD_TYPE="RelWithDebInfo" ; shift ;;
+        (-a | --address_sanitizer)
+                set_asan_env_vars
+                set_address_sanitizer_on ; shift ;;
+				(-s | --static )   
+								if [ "$IGNORE_STATIC" = "off" ] 
+									then 
+											SHARED_LIBS="off" 
+								fi  
+								shift ;; 
+        (-o | --outdir)
+                TARGET="outdir"; PKGTYPE="$2" ; OUT_DIR_SPECIFIED=1 ; ((CLEAN_OR_OUT|=2)) ; shift 2 ;;
+        (-p | --package)
+                PKGTYPE="$2"; MAKETARGET="$2" ; shift 2;;
+        (--)     shift; break;;
+        (*)
+                echo " This should never come but just incase : UNEXPECTED ERROR Parm : [$1] ">&2 ; exit 20;;
+			esac
+		RET_CONFLICT=1
+		check_conflicting_options $CLEAN_OR_OUT $PKGTYPE $MAKETARGET
+	done
+}
+
+print_output_directory() {
+		if [ "$packageRoot" == ""}
+			then
+				packageRoot=$(getPackageRoot $1)
+		fi
+    case ${PKGTYPE} in
+        ("deb")
+            echo $(getDebPath $1);;
+        ("rpm")
+            echo $(getRpmPath $1);;
+        (*)
+            echo "Invalid package type \"${PKGTYPE}\" provided for -o" >&2; exit 1;;
+    esac
+    exit
+}
+# which taget to choose
+# it takes the api name in $1.
+targetSelector() {
+case $TARGET in
+    (build) build_"$1" ;;
+    (outdir) print_output_directory "$1";;
+    (clean) clean_"$1" ;;
+    (*) die "Invalid target $TARGET" ;;
+esac
+}
