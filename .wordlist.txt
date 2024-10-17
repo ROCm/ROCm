@@ -70,6 +70,7 @@ Concretized
 Conda
 ConnectX
 CuPy
+Dashboarding
 DDR
 DF
 DGEMM
@@ -199,6 +200,7 @@ LSAN
 LSan
 LTS
 LoRA
+MAD's
 MEM
 MERCHANTABILITY
 MFMA
@@ -513,6 +515,7 @@ dev
 devicelibs
 devsel
 dimensionality
+dir
 disambiguates
 distro
 el
