@@ -7,6 +7,8 @@ Accelerator and GPU hardware specifications
 
 The following tables provide an overview of the hardware specifications for AMD Instinct™ accelerators, and AMD Radeon™ PRO and Radeon™ GPUs.
 
+For more information about ROCm hardware compatibility, see the ROCm `Compatibility matrix <https://rocm.docs.amd.com/en/latest/compatibility/compatibility-matrix.html>`_.
+
 .. tab-set::
 
   .. tab-item:: AMD Instinct accelerators
