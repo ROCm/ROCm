@@ -9,16 +9,16 @@
 
 ROCm is an open-source software platform optimized to extract HPC and AI workload
 performance from AMD Instinct accelerators and AMD Radeon GPUs while maintaining
-compatibility with industry software frameworks. For more information, see [What is ROCm?](./what-is-rocm.rst)
+compatibility with industry software frameworks. For more information, see
+[What is ROCm?](./what-is-rocm.rst)
+
+The ROCm platform uses the Heterogeneous System Architecture (HSA) to support
+computing across multiple hardware architectures, letting developers write code
+that runs on both AMD CPUs and GPUs. ROCm supports multiple programming
+languages such as HIP (Heterogeneous-Compute Interface for Portability), OpenCL,
+and OpenMP, as described in {doc}`HIP programming guide<hip:index>`. 
 
 If you're using Radeon GPUs, consider reviewing {doc}`Radeon-specific ROCm documentation<radeon:index>`.
-
-Installation instructions are available from:
-
-* {doc}`ROCm installation for Linux<rocm-install-on-linux:index>`
-* {doc}`HIP SDK installation for Windows<rocm-install-on-windows:index>`
-* [Deep learning frameworks installation](./how-to/deep-learning-rocm.rst)
-* [Build ROCm from source](./how-to/build-rocm.rst)
 
 ROCm documentation is organized into the following categories:
 
@@ -41,6 +41,7 @@ ROCm documentation is organized into the following categories:
 :::{grid-item-card} How to
 :class-body: rocm-card-banner rocm-hue-12
 
+* [Programming guide](./how-to/hip_programming_guide.rst)
 * [Using ROCm for AI](./how-to/rocm-for-ai/index.rst)
 * [Using ROCm for HPC](./how-to/rocm-for-hpc/index.rst)
 * [Fine-tuning LLMs and inference optimization](./how-to/llm-fine-tuning-optimization/index.rst)

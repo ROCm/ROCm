@@ -23,6 +23,8 @@ subtrees:
 
 - caption: How to
   entries:
+  - file: how-to/hip_programming_guide.rst
+    title: Programming guide
   - file: how-to/rocm-for-ai/index.rst
     title: Using ROCm for AI
     subtrees:
