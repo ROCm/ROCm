@@ -13,12 +13,8 @@ compatibility with industry software frameworks. For more information, see [What
 
 If you're using Radeon GPUs, consider reviewing {doc}`Radeon-specific ROCm documentation<radeon:index>`.
 
-Installation instructions are available from:
-
-* {doc}`ROCm installation for Linux<rocm-install-on-linux:index>`
-* {doc}`HIP SDK installation for Windows<rocm-install-on-windows:index>`
-* [Deep learning frameworks installation](./how-to/deep-learning-rocm.rst)
-* [Build ROCm from source](./how-to/build-rocm.rst)
+{doc}`HIP programming guide<hip:index>` serves as a model and interface guide 
+for ROCm.
 
 ROCm documentation is organized into the following categories:
 
@@ -41,6 +37,7 @@ ROCm documentation is organized into the following categories:
 :::{grid-item-card} How to
 :class-body: rocm-card-banner rocm-hue-12
 
+* [Programming guide](./how-to/hip_programming_guide.rst)
 * [Using ROCm for AI](./how-to/rocm-for-ai/index.rst)
 * [Using ROCm for HPC](./how-to/rocm-for-hpc/index.rst)
 * [Fine-tuning LLMs and inference optimization](./how-to/llm-fine-tuning-optimization/index.rst)
