@@ -148,6 +148,8 @@ subtrees:
             title: White paper
   - file: conceptual/gpu-memory.md
     title: GPU memory
+  - file: conceptual/iommu.rst
+    title: Input-Output Memory Management Unit (IOMMU)
   - file: conceptual/file-reorg.md
     title: File structure (Linux FHS)
   - file: conceptual/gpu-isolation.md
