@@ -1,9 +1,21 @@
-#!/bin/bash
+ #!/bin/bash
 
 set -ex
-source "$(dirname "${BASH_SOURCE[0]}")/compute_helper.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/envsetup.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/compute_utils.sh"
 
-set_component_src half
+API_NAME=half
+HALF_ROOT=$(getPackageRoot $API_NAME)
+PACKAGE_SRC=$(pwd)/$API_NAME
+PACKAGE_DEB=$(getDebPath $API_NAME)
+PACKAGE_RPM=$(getRpmPath $API_NAME)
+BUILD_DIR=$(getBuildPath $API_NAME)
+
+TARGET='build'
+MAKETARGET='deb'
+IGNORE_STATIC="off"
+
+cmdOptionHandler
 
 build_half() {
     echo "Start build"
@@ -18,16 +30,16 @@ build_half() {
     cmake \
         -DCMAKE_INSTALL_PREFIX="$ROCM_PATH" \
         -DBUILD_FILE_REORG_BACKWARD_COMPATIBILITY=OFF \
-        "$COMPONENT_SRC"
+        "$PACKAGE_SRC"
 
-    cmake --build "$BUILD_DIR" -- -j${PROC}
+    cmake --build "$BUILD_DIR" -- $DASH_JAY
     cmake --build "$BUILD_DIR" -- package
     cmake --build "$BUILD_DIR" -- install
 
     rm -rf _CPack_Packages/ && find -name '*.o' -delete
-    mkdir -p $PACKAGE_DIR && cp ${BUILD_DIR}/*.${PKGTYPE} $PACKAGE_DIR
+    copy_if DEB "${CPACKGEN:-"DEB;RPM"}" "$PACKAGE_DEB" $BUILD_DIR/half*.deb
+    copy_if RPM "${CPACKGEN:-"DEB;RPM"}" "$PACKAGE_RPM" $BUILD_DIR/half*.rpm
 
-    show_build_cache_stats
 }
 
 clean_half() {
@@ -36,11 +48,5 @@ clean_half() {
     echo "Done!"
 }
 
-stage2_command_args "$@"
 
-case $TARGET in
-    build) build_half ;;
-    outdir) print_output_directory ;;
-    clean) clean_half ;;
-    *) die "Invalid target $TARGET" ;;
-esac
+targetSelector $API_NAME
