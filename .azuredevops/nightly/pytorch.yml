@@ -235,6 +235,15 @@ jobs:
       script: git clone https://github.com/pytorch/builder.git --depth=1 --recurse-submodules
       workingDirectory: $(Build.SourcesDirectory)/pytorch
   - task: Bash@3
+    displayName: update CK submodule
+    inputs:
+      targetType: inline
+      script: |
+        git fetch origin
+        git checkout develop
+        git pull origin develop
+      workingDirectory: $(Build.SourcesDirectory)/pytorch/third_party/composable_kernel
+  - task: Bash@3
     displayName: Install patchelf
     inputs:
       targetType: inline
