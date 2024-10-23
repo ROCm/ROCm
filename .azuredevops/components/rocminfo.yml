@@ -5,13 +5,6 @@ parameters:
 - name: checkoutRef
   type: string
   default: ''
-- name: aptPackages
-  type: object
-  default:
-    - libelf-dev
-    - libdrm-dev
-    - lignuma-dev
-    - python3-pip
 - name: rocmDependencies
   type: object
   default:
