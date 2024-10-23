@@ -2,11 +2,13 @@
 steps:
 - task: Bash@3
   displayName: 'List amdgpu/rocm/mesa packages'
+  continueOnError: true
   inputs:
     targetType: inline
     script: apt list --installed | grep -E 'amdgpu|rocm|mesa'
 - task: Bash@3
   displayName: 'List GPU processes'
+  continueOnError: true
   inputs:
     targetType: inline
     script: |
@@ -14,11 +16,13 @@ steps:
       sudo lsof | grep amdgpu
 - task: Bash@3
   displayName: 'System snapshot'
+  continueOnError: true
   inputs:
     targetType: inline
     script: top -bn1
 - task: Bash@3
   displayName: 'List dmesg'
+  continueOnError: true
   inputs:
     targetType: inline
     script: |
