@@ -6,20 +6,18 @@
 What is ROCm?
 ***********************************************************
 
-ROCm is an open-source stack, composed primarily of open-source software, designed for
-graphics processing unit (GPU) computation. ROCm consists of a collection of drivers, development
-tools, and APIs that enable GPU programming from low-level kernel to end-user applications.
+ROCm is a software stack, composed primarily of open-source software, that
+provides the tools for programming AMD Graphics Processing Units (GPUs), from
+low-level kernels to high-level end-user applications.
 
 .. image:: data/rocm-software-stack-6_2_0.jpg
   :width: 800
   :alt: AMD's ROCm software stack and neighboring technologies.
   :align: center
 
-ROCm is powered by
-:doc:`Heterogeneous-computing Interface for Portability (HIP) <hip:index>`;
-it supports programming models, such as OpenMP and OpenCL, and includes all necessary open
-source software compilers, debuggers, and libraries. It's fully integrated into machine learning (ML)
-frameworks, such as PyTorch and TensorFlow.
+ROCm provides device drivers, runtimes, API libraries, compilers, debuggers, and performance profilers for
+:doc:`HIP (Heterogeneous-computing Interface for Portability) <hip:index>`,
+OpenCL, and OpenMP programming languages. 
 
 .. tip::
   If you're using Radeon GPUs, refer to the
@@ -149,5 +147,5 @@ Runtimes
   :header: "Component", "Description"
 
   ":doc:`AMD Common Language Runtime (CLR) <hip:understand/amd_clr>`", "Contains source code for AMD's common language runtimes: HIP and OpenCL"
-  ":doc:`HIP <hip:index>`", "AMD's GPU programming language extension and the GPU runtime"
+  ":doc:`HIP <hip:index>`", "C++ runtime API and kernel language that lets developers create portable applications for AMD and NVIDIA GPUs from single source code."
   ":doc:`ROCR-Runtime <rocr-runtime:index>`", "User-mode API interfaces and libraries necessary for host applications to launch compute kernels on available HSA ROCm kernel agents"
