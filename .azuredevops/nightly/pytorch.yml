@@ -68,7 +68,7 @@ parameters:
   default:
     - cmake
     - astunparse
-    - expecttest!=0.2.0
+    - expecttest>=0.2.1
     - hypothesis
     - numpy
     - psutil
@@ -85,7 +85,8 @@ parameters:
     - lintrunner
     - ninja
     - packaging
-    - optree>=0.12.0
+    - optree>=0.13.0
+    - click>=8.0.3
   # list for vision
     - auditwheel
     - future
