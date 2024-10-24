@@ -232,8 +232,10 @@ jobs:
     displayName: git clone pytorch builder
     inputs:
       targetType: inline
-      script: git clone https://github.com/pytorch/builder.git --depth=1 --recurse-submodules
-      workingDirectory: $(Build.SourcesDirectory)/pytorch
+      script: |
+        git clone https://github.com/pytorch/builder.git --depth=1 --recurse-submodules
+        sudo ln -s $(Build.SourcesDirectory)/builder /builder
+      workingDirectory: $(Build.SourcesDirectory)
   - task: Bash@3
     displayName: update CK submodule
     inputs:
