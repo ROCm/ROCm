@@ -15,10 +15,9 @@ low-level kernels to high-level end-user applications.
   :alt: AMD's ROCm software stack and neighboring technologies.
   :align: center
 
-Specifically, ROCm provides the tools for
+ROCm provides device drivers, runtimes, API libraries, compilers, debuggers, and performance profilers for
 :doc:`HIP (Heterogeneous-computing Interface for Portability) <hip:index>`,
-OpenCL and OpenMP. This include compilers, libraries for high-level
-functions, debuggers, profilers and runtimes.
+OpenCL, and OpenMP programming languages. 
 
 .. tip::
   If you're using Radeon GPUs, refer to the
