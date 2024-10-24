@@ -86,3 +86,4 @@ jobs:
       testExecutable: './rocm/bin/rocm_agent_enumerator'
       testParameters: ''
       testPublishResults: false
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
