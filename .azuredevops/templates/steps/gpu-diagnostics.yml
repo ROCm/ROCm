@@ -21,6 +21,14 @@ steps:
     targetType: inline
     script: top -bn1
 - task: Bash@3
+  displayName: rocminfo
+  continueOnError: true
+  inputs:
+    targetType: inline
+    script: |
+      $(Agent.BuildDirectory)/rocm/bin/rocminfo
+      $(Agent.BuildDirectory)/rocm/bin/rocm_agent_enumerator
+- task: Bash@3
   displayName: 'List dmesg'
   continueOnError: true
   inputs:
