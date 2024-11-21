@@ -1,6 +1,8 @@
 # specify non-secret global variables reused across pipelines here
 
 variables:
+- name: RESOURCES_REPOSITORIES
+  value: $[ convertToJson(resources.repositories) ]
 - name: CI_ROOT_PATH
   value: /.azuredevops
 - name: CI_COMPONENT_PATH

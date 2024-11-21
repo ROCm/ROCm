@@ -29,17 +29,17 @@ steps:
         definition: ${{ parameters.definitionId }}
         buildId: ${{ parameters.buildId }}
       itemPattern: '**/*${{ parameters.gpuTarget }}*'
-      targetPath: $(System.ArtifactsDirectory)
+      targetPath: $(Pipeline.Workspace)/d
   - task: ExtractFiles@1
     displayName: 'Extract Pipeline Build'
     inputs:
-      archiveFilePatterns: '$(System.ArtifactsDirectory)/**/*.tar.gz'
+      archiveFilePatterns: '$(Pipeline.Workspace)/d/**/*.tar.gz'
       destinationFolder: '$(Agent.BuildDirectory)/rocm'
       cleanDestinationFolder: false
       overwriteExistingFiles: true
   - task: DeleteFiles@1
     displayName: 'Clean up Compressed Pipeline Build'
     inputs:
-      SourceFolder: '$(System.ArtifactsDirectory)'
+      SourceFolder: '$(Pipeline.Workspace)/d'
       Contents: '/**/*.tar.xz'
       RemoveDotFiles: true

@@ -1,0 +1,111 @@
+steps:
+- task: Bash@3
+  displayName: Set up release_repo values
+  inputs:
+    targetType: inline
+    script: |
+      # RESOURCES_REPOSITORIES is a runtime variable (not an env var!) that contains quotations and newlines
+      # So we need to save it to a file to properly preserve its formatting and contents
+      cat <<EOF > resources.repositories
+      $(RESOURCES_REPOSITORIES)
+      EOF
+      cat resources.repositories
+
+      echo "##vso[task.setvariable variable=release_repo.id;]$(cat resources.repositories | jq .release_repo.id | tr -d '"')"
+      echo "##vso[task.setvariable variable=release_repo.name;]$(cat resources.repositories | jq .release_repo.name | tr -d '"')"
+      echo "##vso[task.setvariable variable=release_repo.ref;]$(cat resources.repositories | jq .release_repo.ref | tr -d '"')"
+      echo "##vso[task.setvariable variable=release_repo.url;]$(cat resources.repositories | jq .release_repo.url | tr -d '"')"
+      echo "##vso[task.setvariable variable=release_repo.version;]$(cat resources.repositories | jq .release_repo.version | tr -d '"')"
+- task: Bash@3
+  displayName: Create manifest.json
+  inputs:
+    targetType: inline
+    script: |
+      dependencies=()
+      for manifest_file in $(Pipeline.Workspace)/d/**/manifest_*.json; do
+        current=$(jq '.current' "$manifest_file")
+        dependencies+=("$current")
+      done
+      dependencies_json=$(printf '%s\n' "${dependencies[@]}" | jq -s '.')
+
+      jq -n \
+        --arg buildNumber "$(Build.BuildNumber)" \
+        --arg buildId "$(Build.BuildId)" \
+        --arg repoId "$(release_repo.id)" \
+        --arg repoName "$(release_repo.name)" \
+        --arg repoRef "$(release_repo.ref)" \
+        --arg repoUrl "$(release_repo.url)" \
+        --arg repoVersion "$(release_repo.version)" \
+        --argjson dependencies "$dependencies_json" \
+        '{
+          current: {
+            buildNumber: $buildNumber,
+            buildId: $buildId,
+            repoId: $repoId,
+            repoName: $repoName,
+            repoRef: $repoRef,
+            repoUrl: $repoUrl,
+            repoVersion: $repoVersion
+          },
+          dependencies: $dependencies
+        }' > $(Build.ArtifactStagingDirectory)/manifest_$(Build.DefinitionName).json
+
+      dependencies_rows=$(cat $(Build.ArtifactStagingDirectory)/manifest_$(Build.DefinitionName).json | \
+        jq -r '
+          .dependencies[] | 
+          "<tr><td>" + .buildNumber + "</td>" + 
+          "<td><a href=\"https://dev.azure.com/ROCm-CI/ROCm-CI/_build/results?buildId=" + .buildId + "\">" + .buildId + "</a></td>" + 
+          "<td><a href=\"" + .repoUrl + "\">" + .repoName + "</a></td>" + 
+          "<td><a href=\"" + .repoUrl + "/tree/" + .repoRef + "\">" + .repoRef + "</a></td>" + 
+          "<td><a href=\"" + .repoUrl + "/commit/" + .repoVersion + "\">" + .repoVersion + "</a></td></tr>"
+        ')
+      dependencies_rows=$(echo $dependencies_rows)
+      echo "##vso[task.setvariable variable=dependencies_rows;]$dependencies_rows"
+
+      cat $(Build.ArtifactStagingDirectory)/manifest_$(Build.DefinitionName).json
+- task: Bash@3
+  displayName: Create manifest.html
+  inputs:
+    targetType: inline
+    script: |
+      cat <<EOF > $(Build.ArtifactStagingDirectory)/manifest_$(Build.DefinitionName).html
+      <html>
+      <h1>Manifest</h1>
+      <h2>Current</h2>
+      <table border="1">
+      <tr>
+        <th>Build Number</th>
+        <th>Build ID</th>
+        <th>Repo Name</th>
+        <th>Repo Ref</th>
+        <th>Repo Version</th>
+      </tr>
+      <tr>
+        <td>$(Build.BuildNumber)</td>
+        <td><a href="https://dev.azure.com/ROCm-CI/ROCm-CI/_build/results?buildId=$(Build.BuildId)">$(Build.BuildId)</a></td>
+        <td><a href="$(release_repo.url)">$(release_repo.name)</a></td>
+        <td><a href="$(release_repo.url)/tree/$(release_repo.ref)">$(release_repo.ref)</a></td>
+        <td><a href="$(release_repo.url)/commit/$(release_repo.version)">$(release_repo.version)</a></td>
+      </tr>
+      </table>
+      <h2>Dependencies</h2>
+      <table border="1">
+      <tr>
+        <th>Build Number</th>
+        <th>Build ID</th>
+        <th>Repo Name</th>
+        <th>Repo Ref</th>
+        <th>Repo Version</th>
+      </tr>
+      $(dependencies_rows)
+      </table>
+      </html>
+      EOF
+
+      cat $(Build.ArtifactStagingDirectory)/manifest_$(Build.DefinitionName).html
+- task: PublishHtmlReport@1
+  displayName: Publish manifest.html
+  continueOnError: true
+  inputs:
+    tabName: Manifest
+    reportDir: $(Build.ArtifactStagingDirectory)/manifest_$(Build.DefinitionName).html

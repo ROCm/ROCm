@@ -34,4 +34,5 @@ jobs:
     parameters:
       componentName: rocprofiler-register
       testDir: 'tests/build'
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/create-manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
