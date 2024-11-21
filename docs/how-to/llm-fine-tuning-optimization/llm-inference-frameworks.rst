@@ -135,11 +135,13 @@ Installing vLLM
 
             {"text":["What is AMD Instinct?\nAmd Instinct is a brand new line of high-performance computing (HPC) processors from Advanced Micro Devices (AMD). These processors are designed to deliver unparalleled performance for HPC workloads, including scientific simulations, data analytics, and machine learning.\nThe Instinct lineup includes a range of processors, from the entry-level Inst"]}
 
-Refer to :ref:`mi300x-vllm-optimization` for performance optimization tips.
+.. seealso::
 
-ROCm provides a prebuilt optimized Docker image for validating the performance of LLM inference with vLLM 
-on the MI300X accelerator. The Docker image includes ROCm, vLLM, PyTorch, and tuning files in the CSV 
-format. For more information, see :doc:`/how-to/performance-validation/mi300x/vllm-benchmark`.
+   See :ref:`mi300x-vllm-optimization` for performance optimization tips.
+
+   ROCm provides a prebuilt optimized Docker image for validating the performance of LLM inference with vLLM
+   on the MI300X accelerator. The Docker image includes ROCm, vLLM, PyTorch, and tuning files in CSV
+   format. For more information, see :doc:`/how-to/performance-validation/mi300x/vllm-benchmark`.
 
 .. _fine-tuning-llms-tgi:
 
