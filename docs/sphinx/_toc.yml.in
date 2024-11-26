@@ -171,6 +171,8 @@ subtrees:
       title: Hardware specifications
     - file: reference/precision-support.rst
       title: Precision support
+    - file: reference/graph-safe-support.rst
+      title: Graph safe support
 
 - caption: Contribute
   entries:
