@@ -5,6 +5,8 @@ steps:
   inputs:
     targetType: inline
     script: |
+      sudo apt-get install -y jq
+
       # RESOURCES_REPOSITORIES is a runtime variable (not an env var!) that contains quotations and newlines
       # So we need to save it to a file to properly preserve its formatting and contents
       cat <<EOF > resources.repositories
