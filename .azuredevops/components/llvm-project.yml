@@ -141,4 +141,5 @@ jobs:
         -DCMAKE_BUILD_TYPE=Release
         -DHIPCC_BACKWARD_COMPATIBILITY=OFF
       cmakeBuildDir: 'amd/hipcc/build'
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml

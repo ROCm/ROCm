@@ -54,4 +54,5 @@ jobs:
         -DAOMP_VERSION_STRING=$(LATEST_RELEASE_TAG)
         -GNinja
       installDir: $(Build.BinariesDirectory)/llvm
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml

@@ -52,6 +52,7 @@ jobs:
         -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm
         -DBUILD_FILE_REORG_BACKWARD_COMPATIBILITY=OFF
         -GNinja
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
   # only run test03 because test11 has too many test cases, taking way too long
   - task: Bash@3

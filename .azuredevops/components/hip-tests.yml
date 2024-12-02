@@ -82,6 +82,7 @@ jobs:
         -DHIP_PATH=$(Agent.BuildDirectory)/rocm
         -DOFFLOAD_ARCH_STR="--offload-arch=$(JOB_GPU_TARGET)"
         -GNinja
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)

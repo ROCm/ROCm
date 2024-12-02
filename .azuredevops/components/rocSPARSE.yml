@@ -88,6 +88,7 @@ jobs:
         -DBUILD_CLIENTS_BENCHMARKS=OFF
         -DCMAKE_MODULE_PATH=$(Agent.BuildDirectory)/rocm/lib/cmake/hip;$(Agent.BuildDirectory)/rocm/hip/cmake
         -GNinja
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
       artifactName: rocSPARSE

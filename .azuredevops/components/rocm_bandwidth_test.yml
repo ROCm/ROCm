@@ -69,6 +69,7 @@ jobs:
         -DCMAKE_MODULE_PATH=$(Build.SourcesDirectory)/cmake_modules
         -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm;$(Agent.BuildDirectory)/rocm/include;$(Agent.BuildDirectory)/rocm/include/hsa
         -GNinja
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
 
 - job: rocm_bandwidth_test_testing

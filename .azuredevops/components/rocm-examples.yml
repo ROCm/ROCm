@@ -109,6 +109,7 @@ jobs:
       script: |
         mkdir -p $(Build.BinariesDirectory)/examples
         mv $(Build.BinariesDirectory)/bin/* $(Build.BinariesDirectory)/examples
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)

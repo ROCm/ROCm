@@ -92,6 +92,7 @@ jobs:
         --with-rocm-dbgapi=$(Agent.BuildDirectory)/rocm
         LDFLAGS="-Wl,--enable-new-dtags,-rpath=$(Agent.BuildDirectory)/rocm/lib"
       makeCallPrefix: LD_RUN_PATH='${ORIGIN}/../lib'
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
   - task: Bash@3
     displayName: Setup test environment

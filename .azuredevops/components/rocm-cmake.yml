@@ -36,14 +36,6 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/checkout.yml
     parameters:
       checkoutRepo: ${{ parameters.checkoutRepo }}
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/local-artifact-download.yml
-    parameters:
-      buildType: specific
-      buildId: 15647
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/local-artifact-download.yml
-    parameters:
-      buildType: specific
-      buildId: 15648
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
 # extra steps for ctest suite
   - script: |
@@ -55,5 +47,5 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
     parameters:
       componentName: rocm-cmake
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/create-manifest.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml

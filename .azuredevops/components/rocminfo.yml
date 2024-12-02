@@ -35,17 +35,17 @@ jobs:
       dependencyList: ${{ parameters.rocmDependencies }}
       skipLlvmSymlink: true
       # CI case: download latest default branch build
-      ${{ if eq(parameters.checkoutRef, 'amd-staging') }}:
+      ${{ if eq(parameters.checkoutRef, '') }}:
         dependencySource: staging
       # manual build case: triggered by ROCm/ROCm repo
-      ${{ elseif ne(parameters.checkoutRef, 'amd-staging') }}:
+      ${{ elseif ne(parameters.checkoutRef, '') }}:
         dependencySource: tag-builds
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
       extraBuildFlags: >-
         -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm
         -DROCRTST_BLD_TYPE=release
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/create-manifest.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
 
 - job: rocminfo_testing
@@ -69,9 +69,9 @@ jobs:
     parameters:
       dependencyList: ${{ parameters.rocmTestDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
-      ${{ if eq(parameters.checkoutRef, 'amd-staging') }}:
+      ${{ if eq(parameters.checkoutRef, '') }}:
         dependencySource: staging
-      ${{ elseif ne(parameters.checkoutRef, 'amd-staging') }}:
+      ${{ elseif ne(parameters.checkoutRef, '') }}:
         dependencySource: tag-builds
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
     parameters:

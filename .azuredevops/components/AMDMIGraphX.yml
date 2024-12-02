@@ -122,6 +122,7 @@ jobs:
         -DHALF_INCLUDE_DIR=$(Agent.BuildDirectory)/rocm/include
         -DBUILD_TESTING=ON
         -GNinja
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)

@@ -409,6 +409,7 @@ jobs:
       SourceFolder: $(Build.ArtifactStagingDirectory)
       Contents: '/**/*'
       RemoveDotFiles: true
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
 
 - job: aomp_testing

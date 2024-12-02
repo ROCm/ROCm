@@ -31,6 +31,7 @@ jobs:
     parameters:
       extraBuildFlags: >-
         -DBUILD_TESTS=ON
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
 
 - job: amdsmi_testing
