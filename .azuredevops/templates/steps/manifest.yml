@@ -1,6 +1,6 @@
 steps:
 - task: Bash@3
-  displayName: Set up release_repo values
+  displayName: Set up current_repo values
   continueOnError: true
   inputs:
     targetType: inline
@@ -12,11 +12,18 @@ steps:
       EOF
       cat resources.repositories
 
-      echo "##vso[task.setvariable variable=release_repo.id;]$(cat resources.repositories | jq .release_repo.id | tr -d '"')"
-      echo "##vso[task.setvariable variable=release_repo.name;]$(cat resources.repositories | jq .release_repo.name | tr -d '"')"
-      echo "##vso[task.setvariable variable=release_repo.ref;]$(cat resources.repositories | jq .release_repo.ref | tr -d '"')"
-      echo "##vso[task.setvariable variable=release_repo.url;]$(cat resources.repositories | jq .release_repo.url | tr -d '"')"
-      echo "##vso[task.setvariable variable=release_repo.version;]$(cat resources.repositories | jq .release_repo.version | tr -d '"')"
+      IS_TAG_BUILD=$(jq 'has("release_repo")' resources.repositories)
+      if [ "$IS_TAG_BUILD" = "true" ]; then
+        REPO_TYPE="release_repo" # Triggered by a ROCm/ROCm tag-builds file
+      else
+        REPO_TYPE="self" # Triggered by component repo's rocm-ci.yml file
+      fi
+
+      echo "##vso[task.setvariable variable=current_repo.id;]$(jq .$REPO_TYPE.id resources.repositories | tr -d '"')"
+      echo "##vso[task.setvariable variable=current_repo.name;]$(jq .$REPO_TYPE.name resources.repositories | tr -d '"')"
+      echo "##vso[task.setvariable variable=current_repo.ref;]$(jq .$REPO_TYPE.ref resources.repositories | tr -d '"')"
+      echo "##vso[task.setvariable variable=current_repo.url;]$(jq .$REPO_TYPE.url resources.repositories | tr -d '"')"
+      echo "##vso[task.setvariable variable=current_repo.version;]$(jq .$REPO_TYPE.version resources.repositories | tr -d '"')"
 - task: Bash@3
   displayName: Create manifest.json
   continueOnError: true
@@ -33,11 +40,11 @@ steps:
       jq -n \
         --arg buildNumber "$(Build.BuildNumber)" \
         --arg buildId "$(Build.BuildId)" \
-        --arg repoId "$(release_repo.id)" \
-        --arg repoName "$(release_repo.name)" \
-        --arg repoRef "$(release_repo.ref)" \
-        --arg repoUrl "$(release_repo.url)" \
-        --arg repoVersion "$(release_repo.version)" \
+        --arg repoId "$(current_repo.id)" \
+        --arg repoName "$(current_repo.name)" \
+        --arg repoRef "$(current_repo.ref)" \
+        --arg repoUrl "$(current_repo.url)" \
+        --arg repoVersion "$(current_repo.version)" \
         --argjson dependencies "$dependencies_json" \
         '{
           current: {
@@ -86,9 +93,9 @@ steps:
       <tr>
         <td>$(Build.BuildNumber)</td>
         <td><a href="https://dev.azure.com/ROCm-CI/ROCm-CI/_build/results?buildId=$(Build.BuildId)">$(Build.BuildId)</a></td>
-        <td><a href="$(release_repo.url)">$(release_repo.name)</a></td>
-        <td><a href="$(release_repo.url)/tree/$(release_repo.ref)">$(release_repo.ref)</a></td>
-        <td><a href="$(release_repo.url)/commit/$(release_repo.version)">$(release_repo.version)</a></td>
+        <td><a href="$(current_repo.url)">$(current_repo.name)</a></td>
+        <td><a href="$(current_repo.url)/tree/$(current_repo.ref)">$(current_repo.ref)</a></td>
+        <td><a href="$(current_repo.url)/commit/$(current_repo.version)">$(current_repo.version)</a></td>
       </tr>
       </table>
       <h2>Dependencies</h2>
