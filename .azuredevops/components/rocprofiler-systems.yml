@@ -105,6 +105,7 @@ jobs:
 # build flags reference: https://rocm.docs.amd.com/projects/omnitrace/en/latest/install/install.html
       extraBuildFlags: >-
         -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm
+        -DROCM_PATH=$(Agent.BuildDirectory)/rocm
         -DROCPROFSYS_BUILD_TESTING=ON
         -DROCPROFSYS_BUILD_DYNINST=ON
         -DROCPROFSYS_BUILD_LIBUNWIND=ON

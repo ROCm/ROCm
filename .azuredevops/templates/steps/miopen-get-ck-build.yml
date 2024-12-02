@@ -1,0 +1,72 @@
+parameters:
+- name: gpuTarget
+  type: string
+  default: ''
+
+steps:
+- task: Bash@3
+  name: downloadCKBuild
+  displayName: Download specific CK build
+  continueOnError: true
+  env:
+    CXX: $(Agent.BuildDirectory)/rocm/llvm/bin/amdclang++
+    CC: $(Agent.BuildDirectory)/rocm/llvm/bin/amdclang
+  inputs:
+    targetType: inline
+    workingDirectory: $(Build.SourcesDirectory)
+    script: |
+      AZ_API="https://dev.azure.com/ROCm-CI/ROCm-CI/_apis"
+      GH_API="https://api.github.com/repos/ROCm"
+      ARTIFACT_NAME="composablekernel.${{ parameters.gpuTarget }}"
+      EXIT_CODE=0
+
+      # The commits that MIOpen reference are all merge commits from CK/develop to CK/amd-develop
+      # These commits are present on CK/amd-develop but not on CK/develop
+      # Ex-CI only builds CK/develop, so we need to find a commit present on both CK/develop and CK/amd-develop
+
+      CK_COMMIT=$(grep 'ROCm/composable_kernel' requirements.txt | sed -E 's/.*@([a-f0-9]{40}).*/\1/')
+      echo "Fetching CK build ID for commit $CK_COMMIT"
+      CK_COMMIT_URL="$GH_API/composable_kernel/commits/${CK_COMMIT}"
+      PARENT_COMMIT=$(curl -s $CK_COMMIT_URL | jq '.parents[1].sha' | tr -d '"')
+      echo "Found parent commit: $PARENT_COMMIT"
+      PARENT_CHECKS_URL="$GH_API/composable_kernel/commits/${PARENT_COMMIT}/check-runs"
+      CK_BUILD_ID=$(curl -s $PARENT_CHECKS_URL | \
+        jq '.check_runs[] | select(.name == "composable_kernel" and .app.slug == "azure-pipelines") | .details_url' | \
+        tr -d '"' | grep -oP 'buildId=\K\d+')
+
+      if [ -z "$CK_BUILD_ID" ]; then
+        echo "Did not find specific CK build ID"
+        LATEST_BUILD_URL="$AZ_API/build/builds?definitions=$(COMPOSABLE_KERNEL_PIPELINE_ID)&status=completed&result=succeeded&\$top=1&api-version=7.1"
+        CK_BUILD_ID=$(curl -s $LATEST_BUILD_URL | jq '.value[0].id')
+        echo "Found latest CK build ID: $CK_BUILD_ID"
+        EXIT_CODE=1
+      fi
+
+      AZURE_URL="$AZ_API/build/builds/$CK_BUILD_ID/artifacts?artifactName=$ARTIFACT_NAME&api-version=7.1"
+      ARTIFACT_URL=$(curl -s $AZURE_URL | jq '.resource.downloadUrl' | tr -d '"')
+
+      if [ -z "$ARTIFACT_URL" ]; then
+        echo "Did not find specific CK build artifact"
+        LATEST_BUILD_URL="$AZ_API/build/builds?definitions=$(COMPOSABLE_KERNEL_PIPELINE_ID)&status=completed&result=succeeded&\$top=1&api-version=7.1"
+        CK_BUILD_ID=$(curl -s $LATEST_BUILD_URL | jq '.value[0].id')
+        echo "Found latest CK build ID: $CK_BUILD_ID"
+        AZURE_URL="$AZ_API/build/builds/$CK_BUILD_ID/artifacts?artifactName=$ARTIFACT_NAME&api-version=7.1"
+        ARTIFACT_URL=$(curl -s $AZURE_URL | jq '.resource.downloadUrl' | tr -d '"')
+        EXIT_CODE=2
+      elif [ $EXIT_CODE -eq 0 ]; then
+        echo "Found specific CK build ID: $CK_BUILD_ID"
+      fi
+
+      echo "Downloading CK artifact from $ARTIFACT_URL"
+      wget -nv $ARTIFACT_URL -O $(System.ArtifactsDirectory)/ck.zip
+      unzip $(System.ArtifactsDirectory)/ck.zip -d $(System.ArtifactsDirectory)
+      mkdir -p $(Agent.BuildDirectory)/rocm
+      tar -zxvf $(System.ArtifactsDirectory)/$ARTIFACT_NAME/*.tar.gz -C $(Agent.BuildDirectory)/rocm
+      rm -r $(System.ArtifactsDirectory)/ck.zip $(System.ArtifactsDirectory)/$ARTIFACT_NAME
+
+      if [ $EXIT_CODE -ne 0 ]; then
+        BUILD_COMMIT=$(curl -s $AZ_API/build/builds/$CK_BUILD_ID | jq '.sourceVersion' | tr -d '"')
+        echo "WARNING: couldn't find a CK build for commit $CK_COMMIT"
+        echo "Instead used latest CK build $CK_BUILD_ID for commit $BUILD_COMMIT"
+      fi
+      exit $EXIT_CODE

@@ -109,11 +109,12 @@ jobs:
 # for the compilation and installation to go through.
   - script: |
       sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
-      mkdir -p $(Build.BinariesDirectory)/bin
-      ln -s $(Agent.BuildDirectory)/rocm/llvm/bin/clang $(Build.BinariesDirectory)/bin/clang
-      ln -s $(Agent.BuildDirectory)/rocm/llvm/bin/clang++ $(Build.BinariesDirectory)/bin/clang++
-      ln -s $(Agent.BuildDirectory)/rocm/llvm/bin/llvm-config $(Build.BinariesDirectory)/bin/llvm-config
+      mkdir -p $(Build.BinariesDirectory)/lib/llvm/bin
+      ln -s $(Agent.BuildDirectory)/rocm/llvm/bin/clang $(Build.BinariesDirectory)/lib/llvm/bin/clang
+      ln -s $(Agent.BuildDirectory)/rocm/llvm/bin/clang++ $(Build.BinariesDirectory)/lib/llvm/bin/clang++
+      ln -s $(Agent.BuildDirectory)/rocm/llvm/bin/llvm-config $(Build.BinariesDirectory)/lib/llvm/bin/llvm-config
       ln -s $(Agent.BuildDirectory)/rocm/llvm $(Build.BinariesDirectory)/llvm
+      ls -1R $(Build.BinariesDirectory)
     displayName: Extra build environment setup
 # We follow the sequence described in the aomp repo instructions
 # https://github.com/ROCm/aomp/blob/aomp-dev/docs/SOURCEINSTALL.md
@@ -126,7 +127,7 @@ jobs:
 # method leads to a giant build log compared to separate logs per script call.
 #
 # Components compiled and the order for non-standalone build found at
-# https://github.com/ROCm/aomp/blob/aomp-dev/bin/build_aomp.sh#L135-L143
+# https://github.com/ROCm/aomp/blob/aomp-dev/bin/build_aomp.sh#L135-L142
   - task: Bash@3
     displayName: Build Prereq
     inputs:
@@ -176,7 +177,6 @@ jobs:
       AOMP_USE_NINJA: 1
       ALTAOMP: $(Agent.BuildDirectory)/rocm/llvm
       INSTALL_PREFIX: $(Build.BinariesDirectory)
-      CMAKE_INSTALL_PREFIX: $(Build.BinariesDirectory)
       LLVM_PROJECT_ROOT: $(Build.SourcesDirectory)/llvm-project
       AOMP: $(Build.BinariesDirectory)
       AOMP_INSTALL_DIR: $(Build.BinariesDirectory)
@@ -196,7 +196,6 @@ jobs:
       AOMP_USE_NINJA: 1
       ALTAOMP: $(Agent.BuildDirectory)/rocm/llvm
       INSTALL_PREFIX: $(Build.BinariesDirectory)
-      CMAKE_INSTALL_PREFIX: $(Build.BinariesDirectory)
       LLVM_PROJECT_ROOT: $(Build.SourcesDirectory)/llvm-project
       AOMP: $(Build.BinariesDirectory)
       AOMP_INSTALL_DIR: $(Build.BinariesDirectory)
@@ -237,11 +236,42 @@ jobs:
       AOMP_USE_NINJA: 1
       ALTAOMP: $(Agent.BuildDirectory)/rocm/llvm
       INSTALL_PREFIX: $(Build.BinariesDirectory)
-      CMAKE_INSTALL_PREFIX: $(Build.BinariesDirectory)
       LLVM_PROJECT_ROOT: $(Build.SourcesDirectory)/llvm-project
       AOMP: $(Build.BinariesDirectory)
       AOMP_INSTALL_DIR: $(Build.BinariesDirectory)
       INSTALL_OPENMP: $(Build.BinariesDirectory)
+  - task: Bash@3
+    displayName: Build llvm-legacy
+    inputs:
+      filePath: $(Build.SourcesDirectory)/aomp/bin/build_llvm-legacy.sh
+    env:
+      AOMP_REPOS: $(Build.SourcesDirectory)
+      AOMP_PROJECT_REPO_NAME: llvm-project
+      AOMP_STANDALONE_BUILD: 0
+      AOMP_BUILD_SANITIZER: 0
+      AOMP_BUILD_DEBUG: 0
+      AOMP_USE_NINJA: 1
+      INSTALL_PREFIX: $(Build.BinariesDirectory)
+      LLVM_PROJECT_ROOT: $(Build.SourcesDirectory)/llvm-project
+      AOMP: $(Build.BinariesDirectory)
+      AOMP_INSTALL_DIR: $(Build.BinariesDirectory)
+  - task: Bash@3
+    displayName: Install llvm-legacy
+    inputs:
+      filePath: $(Build.SourcesDirectory)/aomp/bin/build_llvm-legacy.sh
+      arguments: install
+    env:
+      AOMP_REPOS: $(Build.SourcesDirectory)
+      AOMP_PROJECT_REPO_NAME: llvm-project
+      AOMP_STANDALONE_BUILD: 0
+      AOMP_BUILD_SANITIZER: 0
+      AOMP_BUILD_DEBUG: 0
+      AOMP_USE_NINJA: 1
+      INSTALL_PREFIX: $(Build.BinariesDirectory)
+      CMAKE_INSTALL_PREFIX: $(Build.BinariesDirectory)
+      LLVM_PROJECT_ROOT: $(Build.SourcesDirectory)/llvm-project
+      AOMP: $(Build.BinariesDirectory)
+      AOMP_INSTALL_DIR: $(Build.BinariesDirectory)
   - task: Bash@3
     displayName: Build flang-legacy
     inputs:
@@ -254,7 +284,6 @@ jobs:
       AOMP_BUILD_DEBUG: 0
       AOMP_USE_NINJA: 1
       INSTALL_PREFIX: $(Build.BinariesDirectory)
-      CMAKE_INSTALL_PREFIX: $(Build.BinariesDirectory)
       LLVM_PROJECT_ROOT: $(Build.SourcesDirectory)/llvm-project
       AOMP: $(Build.BinariesDirectory)
       AOMP_INSTALL_DIR: $(Build.BinariesDirectory)
@@ -271,7 +300,6 @@ jobs:
       AOMP_BUILD_DEBUG: 0
       AOMP_USE_NINJA: 1
       INSTALL_PREFIX: $(Build.BinariesDirectory)
-      CMAKE_INSTALL_PREFIX: $(Build.BinariesDirectory)
       LLVM_PROJECT_ROOT: $(Build.SourcesDirectory)/llvm-project
       AOMP: $(Build.BinariesDirectory)
       AOMP_INSTALL_DIR: $(Build.BinariesDirectory)
@@ -287,11 +315,9 @@ jobs:
       AOMP_BUILD_DEBUG: 0
       AOMP_USE_NINJA: 1
       INSTALL_PREFIX: $(Build.BinariesDirectory)
-      CMAKE_INSTALL_PREFIX: $(Build.BinariesDirectory)
       LLVM_PROJECT_ROOT: $(Build.SourcesDirectory)/llvm-project
       AOMP: $(Build.BinariesDirectory)
       AOMP_INSTALL_DIR: $(Build.BinariesDirectory)
-      INSTALL_FLANG: $(Build.BinariesDirectory)
   - task: Bash@3
     displayName: Install pgmath
     inputs:
@@ -305,11 +331,9 @@ jobs:
       AOMP_BUILD_DEBUG: 0
       AOMP_USE_NINJA: 1
       INSTALL_PREFIX: $(Build.BinariesDirectory)
-      CMAKE_INSTALL_PREFIX: $(Build.BinariesDirectory)
       LLVM_PROJECT_ROOT: $(Build.SourcesDirectory)/llvm-project
       AOMP: $(Build.BinariesDirectory)
       AOMP_INSTALL_DIR: $(Build.BinariesDirectory)
-      INSTALL_FLANG: $(Build.BinariesDirectory)
   - task: Bash@3
     displayName: Build flang
     inputs:
@@ -322,11 +346,9 @@ jobs:
       AOMP_BUILD_DEBUG: 0
       AOMP_USE_NINJA: 1
       INSTALL_PREFIX: $(Build.BinariesDirectory)
-      CMAKE_INSTALL_PREFIX: $(Build.BinariesDirectory)
       LLVM_PROJECT_ROOT: $(Build.SourcesDirectory)/llvm-project
       AOMP: $(Build.BinariesDirectory)
       AOMP_INSTALL_DIR: $(Build.BinariesDirectory)
-      INSTALL_FLANG: $(Build.BinariesDirectory)
   - task: Bash@3
     displayName: Install flang
     inputs:
@@ -340,11 +362,9 @@ jobs:
       AOMP_BUILD_DEBUG: 0
       AOMP_USE_NINJA: 1
       INSTALL_PREFIX: $(Build.BinariesDirectory)
-      CMAKE_INSTALL_PREFIX: $(Build.BinariesDirectory)
       LLVM_PROJECT_ROOT: $(Build.SourcesDirectory)/llvm-project
       AOMP: $(Build.BinariesDirectory)
       AOMP_INSTALL_DIR: $(Build.BinariesDirectory)
-      INSTALL_FLANG: $(Build.BinariesDirectory)
   - task: Bash@3
     displayName: Build flang_runtime
     inputs:
@@ -357,11 +377,9 @@ jobs:
       AOMP_BUILD_DEBUG: 0
       AOMP_USE_NINJA: 1
       INSTALL_PREFIX: $(Build.BinariesDirectory)
-      CMAKE_INSTALL_PREFIX: $(Build.BinariesDirectory)
       LLVM_PROJECT_ROOT: $(Build.SourcesDirectory)/llvm-project
       AOMP: $(Build.BinariesDirectory)
       AOMP_INSTALL_DIR: $(Build.BinariesDirectory)
-      INSTALL_FLANG: $(Build.BinariesDirectory)
   - task: Bash@3
     displayName: Install flang_runtime
     inputs:
@@ -375,24 +393,36 @@ jobs:
       AOMP_BUILD_DEBUG: 0
       AOMP_USE_NINJA: 1
       INSTALL_PREFIX: $(Build.BinariesDirectory)
-      CMAKE_INSTALL_PREFIX: $(Build.BinariesDirectory)
       LLVM_PROJECT_ROOT: $(Build.SourcesDirectory)/llvm-project
       AOMP: $(Build.BinariesDirectory)
       AOMP_INSTALL_DIR: $(Build.BinariesDirectory)
-      INSTALL_FLANG: $(Build.BinariesDirectory)
 # Clean up build environment before publish artifact
   - script: |
-      rm $(Build.BinariesDirectory)/bin/clang
-      rm $(Build.BinariesDirectory)/bin/clang++
-      rm $(Build.BinariesDirectory)/bin/llvm-config
+      rm $(Build.BinariesDirectory)/lib/llvm/bin/clang
+      rm $(Build.BinariesDirectory)/lib/llvm/bin/clang++
+      rm $(Build.BinariesDirectory)/lib/llvm/bin/llvm-config
+      rm $(Build.BinariesDirectory)/lib/llvm/bin/flang
       rm $(Build.BinariesDirectory)/llvm
     displayName: Remove temporary symbolic links
+# aomp scripts changed where files get installed in scripts, copy to expected location
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-prepare-package.yml
+    parameters:
+      sourceDir: $(Build.BinariesDirectory)/lib/llvm
+      targetDir: $(Build.ArtifactStagingDirectory)
+# Remove temporary directory used to deal with expected paths of scripts
+  - script: |
+      rm -rf $(Build.BinariesDirectory)/lib/llvm
+    displayName: Remove temporary directories
 # Copy the files to artifact staging temporarily to clean up binaries directory
 # and then copy files back to llvm subdirectory in the cleaned up binaries directory
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-prepare-package.yml
     parameters:
       sourceDir: $(Build.BinariesDirectory)
       targetDir: $(Build.ArtifactStagingDirectory)
+      clean: false
+  - script: |
+      ln -s $(Build.ArtifactStagingDirectory)/bin/flang-legacy $(Build.ArtifactStagingDirectory)/bin/flang
+    displayName: Recreate flang symlink
   - task: DeleteFiles@1
     displayName: 'Cleanup Binaries Directory'
     inputs:

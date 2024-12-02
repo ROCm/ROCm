@@ -9,19 +9,15 @@ parameters:
   type: object
   default:
     - cmake
-    - libbz2-dev
+    - jq
     - libdrm-dev
-    - libeigen3-dev
-    - libgmock-dev
-    - libgtest-dev
     - libsqlite3-dev
     - libstdc++-12-dev
-    - libzstd-dev
     - ninja-build
-    - nlohmann-json3-dev
     - python3-pip
+    - python3-venv
     - software-properties-common
-    - zstd
+    - zip
 - name: pipModules
   type: object
   default:
@@ -29,14 +25,12 @@ parameters:
 - name: rocmDependencies
   type: object
   default:
-    - rocMLIR
+    - half
     - rocRAND
     - rocBLAS
     - hipBLAS
     - hipBLASLt
     - hipBLAS-common
-    - half
-    - composable_kernel
     - rocm-cmake
     - llvm-project
     - ROCR-Runtime
@@ -48,7 +42,6 @@ parameters:
   type: object
   default:
     - clr
-    - composable_kernel
     - half
     - hipBLAS
     - hipBLAS-common
@@ -57,7 +50,6 @@ parameters:
     - rocBLAS
     - rocm-cmake
     - rocminfo
-    - rocMLIR
     - ROCR-Runtime
     - rocprofiler-register
     - rocRAND
@@ -84,8 +76,9 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/checkout.yml
     parameters:
       checkoutRepo: ${{ parameters.checkoutRepo }}
-  # The default boost library from apt is 1.74, which does not satisfy MIOpen's build requirement (1.79+)
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-boost.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/miopen-get-ck-build.yml
+    parameters:
+      gpuTarget: $(JOB_GPU_TARGET)
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
     parameters:
       dependencyList: ${{ parameters.rocmDependencies }}
@@ -96,12 +89,23 @@ jobs:
       # manual build case: triggered by ROCm/ROCm repo
       ${{ elseif ne(parameters.checkoutRef, '') }}:
         dependencySource: tag-builds
+  - task: Bash@3
+    displayName: Build and install other dependencies
+    inputs:
+      targetType: inline
+      workingDirectory: $(Build.SourcesDirectory)
+      script: |
+        sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
+        sed -i '/composable_kernel/d' requirements.txt
+        mkdir -p $(Agent.BuildDirectory)/miopen-deps
+        cmake -P install_deps.cmake --prefix $(Agent.BuildDirectory)/miopen-deps
+        sudo rm -rf /opt/rocm
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
       extraBuildFlags: >-
         -DMIOPEN_BACKEND=HIP
         -DCMAKE_CXX_COMPILER=$(Agent.BuildDirectory)/rocm/llvm/bin/amdclang++
-        -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm;$(Agent.BuildDirectory)/boost
+        -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm;$(Agent.BuildDirectory)/miopen-deps
         -DAMDGPU_TARGETS=$(JOB_GPU_TARGET)
         -DMIOPEN_ENABLE_AI_KERNEL_TUNING=OFF
         -DMIOPEN_ENABLE_AI_IMMED_MODE_FALLBACK=OFF
@@ -114,6 +118,7 @@ jobs:
       gpuTarget: $(JOB_GPU_TARGET)
 
 - job: MIOpen_testing
+  timeoutInMinutes: 90
   dependsOn: MIOpen
   condition: and(succeeded(), eq(variables.ENABLE_GFX942_TESTS, 'true'), not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])))
   variables:
@@ -136,14 +141,15 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/checkout.yml
     parameters:
       checkoutRepo: ${{ parameters.checkoutRepo }}
-  # The default boost library from apt is 1.74, which does not satisfy MIOpen's build requirement (1.79+)
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-boost.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-aqlprofile.yml
     parameters:
       ${{ if eq(parameters.checkoutRef, '') }}:
         dependencySource: staging
       ${{ elseif ne(parameters.checkoutRef, '') }}:
         dependencySource: tag-builds
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/miopen-get-ck-build.yml
+    parameters:
+      gpuTarget: $(JOB_GPU_TARGET)
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
     parameters:
       dependencyList: ${{ parameters.rocmTestDependencies }}
@@ -152,44 +158,22 @@ jobs:
         dependencySource: staging
       ${{ elseif ne(parameters.checkoutRef, '') }}:
         dependencySource: tag-builds
-# MIOpen depends on a specific version of frugally-deep which is forked here: https://github.com/ROCm/frugally-deep
-# https://github.com/ROCm/frugally-deep/blob/master/INSTALL.md
   - task: Bash@3
-    displayName: Add Python site-packages binaries to path
+    displayName: Build and install other dependencies
     inputs:
       targetType: inline
-      script: |
-        USER_BASE=$(python3 -m site --user-base)
-        echo "##vso[task.prependpath]$USER_BASE/bin"
-  - task: Bash@3
-    displayName: Install FunctionalPlus
-    inputs:
-      targetType: inline
-      script: cget install Dobiasd/FunctionalPlus
-  - task: Bash@3
-    displayName: Remove Python site-packages binaries from path
-    inputs:
-      targetType: inline
-      script: |
-        USER_BASE=$(python3 -m site --user-base)
-        echo "##vso[task.setvariable variable=PATH]$(echo $PATH | sed -e 's;:$USER_BASE/bin;;' -e 's;^/;;' -e 's;/$;;')"
-  - task: Bash@3
-    displayName: git clone frugally-deep
-    inputs:
-      targetType: inline
-      script: git clone https://github.com/ROCm/frugally-deep --depth=1 --shallow-submodules
       workingDirectory: $(Build.SourcesDirectory)
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
-    parameters:
-      componentName: frugally-deep
-      cmakeBuildDir: $(Build.SourcesDirectory)/frugally-deep/build
-      installDir: $(Build.SourcesDirectory)/bin
-      extraBuildFlags: -DCMAKE_PREFIX_PATH=$(Build.SourcesDirectory)/cget/cget/pkg/Dobiasd__FunctionalPlus/install
+      script: |
+        sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
+        sed -i '/composable_kernel/d' requirements.txt
+        mkdir -p $(Agent.BuildDirectory)/miopen-deps
+        cmake -P install_deps.cmake --prefix $(Agent.BuildDirectory)/miopen-deps
+        sudo rm -rf /opt/rocm
   - task: CMake@1
     displayName: 'MIOpen Test CMake Flags'
     inputs:
       cmakeArgs: >-
-        -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm;$(Build.SourcesDirectory)/bin;$(Build.SourcesDirectory)/cget/cget/pkg/Dobiasd__FunctionalPlus/install;$(Agent.BuildDirectory)/boost
+        -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm;$(Build.SourcesDirectory)/bin;$(Agent.BuildDirectory)/miopen-deps
         -DCMAKE_INSTALL_PREFIX=$(Agent.BuildDirectory)/rocm
         -DCMAKE_CXX_COMPILER=$(Agent.BuildDirectory)/rocm/llvm/bin/amdclang++
         -DCMAKE_C_COMPILER=$(Agent.BuildDirectory)/rocm/llvm/bin/amdclang
