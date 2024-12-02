@@ -99,10 +99,10 @@ jobs:
     parameters:
       dependencyList: ${{ parameters.rocmDependencies }}
       # CI case: download latest default branch build
-      ${{ if eq(parameters.checkoutRef, '') }}:
+      ${{ if eq(parameters.checkoutRef, 'aomp-dev') }}:
         dependencySource: staging
       # manual build case: triggered by ROCm/ROCm repo
-      ${{ elseif ne(parameters.checkoutRef, '') }}:
+      ${{ elseif ne(parameters.checkoutRef, 'aomp-dev') }}:
         dependencySource: tag-builds
 # Because clang is not being rebuilt and to separate downloaded ROCm
 # dependencies from the new artifacts, we use temporary symbolic links
@@ -241,9 +241,9 @@ jobs:
       AOMP_INSTALL_DIR: $(Build.BinariesDirectory)
       INSTALL_OPENMP: $(Build.BinariesDirectory)
   - task: Bash@3
-    displayName: Build llvm-legacy
+    displayName: Build llvm-classic
     inputs:
-      filePath: $(Build.SourcesDirectory)/aomp/bin/build_llvm-legacy.sh
+      filePath: $(Build.SourcesDirectory)/aomp/bin/build_llvm-classic.sh
     env:
       AOMP_REPOS: $(Build.SourcesDirectory)
       AOMP_PROJECT_REPO_NAME: llvm-project
@@ -256,9 +256,9 @@ jobs:
       AOMP: $(Build.BinariesDirectory)
       AOMP_INSTALL_DIR: $(Build.BinariesDirectory)
   - task: Bash@3
-    displayName: Install llvm-legacy
+    displayName: Install llvm-classic
     inputs:
-      filePath: $(Build.SourcesDirectory)/aomp/bin/build_llvm-legacy.sh
+      filePath: $(Build.SourcesDirectory)/aomp/bin/build_llvm-classic.sh
       arguments: install
     env:
       AOMP_REPOS: $(Build.SourcesDirectory)
@@ -273,9 +273,9 @@ jobs:
       AOMP: $(Build.BinariesDirectory)
       AOMP_INSTALL_DIR: $(Build.BinariesDirectory)
   - task: Bash@3
-    displayName: Build flang-legacy
+    displayName: Build flang-classic
     inputs:
-      filePath: $(Build.SourcesDirectory)/aomp/bin/build_flang-legacy.sh
+      filePath: $(Build.SourcesDirectory)/aomp/bin/build_flang-classic.sh
     env:
       AOMP_REPOS: $(Build.SourcesDirectory)
       AOMP_PROJECT_REPO_NAME: llvm-project
@@ -288,9 +288,9 @@ jobs:
       AOMP: $(Build.BinariesDirectory)
       AOMP_INSTALL_DIR: $(Build.BinariesDirectory)
   - task: Bash@3
-    displayName: Install flang-legacy
+    displayName: Install flang-classic
     inputs:
-      filePath: $(Build.SourcesDirectory)/aomp/bin/build_flang-legacy.sh
+      filePath: $(Build.SourcesDirectory)/aomp/bin/build_flang-classic.sh
       arguments: install
     env:
       AOMP_REPOS: $(Build.SourcesDirectory)
@@ -421,7 +421,7 @@ jobs:
       targetDir: $(Build.ArtifactStagingDirectory)
       clean: false
   - script: |
-      ln -s $(Build.ArtifactStagingDirectory)/bin/flang-legacy $(Build.ArtifactStagingDirectory)/bin/flang
+      ln -s $(Build.ArtifactStagingDirectory)/bin/flang-classic $(Build.ArtifactStagingDirectory)/bin/flang
     displayName: Recreate flang symlink
   - task: DeleteFiles@1
     displayName: 'Cleanup Binaries Directory'
@@ -465,9 +465,9 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
     parameters:
       dependencyList: ${{ parameters.rocmDependencies }}
-      ${{ if eq(parameters.checkoutRef, '') }}:
+      ${{ if eq(parameters.checkoutRef, 'aomp-dev') }}:
         dependencySource: staging
-      ${{ elseif ne(parameters.checkoutRef, '') }}:
+      ${{ elseif ne(parameters.checkoutRef, 'aomp-dev') }}:
         dependencySource: tag-builds
   - task: Bash@3
     displayName: ROCm symbolic link
