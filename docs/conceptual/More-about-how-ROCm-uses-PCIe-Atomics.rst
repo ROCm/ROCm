@@ -12,7 +12,7 @@ ROCm uses platform atomics to perform memory operations like queuing, signaling,
 
 Platform atomics in ROCm
 ==============================
-Platform atomics enable the set of atomic operations that perform RMW actions across multiple processors, devices, and memory locations so that they execute synchronously without interruption. An atomic operation is a sequence of computing instructions run as a single, indivisible unit. These instructions are completed in their entirety without any interruptions. If the instructions can't be completed as a unit without interruption, none of the instructions are run. These operations support 32-bit and 64-bit address formats.
+Platform atomics enable the set of atomic operations that perform RMW actions across multiple processors, devices, and memory locations so that they run synchronously without interruption. An atomic operation is a sequence of computing instructions run as a single, indivisible unit. These instructions are completed in their entirety without any interruptions. If the instructions can't be completed as a unit without interruption, none of the instructions are run. These operations support 32-bit and 64-bit address formats.
 
 ROCm uses platform atomics to:
 
