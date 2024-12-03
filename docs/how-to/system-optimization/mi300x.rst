@@ -479,7 +479,7 @@ Change affinity of ROCm helper threads
 This change prevents internal ROCm threads from having their CPU core affinity mask 
 set to all CPU cores available. With this setting, the threads inherit their parent's 
 CPU core affinity mask. If you have any questions regarding this setting, 
-contact your MI300A platform vendor. To enable this setting, enter the following command:
+contact your MI300X platform vendor. To enable this setting, enter the following command:
 
 .. code-block:: shell
 

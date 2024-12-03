@@ -67,7 +67,7 @@ When profiling indicates that GPUs are a performance bottleneck, delve deeper
 into kernel-level profiling. Tools such as the
 :ref:`ROCr Debug Agent <mi300x-rocr-debug-agent>`,
 :ref:`ROCProfiler <mi300x-rocprof>`, and
-:ref:`Omniperf <mi300x-omniperf>` offer detailed insights
+:ref:`ROCm Compute Profiler <mi300x-rocprofiler-compute>` offer detailed insights
 into GPU kernel execution. These tools can help isolate problematic GPU
 operations and provide data needed for targeted optimizations.
 
@@ -169,9 +169,9 @@ tools available depending on their specific profiling needs.
   :doc:`ROCProfiler <rocprofiler:index>`
   documentation.
 
-* Omniperf builds upon ROCProfiler but provides more guided analysis.
+* ROCm Compute Profiler builds upon ROCProfiler but provides more guided analysis.
   For more information, see
-  :doc:`Omniperf documentation <omniperf:index>`.
+  :doc:`ROCm Compute Profiler documentation <rocprofiler-compute:index>`.
 
 Refer to :doc:`/how-to/llm-fine-tuning-optimization/profiling-and-debugging`
 to explore commonly used profiling tools and their usage patterns.
@@ -242,9 +242,9 @@ working with AMD Instinct accelerators have multiple tools depending on their sp
 
 * :ref:`ROCProfiler <mi300x-rocprof>`
 
-* :ref:`Omniperf <mi300x-omniperf>`
+* :ref:`ROCm Compute Profiler <mi300x-rocprof-compute>`
 
-* :ref:`Omnitrace <mi300x-omnitrace>`
+* :ref:`ROCm Systems Profiler <mi300x-rocprof-systems>`
 
 .. _mi300x-rocprof:
 
@@ -269,61 +269,61 @@ ability to collect timeline traces of the accelerator software stack as well as 
    gives the user full access and control of raw performance profiling data, but requires extra effort to analyze the
    collected data.
 
-.. _mi300x-omniperf:
+.. _mi300x-rocprof-compute:
 
-Omniperf
-^^^^^^^^
+ROCm Compute Profiler
+^^^^^^^^^^^^^^^^^^^^^
 
-:doc:`Omniperf <omniperf:index>` is a system performance profiler for high-performance computing (HPC) and
-machine learning (ML) workloads using Instinct accelerators. Under the hood, Omniperf uses
-:ref:`ROCProfiler <mi300x-rocprof>` to collect hardware performance counters. The Omniperf tool performs
+:doc:`ROCm Compute Profiler <rocprofiler-compute:index>` is a system performance profiler for high-performance computing (HPC) and
+machine learning (ML) workloads using Instinct accelerators. Under the hood, ROCm Compute Profiler uses
+:ref:`ROCProfiler <mi300x-rocprof>` to collect hardware performance counters. The ROCm Compute Profiler tool performs
 system profiling based on all approved hardware counters for Instinct
 accelerator architectures. It provides high level performance analysis features including System Speed-of-Light, IP
 block Speed-of-Light, Memory Chart Analysis, Roofline Analysis, Baseline Comparisons, and more.
 
-Omniperf takes the guesswork out of profiling by removing the need to provide text input files with lists of counters
-to collect and analyze raw CSV output files as is the case with ROC-profiler. Instead, Omniperf automates the collection
+ROCm Compute Profiler takes the guesswork out of profiling by removing the need to provide text input files with lists of counters
+to collect and analyze raw CSV output files as is the case with ROC-profiler. Instead, ROCm Compute Profiler automates the collection
 of all available hardware counters in one command and provides a graphical interface to help users understand and
 analyze bottlenecks and stressors for their computational workloads on AMD Instinct accelerators.
 
 .. note::
 
-   Omniperf collects hardware counters in multiple passes, and will therefore re-run the application during each pass
+   ROCm Compute Profiler collects hardware counters in multiple passes, and will therefore re-run the application during each pass
    to collect different sets of metrics.
 
-.. figure:: ../../../data/how-to/tuning-guides/omniperf-analysis.png
+.. figure:: ../../../data/how-to/tuning-guides/rocprof-compute-analysis.png
 
-   Omniperf memory chat analysis panel.
+   ROCm Compute Profiler memory chat analysis panel.
 
-In brief, Omniperf provides details about hardware activity for a particular GPU kernel. It also supports both
+In brief, ROCm Compute Profiler provides details about hardware activity for a particular GPU kernel. It also supports both
 a web-based GUI or command-line analyzer, depending on your preference.
 
-.. _mi300x-omnitrace:
+.. _mi300x-rocprof-systems:
 
-Omnitrace
-^^^^^^^^^
+ROCm Systems Profiler
+^^^^^^^^^^^^^^^^^^^^^
 
-:doc:`Omnitrace <omnitrace:index>` is a comprehensive profiling and tracing tool for parallel applications,
+:doc:`ROCm Systems Profiler <rocprofiler-systems:index>` is a comprehensive profiling and tracing tool for parallel applications,
 including HPC and ML packages, written in C, C++, Fortran, HIP, OpenCL, and Python which execute on the CPU or CPU and
 GPU. It is capable of gathering the performance information of functions through any combination of binary
 instrumentation, call-stack sampling, user-defined regions, and Python interpreter hooks.
 
-Omnitrace supports interactive visualization of comprehensive traces in the web browser in addition to high-level
+ROCm Systems Profiler supports interactive visualization of comprehensive traces in the web browser in addition to high-level
 summary profiles with ``mean/min/max/stddev`` statistics. Beyond runtime
-information, Omnitrace supports the collection of system-level metrics such as CPU frequency, GPU temperature, and GPU
+information, ROCm Systems Profiler supports the collection of system-level metrics such as CPU frequency, GPU temperature, and GPU
 utilization. Process and thread level metrics such as memory usage, page faults, context switches, and numerous other
 hardware counters are also included.
 
 .. tip::
 
    When analyzing the performance of an application, it is best not to assume you know where the performance
-   bottlenecks are and why they are happening. Omnitrace is the ideal tool for characterizing where optimization would
+   bottlenecks are and why they are happening. ROCm Systems Profiler is the ideal tool for characterizing where optimization would
    have the greatest impact on the end-to-end execution of the application and to discover what else is happening on the
    system during a performance bottleneck.
 
-.. figure:: ../../../data/how-to/tuning-guides/omnitrace-timeline.png
+.. figure:: ../../../data/how-to/tuning-guides/rocprof-systems-timeline.png
 
-   Omnitrace timeline trace example.
+   ROCm Systems Profiler timeline trace example.
 
 For details usage and examples of using these tools, refer to the
 `Introduction to profiling tools for AMD hardware <https://rocm.blogs.amd.com/software-tools-optimization/profilers/README.html>`_

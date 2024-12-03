@@ -9,6 +9,13 @@ subtrees:
   - file: what-is-rocm.rst
   - file: about/release-notes.md
     title: Release notes
+  - file: compatibility/compatibility-matrix.rst
+    title: Compatibility matrix
+    entries:
+    - url: https://rocm.docs.amd.com/projects/install-on-linux/en/${branch}/reference/system-requirements.html
+      title: Linux system requirements
+    - url: https://rocm.docs.amd.com/projects/install-on-windows/en/${branch}/reference/system-requirements.html
+      title: Windows system requirements
 
 - caption: Install
   entries:
@@ -16,6 +23,8 @@ subtrees:
     title: ROCm on Linux
   - url: https://rocm.docs.amd.com/projects/install-on-windows/en/${branch}/
     title: HIP SDK on Windows
+  - url: https://rocm.docs.amd.com/projects/radeon/en/latest/index.html
+    title: ROCm on Radeon GPUs
   - file: how-to/deep-learning-rocm.md
     title: Deep learning frameworks
   - file: how-to/build-rocm.rst
@@ -26,18 +35,21 @@ subtrees:
   - file: how-to/programming_guide.rst
     title: Programming guide
   - file: how-to/rocm-for-ai/index.rst
-    title: Using ROCm for AI
+    title: Use ROCm for AI
     subtrees:
     - entries:
       - file: how-to/rocm-for-ai/install.rst
         title: Installation
       - file: how-to/rocm-for-ai/train-a-model.rst
+        title: Train a model
       - file: how-to/rocm-for-ai/hugging-face-models.rst
+        title: Run models from Hugging Face
       - file: how-to/rocm-for-ai/deploy-your-model.rst
+        title: Deploy your model
   - file: how-to/rocm-for-hpc/index.rst
-    title: Using ROCm for HPC
+    title: Use ROCm for HPC
   - file: how-to/llm-fine-tuning-optimization/index.rst
-    title: Fine-tuning LLMs and inference optimization
+    title: Fine-tune LLMs and inference optimization
     subtrees:
     - entries:
       - file: how-to/llm-fine-tuning-optimization/overview.rst
@@ -46,17 +58,18 @@ subtrees:
         subtrees:
         - entries:
           - file: how-to/llm-fine-tuning-optimization/single-gpu-fine-tuning-and-inference.rst
-            title: Using a single accelerator
+            title: Use a single accelerator
           - file: how-to/llm-fine-tuning-optimization/multi-gpu-fine-tuning-and-inference.rst
-            title: Using multiple accelerators
+            title: Use multiple accelerators
       - file: how-to/llm-fine-tuning-optimization/model-quantization.rst
       - file: how-to/llm-fine-tuning-optimization/model-acceleration-libraries.rst
       - file: how-to/llm-fine-tuning-optimization/llm-inference-frameworks.rst
       - file: how-to/llm-fine-tuning-optimization/optimizing-with-composable-kernel.md
-        title: Optimizing with Composable Kernel
+        title: Optimize with Composable Kernel
       - file: how-to/llm-fine-tuning-optimization/optimizing-triton-kernel.rst
-        title: Optimizing Triton kernels
+        title: Optimize Triton kernels
       - file: how-to/llm-fine-tuning-optimization/profiling-and-debugging.rst
+        title: Profile and debug
   - file: how-to/system-optimization/index.rst
     title: System optimization
     subtrees:
@@ -84,39 +97,22 @@ subtrees:
   - url: https://rocm.docs.amd.com/projects/gpu-cluster-networking/en/${branch}/index.html
     title: GPU cluster networking
   - file: how-to/gpu-enabled-mpi.rst
-    title: Using MPI
+    title: Use MPI
   - file: how-to/system-debugging.md
   - file: conceptual/compiler-topics.md
-    title: Using advanced compiler features
+    title: Use advanced compiler features
     subtrees:
     - entries:
       - url: https://rocm.docs.amd.com/projects/llvm-project/en/latest/index.html
         title: ROCm compiler infrastructure
       - url: https://rocm.docs.amd.com/projects/llvm-project/en/latest/conceptual/using-gpu-sanitizer.html
-        title: Using AddressSanitizer
+        title: Use AddressSanitizer
       - url: https://rocm.docs.amd.com/projects/llvm-project/en/latest/conceptual/openmp.html
         title: OpenMP support
   - file: how-to/setting-cus
-    title: Setting the number of CUs  
+    title: Set the number of CUs  
   - url: https://github.com/amd/rocm-examples
     title: ROCm examples
-
-- caption: Compatibility
-  entries:
-  - file: compatibility/compatibility-matrix.rst
-    title: Compatibility matrix
-  - url: https://rocm.docs.amd.com/projects/install-on-linux/en/${branch}/reference/system-requirements.html
-    title: Linux system requirements
-  - url: https://rocm.docs.amd.com/projects/install-on-windows/en/${branch}/reference/system-requirements.html
-    title: Windows system requirements
-  - url: https://rocm.docs.amd.com/projects/install-on-linux/en/${branch}/reference/3rd-party-support-matrix.html
-    title: Third-party support
-  - url: https://rocm.docs.amd.com/projects/install-on-linux/en/latest/reference/user-kernel-space-compat-matrix.html
-    title: User and kernel-space support matrix
-  - url: https://rocm.docs.amd.com/projects/install-on-linux/en/latest/reference/docker-image-support-matrix.html
-    title: Docker image support matrix
-  - url: https://rocm.docs.amd.com/projects/radeon/en/latest/index.html
-    title: Use ROCm on Radeon GPUs
 
 - caption: Conceptual
   entries:

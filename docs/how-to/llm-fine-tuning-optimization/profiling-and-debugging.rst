@@ -22,8 +22,8 @@ as well as other profiling and debugging suggestions.
 
   * :ref:`ROCProfiler <mi300x-rocprof>`
 
-  * :ref:`Omniperf <mi300x-omniperf>`
+  * :ref:`ROCm Compute Profiler <mi300x-rocprof-compute>`
 
-  * :ref:`Omnitrace <mi300x-omnitrace>`
+  * :ref:`ROCm Systems Profiler <mi300x-rocprof-systems>`
 
 * :ref:`ROCr Debug Agent <mi300x-rocr-debug-agent>`

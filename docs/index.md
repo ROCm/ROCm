@@ -24,32 +24,30 @@ ROCm documentation is organized into the following categories:
 :gutter: 3
 :class-container: rocm-doc-grid
 
-:::{grid-item-card} Compatibility
+:::{grid-item-card} Install
 :class-body: rocm-card-banner rocm-hue-2
 
-* [Compatibility matrix](./compatibility/compatibility-matrix.rst)
-* {doc}`Linux system requirements<rocm-install-on-linux:reference/system-requirements>`
-* {doc}`Windows system requirements<rocm-install-on-windows:reference/system-requirements>`
-* {doc}`Third-party support<rocm-install-on-linux:reference/3rd-party-support-matrix>`
-* {doc}`User and kernel-space support matrix<rocm-install-on-linux:reference/user-kernel-space-compat-matrix>`
-* {doc}`Docker image support matrix<rocm-install-on-linux:reference/docker-image-support-matrix>`
-* {doc}`Use ROCm on Radeon GPUs<radeon:index>`
+* {doc}`ROCm on Linux <rocm-install-on-linux:reference/system-requirements>`
+* {doc}`HIP SDK on Windows <rocm-install-on-windows:reference/system-requirements>`
+* [ROCm on Radeon GPUs](https://rocm.docs.amd.com/projects/radeon/en/latest/index.html)
+* {doc}`Deep learning frameworks </how-to/deep-learning-rocm>`
+* {doc}`Build from source </how-to/build-rocm>`
 :::
 
 :::{grid-item-card} How to
 :class-body: rocm-card-banner rocm-hue-12
 
 * [Programming guide](./how-to/hip_programming_guide.rst)
-* [Using ROCm for AI](./how-to/rocm-for-ai/index.rst)
-* [Using ROCm for HPC](./how-to/rocm-for-hpc/index.rst)
-* [Fine-tuning LLMs and inference optimization](./how-to/llm-fine-tuning-optimization/index.rst)
+* [Use ROCm for AI](./how-to/rocm-for-ai/index.rst)
+* [Use ROCm for HPC](./how-to/rocm-for-hpc/index.rst)
+* [Fine-tune LLMs and inference optimization](./how-to/llm-fine-tuning-optimization/index.rst)
 * [System optimization](./how-to/system-optimization/index.rst)
 * [AMD Instinct MI300X performance validation and tuning](./how-to/tuning-guides/mi300x/index.rst)
 * [GPU cluster networking](https://rocm.docs.amd.com/projects/gpu-cluster-networking/en/latest/index.html)
 * [System debugging](./how-to/system-debugging.md)
-* [Using MPI](./how-to/gpu-enabled-mpi.rst)
-* [Using advanced compiler features](./conceptual/compiler-topics.md)
-* [Setting the number of CUs](./how-to/setting-cus)  
+* [Use MPI](./how-to/gpu-enabled-mpi.rst)
+* [Use advanced compiler features](./conceptual/compiler-topics.md)
+* [Set the number of CUs](./how-to/setting-cus)  
 * [ROCm examples](https://github.com/amd/rocm-examples)
 :::
 

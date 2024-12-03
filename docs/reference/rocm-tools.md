@@ -29,12 +29,13 @@
 :::{grid-item-card} Performance
 :class-body: rocm-card-banner rocm-hue-6
 
-* {doc}`Omniperf <omniperf:index>`
-* {doc}`Omnitrace <omnitrace:index>`
 * {doc}`ROCm Bandwidth Test <rocm_bandwidth_test:index>`
+* {doc}`ROCm Compute Profiler <rocprofiler-compute:index>`
+* {doc}`ROCm Systems Profiler <rocprofiler-systems:index>`
 * {doc}`ROCProfiler <rocprofiler:index>`
 * {doc}`ROCprofiler-SDK <rocprofiler-sdk:index>`
 * {doc}`ROCTracer <roctracer:index>`
+* {doc}`TransferBench <transferbench:index>`
 :::
 
 (development-tools)=
@@ -64,7 +65,7 @@
 :::{grid-item-card} Runtimes
 :class-body: rocm-card-banner rocm-hue-12
 
-* {doc}`AMD Common Language Runtime (CLR) <hip:understand/amd_clr>`
+* {doc}`AMD Compute Language Runtime (CLR) <hip:understand/amd_clr>`
 * {doc}`HIP <hip:index>`
 * {doc}`ROCR-Runtime <rocr-runtime:index>`
 :::

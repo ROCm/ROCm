@@ -10,7 +10,7 @@ ROCm is a software stack, composed primarily of open-source software, that
 provides the tools for programming AMD Graphics Processing Units (GPUs), from
 low-level kernels to high-level end-user applications.
 
-.. image:: data/rocm-software-stack-6_2_0.jpg
+.. image:: data/rocm-software-stack-6_3_0.jpg
   :width: 800
   :alt: AMD's ROCm software stack and neighboring technologies.
   :align: center
@@ -42,6 +42,7 @@ Machine Learning & Computer Vision
   ":doc:`ROCm Performance Primitives (RPP) <rpp:index>`", "Comprehensive high-performance computer vision library for AMD processors with HIP/OpenCL/CPU back-ends"
   ":doc:`rocAL <rocal:index>`", "An augmentation library designed to decode and process images and videos"
   ":doc:`rocDecode <rocdecode:index>`", "High-performance SDK for access to video decoding features on AMD GPUs"
+  ":doc:`rocJPEG <rocjpeg:index>`", "Library for decoding JPG images on AMD GPUs"
   ":doc:`rocPyDecode <rocpydecode:index>`", "Provides access to rocDecode APIs in both Python and C/C++ languages"
 
 Communication
@@ -74,7 +75,7 @@ Math
   ":doc:`rocSOLVER <rocsolver:index>`", "An implementation of LAPACK routines on ROCm software, implemented in the HIP programming language and optimized for AMD's latest discrete GPUs"
   ":doc:`rocSPARSE <rocsparse:index>`", "Exposes a common interface that provides BLAS for sparse computation implemented on ROCm runtime and toolchains (in the HIP programming language)"
   ":doc:`rocWMMA <rocwmma:index>`", "C++ library for accelerating mixed-precision matrix multiply-accumulate (MMA) operations"
-  "`Tensile <https://github.com/ROCm/Tensile>`_ ", "Creates benchmark-driven backend libraries for GEMMs, GEMM-like problems, and general N-dimensional tensor contractions"
+  ":doc:`Tensile <tensile:index>`", "Creates benchmark-driven backend libraries for GEMMs, GEMM-like problems, and general N-dimensional tensor contractions"
 
 Primitives
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -108,12 +109,14 @@ Performance
 .. csv-table::
   :header: "Component", "Description"
 
-  ":doc:`Omniperf <omniperf:index>`", "System performance profiling tool for machine learning and HPC workloads"
-  ":doc:`Omnitrace <omnitrace:index>`", "Comprehensive profiling and tracing tool for HIP applications"
   ":doc:`ROCm Bandwidth Test <rocm_bandwidth_test:index>`", "Captures the performance characteristics of buffer copying and kernel read/write operations"
+  ":doc:`ROCm Compute Profiler <rocprofiler-compute:index>`", "Kernel-level profiling for machine learning and high performance computing (HPC) workloads"
+  ":doc:`ROCm Systems Profiler <rocprofiler-systems:index>`", "Comprehensive profiling and tracing of applications running on the CPU or the CPU and GPU"
   ":doc:`ROCProfiler <rocprofiler:index>`", "Profiling tool for HIP applications"
   ":doc:`ROCprofiler-SDK <rocprofiler-sdk:index>`", "Toolkit for developing analysis tools for profiling and tracing GPU compute applications. This toolkit is in beta and subject to change"
   ":doc:`ROCTracer <roctracer:index>`", "Intercepts runtime API calls and traces asynchronous activity"
+  ":doc:`TransferBench <transferbench:index>`", "Benchmark simultaneous transfers between user-specified devices (CPUs or GPUs)."
+
 
 Development
 ^^^^^^^^^^^
@@ -143,6 +146,6 @@ Runtimes
 .. csv-table::
   :header: "Component", "Description"
 
-  ":doc:`AMD Common Language Runtime (CLR) <hip:understand/amd_clr>`", "Contains source code for AMD's common language runtimes: HIP and OpenCL"
-  ":doc:`HIP <hip:index>`", "C++ runtime API and kernel language that lets developers create portable applications for AMD and NVIDIA GPUs from single source code."
+  ":doc:`AMD Compute Language Runtime (CLR) <hip:understand/amd_clr>`", "Contains source code for AMD's compute language runtimes: HIP and OpenCL"
+  ":doc:`HIP <hip:index>`", "AMD's GPU programming language extension and the GPU runtime"
   ":doc:`ROCR-Runtime <rocr-runtime:index>`", "User-mode API interfaces and libraries necessary for host applications to launch compute kernels on available HSA ROCm kernel agents"

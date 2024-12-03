@@ -24,6 +24,7 @@
 * {doc}`rocAL <rocal:index>`
 * {doc}`rocDecode <rocdecode:index>`
 * {doc}`rocPyDecode <rocpydecode:index>`
+* {doc}`rocJPEG <rocjpeg:index>`
 * {doc}`ROCm Performance Primitives (RPP) <rpp:index>`
 :::
 
@@ -62,7 +63,7 @@
 * {doc}`hipSPARSELt <hipsparselt:index>`
 * {doc}`rocALUTION <rocalution:index>`
 * {doc}`rocWMMA <rocwmma:index>`
-* [Tensile](https://github.com/ROCm/Tensile)
+* {doc}`Tensile <tensile:index>`
 :::
 
 ::::

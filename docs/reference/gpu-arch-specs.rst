@@ -35,7 +35,7 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
         *
           - MI300X
           - CDNA3
-          - gfx941 or gfx942
+          - gfx942
           - 192
           - 304 (38 per XCD)
           - 64
@@ -50,7 +50,7 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
         *
           - MI300A
           - CDNA3
-          - gfx940 or gfx942
+          - gfx942
           - 128
           - 228 (38 per XCD)
           - 64
