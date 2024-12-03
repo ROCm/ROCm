@@ -67,8 +67,8 @@ stack.
   This might include updating environment variables, commands, and paths as
   needed to avoid disruptions to your profiling or tracing workflows.
 
-  See [ROCm Compute Profiler](#rocm-compute-profiler-3-0-0) and [ROCm Systems
-  Profiler](#rocm-systems-profiler-0-1-0).
+  See [ROCm Compute Profiler 3.0.0](#rocm-compute-profiler-3-0-0) and [ROCm Systems
+  Profiler 0.1.0](#rocm-systems-profiler-0-1-0).
   ```
 
 ### SHARK AI toolkit for high-speed inferencing and serving introduced
@@ -1598,12 +1598,13 @@ issues related to individual components, review the [Detailed component changes]
 ### Instinct MI300X reports incorrect raw GPU timestamps
 
 On MI300X accelerators, the command processor firmware reports incorrect raw GPU timestamps. This
-issue is under investigation and will be addressed in a future release.
+issue is under investigation and will be addressed in a future release. See [GitHub issue #4079](https://github.com/ROCm/ROCm/issues/4079).
 
 ### Instinct MI300 series: backward weights convolution performance issue
 
 A performance issue affects certain tensor shapes during backward weights convolution when using
 FP16 or FP32 data types on Instinct MI300 series accelerators. This issue will be addressed in a future ROCm release.
+See [GitHub issue #4080](https://github.com/ROCm/ROCm/issues/4080).
 
 To mitigate the issue during model training, set the following environment variables:
 
@@ -1622,7 +1623,7 @@ section in the workload optimization guide to learn more about MIOpen's auto-tun
 
 TransferBench packages included in the ROCm 6.3.0 release are not compiled properly and are not
 functional for most GPU targets, with the exception of gfx906. Full functionality will be available
-in a future ROCm release.
+in a future ROCm release. See [GitHub issue #4081](https://github.com/ROCm/ROCm/issues/4081).
 
 TransferBench is a utility for benchmarking simultaneous transfers between user-specified devices
 (CPUs or GPUs). See the documentation at [TransferBench
@@ -1637,6 +1638,7 @@ Instead, use `apt install rocprofiler-compute`. See [ROCm Compute Profiler 3.0.0
 
 When upgrading from ROCm 6.2 to 6.3, any existing `/opt/rocm-6.2/../omniperf` folders are not
 automatically removed. To clean up these folders, manually uninstall Omniperf using `apt remove omniperf`.
+See [GitHub issue #4082](https://github.com/ROCm/ROCm/issues/4082).
 
 ### ROCm Systems Profiler post-upgrade
 
@@ -1645,6 +1647,7 @@ Instead, use `apt install rocprofiler-systems`. See [ROCm Systems Profiler 0.1.0
 
 When upgrading from ROCm 6.2 to 6.3, any existing `/opt/rocm-6.2/../omnitrace` folders are not
 automatically removed. To clean up these folders, manually uninstall Omnitrace using `apt remove omnitrace`.
+See [GitHub issue #4083](https://github.com/ROCm/ROCm/issues/4083).
 
 ### Stale file due to OpenCL ICD loader deprecation
 
@@ -1652,7 +1655,7 @@ When upgrading from ROCm 6.2.x to ROCm 6.3.0, the [removal of the `rocm-icd-load
 package](#opencl-icd-loader-separated-from-rocm) leaves a stale file in the old `rocm-6.2.x`
 directory. This has no functional impact. As a workaround, manually uninstall the
 `rocm-icd-loader` package to remove the stale file. This issue will be addressed in a future ROCm
-release.
+release. See [GitHub issue #4084](https://github.com/ROCm/ROCm/issues/4084).
 
 ### ROCm Compute Profiler CTest failure in CI
 
@@ -1660,7 +1663,7 @@ When running ROCm Compute Profiler's (`rocprof-compute`) CTest in the Azure CI e
 `rocprof-compute` execution test fails. This issue is due to an outdated test file that was not renamed
 (`omniperf` to `rocprof-compute`), and due to the `ROCM_PATH` environment variable not being set in
 the Azure CI environment, causing the tool to be unable to extract chip information as expected.
-This issue will be addressed in a future ROCm release.
+This issue will be addressed in a future ROCm release. See [GitHub issue #4085](https://github.com/ROCm/ROCm/issues/4085).
 
 ### MIVisionX memory access fault in Canny edge detection
 
@@ -1668,7 +1671,7 @@ Canny edge detection kernels might access out-of-bounds memory locations while
 computing gradient intensities on edge pixels. This issue is isolated to
 Canny-specific use cases on Instinct MI300 series accelerators. This issue is
 resolved in the [MIVisionX `develop` branch](https://github.com/ROCm/mivisionx)
-and will be part of a future ROCm release.
+and will be part of a future ROCm release. See [GitHub issue #4086](https://github.com/ROCm/ROCm/issues/4086).
 
 ### Transformer Engine test_distributed_fused_attn aborts with fatal Python error
 
@@ -1676,18 +1679,20 @@ The `test_distributed_fused_attn` Pytest case for JAX in [Transformer Engine
 for ROCm](https://github.com/ROCm/TransformerEngine) fails with a fatal Python
 error under certain conditions. The root cause is unrelated Transformer Engine
 but due to some issue within XLA. This XLA issue is under investigation and
-will be addressed in a future release.
+will be addressed in a future release. See [GitHub issue #4087](https://github.com/ROCm/ROCm/issues/4087).
 
 ### AMD SMI manual build issue
 
 Manual builds of AMD SMI fail due to a broken link in its build configuration.
 This affects past AMD SMI releases as well. The fix is underway and will be
 applied to all branches at [https://github.com/ROCm/amdsmi](https://github.com/ROCm/amdsmi).
+See [GitHub issue #4088](https://github.com/ROCm/ROCm/issues/4088).
 
 ### ROCm Data Center Tool incorrect RHEL9 package version
 
 In previous versions of ROCm Data Center Tool (RDC) included with ROCm 6.2 for RHEL9, RDC's version
 number was incorrectly set to `1.0.0`. ROCm 6.3 includes RDC with the correct version number.
+See [GitHub issue #4089](https://github.com/ROCm/ROCm/issues/4089).
 
 ```{important}
 If you're using RHEL9, you must first uninstall the existing ROCm 6.2 RDC 1.0.0 package with `sudo yum
@@ -1700,6 +1705,7 @@ ROCm Validation Suite might fail for certain platforms if executed without the `
 specifying the configuration file. See [RVS command line
 options](https://rocm.docs.amd.com/projects/ROCmValidationSuite/en/docs-6.3.0/ug1main.html#command-line-options)
 for more information. This issue will be addressed in a future release.
+See [GitHub issue #4090](https://github.com/ROCm/ROCm/issues/4090).
 
 ## ROCm resolved issues
 
