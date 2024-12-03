@@ -33,6 +33,7 @@ subtrees:
         title: Installation
       - file: how-to/rocm-for-ai/train-a-model.rst
       - file: how-to/rocm-for-ai/hugging-face-models.rst
+      - file: how-to/rocm-for-ai/model-automation-and-dashboarding.rst
       - file: how-to/rocm-for-ai/deploy-your-model.rst
   - file: how-to/rocm-for-hpc/index.rst
     title: Using ROCm for HPC

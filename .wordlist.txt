@@ -201,6 +201,7 @@ LSAN
 LSan
 LTS
 LoRA
+MAD's
 MEM
 MERCHANTABILITY
 MFMA
@@ -520,6 +521,7 @@ dev
 devicelibs
 devsel
 dimensionality
+dir
 disambiguates
 distro
 distros
