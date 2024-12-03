@@ -1,6 +1,7 @@
 steps:
 - task: Bash@3
   displayName: Set up current_repo values
+  condition: always()
   continueOnError: true
   inputs:
     targetType: inline
@@ -28,6 +29,7 @@ steps:
       echo "##vso[task.setvariable variable=current_repo.version;]$(jq .$REPO_TYPE.version resources.repositories | tr -d '"')"
 - task: Bash@3
   displayName: Create manifest.json
+  condition: always()
   continueOnError: true
   inputs:
     targetType: inline
@@ -76,6 +78,7 @@ steps:
       cat $(Build.ArtifactStagingDirectory)/manifest_$(Build.DefinitionName).json
 - task: Bash@3
   displayName: Create manifest.html
+  condition: always()
   continueOnError: true
   inputs:
     targetType: inline
@@ -117,6 +120,7 @@ steps:
       cat $(Build.ArtifactStagingDirectory)/manifest_$(Build.DefinitionName).html
 - task: PublishHtmlReport@1
   displayName: Publish manifest.html
+  condition: always()
   continueOnError: true
   inputs:
     tabName: Manifest
