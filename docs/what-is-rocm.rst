@@ -115,8 +115,6 @@ Performance
   ":doc:`ROCProfiler <rocprofiler:index>`", "Profiling tool for HIP applications"
   ":doc:`ROCprofiler-SDK <rocprofiler-sdk:index>`", "Toolkit for developing analysis tools for profiling and tracing GPU compute applications. This toolkit is in beta and subject to change"
   ":doc:`ROCTracer <roctracer:index>`", "Intercepts runtime API calls and traces asynchronous activity"
-  ":doc:`TransferBench <transferbench:index>`", "Benchmark simultaneous transfers between user-specified devices (CPUs or GPUs)."
-
 
 Development
 ^^^^^^^^^^^
