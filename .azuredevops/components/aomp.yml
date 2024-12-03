@@ -200,7 +200,7 @@ jobs:
       AOMP: $(Build.BinariesDirectory)
       AOMP_INSTALL_DIR: $(Build.BinariesDirectory)
       INSTALL_OPENMP: $(Build.BinariesDirectory)
-  - script: ln -s $(Build.BinariesDirectory)/include/omp.h $(Build.SourcesDirectory)/llvm-project/llvm/include/omp.h
+  - script: ln -s $(Build.BinariesDirectory)/lib/llvm/include/omp.h $(Build.SourcesDirectory)/llvm-project/llvm/include/omp.h
     displayName: Link omp header
   - task: Bash@3
     displayName: Build offload
