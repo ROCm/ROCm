@@ -36,6 +36,8 @@ steps:
     script: |
       dependencies=()
       for manifest_file in $(Pipeline.Workspace)/d/**/manifest_*.json; do
+        echo "Processing $manifest_file"
+        cat $manifest_file
         current=$(jq '.current' "$manifest_file")
         dependencies+=("$current")
       done
