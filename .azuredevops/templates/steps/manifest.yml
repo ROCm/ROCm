@@ -34,6 +34,8 @@ steps:
   inputs:
     targetType: inline
     script: |
+      manifest_json=$(Build.ArtifactStagingDirectory)/manifest_$(Build.DefinitionName)_$(Build.SourceBranchName)_$(Build.BuildId)_$(Build.BuildNumber)_ubuntu2204_${{ parameters.artifactName }}_${{ parameters.gpuTarget }}.json
+
       dependencies=()
       for manifest_file in $(Pipeline.Workspace)/d/**/manifest_*.json; do
         echo "Processing $manifest_file"
@@ -63,9 +65,9 @@ steps:
             repoVersion: $repoVersion
           },
           dependencies: $dependencies
-        }' > $(Build.ArtifactStagingDirectory)/manifest_$(Build.DefinitionName).json
+        }' > $manifest_json
 
-      dependencies_rows=$(cat $(Build.ArtifactStagingDirectory)/manifest_$(Build.DefinitionName).json | \
+      dependencies_rows=$(cat $manifest_json | \
         jq -r '
           .dependencies[] | 
           "<tr><td>" + .buildNumber + "</td>" + 
@@ -77,7 +79,7 @@ steps:
       dependencies_rows=$(echo $dependencies_rows)
       echo "##vso[task.setvariable variable=dependencies_rows;]$dependencies_rows"
 
-      cat $(Build.ArtifactStagingDirectory)/manifest_$(Build.DefinitionName).json
+      cat $manifest_json
 - task: Bash@3
   displayName: Create manifest.html
   condition: always()
@@ -85,7 +87,8 @@ steps:
   inputs:
     targetType: inline
     script: |
-      cat <<EOF > $(Build.ArtifactStagingDirectory)/manifest_$(Build.DefinitionName).html
+      manifest_html=$(Build.ArtifactStagingDirectory)/manifest_$(Build.DefinitionName)_$(Build.SourceBranchName)_$(Build.BuildId)_$(Build.BuildNumber)_ubuntu2204_${{ parameters.artifactName }}_${{ parameters.gpuTarget }}.html
+      cat <<EOF > $manifest_html
       <html>
       <h1>Manifest</h1>
       <h2>Current</h2>
@@ -119,11 +122,11 @@ steps:
       </html>
       EOF
 
-      cat $(Build.ArtifactStagingDirectory)/manifest_$(Build.DefinitionName).html
+      cat $manifest_html
 - task: PublishHtmlReport@1
   displayName: Publish manifest.html
   condition: always()
   continueOnError: true
   inputs:
     tabName: Manifest
-    reportDir: $(Build.ArtifactStagingDirectory)/manifest_$(Build.DefinitionName).html
+    reportDir: $(Build.ArtifactStagingDirectory)/manifest_$(Build.DefinitionName)_$(Build.SourceBranchName)_$(Build.BuildId)_$(Build.BuildNumber)_ubuntu2204_${{ parameters.artifactName }}_${{ parameters.gpuTarget }}.html
