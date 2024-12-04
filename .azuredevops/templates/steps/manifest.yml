@@ -1,3 +1,11 @@
+parameters:
+- name: artifactName
+  type: string
+  default: 'drop'
+- name: gpuTarget
+  type: string
+  default: ''
+
 steps:
 - task: Bash@3
   displayName: Set up current_repo values

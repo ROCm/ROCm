@@ -83,6 +83,8 @@ jobs:
         -DCLR_BUILD_HIP=ON
         -DCLR_BUILD_OCL=ON
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
+    parameters:
+      artifactName: amd
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
       artifactName: amd
