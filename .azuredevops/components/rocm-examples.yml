@@ -10,6 +10,7 @@ parameters:
   default:
     - cmake
     - libglfw3-dev
+    - libtbb-dev
     - python3-pip
 - name: rocmDependencies
   type: object
