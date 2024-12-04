@@ -79,7 +79,7 @@ engine](https://github.com/nod-ai/shark-ai/tree/main/shortfin), which is the SHA
 library that includes example server applications for popular models.
 
 This initial release includes support for serving the Stable Diffusion XL model on AMD Instinct™
-MI300 devices using ROCm. See SHARK's [release
+MI300 devices using ROCm. See the SHARK [release
 page](https://github.com/nod-ai/shark-ai/releases/tag/v3.0.0) on GitHub to get started.
 
 ### PyTorch 2.4 support added
@@ -1617,18 +1617,18 @@ These settings enable auto-tuning on the first occurrence of a new tensor shape.
 are stored in the user database, eliminating the need for repeated tuning when the same shape is
 encountered in subsequent runs. See the
 [MIOpen](https://rocm.docs.amd.com/en/latest/how-to/tuning-guides/mi300x/workload.html#miopen)
-section in the workload optimization guide to learn more about MIOpen's auto-tuning capabilities.
+section in the workload optimization guide to learn more about the MIOpen auto-tuning capabilities.
 
 ### TransferBench package not functional
 
 TransferBench packages included in the ROCm 6.3.0 release are not compiled properly and are not
-functional for most GPU targets, with the exception of gfx906. Full functionality will be available
+functional for most GPU targets, except for gfx906. Full functionality will be available
 in a future ROCm release. See [GitHub issue #4081](https://github.com/ROCm/ROCm/issues/4081).
 
 TransferBench is a utility for benchmarking simultaneous transfers between user-specified devices
 (CPUs or GPUs). See the documentation at [TransferBench
-documentation](https://rocm.docs.amd.com/projects/TransferBench/en/docs-6.3.0/index.html). Those
-looking to use TransferBench can access the properly compiled packages at
+documentation](https://rocm.docs.amd.com/projects/TransferBench/en/docs-6.3.0/index.html). If you
+want to use TransferBench, access the properly compiled packages at
 [https://github.com/ROCm/TransferBench/releases](https://github.com/ROCm/TransferBench/releases).
 
 ### ROCm Compute Profiler post-upgrade
@@ -1725,8 +1725,8 @@ The following changes to the ROCm software stack are anticipated for future rele
 
 ### AMDGPU wavefront size compiler macro deprecation
 
-The `__AMDGCN_WAVEFRONT_SIZE__` macro will be deprecated in an upcoming
-release. It is recommended to remove any use of this macro. For more information, see [AMDGPU
+The `__AMDGCN_WAVEFRONT_SIZE__` macro is deprecated and support will be removed in an upcoming
+release. It is recommended that any use of this macro be removed. For more information, see [AMDGPU
 support](https://rocm.docs.amd.com/projects/llvm-project/en/docs-6.3.0/LLVM/clang/html/AMDGPUSupport.html).
 
 ### HIPCC Perl scripts deprecation
