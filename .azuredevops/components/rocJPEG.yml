@@ -1,0 +1,84 @@
+parameters:
+- name: checkoutRepo
+  type: string
+  default: 'self'
+- name: checkoutRef
+  type: string
+  default: ''
+- name: aptPackages
+  type: object
+  default:
+    - cmake
+    - libdrm-dev
+    - libstdc++-12-dev
+    - libva-amdgpu-dev
+    - mesa-amdgpu-va-drivers
+    - ninja-build
+    - pkg-config
+- name: rocmDependencies
+  type: object
+  default:
+    - clr
+    - llvm-project
+    - rocm-cmake
+    - rocminfo
+    - rocm-core
+    - rocprofiler-register
+    - ROCR-Runtime
+- name: rocmTestDependencies
+  type: object
+  default:
+    - clr
+    - llvm-project
+    - rocminfo
+    - rocprofiler-register
+    - ROCR-Runtime
+
+jobs:
+- job: rocJPEG
+  variables:
+  - group: common
+  - template: /.azuredevops/variables-global.yml
+  pool:
+    vmImage: ${{ variables.BASE_BUILD_POOL }}
+  workspace:
+    clean: all
+  steps:
+  # Since mesa-amdgpu-multimedia-devel is not directly available from apt, register it
+  - task: Bash@3
+    displayName: 'Register ROCm packages'
+    inputs:
+      targetType: inline
+      script: |
+        sudo mkdir --parents --mode=0755 /etc/apt/keyrings
+        wget https://repo.radeon.com/rocm/rocm.gpg.key -O - | gpg --dearmor | sudo tee /etc/apt/keyrings/rocm.gpg > /dev/null
+        echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/amdgpu/${{ variables.KEYRING_VERSION }}/ubuntu jammy main" | sudo tee /etc/apt/sources.list.d/amdgpu.list
+        echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/rocm/apt/${{ variables.KEYRING_VERSION }} jammy main" | sudo tee --append /etc/apt/sources.list.d/rocm.list
+        echo -e 'Package: *\nPin: release o=repo.radeon.com\nPin-Priority: 600' | sudo tee /etc/apt/preferences.d/rocm-pin-600
+        sudo apt update
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/checkout.yml
+    parameters:
+      checkoutRepo: ${{ parameters.checkoutRepo }}
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
+    parameters:
+      dependencyList: ${{ parameters.rocmDependencies }}
+      gpuTarget: $(JOB_GPU_TARGET)
+      # CI case: download latest default branch build
+      ${{ if eq(parameters.checkoutRef, 'develop') }}:
+        dependencySource: staging
+      # manual build case: triggered by ROCm/ROCm repo
+      ${{ elseif ne(parameters.checkoutRef, 'develop') }}:
+        dependencySource: tag-builds
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
+    parameters:
+      extraBuildFlags: >-
+        -DROCM_PATH=$(Agent.BuildDirectory)/rocm
+        -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm
+        -DCMAKE_BUILD_TYPE=Release
+        -GNinja
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
