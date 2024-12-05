@@ -61,7 +61,7 @@ parameters:
     rocFFT: develop
     ROCgdb: amd-staging
     rocm-cmake: develop
-    rocm-core: amd-staging
+    rocm-core: master
     rocm-examples: develop
     rocminfo: amd-staging
     rocMLIR: develop
