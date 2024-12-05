@@ -119,17 +119,17 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/local-artifact-download.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-aqlprofile.yml
     parameters:
-      ${{ if eq(parameters.checkoutRef, '') }}:
+      ${{ if eq(parameters.checkoutRef, 'develop') }}:
         dependencySource: staging
-      ${{ elseif ne(parameters.checkoutRef, '') }}:
+      ${{ elseif ne(parameters.checkoutRef, 'develop') }}:
         dependencySource: tag-builds
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
     parameters:
       dependencyList: ${{ parameters.rocmTestDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
-      ${{ if eq(parameters.checkoutRef, '') }}:
+      ${{ if eq(parameters.checkoutRef, 'develop') }}:
         dependencySource: staging
-      ${{ elseif ne(parameters.checkoutRef, '') }}:
+      ${{ elseif ne(parameters.checkoutRef, 'develop') }}:
         dependencySource: tag-builds
   # anything in /opt may be persistent across runs
   # so we need to remove the symlink if it already exists
