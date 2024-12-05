@@ -62,7 +62,7 @@ parameters:
     ROCgdb: amd-staging
     rocJPEG: develop
     rocm-cmake: develop
-    rocm-core: amd-staging
+    rocm-core: master
     rocm-examples: develop
     rocminfo: amd-staging
     rocMLIR: develop
