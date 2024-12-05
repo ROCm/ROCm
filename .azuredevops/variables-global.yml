@@ -34,7 +34,7 @@ variables:
 - name: LATEST_DOCKER_VERSION
   value: 6.1
 - name: KEYRING_VERSION
-  value: 6.1
+  value: 6.3
 - name: AMDMIGRAPHX_GFX942_TEST_PIPELINE_ID
   value: 197
 - name: AMDMIGRAPHX_PIPELINE_ID
