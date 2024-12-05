@@ -643,7 +643,7 @@ The following sections describe key changes to ROCm components.
   - The command will be at full functionality once additional partition information from `amdsmi_get_gpu_accelerator_partition_profile()` has been implemented.
 
 ```{note}
-See the full [AMD SMI changelog](https://github.com/ROCm/amdsmi/blob/rocm-6.3.x/CHANGELOG.md) for more details and examples.
+See the full [AMD SMI changelog](https://github.com/ROCm/amdsmi/blob/6.3.x/CHANGELOG.md) for more details and examples.
 ```
 
 ### **HIP** (6.3.0)
@@ -1170,7 +1170,7 @@ memory partition modes upon an invalid argument return from memory partition mod
 - C++ tests for `memorypartition_read_write` are to be re-enabled in a future ROCm release.
 
 ```{note}
-See the full [ROCm SMI changelog](https://github.com/ROCm/rocm_smi_lib/blob/rocm-6.3.x/CHANGELOG.md) for more details and examples.
+See the full [ROCm SMI changelog](https://github.com/ROCm/rocm_smi_lib/blob/6.3.x/CHANGELOG.md) for more details and examples.
 ```
 
 ### **ROCm Systems Profiler** (0.1.0)
