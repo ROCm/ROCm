@@ -219,6 +219,10 @@ variables:
   value: 134
 - name: ROCGDB_TAGGED_PIPELINE_ID
   value: 50
+- name: ROCJPEG_PIPELINE_ID
+  value: 262
+- name: ROCJPEG_TAGGED_PIPELINE_ID
+  value: 263
 - name: ROCM_BANDWIDTH_TEST_PIPELINE_ID
   value: 88
 - name: ROCM_BANDWIDTH_TEST_TAGGED_PIPELINE_ID

@@ -35,6 +35,7 @@ parameters:
     - rocDecode
     - rocFFT
     - ROCgdb
+    - rocJPEG
     - rocm-cmake
     - rocm-core
     - rocm-examples
