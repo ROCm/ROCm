@@ -144,8 +144,6 @@ subtrees:
             title: AMD Instinct MI100/CDNA1 ISA
           - url: https://www.amd.com/system/files/documents/amd-cdna-whitepaper.pdf
             title: White paper
-  - file: conceptual/gpu-memory.md
-    title: GPU memory
   - file: conceptual/iommu.rst
     title: Input-Output Memory Management Unit (IOMMU)
   - file: conceptual/file-reorg.md

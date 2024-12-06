@@ -55,7 +55,6 @@ ROCm documentation is organized into the following categories:
 :class-body: rocm-card-banner rocm-hue-8
 
 * [GPU architecture overview](./conceptual/gpu-arch.md)
-* [GPU memory](./conceptual/gpu-memory.md)
 * [Input-Output Memory Management Unit (IOMMU)](./conceptual/iommu.rst)
 * [File structure (Linux FHS)](./conceptual/file-reorg.md)
 * [GPU isolation techniques](./conceptual/gpu-isolation.md)
