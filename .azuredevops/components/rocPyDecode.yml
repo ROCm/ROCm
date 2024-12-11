@@ -181,6 +181,7 @@ jobs:
     parameters:
       dependencyList: ${{ parameters.rocmDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
+      setHIPLibrarySymlinks: true
       ${{ if eq(parameters.checkoutRef, '') }}:
         dependencySource: staging
       ${{ elseif ne(parameters.checkoutRef, '') }}:
@@ -215,6 +216,7 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
     parameters:
+      testExecutable: LD_LIBRARY_PATH="$(Agent.BuildDirectory)/rocm/lib" ctest
       componentName: rocPyDecode
       testDir: $(Build.SourcesDirectory)/build
 # sudo required for pip install but screws up permissions for next pipeline run
