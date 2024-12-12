@@ -902,7 +902,6 @@ See the full [AMD SMI changelog](https://github.com/ROCm/amdsmi/blob/6.3.x/CHANG
 #### Added
 
 * Initial code to run on Windows
-* Support for gfx120x GPU 
 * Support for FP8, and INT4
 * Support for the Log2 internal operator
 * Support for the GCC 14 compiler
