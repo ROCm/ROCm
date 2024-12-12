@@ -950,7 +950,7 @@ See the full [AMD SMI changelog](https://github.com/ROCm/amdsmi/blob/6.3.x/CHANG
     * Verification tools
     * Debug prints
     * Documentation, including gpu-driver utility documentation
-    * Summary section of the `migrahx-driver perf` command
+    * Summary section of the `migraphx-driver perf` command
 * Reduced model compilation time
 * Reordered some compiler passes to allow for more fusions
 * Preloaded tiles into LDS to improve performance of pointwise transposes
@@ -959,7 +959,7 @@ See the full [AMD SMI changelog](https://github.com/ROCm/amdsmi/blob/6.3.x/CHANG
 #### Resolved issues
 
 * Fixed a bug with gfx1030 that overwrote `dpp_reduce`.
-* Fixed a bug in 1arg dynamic reshape that created a failure.
+* Fixed a bug in 1-arg dynamic reshape that created a failure.
 * Fixed a bug with `dot_broadcast` and `inner_broadcast` that caused compile failures.
 * Fixed a bug where some configs were failing when using exhaustive-tune.
 * Fixed the ROCm Install Guide URL.
