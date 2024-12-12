@@ -45,10 +45,10 @@ jobs:
       dependencyList: ${{ parameters.rocmDependencies }}
       skipLlvmSymlink: true
       # CI case: download latest default branch build
-      ${{ if eq(parameters.checkoutRef, '') }}:
+      ${{ if eq(parameters.checkoutRef, 'amd-staging') }}:
         dependencySource: staging
       # manual build case: triggered by ROCm/ROCm repo
-      ${{ elseif ne(parameters.checkoutRef, '') }}:
+      ${{ elseif ne(parameters.checkoutRef, 'amd-staging') }}:
         dependencySource: tag-builds
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
@@ -126,6 +126,7 @@ jobs:
       componentName: comgr
       extraBuildFlags: >-
         -DCMAKE_PREFIX_PATH="$(Build.SourcesDirectory)/llvm/build;$(Build.SourcesDirectory)/amd/device-libs/build"
+        -DCOMGR_DISABLE_SPIRV=1
         -DCMAKE_BUILD_TYPE=Release
       cmakeBuildDir: 'amd/comgr/build'
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
