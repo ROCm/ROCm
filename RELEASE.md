@@ -944,7 +944,7 @@ See the full [AMD SMI changelog](https://github.com/ROCm/amdsmi/blob/6.3.x/CHANG
     * Use of Attention fusion with models
     * Performance of the Softmax JIT kernel and of the Pooling operator
     * Tuning operations through a new 50ms delay before running the next kernel
-    * Performance of several convolution based models through an optimized NHWC layout 
+    * Performance of several convolution-based models through an optimized NHWC layout 
     * Performance for the `FP8` datatype
     * GPU utilization
     * Verification tools
