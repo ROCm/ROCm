@@ -933,7 +933,7 @@ See the full [AMD SMI changelog](https://github.com/ROCm/amdsmi/blob/6.3.x/CHANG
 #### Removed
 
 * Disabled requirements for MIOpen and rocBLAS when running on Windows.
-* Removed inaccuracte warning messages when using exhaustive-tune.
+* Removed inaccurate warning messages when using exhaustive-tune.
 * Remove the hard coded path in `MIGRAPHX_CXX_COMPILER` allowing the compiler to be installed in different locations.
 
 #### Optimized
