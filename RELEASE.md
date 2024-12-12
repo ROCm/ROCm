@@ -917,7 +917,7 @@ See the full [AMD SMI changelog](https://github.com/ROCm/amdsmi/blob/6.3.x/CHANG
 * Pointwise fusions with MLIR across reshape operations
 * `MIGRAPHX_MLIR_DUMP` environment variable to dump MLIR modules to MXRs
 * The `3` option to `MIGRAPHX_TRACE_BENCHMARKING` to print the MLIR program for improved debug output
-* `MIGRAPHX_ENABLE_HIPBLASLT_GEMM` environment variable to call hipBlasLt libaries
+* `MIGRAPHX_ENABLE_HIPBLASLT_GEMM` environment variable to call hipBLASLt libraries
 * `MIGRAPHX_VERIFY_DUMP_DIFF` to improve the debugging of accuracy issues  
 * `reduce_any` and `reduce_all` options to the `Reduce` operation via Torch MIGraphX
 * Examples for RNNT, and ControlNet
