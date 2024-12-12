@@ -942,7 +942,7 @@ See the full [AMD SMI changelog](https://github.com/ROCm/amdsmi/blob/6.3.x/CHANG
     * Infrastructure code to enable better Kernel fusions with all supported data types
     * Subsequent model compile time by creating a cache for already performant kernels
     * Use of Attention fusion with models
-    * Performance of the Softmax JIT kernel and of the Pooling opterator
+    * Performance of the Softmax JIT kernel and of the Pooling operator
     * Tuning operations through a new 50ms delay before running the next kernel
     * Performance of several convolution based models through an optimized NHWC layout 
     * Performance for the FP8 datatype
