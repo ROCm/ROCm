@@ -911,7 +911,7 @@ See the full [AMD SMI changelog](https://github.com/ROCm/amdsmi/blob/6.3.x/CHANG
 * Split-K as an optional performance improvement
 * Scripts to validate ONNX models from the ONNX Model Zoo
 * GPU Pooling Kernel
-* `--mlir` flag the migraphx-driver program to offload entire module to mlir
+* `--mlir` flag the migraphx-driver program to offload entire module to MLIR
 * Fusing split-reduce with MLIR 
 * Multiple outputs for the MLIR + Pointwise fusions 
 * Pointwise fusions with MLIR across reshape operations
