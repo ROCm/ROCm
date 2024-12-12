@@ -962,7 +962,7 @@ See the full [AMD SMI changelog](https://github.com/ROCm/amdsmi/blob/6.3.x/CHANG
 * Fixed a bug in 1arg dynamic reshape that created a failure.
 * Fixed a bug with `dot_broadcast` and `inner_broadcast` that caused compile failures.
 * Fixed a bug where some configs were failing when using exhaustive-tune.
-* Fixed the ROCM Install Guide URL.
+* Fixed the ROCm Install Guide URL.
 * Fixed an issue while building a whl package due to an apostrophe.
 * Fixed the BERT Squad example requirements file to support different versions of Python.
 * Fixed a bug that stopped the Vicuna model from compiling.
