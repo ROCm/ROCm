@@ -232,7 +232,7 @@ Click {fab}`github` to go to the component's source code on GitHub.
             </tr>
             <tr>
                 <td><a href="https://rocm.docs.amd.com/projects/AMDMIGraphX/en/docs-6.3.0/index.html">MIGraphX</a></td>
-                <td>2.11.0</td>
+                <td>2.10.0&nbsp;&Rightarrow;&nbsp;<a href="#migraphx-2-11-0">2.11.0</a></td>
                 <td><a href="https://github.com/ROCm/AMDMIGraphX"><i class="fab fa-github fa-lg"></i></a></td>
             </tr>
             <tr>
@@ -896,6 +896,78 @@ See the full [AMD SMI changelog](https://github.com/ROCm/amdsmi/blob/6.3.x/CHANG
 * Fixed an issue where the compiler would incorrectly compile a program that used the `__shfl(var,
   srcLane, width)` function when one of the parameters to the function is undefined along some path
   to the function. See [issue #3499](https://github.com/ROCm/ROCm/issues/3499) on GitHub.
+
+### **MIGraphX** (2.11.0)
+
+#### Added
+
+* Initial code to run on Windows
+* Support for `FP8` and `INT4`
+* Support for the Log2 internal operator
+* Support for the GCC 14 compiler
+* The `BitwiseAnd`, `Scan`, `SoftmaxCrossEntropyLoss`, `GridSample`, and `NegativeLogLikelihoodLoss` ONNX operators 
+* The `MatMulNBits`, `QuantizeLinear`/`DequantizeLinear`, `GroupQueryAttention`, `SkipSimplifiedLayerNormalization`, and `SimpliedLayerNormalizationMicrosoft` Contrib operators 
+* Dynamic batch parameter support to `OneHot` operator
+* Split-K as an optional performance improvement
+* Scripts to validate ONNX models from the ONNX Model Zoo
+* GPU Pooling Kernel
+* `--mlir` flag the migraphx-driver program to offload entire module to MLIR
+* Fusing split-reduce with MLIR 
+* Multiple outputs for the MLIR + Pointwise fusions 
+* Pointwise fusions with MLIR across reshape operations
+* `MIGRAPHX_MLIR_DUMP` environment variable to dump MLIR modules to MXRs
+* The `3` option to `MIGRAPHX_TRACE_BENCHMARKING` to print the MLIR program for improved debug output
+* `MIGRAPHX_ENABLE_HIPBLASLT_GEMM` environment variable to call hipBLASLt libraries
+* `MIGRAPHX_VERIFY_DUMP_DIFF` to improve the debugging of accuracy issues  
+* `reduce_any` and `reduce_all` options to the `Reduce` operation via Torch MIGraphX
+* Examples for RNNT, and ControlNet
+
+#### Changed
+
+* Switched to MLIR's 3D Convolution operator.
+* MLIR is now used for Attention operations by default on gfx942 and newer ASICs.
+* Names and locations for VRM specific libraries have changed.
+* Use random mode for benchmarking GEMMs and convolutions.
+* Python version is now printed with an actual version number.
+
+#### Removed
+
+* Disabled requirements for MIOpen and rocBLAS when running on Windows.
+* Removed inaccurate warning messages when using exhaustive-tune.
+* Remove the hard coded path in `MIGRAPHX_CXX_COMPILER` allowing the compiler to be installed in different locations.
+
+#### Optimized
+
+* Improved:
+    * Infrastructure code to enable better Kernel fusions with all supported data types
+    * Subsequent model compile time by creating a cache for already performant kernels
+    * Use of Attention fusion with models
+    * Performance of the Softmax JIT kernel and of the Pooling operator
+    * Tuning operations through a new 50ms delay before running the next kernel
+    * Performance of several convolution-based models through an optimized NHWC layout 
+    * Performance for the `FP8` datatype
+    * GPU utilization
+    * Verification tools
+    * Debug prints
+    * Documentation, including gpu-driver utility documentation
+    * Summary section of the `migraphx-driver perf` command
+* Reduced model compilation time
+* Reordered some compiler passes to allow for more fusions
+* Preloaded tiles into LDS to improve performance of pointwise transposes
+* Exposed the `external_data_path` property in `onnx_options` to set the path from `onnxruntime`
+
+#### Resolved issues
+
+* Fixed a bug with gfx1030 that overwrote `dpp_reduce`.
+* Fixed a bug in 1-arg dynamic reshape that created a failure.
+* Fixed a bug with `dot_broadcast` and `inner_broadcast` that caused compile failures.
+* Fixed a bug where some configs were failing when using exhaustive-tune.
+* Fixed the ROCm Install Guide URL.
+* Fixed an issue while building a whl package due to an apostrophe.
+* Fixed the BERT Squad example requirements file to support different versions of Python.
+* Fixed a bug that stopped the Vicuna model from compiling.
+* Fixed failures with the verify option of migraphx-driver that would cause the application to exit early.
+
 
 ### **MIOpen** (3.3.0)
 
