@@ -181,7 +181,7 @@ jobs:
     parameters:
       dependencyList: ${{ parameters.rocmDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
-      setHIPLibrarySymlinks: true
+      setupHIPLibrarySymlinks: true
       ${{ if eq(parameters.checkoutRef, '') }}:
         dependencySource: staging
       ${{ elseif ne(parameters.checkoutRef, '') }}:
