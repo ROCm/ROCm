@@ -92,7 +92,7 @@ ROCm 6.2.
       - JAX
       - Linux
       - Python
-    * - `rocm6.2.4-jax0.4.35-py3.12.7 <https://hub.docker.com/layers/rocm/jax-community/rocm6.2.4-jax0.4.35-py3.12.7/images/sha256-a6032d89c07573b84c44e42c637bf9752b1b7cd2a222d39344e603d8f4c63beb?context=explore>`_
+  * - `rocm6.2.4-jax0.4.35-py3.12.7 <https://hub.docker.com/layers/rocm/jax-community/rocm6.2.4-jax0.4.35-py3.12.7/images/sha256-a6032d89c07573b84c44e42c637bf9752b1b7cd2a222d39344e603d8f4c63beb?context=explore>`_
     - `6.2.4 <https://repo.radeon.com/rocm/apt/6.2.4/>`_
     - `0.4.35 <https://github.com/ROCm/jax/releases/tag/rocm-jax-v0.4.35>`_
     - **Ubuntu 22.04**
