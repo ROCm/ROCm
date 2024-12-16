@@ -14,7 +14,7 @@ Platform atomics in ROCm
 ==============================
 Platform atomics enable the set of atomic operations that perform RMW actions across multiple processors, devices, and memory locations so that they run synchronously without interruption. An atomic operation is a sequence of computing instructions run as a single, indivisible unit. These instructions are completed in their entirety without any interruptions. If the instructions can't be completed as a unit without interruption, none of the instructions are run. These operations support 32-bit and 64-bit address formats.
 
-Some of the operations that ROCm uses platform atomics are to:
+Some of the operations for which ROCm uses platform atomics are to:
 
 * Update the HSA queue's ``read_dispatch_id``. The command processor on the GPU agent uses a 64-bit atomic add operation. It updates the packet ID it processed.
 * Update the HSA queue's ``write_dispatch_id``. The CPU and GPU agents use a 64-bit atomic add operation. It supports multi-writer queue insertions.
