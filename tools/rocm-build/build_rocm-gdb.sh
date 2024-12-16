@@ -137,7 +137,7 @@ Section: utils
 Architecture: amd64
 Essential: no
 Priority: optional
-Depends: libexpat1, libtinfo5, libncurses5, rocm-dbgapi, libpython3.10 | libpython3.8, libbabeltrace-ctf1 (>= 1.2.1), libbabeltrace1 (>= 1.2.1), rocm-core
+Depends: libexpat1, libtinfo5, libncurses5, rocm-dbgapi, libpython3-all-dev, libbabeltrace-ctf1 (>= 1.2.1), libbabeltrace1 (>= 1.2.1), rocm-core
 EOF
 
     mkdir -p "$OUT_DIR/deb/$PROJ_NAME"
