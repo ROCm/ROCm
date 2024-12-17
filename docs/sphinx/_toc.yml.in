@@ -157,7 +157,7 @@ subtrees:
   - file: conceptual/cmake-packages.rst
     title: Using CMake
   - file: conceptual/pcie-atomics.rst
-    title: ROCm & PCIe atomics
+    title: PCIe atomics in ROCm
   - file: conceptual/ai-pytorch-inception.md
     title: Inception v3 with PyTorch
   - file: conceptual/oversubscription.rst
