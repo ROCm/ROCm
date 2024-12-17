@@ -8,13 +8,13 @@ How ROCm uses PCIe atomics
 AMD ROCm is an extension of the Heterogeneous System Architecture (HSA). To meet the requirements of an HSA-compliant system, ROCm supports queuing models, memory models, and signaling and synchronization protocols. ROCm can perform atomic Read-Modify-Write (RMW) transactions that extend inter-processor synchronization mechanisms to Input/Output (I/O) devices starting from Peripheral Component Interconnect Express 3.0 (PCIe™ 3.0). It supports the defined HSA capabilities for queuing and signaling memory operations. To learn more about the requirements of an HSA-compliant system, see the 
 `HSA Platform System Architecture Specification <http://hsafoundation.com/wp-content/uploads/2021/02/HSA-SysArch-1.2.pdf>`_.
 
-ROCm uses platform atomics to perform memory operations like queuing, signaling, and synchronization across multiple CPU, GPU agents, and I/O devices. Platform atomics ensures that atomic operations run synchronously without interruptions or conflicts across multiple shared resources. This section details how ROCm uses platform atomics and features of PCIe 3.0.
+ROCm uses platform atomics to perform memory operations like queuing, signaling, and synchronization across multiple CPU, GPU agents, and I/O devices. Platform atomics ensure that atomic operations run synchronously, without interruptions or conflicts, across multiple shared resources.
 
 Platform atomics in ROCm
 ==============================
 Platform atomics enable the set of atomic operations that perform RMW actions across multiple processors, devices, and memory locations so that they run synchronously without interruption. An atomic operation is a sequence of computing instructions run as a single, indivisible unit. These instructions are completed in their entirety without any interruptions. If the instructions can't be completed as a unit without interruption, none of the instructions are run. These operations support 32-bit and 64-bit address formats.
 
-Some of the operations for which ROCm uses platform atomics are to:
+Some of the operations for which ROCm uses platform atomics are:
 
 * Update the HSA queue's ``read_dispatch_id``. The command processor on the GPU agent uses a 64-bit atomic add operation. It updates the packet ID it processed.
 * Update the HSA queue's ``write_dispatch_id``. The CPU and GPU agents use a 64-bit atomic add operation. It supports multi-writer queue insertions.
@@ -44,9 +44,8 @@ PCIe endpoint and PCIe I/O devices can perform atomic operations.
 
 If your system uses PCIe switches to connect and enable communication between multiple PCIe components, the switches must also support atomic operations routing.
 
-To enable atomic operations routing between multiple root ports, each root port must support atomic operation routing. This capability can be identified from the atomic operations routing supported bit in the DevCap2 register. If the bit has value of 1, routing is supported. Atomic operation requests are permitted only if a component's ``DEVCTL2.ATOMICOP_REQUESTER_ENABLE``
-field is set. These requests can only be serviced if the upstream components also support atomic operation
-completion, or can route it to a component that supports it, or both.  
+To enable atomic operations routing between multiple root ports, each root port must support atomic operation routing. This capability can be identified from the atomic operations routing support bit in the DevCap2 register. If the bit has value of 1, routing is supported. Atomic operation requests are permitted only if a component's ``DEVCTL2.ATOMICOP_REQUESTER_ENABLE``
+field is set. These requests can only be serviced if the upstream components also support atomic operation completion or if the requests can be routed to a component that supports atomic operation completion.
 
 ROCm uses the PCIe-ID-based ordering technology for peer-to-peer (P2P) data transmission. PCIe-ID-based ordering technology is used when the GPU initiates multiple write operations to different memory locations.
 
