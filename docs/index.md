@@ -62,7 +62,7 @@ ROCm documentation is organized into the following categories:
 * [File structure (Linux FHS)](./conceptual/file-reorg.md)
 * [GPU isolation techniques](./conceptual/gpu-isolation.md)
 * [Using CMake](./conceptual/cmake-packages.rst)
-* [ROCm & PCIe atomics](./conceptual/More-about-how-ROCm-uses-PCIe-Atomics.rst)
+* [ROCm & PCIe atomics](./conceptual/pcie-atomics.rst)
 * [Inception v3 with PyTorch](./conceptual/ai-pytorch-inception.md)
 * [Oversubscription of hardware resources](./conceptual/oversubscription.rst)
 :::
