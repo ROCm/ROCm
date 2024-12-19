@@ -10,42 +10,42 @@ JAX provides a NumPy-like API, which combines automatic differentiation and the
 Accelerated Linear Algebra (XLA) compiler to achieve high-performance machine
 learning at scale.
 
-JAX uses composable transformations of Python+NumPy through just-in-time (JIT)
-compilation, automatic vectorization, and parallelization.
+JAX uses composable transformations of Python and NumPy through just-in-time (JIT) compilation,
+automatic vectorization, and parallelization. To learn about JAX, including profiling and
+optimizations, see the official `JAX documentation
+<https://jax.readthedocs.io/en/latest/notebooks/quickstart.html>`_.
 
-To learn about JAX, including profiling and optimizations, refer to the
-`JAX documentation <https://jax.readthedocs.io/en/latest/notebooks/quickstart.html>`_.
-
-JAX already upstreamed and users can build the official source code with ROCm
+ROCm support for JAX is upstreamed and users can build the official source code with ROCm
 support:
 
 - ROCm JAX release:
 
-  - Support the few minor version behind JAX releases with the latest
-    ROCm.
+  - Provides the latest version of ROCm but doesn't immediately support the latest stable JAX
+    version.
 
-  - `Docker images <https://hub.docker.com/r/rocm/jax>`_ with preinstalled
-    JAX and ROCm.
-
-  - `Community docker images <https://hub.docker.com/r/rocm/jax-community>`_
-    with preinstalled JAX and ROCm.
+  - Offers AMD-validated and community :ref:`Docker images <jax-docker-compat>` with ROCm and JAX pre-installed.
 
   - `ROCm JAX repository <https://github.com/rocm/jax>`_
 
-  - :doc:`ROCm JAX installation guide <rocm-install-on-linux:install/3rd-party/jax-install>`
+  - See the :doc:`ROCm JAX installation guide <rocm-install-on-linux:install/3rd-party/jax-install>`
+    to get started.
 
-- Official JAX:
+- Official JAX release:
 
-  - `Official JAX repository <https://github.com/jax-ml/jax>`_
+  - Official JAX repository: `<https://github.com/jax-ml/jax>`__
 
-  - `Build from source <https://jax.readthedocs.io/en/latest/developer.html#building-from-source>`_.
+  - See the `AMD GPU (Linux) installation section
+    <https://jax.readthedocs.io/en/latest/installation.html#amd-gpu-linux>`_ in the JAX
+    documentation.
 
 .. note::
 
-  The `community docker images <https://hub.docker.com/r/rocm/jax-community>`_
+  The `community Docker images <https://hub.docker.com/r/rocm/jax-community>`_
   are using multiple stable ROCm version with the one or two minor version
-  lagging JAX, while the validated `docker images <https://hub.docker.com/r/rocm/jax>`_
+  lagging behind JAX, while the validated `Docker images <https://hub.docker.com/r/rocm/jax>`_
   are using the latest ROCm with older JAX versions.
+
+.. _jax-docker-compat:
 
 Docker image compatibility
 ================================================================================
@@ -55,7 +55,7 @@ images with ROCm backends on Docker Hub. The following Docker image tags and
 associated inventories are validated for
 `ROCm 6.3.0 <https://repo.radeon.com/rocm/apt/6.3/>`_.
 
-.. list-table:: JAX docker image components
+.. list-table:: JAX Docker image components
     :header-rows: 1
 
     * - Docker image
@@ -64,14 +64,14 @@ associated inventories are validated for
       - Python
     * - .. raw:: html
 
-           <a href="https://hub.docker.com/layers/rocm/jax/rocm6.3-jax0.4.31-py3.12/images/sha256-800ec9750573618760a3b0ffc56f99811830a3b45bec77059d55e9f7823c54ef?context=explore"><i class="fab fa-docker fa-lg"></i></a>
+           <a href="https://hub.docker.com/layers/rocm/jax/rocm6.3-jax0.4.31-py3.12/images/sha256-800ec9750573618760a3b0ffc56f99811830a3b45bec77059d55e9f7823c54ef?context=explore"><i class="fab fa-docker fa-lg"></i> rocm/jax</a>
 
       - `0.4.31 <https://github.com/ROCm/jax/releases/tag/rocm-jax-v0.4.31>`_
       - Ubuntu 24.04
       - `3.12.7 <https://www.python.org/downloads/release/python-3127/>`_
     * - .. raw:: html
 
-           <a href="https://hub.docker.com/layers/rocm/jax/rocm6.3-jax0.4.31-py3.10/images/sha256-54998ca513b1ea055e67a279e4d64bd569a1ae56c01076d34bd4e7366d33dbc7?context=explore"><i class="fab fa-docker fa-lg"></i></a>
+           <a href="https://hub.docker.com/layers/rocm/jax/rocm6.3-jax0.4.31-py3.10/images/sha256-54998ca513b1ea055e67a279e4d64bd569a1ae56c01076d34bd4e7366d33dbc7?context=explore"><i class="fab fa-docker fa-lg"></i> rocm/jax</a>
 
       - `0.4.31 <https://github.com/ROCm/jax/releases/tag/rocm-jax-v0.4.31>`_
       - Ubuntu 22.04
@@ -81,7 +81,7 @@ AMD publishes community `JAX <https://hub.docker.com/r/rocm/jax-community>`_
 images with ROCm backends on Docker Hub. The following Docker image tags and
 associated inventories are tested for `ROCm 6.2.4 <https://repo.radeon.com/rocm/apt/6.2.4/>`_.
 
-.. list-table:: JAX community docker image components
+.. list-table:: JAX community Docker image components
     :header-rows: 1
 
     * - Docker image
@@ -90,21 +90,21 @@ associated inventories are tested for `ROCm 6.2.4 <https://repo.radeon.com/rocm/
       - Python
     * - .. raw:: html
 
-           <a href="https://hub.docker.com/layers/rocm/jax-community/rocm6.2.4-jax0.4.35-py3.12.7/images/sha256-a6032d89c07573b84c44e42c637bf9752b1b7cd2a222d39344e603d8f4c63beb?context=explore"><i class="fab fa-docker fa-lg"></i></a>
+           <a href="https://hub.docker.com/layers/rocm/jax-community/rocm6.2.4-jax0.4.35-py3.12.7/images/sha256-a6032d89c07573b84c44e42c637bf9752b1b7cd2a222d39344e603d8f4c63beb?context=explore"><i class="fab fa-docker fa-lg"></i> rocm/jax-community</a>
 
       - `0.4.35 <https://github.com/ROCm/jax/releases/tag/rocm-jax-v0.4.35>`_
       - Ubuntu 22.04
       - `3.12.7 <https://www.python.org/downloads/release/python-3127/>`_
     * - .. raw:: html
 
-           <a href="https://hub.docker.com/layers/rocm/jax-community/rocm6.2.4-jax0.4.35-py3.11.10/images/sha256-d462f7e445545fba2f3b92234a21beaa52fe6c5f550faabcfdcd1bf53486d991?context=explore"><i class="fab fa-docker fa-lg"></i></a>
+           <a href="https://hub.docker.com/layers/rocm/jax-community/rocm6.2.4-jax0.4.35-py3.11.10/images/sha256-d462f7e445545fba2f3b92234a21beaa52fe6c5f550faabcfdcd1bf53486d991?context=explore"><i class="fab fa-docker fa-lg"></i> rocm/jax-community</a>
 
       - `0.4.35 <https://github.com/ROCm/jax/releases/tag/rocm-jax-v0.4.35>`_
       - Ubuntu 22.04
       - `3.11.10 <https://www.python.org/downloads/release/python-31110/>`_
     * - .. raw:: html
 
-           <a href="https://hub.docker.com/layers/rocm/jax-community/rocm6.2.4-jax0.4.35-py3.10.15/images/sha256-6f2d4d0f529378d9572f0e8cfdcbc101d1e1d335bd626bb3336fff87814e9d60?context=explore"><i class="fab fa-docker fa-lg"></i></a>
+           <a href="https://hub.docker.com/layers/rocm/jax-community/rocm6.2.4-jax0.4.35-py3.10.15/images/sha256-6f2d4d0f529378d9572f0e8cfdcbc101d1e1d335bd626bb3336fff87814e9d60?context=explore"><i class="fab fa-docker fa-lg"></i> rocm/jax-community</a>
 
       - `0.4.35 <https://github.com/ROCm/jax/releases/tag/rocm-jax-v0.4.35>`_
       - Ubuntu 22.04
@@ -128,7 +128,7 @@ performance, and feature set available to developers.
       - 2.3.0
       - Provides GPU-accelerated Basic Linear Algebra Subprograms (BLAS) for
         matrix and vector operations.
-      - Matrix Multiplication in ``jax.numpy.matmul``, ``jax.lax.dot`` and
+      - Matrix multiplication in ``jax.numpy.matmul``, ``jax.lax.dot`` and
         ``jax.lax.dot_general``, operations like ``jax.numpy.dot``, which
         involve vector and matrix computations and batch matrix multiplications
         ``jax.numpy.einsum`` with matrix-multiplication patterns algebra
@@ -217,7 +217,7 @@ table:
       - Description
       - Since JAX
       - Since ROCm
-    * - ``jax.numpy``
+    * - jax.numpy
       - Implements the NumPy API, using the primitives in ``jax.lax``.
       - 0.1.56
       - 5.0.0
@@ -315,11 +315,11 @@ table:
       - 0.4.6
       - 5.3.0
 
-``jax.lax`` module
+jax.lax module
 -------------------------------------------------------------------------------
 
 
-``jax.scipy`` module
+jax.scipy module
 -------------------------------------------------------------------------------
 
 A SciPy-like API for scientific computing.
@@ -327,7 +327,7 @@ A SciPy-like API for scientific computing.
 .. list-table::
     :header-rows: 1
 
-    * - module
+    * - Module
       - Since JAX
       - Since ROCm
     * - ``jax.scipy.cluster``
@@ -367,13 +367,13 @@ A SciPy-like API for scientific computing.
       - 0.1.56
       - 5.0.0
 
-``jax.scipy.stats`` module
+jax.scipy.stats module
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. list-table::
    :header-rows: 1
 
-   * - module
+   * - Module
      - Since JAX
      - Since ROCm
    * - ``jax.scipy.stats.bernouli``
@@ -449,7 +449,7 @@ A SciPy-like API for scientific computing.
      - 0.4.20
      - 5.6.0
 
-``jax.extend`` module
+jax.extend module
 -------------------------------------------------------------------------------
 
 Modules for JAX extensions.
@@ -457,7 +457,7 @@ Modules for JAX extensions.
 .. list-table::
     :header-rows: 1
 
-    * - module
+    * - Module
       - Since JAX
       - Since ROCm
     * - ``jax.extend.ffi``
@@ -473,7 +473,7 @@ Modules for JAX extensions.
       - 0.4.15
       - 5.5.0
 
-``jax.experimental`` module
+jax.experimental module
 -------------------------------------------------------------------------------
 
 Experimental modules and APIs.
@@ -481,7 +481,7 @@ Experimental modules and APIs.
 .. list-table::
     :header-rows: 1
 
-    * - module
+    * - Module
       - Since JAX
       - Since ROCm
     * - ``jax.experimental.checkify``
@@ -542,7 +542,7 @@ Module for Pallas, a JAX extension for custom kernels.
 .. list-table::
     :header-rows: 1
 
-    * - module
+    * - Module
       - Since JAX
       - Since ROCm
     * - ``jax.experimental.pallas.mosaic_gpu``
@@ -563,7 +563,7 @@ Experimental support for sparse matrix operations.
 .. list-table::
     :header-rows: 1
 
-    * - module
+    * - Module
       - Since JAX
       - Since ROCm
     * - ``jax.experimental.sparse.linalg``
@@ -576,7 +576,7 @@ Experimental support for sparse matrix operations.
 .. list-table::
     :header-rows: 1
 
-    * - sparse data structure API
+    * - ``sparse`` data structure API
       - Since JAX
       - Since ROCm
     * - ``jax.experimental.sparse.BCOO``
@@ -596,7 +596,7 @@ Experimental support for sparse matrix operations.
       - 5.0.0
 
 Unsupported JAX features
-================================================================================
+------------------------
 
 The following are GPU-acclerated JAX features not currently supported by
 ROCm.
@@ -604,7 +604,7 @@ ROCm.
 .. list-table::
     :header-rows: 1
 
-    * - Data Type
+    * - Data type
       - Description
       - Since PyTorch
     * - Mixed Precision with TF32
@@ -653,7 +653,7 @@ Use cases and recommendations
   matrices using Triton, integrate it with JAX, and benchmark its performance
   using ROCm.
 
-* The `Distributed Fine-Tuning with JAX on AMD GPUs <https://rocm.blogs.amd.com/artificial-intelligence/distributed-sft-jax/README.html>`_
+* The `Distributed fine-tuning with JAX on AMD GPUs <https://rocm.blogs.amd.com/artificial-intelligence/distributed-sft-jax/README.html>`_
   outlines the process of fine-tuning a Bidirectional Encoder Representations
   from Transformers (BERT)-based large language model (LLM) using JAX for a text
   classification task. The blog post discuss techniques for parallelizing the
@@ -662,11 +662,11 @@ Use cases and recommendations
   and the General Language Understanding Evaluation (GLUE) benchmark dataset was
   used on a multi-GPU setup.
 
-* The `MI300X Workload Optimization page <https://rocm.docs.amd.com/en/latest/how-to/tuning-guides/mi300x/workload.html>`_
+* The `MI300X workload optimization guide <https://rocm.docs.amd.com/en/latest/how-to/tuning-guides/mi300x/workload.html>`_
   provides detailed guidance on optimizing workloads for the AMD Instinct MI300X
   accelerator using ROCm. The page is aimed at helping users achieve optimal
   performance for deep learning and other high-performance computing tasks on
   the MI300X GPU.
 
-For more use cases and recommendations, please check `ROCm JAX blog posts <https://rocm.blogs.amd.com/blog/tag/jax.html>`_
+For more use cases and recommendations, see `ROCm JAX blog posts <https://rocm.blogs.amd.com/blog/tag/jax.html>`_
 
