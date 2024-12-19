@@ -6,19 +6,12 @@
 TensorFlow compatibility
 *******************************************************************************
 
-TensorFlow is an open-source library for solving machine learning, deep
-learning, and AI problems. It can solve many problems across different sectors
-and industries, but primarily focuses on neural network training and inference.
-It is one of the most popular and in-demand frameworks and is very active in
-open-source contribution and development.
-
-`TensorFlow <https://www.tensorflow.org/>`_ is an open-source library designed
-for solving machine learning, deep learning, and AI problems. It can solve many
+`TensorFlow <https://www.tensorflow.org/>`_ is an open-source library for
+solving machine learning, deep learning, and AI problems. It can solve many
 problems across different sectors and industries, but primarily focuses on
-neural network training and inference. TensorFlow on ROCm provides
-mixed-precision and large-scale training using
-`MIOpen <https://github.com/ROCm/MIOpen>`_ and
-`RCCL <https://github.com/ROCm/rccl>`_ libraries.
+neural network training and inference. It is one of the most popular and
+in-demand frameworks and is very active in open-source contribution and
+development.
 
 ROCm support for TensorFlow is upstreamed into the official TensorFlow
 repository. Due to independent compatibility considerations, this results in
@@ -28,27 +21,25 @@ two distinct release cycles for TensorFlow on ROCm:
 
   - Provides the latest version of ROCm but doesn't immediately support the
     latest stable TensorFlow version.
+
   - Offers `Docker images <https://hub.docker.com/r/rocm/tensorflow>`_ with
     ROCm and TensorFlow pre-installed.
-  - ROCm TensorFlow repository: `<https://github.com/ROCm/tensorflow-upstream>`__
+
+  - ROCm TensorFlow repository: `<https://github.com/ROCm/tensorflow-upstream>`_
+
   - See the :doc:`ROCm TensorFlow installation guide <rocm-install-on-linux:install/3rd-party/tensorflow-install>`
     to get started.
 
 - Official TensorFlow release:
 
-  - Provides the latest stable version of TensorFlow but doesn't immediately
-    support the latest ROCm version.
-  - Official TensorFlow repository: `<https://github.com/tensorflow/tensorflow>`__
-  - See the `Nightly and latest stable version installation guide <https://www.tensorflow.org/install>`_
-    or `Previous versions <https://www.tensorflow.org/versions>`_ to get started.
+  - Official TensorFlow repository: `<https://github.com/tensorflow/tensorflow>`_
 
-The upstream TensorFlow includes an automatic hipification solution that
-automatically generates HIP source code from the CUDA backend. This approach
-allows TensorFlow to support ROCm without requiring manual code modifications.
+  - See the `Previous versions <https://www.tensorflow.org/versions>`_.
 
-ROCm's development is aligned with the stable release of TensorFlow while
-upstream TensorFlow testing uses the stable release of ROCm to maintain
-consistency.
+.. note::
+
+  The official Tensorflow documentation does not mentioning the ROCm support and
+  only the ROCm documentation provide installation guide.
 
 Docker image compatibility
 ===============================================================================
@@ -59,35 +50,39 @@ Docker Hub. The following Docker image tags and associated inventories are
 validated for `ROCm 6.3.0 <https://repo.radeon.com/rocm/apt/6.3/>`_.
 
 .. list-table:: TensorFlow docker image components
-   :header-rows: 1
+    :header-rows: 1
 
-   * - Docker image
-     - TensorFlow
-     - Linux
-     - Python
+    * - Docker image
+      - TensorFlow
+      - Dev
+      - Python
+      - TensorBoard 
 
-   * - `rocm6.3-py3.10-tf0.37.1-dev <https://hub.docker.com/layers/rocm/tensorflow/rocm6.3-py3.10-tf0.37.1-dev/images/sha256-d1b63d8df056f9f1cc5d1454406ce7e6a1decf18ed9fe42e5df44f3e29587f85>`_
-     - `0.37.1 <https://github.com/tensorflow/tensorflow/tree/v0.37.1>`_
-     - **Ubuntu 22.04**
-     - `3.10 <https://www.python.org/downloads/release/python-31013/>`_
+    * - .. raw:: html
 
-   * - `rocm6.3-py3.10-tf2.15.0-dev <https://hub.docker.com/layers/rocm/tensorflow/rocm6.3-py3.10-tf2.15.0-dev/images/sha256-f1c633cbcebb9e34660c06bff5aa22dee82a9e2a4919ba923deb32216edce5db>`_
-     - `2.15.0 <https://github.com/tensorflow/tensorflow/tree/v2.15.0>`_
-     - **Ubuntu 22.04**
-     - `3.10 <https://www.python.org/downloads/release/python-31013/>`_
+           <a href="https://hub.docker.com/layers/rocm/tensorflow/rocm6.3-py3.10-tf2.15.0-runtime/images/sha256-37e0ab694ac0c65afbf34e32e115122d1c2af37e8095740ac1c951e48faed4e7?context=explore"><i class="fab fa-docker fa-lg"></i></a>
 
-   * - `rocm6.3-py3.10-tf2.15.0-runtime <https://hub.docker.com/layers/rocm/tensorflow/rocm6.3-py3.10-tf2.15.0-runtime/images/sha256-37e0ab694ac0c65afbf34e32e115122d1c2af37e8095740ac1c951e48faed4e7>`_
-     - `2.15.0 <https://github.com/tensorflow/tensorflow/tree/v2.15.0>`_
-     - **Ubuntu 22.04**
-     - `3.10 <https://www.python.org/downloads/release/python-31013/>`_
+      - `tensorflow-rocm 2.15.1 <https://repo.radeon.com/rocm/manylinux/rocm-rel-6.3/tensorflow_rocm-2.15.1-cp310-cp310-manylinux_2_28_x86_64.whl>`_
+      - runtime
+      - `Python 3.10 <https://www.python.org/downloads/release/python-31016/>`_
+      - `TensorBoard 2.15.2 <https://github.com/tensorflow/tensorboard/tree/2.15.2>`_
+
+    * - .. raw:: html
+
+           <a href="https://hub.docker.com/layers/rocm/tensorflow/rocm6.3-py3.10-tf2.15.0-dev/images/sha256-f1c633cbcebb9e34660c06bff5aa22dee82a9e2a4919ba923deb32216edce5db?context=explore"><i class="fab fa-docker fa-lg"></i></a>
+
+      - `tensorflow-rocm 2.15.1 <https://repo.radeon.com/rocm/manylinux/rocm-rel-6.3/tensorflow_rocm-2.15.1-cp310-cp310-manylinux_2_28_x86_64.whl>`_
+      - dev
+      - `Python 3.10 <https://www.python.org/downloads/release/python-31016/>`_
+      - `TensorBoard 2.15.2 <https://github.com/tensorflow/tensorboard/tree/2.15.2>`_
 
 ROCm critical libraries for Tensorflow
 ===============================================================================
 
 TensorFlow depends on multiple components, and the supported features of those
-components can affect the TensorFlow ROCm supported feature set.
-The version mentioned refers to the first TensorFlow version where the ROCm
-library was introduced as a dependency.
+components can affect the TensorFlow ROCm supported feature set. The version
+mentioned refers to the first TensorFlow version where the ROCm library was
+introduced as a dependency.
 
 .. list-table::
     :widths: 25, 10, 35, 30
@@ -147,27 +142,6 @@ library was introduced as a dependency.
         Broadcast.
       - Distributed data parallel training (``tf.distribute.MirroredStrategy``).
         Handles communication in multi-GPU setups.
-    * - `rocBLAS <https://github.com/ROCm/rocBLAS>`_
-      - 4.3.0
-      - Optimized BLAS library for AMD GPUs.
-      - Linear algebra operations in TensorFlow and other ML frameworks
-    * - `rocFFT <https://github.com/ROCm/rocFFT>`_
-      - 1.0.31
-      - Fast Fourier Transform library for AMD GPUs.
-      - Signal processing, scientific computing
-    * - `rocPRIM <https://github.com/ROCm/rocPRIM>`_
-      - 3.3.0
-      - Provides optimized parallel primitives.
-      - Parallel algorithms, data processing
-    * - `rocRAND <https://github.com/ROCm/rocRAND>`_
-      - 3.2.0
-      - Random number generation library for AMD GPUs.
-      - Stochastic processes, statistical sampling
-    * - `rocSOLVER <https://github.com/ROCm/rocSOLVER>`_
-      - 3.27.0
-      - Provides LAPACK functionalities for AMD GPUs.
-      - Solving linear equations, matrix factorizations
-
 
 Supported and unsupported features
 ===============================================================================
@@ -289,8 +263,58 @@ The single data types of `tf.dtypes <https://www.tensorflow.org/api_docs/python/
 Unsupported Tensorflow features
 ===============================================================================
 
+The following are GPU-acclerated JAX features not currently supported by ROCm.
+
+.. list-table::
+    :header-rows: 1
+
+    * - Data Type
+      - Description
+      - Since PyTorch
+    * - Mixed Precision with TF32
+      - Mixed precision with TF32 is used for matrix multiplications,
+        convolutions, and other linear algebra operations, particularly in
+        deep learning workloads like CNNs and transformers.
+      - 
+    * - RNN support
+      - Currently only LSTM with double bias is supported with float32 input
+        and weight.
+      - 
+    * - XLA int4 support
+      - 4-bit integer (int4) precision in the XLA compiler.
+      - 
+    * - Graph support
+      - Does not expose Graphs as a standalone feature, its reliance on XLA for
+        computation allows Graph solutions to be used internally for GPU
+        workloads.
+      - 
+    * - Semi-structured sparsity
+      - Semi-structured sparsity typically involves setting values to zero in
+        certain parts of a tensor or matrix according to patterns that are
+        either predefined or learned.
+      - 
 
 Use cases and recommendations
 ===============================================================================
 
+* The `Training a Neural Collaborative Filtering (NCF) Recommender on an AMD GPU
+  <https://rocm.blogs.amd.com/artificial-intelligence/ncf/README.html>`_ blog post
+  discusses training an NCF recommender system using Tensorflow. It explains how
+  NCF improves traditional collaborative filtering methods by leveraging neural
+  networks to model non-linear user-item interactions. The post outlines the
+  implementation using the recommenders library, focusing on the use of implicit
+  data (e.g., user interactions like viewing or purchasing) and how it addresses
+  challenges like the lack of negative values. 
 
+
+* The `Creating a PyTorch/TensorFlow code environment on AMD GPUs
+  <https://rocm.blogs.amd.com/software-tools-optimization/pytorch-tensorflow-env/README.html>`_
+  blog post provides instructions for creating a machine learning environment for
+  PyTorch and TensorFlow on AMD GPUs using ROCm. It covers steps like installing
+  the libraries, cloning code repositories, installing dependencies, and
+  troubleshooting potential issues with CUDA-based code. Additionally, it
+  explains how to HIPify code (port CUDA code to HIP) and manage Docker images for
+  a better experience on AMD GPUs. This guide aims to help data scientists and
+  ML practitioners adapt their code for AMD GPUs.
+
+For more use cases and recommendations, see `ROCm Tensorflow blog posts <https://rocm.blogs.amd.com/blog/tag/tensorflow.html>`_
