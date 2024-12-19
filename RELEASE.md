@@ -659,7 +659,6 @@ See the full [AMD SMI changelog](https://github.com/ROCm/amdsmi/blob/6.3.x/CHANG
   - `hipDrvGraphAddMemFreeNode`  creates a memory free node and adds it to a graph.
   - `hipDrvGraphExecMemcpyNodeSetParams`  sets the parameters for a memcpy node in the given graphExec.
   - `hipDrvGraphExecMemsetNodeSetParams`  sets the parameters for a memset node in the given graphExec.
-  - `hipExtHostAlloc` preserves the functionality of `hipHostMalloc`.
 
 #### Changed
 
