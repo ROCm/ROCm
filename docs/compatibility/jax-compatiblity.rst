@@ -216,7 +216,7 @@ table:
       - Description
       - Since JAX
       - Since ROCm
-    * - jax.numpy
+    * - ``jax.numpy``
       - Implements the NumPy API, using the primitives in ``jax.lax``.
       - 0.1.56
       - 5.0.0
@@ -533,7 +533,7 @@ Experimental modules and APIs.
       - 0.1.60
       - 5.0.0
 
-``jax.experimental.pallas`` module
+jax.experimental.pallas module
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Module for Pallas, a JAX extension for custom kernels.
@@ -554,7 +554,7 @@ Module for Pallas, a JAX extension for custom kernels.
       - 0.4.32
       - 6.1.3
 
-``jax.experimental.sparse`` module
+jax.experimental.sparse module
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Experimental support for sparse matrix operations.
