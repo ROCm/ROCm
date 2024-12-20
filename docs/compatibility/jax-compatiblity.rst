@@ -20,9 +20,6 @@ support:
 
 - ROCm JAX release:
 
-  - Provides the latest version of ROCm but doesn't immediately support the latest stable JAX
-    version.
-
   - Offers AMD-validated and community :ref:`Docker images <jax-docker-compat>` with ROCm and JAX pre-installed.
 
   - `ROCm JAX repository <https://github.com/rocm/jax>`_
@@ -40,10 +37,12 @@ support:
 
 .. note::
 
-  The `community Docker images <https://hub.docker.com/r/rocm/jax-community>`_
-  are using multiple stable ROCm version with the one or two minor version
-  lagging behind JAX, while the validated `Docker images <https://hub.docker.com/r/rocm/jax>`_
-  are using the latest ROCm with older JAX versions.
+  The official `ROCM JAX docker images <https://hub.docker.com/r/rocm/jax>`_
+  are fully tested by AMD and are released on a quarterly cadence along with
+  new ROCm releases.
+  The `community JAX docker images for ROCM <https://hub.docker.com/r/rocm/jax-community>`_
+  are built and released on a cadence that matches the upstream JAX release
+  cadence and kept current with the latest ROCM version available.
 
 .. _jax-docker-compat:
 
@@ -606,7 +605,7 @@ ROCm.
 
     * - Data type
       - Description
-      - Since PyTorch
+      - Since JAX
     * - Mixed Precision with TF32
       - Mixed precision with TF32 is used for matrix multiplications,
         convolutions, and other linear algebra operations, particularly in
