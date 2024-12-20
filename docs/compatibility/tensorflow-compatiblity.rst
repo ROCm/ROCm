@@ -22,7 +22,7 @@ two distinct release cycles for TensorFlow on ROCm:
   - Provides the latest version of ROCm but doesn't immediately support the
     latest stable TensorFlow version.
 
-  - Offers `Docker images <https://hub.docker.com/r/rocm/tensorflow>`_ with
+  - Offers :ref:`Docker images <tensorflow-docker-compat>` with
     ROCm and TensorFlow pre-installed.
 
   - ROCm TensorFlow repository: `<https://github.com/ROCm/tensorflow-upstream>`_
@@ -34,22 +34,25 @@ two distinct release cycles for TensorFlow on ROCm:
 
   - Official TensorFlow repository: `<https://github.com/tensorflow/tensorflow>`_
 
-  - See the `Previous versions <https://www.tensorflow.org/versions>`_.
+  - See the `TensorFlow API versions <https://www.tensorflow.org/versions>`_ list.
 
-.. note::
+  .. note::
 
-  The official Tensorflow documentation does not mentioning the ROCm support and
-  only the ROCm documentation provide installation guide.
+     The official TensorFlow documentation does not cover ROCm support. Use the
+     ROCm documentation for installation instructions for Tensorflow on ROCm.
+     See :doc:`rocm-install-on-linux:install/3rd-party/tensorflow-install`.
+
+.. _tensorflow-docker-compat:
 
 Docker image compatibility
 ===============================================================================
 
-AMD validates and publishes ready-made `Tensorflow
+AMD validates and publishes ready-made `TensorFlow
 <https://hub.docker.com/r/rocm/tensorflow>`_ images with ROCm backends on
 Docker Hub. The following Docker image tags and associated inventories are
 validated for `ROCm 6.3.0 <https://repo.radeon.com/rocm/apt/6.3/>`_.
 
-.. list-table:: TensorFlow docker image components
+.. list-table:: TensorFlow Docker image components
     :header-rows: 1
 
     * - Docker image
@@ -60,7 +63,7 @@ validated for `ROCm 6.3.0 <https://repo.radeon.com/rocm/apt/6.3/>`_.
 
     * - .. raw:: html
 
-           <a href="https://hub.docker.com/layers/rocm/tensorflow/rocm6.3-py3.10-tf2.15.0-runtime/images/sha256-37e0ab694ac0c65afbf34e32e115122d1c2af37e8095740ac1c951e48faed4e7?context=explore"><i class="fab fa-docker fa-lg"></i></a>
+           <a href="https://hub.docker.com/layers/rocm/tensorflow/rocm6.3-py3.10-tf2.15.0-runtime/images/sha256-37e0ab694ac0c65afbf34e32e115122d1c2af37e8095740ac1c951e48faed4e7?context=explore"><i class="fab fa-docker fa-lg"></i> rocm/tensorflow</a>
 
       - `tensorflow-rocm 2.15.1 <https://repo.radeon.com/rocm/manylinux/rocm-rel-6.3/tensorflow_rocm-2.15.1-cp310-cp310-manylinux_2_28_x86_64.whl>`_
       - runtime
@@ -69,19 +72,19 @@ validated for `ROCm 6.3.0 <https://repo.radeon.com/rocm/apt/6.3/>`_.
 
     * - .. raw:: html
 
-           <a href="https://hub.docker.com/layers/rocm/tensorflow/rocm6.3-py3.10-tf2.15.0-dev/images/sha256-f1c633cbcebb9e34660c06bff5aa22dee82a9e2a4919ba923deb32216edce5db?context=explore"><i class="fab fa-docker fa-lg"></i></a>
+           <a href="https://hub.docker.com/layers/rocm/tensorflow/rocm6.3-py3.10-tf2.15.0-dev/images/sha256-f1c633cbcebb9e34660c06bff5aa22dee82a9e2a4919ba923deb32216edce5db?context=explore"><i class="fab fa-docker fa-lg"></i> rocm/tensorflow</a>
 
       - `tensorflow-rocm 2.15.1 <https://repo.radeon.com/rocm/manylinux/rocm-rel-6.3/tensorflow_rocm-2.15.1-cp310-cp310-manylinux_2_28_x86_64.whl>`_
       - dev
       - `Python 3.10 <https://www.python.org/downloads/release/python-31016/>`_
       - `TensorBoard 2.15.2 <https://github.com/tensorflow/tensorboard/tree/2.15.2>`_
 
-ROCm critical libraries for Tensorflow
+Critical ROCm libraries for Tensorflow
 ===============================================================================
 
 TensorFlow depends on multiple components, and the supported features of those
-components can affect the TensorFlow ROCm supported feature set. The version
-mentioned refers to the first TensorFlow version where the ROCm library was
+components can affect the TensorFlow ROCm supported feature set. The versions
+in the following table refer to the first TensorFlow version where the ROCm library was
 introduced as a dependency.
 
 .. list-table::
@@ -100,7 +103,7 @@ introduced as a dependency.
         other matrix multiplications commonly used in neural network layers.
     * - `hipBLASLt <https://github.com/ROCm/hipBLASLt>`_
       - 0.10.0
-      - Extends `hipBLAS` with additional optimizations like fused kernels and
+      - Extends hipBLAS with additional optimizations like fused kernels and
         integer tensor cores.
       - Optimizes matrix multiplications and linear algebra operations used in
         layers like dense, convolutional, and RNNs in TensorFlow.
@@ -146,6 +149,9 @@ introduced as a dependency.
 Supported and unsupported features
 ===============================================================================
 
+The following section maps supported data types and GPU-accelerated TensorFlow
+features to their minimum supported ROCm and TensorFlow versions.
+
 Data types
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -153,7 +159,8 @@ The data type of a tensor is specified using the ``dtype`` attribute or
 argument, and TensorFlow supports a wide range of data types for different use
 cases.
 
-The single data types of `tf.dtypes <https://www.tensorflow.org/api_docs/python/tf/dtypes>`_
+The basic, single data types of `tf.dtypes <https://www.tensorflow.org/api_docs/python/tf/dtypes>`_
+are as follows:
 
 .. list-table::
     :header-rows: 1
@@ -162,15 +169,15 @@ The single data types of `tf.dtypes <https://www.tensorflow.org/api_docs/python/
       - Description
       - Since TensorFlow
       - Since ROCm
-    * - bfloat16
+    * - ``bfloat16``
       - 16-bit bfloat (brain floating point).
       - 1.0.0
       - 1.7
-    * - bool
+    * - ``bool``
       - Boolean.
       - 1.0.0
       - 1.7
-    * - complex128
+    * - ``complex128``
       - 128-bit complex.
       - 1.0.0
       - 1.7
@@ -178,87 +185,87 @@ The single data types of `tf.dtypes <https://www.tensorflow.org/api_docs/python/
       - 64-bit complex.
       - 1.0.0
       - 1.7
-    * - double
+    * - ``double``
       - 64-bit (double precision) floating-point.
       - 1.0.0
       - 1.7
-    * - float16
+    * - ``float16``
       - 16-bit (half precision) floating-point.
       - 1.0.0
       - 1.7
-    * - float32
+    * - ``float32``
       - 32-bit (single precision) floating-point.
       - 1.0.0
       - 1.7
-    * - float64
+    * - ``float64``
       - 64-bit (double precision) floating-point.
       - 1.0.0
       - 1.7
-    * - half
+    * - ``half``
       - 16-bit (half precision) floating-point.
       - 2.0.0
       - 2.0
-    * - int16
+    * - ``int16``
       - Signed 16-bit integer.
       - 1.0.0
       - 1.7
-    * - int32
+    * - ``int32``
       - Signed 32-bit integer.
       - 1.0.0
       - 1.7
-    * - int64
+    * - ``int64``
       - Signed 64-bit integer.
       - 1.0.0
       - 1.7
-    * - int8
+    * - ``int8``
       - Signed 8-bit integer.
       - 1.0.0
       - 1.7
-    * - qint16
+    * - ``qint16``
       - Signed quantized 16-bit integer.
       - 1.0.0
       - 1.7
-    * - qint32
+    * - ``qint32``
       - Signed quantized 32-bit integer.
       - 1.0.0
       - 1.7
-    * - qint8
+    * - ``qint8``
       - Signed quantized 8-bit integer.
       - 1.0.0
       - 1.7
-    * - quint16
+    * - ``quint16``
       - Unsigned quantized 16-bit integer.
       - 1.0.0
       - 1.7
-    * - quint8
+    * - ``quint8``
       - Unsigned quantized 8-bit integer.
       - 1.0.0
       - 1.7
-    * - resource
+    * - ``resource``
       - Handle to a mutable, dynamically allocated resource.
       - 1.0.0
       - 1.7
-    * - string
+    * - ``string``
       - Variable-length string, represented as byte array.
       - 1.0.0
       - 1.7
-    * - uint16
+    * - ``uint16``
       - Unsigned 16-bit (word) integer.
       - 1.0.0
       - 1.7
-    * - uint32
+    * - ``uint32``
       - Unsigned 32-bit (dword) integer.
       - 1.5.0
       - 1.7
-    * - uint64
+    * - ``uint64``
       - Unsigned 64-bit (qword) integer.
       - 1.5.0
       - 1.7
-    * - uint8
+    * - ``uint8``
       - Unsigned 8-bit (byte) integer.
       - 1.0.0
       - 1.7
-    * - variant
+    * - ``variant``
       - Data of arbitrary type (known at runtime).
       - 1.4.0
       - 1.7
@@ -402,61 +409,61 @@ ensuring optimal resource utilization and performance.
      - 3.0
 .. Need to validate
 
-Unsupported Tensorflow features
+Unsupported TensorFlow features
 ===============================================================================
 
-The following are GPU-acclerated JAX features not currently supported by ROCm.
+The following are GPU-acclerated TensorFlow features not currently supported by ROCm.
 
 .. list-table::
     :header-rows: 1
 
-    * - Data Type
+    * - Feature
       - Description
       - Since PyTorch
     * - Mixed Precision with TF32
       - Mixed precision with TF32 is used for matrix multiplications,
         convolutions, and other linear algebra operations, particularly in
         deep learning workloads like CNNs and transformers.
-      - 
+      -
     * - RNN support
       - Currently only LSTM with double bias is supported with float32 input
         and weight.
-      - 
+      -
     * - XLA int4 support
       - 4-bit integer (int4) precision in the XLA compiler.
-      - 
+      -
     * - Graph support
       - Does not expose Graphs as a standalone feature, its reliance on XLA for
         computation allows Graph solutions to be used internally for GPU
         workloads.
-      - 
+      -
     * - Semi-structured sparsity
       - Semi-structured sparsity typically involves setting values to zero in
         certain parts of a tensor or matrix according to patterns that are
         either predefined or learned.
-      - 
+      -
 
 Use cases and recommendations
 ===============================================================================
 
-* The `Training a Neural Collaborative Filtering (NCF) Recommender on an AMD GPU
-  <https://rocm.blogs.amd.com/artificial-intelligence/ncf/README.html>`_ blog post
-  discusses training an NCF recommender system using Tensorflow. It explains how
-  NCF improves traditional collaborative filtering methods by leveraging neural
-  networks to model non-linear user-item interactions. The post outlines the
-  implementation using the recommenders library, focusing on the use of implicit
-  data (e.g., user interactions like viewing or purchasing) and how it addresses
-  challenges like the lack of negative values. 
+* The `Training a Neural Collaborative Filtering (NCF) Recommender on an AMD
+  GPU <https://rocm.blogs.amd.com/artificial-intelligence/ncf/README.html>`_
+  blog post discusses training an NCF recommender system using TensorFlow. It
+  explains how NCF improves traditional collaborative filtering methods by
+  leveraging neural networks to model non-linear user-item interactions. The
+  post outlines the implementation using the recommenders library, focusing on
+  the use of implicit data (for example, user interactions like viewing or
+  purchasing) and how it addresses challenges like the lack of negative values.
 
 
 * The `Creating a PyTorch/TensorFlow code environment on AMD GPUs
   <https://rocm.blogs.amd.com/software-tools-optimization/pytorch-tensorflow-env/README.html>`_
-  blog post provides instructions for creating a machine learning environment for
-  PyTorch and TensorFlow on AMD GPUs using ROCm. It covers steps like installing
-  the libraries, cloning code repositories, installing dependencies, and
-  troubleshooting potential issues with CUDA-based code. Additionally, it
-  explains how to HIPify code (port CUDA code to HIP) and manage Docker images for
-  a better experience on AMD GPUs. This guide aims to help data scientists and
-  ML practitioners adapt their code for AMD GPUs.
+  blog post provides instructions for creating a machine learning environment
+  for PyTorch and TensorFlow on AMD GPUs using ROCm. It covers steps like
+  installing the libraries, cloning code repositories, installing dependencies,
+  and troubleshooting potential issues with CUDA-based code. Additionally, it
+  explains how to HIPify code (port CUDA code to HIP) and manage Docker images
+  for a better experience on AMD GPUs. This guide aims to help data scientists
+  and ML practitioners adapt their code for AMD GPUs.
 
-For more use cases and recommendations, see `ROCm Tensorflow blog posts <https://rocm.blogs.amd.com/blog/tag/tensorflow.html>`_
+For more use cases and recommendations, see the `ROCm Tensorflow blog posts <https://rocm.blogs.amd.com/blog/tag/tensorflow.html>`_
