@@ -146,6 +146,9 @@ introduced as a dependency.
 Supported and unsupported features
 ===============================================================================
 
+Data types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 The data type of a tensor is specified using the ``dtype`` attribute or
 argument, and TensorFlow supports a wide range of data types for different use
 cases.
@@ -162,103 +165,242 @@ The single data types of `tf.dtypes <https://www.tensorflow.org/api_docs/python/
     * - bfloat16
       - 16-bit bfloat (brain floating point).
       - 1.0.0
-      - [Insert ROCm Version]
+      - 1.7
     * - bool
       - Boolean.
       - 1.0.0
-      - [Insert ROCm Version]
+      - 1.7
     * - complex128
       - 128-bit complex.
       - 1.0.0
-      - [Insert ROCm Version]
+      - 1.7
     * - complex64
       - 64-bit complex.
       - 1.0.0
-      - [Insert ROCm Version]
+      - 1.7
     * - double
       - 64-bit (double precision) floating-point.
       - 1.0.0
-      - [Insert ROCm Version]
+      - 1.7
     * - float16
       - 16-bit (half precision) floating-point.
       - 1.0.0
-      - [Insert ROCm Version]
+      - 1.7
     * - float32
       - 32-bit (single precision) floating-point.
       - 1.0.0
-      - [Insert ROCm Version]
+      - 1.7
     * - float64
       - 64-bit (double precision) floating-point.
       - 1.0.0
-      - [Insert ROCm Version]
+      - 1.7
     * - half
       - 16-bit (half precision) floating-point.
       - 2.0.0
-      - [Insert ROCm Version]
+      - 2.0
     * - int16
       - Signed 16-bit integer.
       - 1.0.0
-      - [Insert ROCm Version]
+      - 1.7
     * - int32
       - Signed 32-bit integer.
       - 1.0.0
-      - [Insert ROCm Version]
+      - 1.7
     * - int64
       - Signed 64-bit integer.
       - 1.0.0
-      - [Insert ROCm Version]
+      - 1.7
     * - int8
       - Signed 8-bit integer.
       - 1.0.0
-      - [Insert ROCm Version]
+      - 1.7
     * - qint16
       - Signed quantized 16-bit integer.
       - 1.0.0
-      - [Insert ROCm Version]
+      - 1.7
     * - qint32
       - Signed quantized 32-bit integer.
       - 1.0.0
-      - [Insert ROCm Version]
+      - 1.7
     * - qint8
       - Signed quantized 8-bit integer.
       - 1.0.0
-      - [Insert ROCm Version]
+      - 1.7
     * - quint16
       - Unsigned quantized 16-bit integer.
       - 1.0.0
-      - [Insert ROCm Version]
+      - 1.7
     * - quint8
       - Unsigned quantized 8-bit integer.
       - 1.0.0
-      - [Insert ROCm Version]
+      - 1.7
     * - resource
       - Handle to a mutable, dynamically allocated resource.
       - 1.0.0
-      - [Insert ROCm Version]
+      - 1.7
     * - string
       - Variable-length string, represented as byte array.
       - 1.0.0
-      - [Insert ROCm Version]
+      - 1.7
     * - uint16
       - Unsigned 16-bit (word) integer.
       - 1.0.0
-      - [Insert ROCm Version]
+      - 1.7
     * - uint32
       - Unsigned 32-bit (dword) integer.
       - 1.5.0
-      - [Insert ROCm Version]
+      - 1.7
     * - uint64
       - Unsigned 64-bit (qword) integer.
       - 1.5.0
-      - [Insert ROCm Version]
+      - 1.7
     * - uint8
       - Unsigned 8-bit (byte) integer.
       - 1.0.0
-      - [Insert ROCm Version]
+      - 1.7
     * - variant
       - Data of arbitrary type (known at runtime).
       - 1.4.0
-      - [Insert ROCm Version]
+      - 1.7
+
+
+Features
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The list provides an overview of key features in TensorFlow and their
+corresponding availability in ROCm.
+
+.. list-table::
+   :header-rows: 1
+
+   * - Features
+     - Description
+     - Since TensorFlow
+     - Since ROCm
+   * - Device Management
+     - Utilities for managing and interacting with GPUs.
+     - 2.0.0
+     - 2.0.0
+   * - Tensor Operations on GPU
+     - Perform tensor operations such as addition and matrix multiplications
+       on the GPU.
+     - 1.12.0
+     - 1.8.2
+   * - Streams and Events
+     - Overlapping computation and communication for optimized performance,
+       events enable synchronization.
+     - 2.4.0
+     - 3.5.0
+   * - Memory Management
+     - Set memory growth and limit GPU memory usage.
+     - 1.12.0
+     - 2.6.0
+   * - Communication Collectives
+     - Efficient communication between multiple GPUs, allowing for distributed
+       computing and data parallelism.
+     - 2.12.1
+     - 2.16.5
+   * - XLA (Accelerated Linear Algebra)
+     - JIT compilation for optimized performance
+     - 2.1.0
+     - 2.6.0
+     ROCm 5.1.3 + tensorflow 2.9.1
+   * - TensorBoard
+     - Visualization tool for monitoring and debugging models
+     - ?
+     - ?
+   * - Distributed Training
+     - Support for distributed training using multiple GPUs.
+     - ?
+     - ?
+
+.. Need to validate and extend.
+
+Automatic mixed precision
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+AMP automatically uses lower precision (e.g., ``float16``) for some operations
+to speed up training while maintaining model accuracy. This can significantly
+improve the performance and efficiency of training deep learning models on
+GPUs.
+
+To enable AMP in TensorFlow, use the ``tf.keras.mixed_precision`` module by
+
+.. code-block:: python
+
+    tf.keras.mixed_precision.set_global_policy('mixed_float16')
+
+
+.. list-table::
+   :header-rows: 1
+
+   * - Data Type
+     - Description
+     - Since TensorFlow
+     - Since ROCm
+   * - Autocasting
+     - Automatically chooses the appropriate precision (``float16`` or
+       ``float32``) for tensor operations to optimize performance.
+     - 2.1
+     - 4.0.0
+   * - Gradient Scaling
+     - Prevents underflow by multiplying the network's losses by a scale factor
+       before backpropagation and scaling gradients by the same factor.
+     - 2.1
+     - 4.0.0
+   * - CUDA op-specific behavior
+     - TensorFlow operations can automatically use CUDA-specific optimizations
+       whether they are part of a ``tf.Module``, as a function, or a tensor
+       method. These ops always benefit from CUDA optimizations if available.
+     - 1.5
+     - ❌
+
+Distributed library features
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+TensorFlow offers powerful distributed training support through strategies and
+libraries for efficient and scalable machine learning. Key features include
+synchronous and asynchronous training across multiple GPUs and machines,
+ensuring optimal resource utilization and performance.
+
+.. list-table::
+   :header-rows: 1
+
+   * - Data Type
+     - Description
+     - Since TensorFlow
+     - Since ROCm
+   * - ``MultiWorkerMirroredStrategy``
+     - Synchronous training across multiple workers using mirrored variables.
+     - 2.0
+     - 3.0
+   * - ``MirroredStrategy``
+     - Synchronous training across multiple GPUs on one machine.
+     - 1.5
+     - 2.5
+   * - ``TPUStrategy``
+     - Efficiently trains models on Google TPUs.
+     - 1.9
+     - ❌
+   * - ``ParameterServerStrategy``
+     - Asynchronous training using parameter servers for variable management.
+     - 2.1
+     - 4.0
+   * - ``CentralStorageStrategy``
+     - Keeps variables on a single device and performs computation on multiple
+       devices.
+     - 2.3
+     - 4.1
+   * - ``CollectiveAllReduceStrategy``
+     - Synchronous training across multiple devices and hosts.
+     - 1.14
+     - 3.5
+   * - Distribution Strategies API
+     - High-level API to simplify distributed training configuration and
+       execution.
+     - 1.10
+     - 3.0
+.. Need to validate
 
 Unsupported Tensorflow features
 ===============================================================================
