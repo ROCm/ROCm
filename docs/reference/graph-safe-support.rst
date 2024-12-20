@@ -36,7 +36,7 @@ The following table shows whether a ROCm library is graph-safe.
       - ✅
     * 
       - `hipFFT <https://github.com/ROCm/hipFFT>`_
-      - ✅ (See :ref:`details <hipfft:hip-graph-support-for-hipfft>`)
+      - ✅ (see :ref:`details <hipfft:hip-graph-support-for-hipfft>`)
     * 
       - `hipRAND <https://github.com/ROCm/hipRAND>`_
       - ✅
@@ -66,13 +66,13 @@ The following table shows whether a ROCm library is graph-safe.
       - ❌
     * 
       - `rocBLAS <https://github.com/ROCm/rocBLAS>`_
-      - ✅ (See :doc:`details <rocblas:reference/beta-features>`)
+      - ✅ (see :doc:`details <rocblas:reference/beta-features>`)
     * 
       - `rocDecode <https://github.com/ROCm/rocDecode>`_
       - ❌
     * 
       - `rocFFT <https://github.com/ROCm/rocFFT>`_
-      - ✅ (See :ref:`details <rocfft:hip-graph-support-for-rocfft>`)
+      - ✅ (see :ref:`details <rocfft:hip-graph-support-for-rocfft>`)
     * 
       - `rocHPCG <https://github.com/ROCm/rocHPCG>`_
       - ❌
@@ -93,7 +93,7 @@ The following table shows whether a ROCm library is graph-safe.
       - ⚠️ (experimental)
     * 
       - `rocThrust <https://github.com/ROCm/rocThrust>`_
-      - ❌ (See :doc:`details <rocthrust:hipgraph-support>`)
+      - ❌ (see :doc:`details <rocthrust:hipgraph-support>`)
     * 
       - `rocWMMA <https://github.com/ROCm/rocWMMA>`_
       - ❌
