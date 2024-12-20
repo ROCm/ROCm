@@ -14,7 +14,7 @@ in-demand frameworks and is very active in open-source contribution and
 development.
 
 The `official TensorFlow repository <http://github.com/tensorflow/tensorflow>`_
-includes full ROCm support. AMD does maintain a TensorFlow `ROCM repository 
+includes full ROCm support. AMD maintains a TensorFlow `ROCm repository
 <http://github.com/rocm/tensorflow-upstream>`_ in order to quickly add bug
 fixes, updates, and support for the latest ROCM versions.
 
@@ -77,7 +77,7 @@ validated for `ROCm 6.3.0 <https://repo.radeon.com/rocm/apt/6.3/>`_.
       - `Python 3.10 <https://www.python.org/downloads/release/python-31016/>`_
       - `TensorBoard 2.15.2 <https://github.com/tensorflow/tensorboard/tree/2.15.2>`_
 
-Critical ROCm libraries for Tensorflow
+Critical ROCm libraries for TensorFlow
 ===============================================================================
 
 TensorFlow depends on multiple components, and the supported features of those
@@ -179,7 +179,7 @@ are as follows:
       - 128-bit complex.
       - 1.0.0
       - 1.7
-    * - complex64
+    * - ``complex64``
       - 64-bit complex.
       - 1.0.0
       - 1.7
