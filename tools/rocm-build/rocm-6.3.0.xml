@@ -9,7 +9,6 @@
     <project name="ROCm" revision="roc-6.3.x" />
     <project name="ROCK-Kernel-Driver" />
     <project name="ROCR-Runtime" />
-    <project name="ROCT-Thunk-Interface" />
     <project name="amdsmi" />
     <project name="rdc" />
     <project name="rocm_bandwidth_test" />

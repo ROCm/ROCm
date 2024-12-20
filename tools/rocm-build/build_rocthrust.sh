@@ -26,8 +26,6 @@ build_rocthrust() {
 
     init_rocm_common_cmake_params
 
-    init_rocm_common_cmake_params
-
     CXX=$(set_build_variables CXX)\
     cmake \
         ${LAUNCHER_FLAGS} \

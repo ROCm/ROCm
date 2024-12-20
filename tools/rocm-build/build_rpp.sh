@@ -40,8 +40,6 @@ build_rpp() {
 
     mkdir -p $BUILD_DIR && cd $BUILD_DIR
 
-   init_rocm_common_cmake_params
-
     init_rocm_common_cmake_params
 
     cmake \

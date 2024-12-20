@@ -26,7 +26,6 @@
     <project name="HIP" />
     <project name="hip-tests" />
     <project name="HIP-Examples" />
-    <project name="HIP-Examples" />
     <project name="HIPIFY" />
     <project name="clr" />
     <project name="hipother" />
