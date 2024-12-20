@@ -33,6 +33,21 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - VGPR File (KiB)
           - SGPR File (KiB)
         *
+          - MI325X
+          - CDNA3
+          - gfx942
+          - 256
+          - 304 (38 per XCD)
+          - 64
+          - 64
+          - 256
+          - 32 (4 per XCD)
+          - 32
+          - 16 per 2 CUs
+          - 64 per 2 CUs
+          - 512
+          - 12.5
+        *
           - MI300X
           - CDNA3
           - gfx942

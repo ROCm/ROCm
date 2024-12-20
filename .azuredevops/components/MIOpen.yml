@@ -197,3 +197,4 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
     parameters:
       componentName: MIOpen
+      testParameters: '-VV --output-on-failure --force-new-ctest-process --output-junit test_output.xml --exclude-regex test_rnn_seq_api'

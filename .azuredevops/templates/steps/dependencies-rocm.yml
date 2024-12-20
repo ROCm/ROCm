@@ -165,6 +165,11 @@ parameters:
 - name: skipLlvmSymlink
   type: boolean
   default: false
+# set to true if dlopen calls for HIP libraries are causing failures
+# because they do not follow shared library symlink convention
+- name: setupHIPLibrarySymlinks
+  type: boolean
+  default: false
 # some ROCm components can specify GPU target and this will affect downloads
 - name: gpuTarget
   type: string
@@ -279,6 +284,37 @@ steps:
       script: |
         for file in amdclang amdclang++ amdclang-cl amdclang-cpp amdflang amdlld aompcc mygpu mycpu offload-arch; do
           sudo ln -s $(Agent.BuildDirectory)/rocm/llvm/bin/$file $(Agent.BuildDirectory)/rocm/bin/$file
+        done
+# dlopen calls within a ctest or pytest sequence runs into issues when shared library symlink convention is not followed
+# the convention is as follows:
+# unversioned .so is a symlink to major version .so
+# major version .so is a symlink to detailed version .so
+# HIP libraries do not follow this convention, and each .so is a copy of each other
+# changing the library structure to follow the symlink convention resolves some test failures
+- ${{ if eq(parameters.setupHIPLibrarySymlinks, true) }}:
+  - task: Bash@3
+    displayName: Setup symlinks for hip libraries
+    inputs:
+      targetType: inline
+      workingDirectory: $(Agent.BuildDirectory)/rocm/lib
+      script: |
+        LIBRARIES=("libamdhip64" "libhiprtc-builtins" "libhiprtc")
+        for LIB_NAME in "${LIBRARIES[@]}"; do
+            VERSIONED_SO=$(ls ${LIB_NAME}.so.* 2>/dev/null | grep -E "${LIB_NAME}\.so\.[0-9]+\.[0-9]+\.[0-9]+(-.*)?" | sort -V | tail -n 1)
+            if [[ -z "$VERSIONED_SO" ]]; then
+                continue
+            fi
+            MAJOR_VERSION=$(echo "$VERSIONED_SO" | grep -oP "${LIB_NAME}\.so\.\K[0-9]+")
+            if [[ -e "${LIB_NAME}.so.${MAJOR_VERSION}" && ! -L "${LIB_NAME}.so.${MAJOR_VERSION}" ]]; then
+                rm -f "${LIB_NAME}.so.${MAJOR_VERSION}"
+            fi
+            if [[ -e "${LIB_NAME}.so" && ! -L "${LIB_NAME}.so" ]]; then
+                rm -f "${LIB_NAME}.so"
+            fi
+            ln -sf "$VERSIONED_SO" "${LIB_NAME}.so.${MAJOR_VERSION}"
+            ln -sf "${LIB_NAME}.so.${MAJOR_VERSION}" "${LIB_NAME}.so"
+            echo "Symlinks created for $LIB_NAME:"
+            ls -l ${LIB_NAME}.so*
         done
 - task: Bash@3
   displayName: 'List downloaded ROCm files'

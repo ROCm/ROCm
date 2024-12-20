@@ -2062,11 +2062,10 @@ collectives.
 Multi-node FSDP and RCCL settings
 ---------------------------------
 
-It's recommended to use high-priority HIP streams with RCCL.
-
-The simplest way to enable this is by using the nightly PyTorch wheels, as the required changes from
-`PR #122830 <https://github.com/pytorch/pytorch/pull/122830>`_ were not included in the PyTorch 2.3
-release but are available in the nightly builds.
+When using PyTorch's FSDP (Full Sharded Data Parallel) feature, the HIP
+streams used by RCCL and HIP streams used for compute kernels do not
+always overlap well. As a workaround, it's recommended to use
+high-priority HIP streams with RCCL.
 
 To configure high-priority streams:
 

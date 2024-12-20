@@ -90,6 +90,7 @@ Dask
 DataFrame
 DataLoader
 DataParallel
+Debian
 DeepSpeed
 Dependabot
 Deprecations
@@ -212,6 +213,7 @@ MiB
 MIGraphX
 MIOpen
 MIOpenGEMM
+MIOpen's
 MIVisionX
 MLM
 MMA
@@ -286,6 +288,7 @@ PCC
 PCI
 PCIe
 PEFT
+PEQT
 PIL
 PILImage
 POR
@@ -315,6 +318,7 @@ RDMA
 RDNA
 README
 RHEL
+RMW
 RNN
 RNNs
 ROC
@@ -331,6 +335,7 @@ ROCmSoftwarePlatform
 ROCmValidationSuite
 ROCprofiler
 ROCr
+RPP
 RST
 RW
 Radeon
@@ -338,6 +343,7 @@ RelWithDebInfo
 Req
 Rickle
 RoCE
+Runfile
 Ryzen
 SALU
 SBIOS
@@ -350,6 +356,7 @@ SENDMSG
 SGPR
 SGPRs
 SHA
+SHARK's
 SIGQUIT
 SIMD
 SIMDs
@@ -519,6 +526,7 @@ dbgapi
 de
 deallocation
 debuggability
+debian
 denoise
 denoised
 denoises
@@ -571,6 +579,7 @@ hipBLASLt's
 hipblaslt
 hipCUB
 hipFFT
+hipFORT
 hipLIB
 hipRAND
 hipSOLVER
@@ -592,6 +601,7 @@ hpp
 hsa
 hsakmt
 hyperparameter
+hyperparameters
 iDRAC
 ib_core
 inband
@@ -705,6 +715,7 @@ rocALUTION
 rocBLAS
 rocDecode
 rocFFT
+rocHPCG
 rocJPEG
 rocLIB
 rocMLIR

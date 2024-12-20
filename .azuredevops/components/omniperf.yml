@@ -1,4 +1,3 @@
-# largely referenced from: https://github.com/ROCm/omnitrace/blob/main/.github/workflows/ubuntu-jammy.yml
 parameters:
 - name: checkoutRepo
   type: string
@@ -9,56 +8,50 @@ parameters:
 - name: aptPackages
   type: object
   default:
-    - autoconf
-    - autotools-dev
-    - bison
-    - build-essential
-    - bzip2
-    - clang
     - cmake
-    - environment-modules
-    - g++-12
-    - libdrm-dev
-    - libfabric-dev
-    - libiberty-dev
-    - libpapi-dev
-    - libpfm4-dev
-    - libtool
-    - libopenmpi-dev
-    - m4
-    - openmpi-bin
-    - software-properties-common
     - python3-pip
-    - texinfo
-    - zlib1g-dev
 - name: pipModules
   type: object
   default:
-    - numpy
-    - perfetto
-    - dataclasses
+    - astunparse==1.6.2
+    - colorlover
+    - dash>=1.12.0
+    - matplotlib
+    - numpy>=1.17.5
+    - pandas>=1.4.3
+    - pymongo
+    - pyyaml
+    - tabulate
+    - tqdm
+    - dash-svg
+    - dash-bootstrap-components
+    - kaleido
+    - setuptools
+    - plotille
+    - mock
+    - pytest
+    - pytest-cov
+    - pytest-xdist
 - name: rocmDependencies
   type: object
   default:
-    - aomp
     - clr
     - llvm-project
-    - rccl
+    - rocm-cmake
     - rocm-core
-    - rocm_smi_lib
     - rocminfo
     - ROCR-Runtime
     - rocprofiler
     - rocprofiler-register
     - roctracer
-    - rocprofiler-sdk
 
 jobs:
-- job: rocprofiler_systems
+- job: omniperf
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  pool: ${{ variables.MEDIUM_BUILD_POOL }}
+  pool:
+    vmImage: ${{ variables.BASE_BUILD_POOL }}
   workspace:
     clean: all
   strategy:
@@ -90,13 +83,51 @@ jobs:
       # manual build case: triggered by ROCm/ROCm repo
       ${{ elseif ne(parameters.checkoutRef, '') }}:
         dependencySource: tag-builds
-  - task: Bash@3
-    displayName: ROCm symbolic link
-    inputs:
-      targetType: inline
-      script: |
-        sudo rm -rf /opt/rocm
-        sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
+    parameters:
+      gpuTarget: $(JOB_GPU_TARGET)
+
+- job: omniperf_testing
+  dependsOn: omniperf
+  condition: and(succeeded(), eq(variables.ENABLE_GFX942_TESTS, 'true'), not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])))
+  variables:
+  - group: common
+  - template: /.azuredevops/variables-global.yml
+  - name: PYTHON_VERSION
+    value: 3.10
+  pool: $(JOB_TEST_POOL)
+  workspace:
+    clean: all
+  strategy:
+    matrix:
+      gfx942:
+        JOB_GPU_TARGET: gfx942
+        JOB_TEST_POOL: ${{ variables.GFX942_TEST_POOL }}
+  steps:
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/checkout.yml
+    parameters:
+      checkoutRepo: ${{ parameters.checkoutRepo }}
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/local-artifact-download.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-aqlprofile.yml
+    parameters:
+      ${{ if eq(parameters.checkoutRef, '') }}:
+        dependencySource: staging
+      ${{ elseif ne(parameters.checkoutRef, '') }}:
+        dependencySource: tag-builds
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
+    parameters:
+      dependencyList: ${{ parameters.rocmDependencies }}
+      gpuTarget: $(JOB_GPU_TARGET)
+      ${{ if eq(parameters.checkoutRef, '') }}:
+        dependencySource: staging
+      ${{ elseif ne(parameters.checkoutRef, '') }}:
+        dependencySource: tag-builds
   - task: Bash@3
     displayName: Add ROCm binaries to PATH
     inputs:
@@ -109,46 +140,27 @@ jobs:
       script: echo "##vso[task.prependpath]$(Agent.BuildDirectory)/rocm/llvm/bin"
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
-# build flags reference: https://rocm.docs.amd.com/projects/omnitrace/en/latest/install/install.html
       extraBuildFlags: >-
+        -DCMAKE_HIP_ARCHITECTURES=$(JOB_GPU_TARGET)
+        -DCMAKE_C_COMPILER=$(Agent.BuildDirectory)/rocm/llvm/bin/amdclang
+        -DCMAKE_MODULE_PATH=$(Agent.BuildDirectory)/rocm/lib/cmake/hip
         -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm
-        -DROCM_PATH=$(Agent.BuildDirectory)/rocm
-        -DROCPROFSYS_BUILD_TESTING=ON
-        -DROCPROFSYS_BUILD_DYNINST=ON
-        -DROCPROFSYS_BUILD_LIBUNWIND=ON
-        -DROCPROFSYS_DISABLE_EXAMPLES="openmp-target"
-        -DDYNINST_BUILD_TBB=ON
-        -DDYNINST_BUILD_ELFUTILS=ON
-        -DDYNINST_BUILD_LIBIBERTY=ON
-        -DDYNINST_BUILD_BOOST=ON
-        -DROCPROFSYS_USE_PAPI=ON
-        -DROCPROFSYS_USE_MPI=ON
-        -DAMDGPU_TARGETS=$(JOB_GPU_TARGET)
-      multithreadFlag: -- -j32
-  - task: Bash@3
-    displayName: Set up rocprofiler-systems env
-    inputs:
-      targetType: inline
-      script: source share/rocprofiler-systems/setup-env.sh
-      workingDirectory: build
+        -DCMAKE_BUILD_TYPE=Release
+        -DENABLE_TESTS=ON
+        -DINSTALL_TESTS=ON
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
     parameters:
-      componentName: rocprofiler-systems
+      componentName: omniperf
+      testDir: $(Build.BinariesDirectory)/libexec/omniperf
+      testExecutable: export OMNIPERF_ARCH_OVERRIDE="MI300X"; ctest
   - task: Bash@3
     displayName: Remove ROCm binaries from PATH
-    condition: always()
     inputs:
       targetType: inline
       script: echo "##vso[task.setvariable variable=PATH]$(echo $PATH | sed -e 's;:$(Agent.BuildDirectory)/rocm/bin;;' -e 's;^/;;' -e 's;/$;;')"
   - task: Bash@3
     displayName: Remove ROCm compilers from PATH
-    condition: always()
     inputs:
       targetType: inline
       script: echo "##vso[task.setvariable variable=PATH]$(echo $PATH | sed -e 's;:$(Agent.BuildDirectory)/rocm/llvm/bin;;' -e 's;^/;;' -e 's;/$;;')"
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
-    parameters:
-      gpuTarget: $(JOB_GPU_TARGET)
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
-    parameters:
-      gpuTarget: $(JOB_GPU_TARGET)

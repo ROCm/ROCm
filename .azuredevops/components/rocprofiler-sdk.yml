@@ -41,6 +41,7 @@ parameters:
     - ROCR-Runtime
     - rocprofiler-register
     - roctracer
+    - aomp
 
 jobs:
 - job: rocprofilersdk
