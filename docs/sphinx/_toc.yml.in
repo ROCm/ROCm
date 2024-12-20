@@ -40,6 +40,8 @@ subtrees:
         title: Installation
       - file: how-to/rocm-for-ai/train-a-model.rst
         title: Train a model
+      - file: how-to/rocm-for-ai/scale-model-training.rst
+        title: Scale model training
       - file: how-to/rocm-for-ai/hugging-face-models.rst
         title: Run models from Hugging Face
       - file: how-to/rocm-for-ai/deploy-your-model.rst
@@ -108,7 +110,9 @@ subtrees:
       - url: https://rocm.docs.amd.com/projects/llvm-project/en/latest/conceptual/openmp.html
         title: OpenMP support
   - file: how-to/setting-cus
-    title: Set the number of CUs  
+    title: Set the number of CUs
+  - file: how-to/Bar-Memory.rst
+    title: Troubleshoot BAR access limitation  
   - url: https://github.com/amd/rocm-examples
     title: ROCm examples
 
@@ -144,8 +148,6 @@ subtrees:
             title: AMD Instinct MI100/CDNA1 ISA
           - url: https://www.amd.com/system/files/documents/amd-cdna-whitepaper.pdf
             title: White paper
-  - file: conceptual/gpu-memory.md
-    title: GPU memory
   - file: conceptual/iommu.rst
     title: Input-Output Memory Management Unit (IOMMU)
   - file: conceptual/file-reorg.md
@@ -154,8 +156,8 @@ subtrees:
     title: GPU isolation techniques
   - file: conceptual/cmake-packages.rst
     title: Using CMake
-  - file: conceptual/More-about-how-ROCm-uses-PCIe-Atomics.rst
-    title: ROCm & PCIe atomics
+  - file: conceptual/pcie-atomics.rst
+    title: PCIe atomics in ROCm
   - file: conceptual/ai-pytorch-inception.md
     title: Inception v3 with PyTorch
   - file: conceptual/oversubscription.rst
@@ -171,6 +173,8 @@ subtrees:
       title: Hardware specifications
     - file: reference/precision-support.rst
       title: Precision support
+    - file: reference/graph-safe-support.rst
+      title: Graph safe support
 
 - caption: Contribute
   entries:

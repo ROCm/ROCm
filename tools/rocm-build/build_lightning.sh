@@ -1117,6 +1117,18 @@ build() {
     create_compiler_config_files
 }
 
+create_wheel_package() {
+    echo "Creating rocm-llvm wheel package"
+    mkdir -p "$ROCM_WHEEL_DIR"
+    cp -f $SCRIPT_ROOT/generate_setup_py.py $ROCM_WHEEL_DIR
+    cp -f $SCRIPT_ROOT/repackage_wheel.sh $ROCM_WHEEL_DIR
+    cd $ROCM_WHEEL_DIR
+    # Currently only supports python3.6
+    ./repackage_wheel.sh $RPM_PATH/rocm-llvm*.rpm python3.6
+    # Copy the wheel created to RPM folder which will be uploaded to artifactory
+    mv "$ROCM_WHEEL_DIR"/dist/*.whl "$RPM_PATH"
+}
+
 case $TARGET in
     (clean) clean_lightning ;;
     (all)

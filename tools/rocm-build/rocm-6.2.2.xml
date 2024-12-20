@@ -2,6 +2,7 @@
 <manifest>
     <remote name="rocm-org" fetch="https://github.com/ROCm/" />
     <default revision="refs/tags/rocm-6.2.2"
+    <default revision="refs/tags/rocm-6.2.1"
      remote="rocm-org"
      sync-c="true"
      sync-j="4" />
@@ -72,7 +73,6 @@
     <project name="aomp-extras" path="openmp-extras/aomp-extras" />
     <project name="flang" path="openmp-extras/flang" />
 </manifest>
-========
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
     <remote name="rocm-org" fetch="https://github.com/ROCm/" />

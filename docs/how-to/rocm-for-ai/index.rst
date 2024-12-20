@@ -16,6 +16,8 @@ In this guide, you'll learn about:
 
 - :doc:`Installing ROCm and machine learning frameworks <install>`
 
+- :doc:`Scaling model training <scale-model-training>`
+
 - :doc:`Training a model <train-a-model>`
 
 - :doc:`Running models from Hugging Face <hugging-face-models>`
