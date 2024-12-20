@@ -13,14 +13,12 @@ neural network training and inference. It is one of the most popular and
 in-demand frameworks and is very active in open-source contribution and
 development.
 
-ROCm support for TensorFlow is upstreamed into the official TensorFlow
-repository. Due to independent compatibility considerations, this results in
-two distinct release cycles for TensorFlow on ROCm:
+The `official TensorFlow repository <http://github.com/tensorflow/tensorflow>`_
+includes full ROCm support. AMD does maintain a TensorFlow `ROCM repository 
+<http://github.com/rocm/tensorflow-upstream>`_ in order to quickly add bug
+fixes, updates, and support for the latest ROCM versions.
 
 - ROCm TensorFlow release:
-
-  - Provides the latest version of ROCm but doesn't immediately support the
-    latest stable TensorFlow version.
 
   - Offers :ref:`Docker images <tensorflow-docker-compat>` with
     ROCm and TensorFlow pre-installed.
@@ -419,7 +417,7 @@ The following are GPU-acclerated TensorFlow features not currently supported by 
 
     * - Feature
       - Description
-      - Since PyTorch
+      - Since TensorFlow
     * - Mixed Precision with TF32
       - Mixed precision with TF32 is used for matrix multiplications,
         convolutions, and other linear algebra operations, particularly in
