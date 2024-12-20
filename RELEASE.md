@@ -529,7 +529,7 @@ Packaging metadata for ROCm Compute Profiler (`rocprofiler-compute`) and ROCm Sy
 (`rocprofiler-systems`) has been updated to handle the renaming from Omniperf and Omnitrace,
 respectively. This fixes minor issues when upgrading from ROCm 6.2 to 6.3. For more information, see the GitHub issues
 [#4082](https://github.com/ROCm/ROCm/issues/4082) and
-[#4083](https://github.com/ROCm/ROCm/issues/4082).
+[#4083](https://github.com/ROCm/ROCm/issues/4083).
 
 ### Stale file due to OpenCL ICD loader deprecation
 
