@@ -26,7 +26,6 @@ parameters:
     - llvm-project
     - MIOpen
     - MIVisionX
-    - omniperf
     - rccl
     - rdc
     - rocAL
