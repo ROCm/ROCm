@@ -94,10 +94,6 @@ subtrees:
         title: System tuning
       - file: how-to/tuning-guides/mi300x/workload.rst
         title: Workload tuning
-  - url: https://dcgpu.docs.amd.com/projects/gpu-cluster-networking/en/latest/index.html
-    title: GPU cluster networking
-  - file: how-to/gpu-enabled-mpi.rst
-    title: Use MPI
   - file: how-to/system-debugging.md
   - file: conceptual/compiler-topics.md
     title: Use advanced compiler features
