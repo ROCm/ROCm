@@ -116,6 +116,9 @@ html_title = "ROCm Documentation"
 
 html_theme_options = {"link_main_doc": False}
 
-redirects = {"reference/openmp/openmp": "../../about/compatibility/openmp.html"}
+redirects = {
+    "reference/openmp/openmp": "../../about/compatibility/openmp.html",
+    "https://rocm.docs.amd.com/projects/gpu-cluster-networking/en/latest/": "https://dcgpu.docs.amd.com/projects/gpu-cluster-networking/en/latest/"
+}
 
 numfig = False
