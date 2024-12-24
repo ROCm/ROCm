@@ -576,14 +576,6 @@ PyTorch interacts with the CUDA or ROCm environment.
       - Globally enables or disables the PyTorch C++ implementation within SDPA.
       - 2.1
       - ❌
-    * - ``allow_fp16_bf16_reduction_math_sdp``
-      - Globally enables FP16 and BF16 precision for reduction operations within
-        SDPA.
-      - 2.1
-      - 
-..
-   FIXME:
-      - Partial?
 
 .. Need to validate and extend.
 
@@ -671,15 +663,6 @@ of computational resources and scalability for large-scale tasks.
         those on separate machines.
       - 1.8
       - 5.4
-    * - RPC Device Map Passing
-      - RPC Device Map Passing in PyTorch refers to a feature of the Remote
-        Procedure Call (RPC) framework that enables developers to control and
-        specify how tensors are transferred between devices during remote
-        operations. It allows fine-grained management of device placement when
-        sending tensors across nodes in distributed training or execution
-        scenarios.
-      - 1.9
-      - 
     * - Gloo
       - Gloo is designed for multi-machine and multi-GPU setups, enabling
         efficient communication and synchronization between processes. Gloo is
@@ -687,24 +670,6 @@ of computational resources and scalability for large-scale tasks.
         (DDP) and RPC frameworks, alongside other backends like NCCL and MPI.
       - 1.0
       - 2.0
-    * - MPI
-      - MPI (Message Passing Interface) in PyTorch refers to the use of the MPI
-        backend for distributed communication in the ``torch.distributed`` module.
-        It enables inter-process communication, primarily in distributed
-        training settings, using the widely adopted MPI standard.
-      - 1.9
-      -
-    * - TorchElastic
-      - TorchElastic is a PyTorch library that enables fault-tolerant and
-        elastic training in distributed environments. It is designed to handle
-        dynamically changing resources, such as adding or removing nodes during
-        training, which is especially useful in cloud-based or preemptible
-        environments.
-      - 1.9
-      -
-
-.. 
-   FIXME: RPC Device Map Passing "Since ROCm version"
 
 torch.compiler
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
