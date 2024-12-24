@@ -42,7 +42,6 @@ ROCm documentation is organized into the following categories:
 * [Fine-tune LLMs and inference optimization](./how-to/llm-fine-tuning-optimization/index.rst)
 * [System optimization](./how-to/system-optimization/index.rst)
 * [AMD Instinct MI300X performance validation and tuning](./how-to/tuning-guides/mi300x/index.rst)
-* [GPU cluster networking](https://dcgpu.docs.amd.com/projects/gpu-cluster-networking/en/latest/index.html)
 * [System debugging](./how-to/system-debugging.md)
 * [Use MPI](./how-to/gpu-enabled-mpi.rst)
 * [Use advanced compiler features](./conceptual/compiler-topics.md)
