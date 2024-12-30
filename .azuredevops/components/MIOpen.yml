@@ -120,7 +120,7 @@ jobs:
       gpuTarget: $(JOB_GPU_TARGET)
 
 - job: MIOpen_testing
-  timeoutInMinutes: 90
+  timeoutInMinutes: 180
   dependsOn: MIOpen
   condition: and(succeeded(), eq(variables.ENABLE_GFX942_TESTS, 'true'), not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])))
   variables:
