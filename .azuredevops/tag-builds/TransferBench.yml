@@ -1,0 +1,29 @@
+variables:
+- group: common
+- template: /.azuredevops/variables-global.yml
+
+parameters:
+- name: checkoutRef
+  type: string
+  default: refs/tags/$(LATEST_RELEASE_TAG)
+
+resources:
+  repositories:
+  - repository: pipelines_repo
+    type: github
+    endpoint: ROCm
+    name: ROCm/ROCm
+  - repository: release_repo
+    type: github
+    endpoint: ROCm
+    name: ROCm/TransferBench
+    ref: ${{ parameters.checkoutRef }}
+
+trigger: none
+pr: none
+
+jobs:
+  - template: ${{ variables.CI_COMPONENT_PATH }}/TransferBench.yml
+    parameters:
+      checkoutRepo: release_repo
+      checkoutRef: ${{ parameters.checkoutRef }}
