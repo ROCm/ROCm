@@ -85,6 +85,7 @@ parameters:
     roctracer: amd-staging
     rocWMMA: develop
     rpp: develop
+    TransferBench: develop
 - name: mainlineBranchList
   type: object
   default:
@@ -148,6 +149,7 @@ parameters:
     roctracer: amd-master
     rocWMMA: mainline
     rpp: mainline
+    TransferBench: mainline
 # BELOW REQUIRED IF useDefaultBranch false
 - name: branchName
   type: string

@@ -216,6 +216,7 @@ parameters:
     - omniperf
     - rocAL
     - ROCmValidationSuite
+    - TransferBench
 
 steps:
 # assuming artifact-download.yml template file in same directory
