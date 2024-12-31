@@ -37,6 +37,7 @@ parameters:
     - ROCmValidationSuite
     - rocprofiler
     - rocprofiler-register
+    - rocprofiler-sdk
     - ROCR-Runtime
 - name: rocmTestDependencies
   type: object
