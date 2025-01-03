@@ -11,8 +11,9 @@ deep learning. PyTorch on ROCm provides mixed-precision and large-scale training
 using `MIOpen <https://github.com/ROCm/MIOpen>`_ and
 `RCCL <https://github.com/ROCm/rccl>`_ libraries.
 
-ROCm support for PyTorch is upstreamed into the official PyTorch repository. Due to independent
-compatibility considerations, this results in two distinct release cycles for PyTorch on ROCm:
+ROCm support for PyTorch is upstreamed into the official PyTorch repository. Due
+to independent compatibility considerations, this results in two distinct
+release cycles for PyTorch on ROCm:
 
 - ROCm PyTorch release:
 

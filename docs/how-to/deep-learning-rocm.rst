@@ -14,9 +14,9 @@ frameworks to ensure that framework-specific optimizations take advantage of AMD
 The following guides provide information on compatibility and supported
 features for these ROCm-enabled deep learning frameworks.
 
-* :doc:`PyTorch compatibility <../compatibility/pytorch-compatibility>`
-.. * :doc:`TensorFlow compatibility <../compatibility/tensorflow-compatibility>`
-.. * :doc:`JAX compatibility <../compatibility/jax-compatibility>`
+* :doc:`PyTorch compatibility <../compatibility/ml-compatibility/pytorch-compatibility>`
+.. * :doc:`TensorFlow compatibility <../compatibility/ml-compatibility/tensorflow-compatibility>`
+* :doc:`JAX compatibility <../compatibility/ml-compatibility/jax-compatibility>`
 
 This chart steps through typical installation workflows for installing deep learning frameworks for ROCm.
 
