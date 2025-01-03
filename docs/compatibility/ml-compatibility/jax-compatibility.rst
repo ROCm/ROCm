@@ -228,8 +228,9 @@ table:
       - 5.0.0
     * - ``jax.lax``
       - A library of primitives operations that underpins libraries such as
-        ``jax.numpy.`` Transformation rules, such as JVP and batching rules,
-        are typically defined as transformations on ``jax.lax`` primitives.
+        ``jax.numpy.`` Transformation rules, such as Jacobian-vector product
+        (JVP) and batching rules, are typically defined as transformations on
+        ``jax.lax`` primitives.
       - 0.1.57
       - 5.0.0
     * - ``jax.random``
@@ -318,8 +319,66 @@ table:
       - jax_triton 0.2.0 
       - 6.2.4
 
-jax.lax module
+``jax.lax`` module
 -------------------------------------------------------------------------------
+
+``jax.lax`` is a library of primitive operations that serves as the foundation
+for higher-level libraries like ``jax.numpy``. Transformation rules, such as
+JVP and batching rules, are typically implemented as 
+transformations on ``jax.lax`` primitives.
+
+Many of these primitives are lightweight wrappers around equivalent XLA
+operations, as detailed in the `XLA operation semantics documentation <https://openxla.org/xla/operation_semantics>`_.
+
+Whenever possible, it is recommended to use higher-level libraries such as
+``jax.numpy`` instead of directly relying on ``jax.lax``. The ``jax.numpy`` API
+adheres to NumPy conventions, making it more stable and less subject to change
+than the ``jax.lax`` API.
+
+The following section maps GPU-accelerated ``jax.lax`` features to their
+supported ROCm and JAX versions. The GPU accelerated JAX modules listed in the
+following table:
+
+.. list-table::
+    :header-rows: 1
+
+    * - Module
+      - Description
+      - Since JAX
+      - Since ROCm
+    * - Operators
+      - Arithmetic and comparison operators, indexing and slicing, reduction
+        operations, logical and bitwise operators, random number generation,
+        trigonometric and special functions and other utility operators.
+      - 0.1.56
+      - 5.0.0
+    * - Control flow operators
+      - Allow conditional logic and looping within JAX's functional programming
+        paradigm.
+      - 
+      - 
+    * - Linear algebra operators
+      - These operators are used for matrix and tensor computations.
+      - 
+      - 
+    * - Custom gradient operators
+      - Allow conditional logic and looping within JAX's functional programming
+        paradigm.
+      - 
+      -
+    * - Parallel operators
+      - Allow conditional logic and looping within JAX's functional programming
+        paradigm.
+      - 
+      -
+    * - Sharding-related operators
+      - Allow conditional logic and looping within JAX's functional programming
+        paradigm.
+      - 
+      -
+    * - Argument classes
+
+
 
 
 jax.scipy module
