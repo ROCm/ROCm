@@ -378,9 +378,6 @@ following table:
       -
     * - Argument classes
 
-
-
-
 jax.scipy module
 -------------------------------------------------------------------------------
 
@@ -706,6 +703,12 @@ Use cases and recommendations
   nanoGPT. By comparing how essential GPT components—such as self-attention
   mechanisms and optimizers—are realized in PyTorch and JAX, also highlight
   JAX’s unique features.
+
+* The `Optimize GPT Training: Enabling Mixed Precision Training in JAX using
+  ROCm on AMD GPUs <https://rocm.blogs.amd.com/artificial-intelligence/jax-mixed-precision/README.html>`_
+  blog post provides a comprehensive guide on enhancing the training efficiency
+  of GPT models by implementing mixed precision techniques in JAX, specifically
+  tailored for AMD GPUs utilizing the ROCm platform.
 
 * The `Supercharging JAX with Triton Kernels on AMD GPUs <https://rocm.blogs.amd.com/artificial-intelligence/jax-triton/README.html>`_
   blog demonstrates how to develop a custom fused dropout-activation kernel for
