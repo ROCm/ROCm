@@ -313,6 +313,10 @@ table:
         frontend and its XLA backend.
       - 0.4.6
       - 5.3.0
+    * - ``jax_triton``
+      - Library that integrates the Triton deep learning compiler with JAX.
+      - jax_triton 0.2.0 
+      - 6.2.4
 
 jax.lax module
 -------------------------------------------------------------------------------
@@ -617,9 +621,6 @@ ROCm.
       - 0.3.25
     * - XLA int4 support
       - 4-bit integer (int4) precision in the XLA compiler.
-      - 0.4.0
-    * - ``jax-triton``
-      - Library that integrates the Triton deep learning compiler with JAX.
       - 0.4.0
     * - Graph support
       - Does not expose Graphs as a standalone feature, its reliance on XLA for
