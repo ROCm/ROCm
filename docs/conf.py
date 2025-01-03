@@ -39,6 +39,7 @@ all_article_info_author = ""
 # pages with specific settings
 article_pages = [
     {"file": "about/release-notes", "os": ["linux", "windows"], "date": "2024-12-20"},
+    {"file": "compatibility/pytorch-compatibility", "os": ["linux"]},
     {"file": "how-to/deep-learning-rocm", "os": ["linux"]},
     {"file": "how-to/rocm-for-ai/index", "os": ["linux"]},
     {"file": "how-to/rocm-for-ai/install", "os": ["linux"]},
