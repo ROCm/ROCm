@@ -37,7 +37,7 @@ support:
 
 .. note::
 
-   AMD releases official ``ROCm JAX Docker images <https://hub.docker.com/r/rocm/jax>`_
+   AMD releases official `ROCm JAX Docker images <https://hub.docker.com/r/rocm/jax>`_
    quarterly alongside new ROCm releases. These images undergo full AMD testing.
    `Community ROCm JAX Docker images <https://hub.docker.com/r/rocm/jax-community>`_
    follow upstream JAX releases and use the latest available ROCm version.
