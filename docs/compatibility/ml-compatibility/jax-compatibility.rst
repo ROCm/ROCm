@@ -37,10 +37,10 @@ support:
 
 .. note::
 
-  The official `ROCM JAX docker images <https://hub.docker.com/r/rocm/jax>`_
+  The official `ROCm JAX Docker images <https://hub.docker.com/r/rocm/jax>`_
   are fully tested by AMD and are released on a quarterly cadence along with
   new ROCm releases.
-  The `community JAX docker images for ROCM <https://hub.docker.com/r/rocm/jax-community>`_
+  The `community JAX Docker images for ROCm <https://hub.docker.com/r/rocm/jax-community>`_
   are built and released on a cadence that matches the upstream JAX release
   cadence and kept current with the latest ROCM version available.
 
@@ -598,7 +598,7 @@ Experimental support for sparse matrix operations.
 Unsupported JAX features
 ------------------------
 
-The following are GPU-acclerated JAX features not currently supported by
+The following are GPU-accelerated JAX features not currently supported by
 ROCm.
 
 .. list-table::
