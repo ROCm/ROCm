@@ -21,6 +21,8 @@ parameters:
     - libavcodec-dev
     - libavformat-dev
     - libavutil-dev
+    - libdlpack-dev
+    - libsndfile1-dev
     - libswscale-dev
     - libturbojpeg-dev
     - libjpeg-turbo-official=3.0.2-20240124
@@ -149,6 +151,7 @@ jobs:
         -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm;/opt/libjpeg-turbo
         -DCMAKE_INSTALL_PREFIX_PYTHON=$Python3_STDARCH
         -DCMAKE_BUILD_TYPE=Release
+        -DGPU_TARGETS=$(JOB_GPU_TARGET)
         -GNinja
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
     parameters:
