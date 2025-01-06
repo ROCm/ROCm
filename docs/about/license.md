@@ -58,7 +58,7 @@ additional licenses. Please review individual repositories for more information.
 | [ROCdbgapi](https://github.com/ROCm/ROCdbgapi/) | [MIT](https://github.com/ROCm/ROCdbgapi/blob/amd-staging/LICENSE.txt) |
 | [rocDecode](https://github.com/ROCm/rocDecode) | [MIT](https://github.com/ROCm/rocDecode/blob/develop/LICENSE) |
 | [rocFFT](https://github.com/ROCm/rocFFT/) | [MIT](https://github.com/ROCm/rocFFT/blob/develop/LICENSE.md) |
-| [ROCgdb](https://github.com/ROCm/ROCgdb/) | [GNU General Public License v3.0](https://github.com/ROCm/ROCgdb/blob/amd-master/COPYING3) |
+| [ROCgdb](https://github.com/ROCm/ROCgdb/) | [GNU General Public License v3.0](https://github.com/ROCm/ROCgdb/blob/amd-staging/COPYING3) |
 | [rocJPEG](https://github.com/ROCm/rocJPEG/) | [MIT](https://github.com/ROCm/rocJPEG/blob/develop/LICENSE) |
 | [ROCK-Kernel-Driver](https://github.com/ROCm/ROCK-Kernel-Driver/) | [GPL 2.0 WITH Linux-syscall-note](https://github.com/ROCm/ROCK-Kernel-Driver/blob/master/COPYING) |
 | [rocminfo](https://github.com/ROCm/rocminfo/) | [The University of Illinois/NCSA](https://github.com/ROCm/rocminfo/blob/amd-staging/License.txt) |
