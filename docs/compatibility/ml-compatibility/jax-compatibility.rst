@@ -137,7 +137,7 @@ performance, and feature set available to developers.
         operations.
     * - `hipBLASLt <https://github.com/ROCm/hipBLASLt>`_
       - 0.10.0
-      - hipBLASLt is an extension of hipBLAS library, providing additional
+      - hipBLASLt is an extension of hipBLAS, providing additional
         features like epilogues fused into the matrix multiplication kernel or
         use of integer tensor cores.
       - Matrix multiplication in ``jax.numpy.matmul`` or ``jax.lax.dot``, and
@@ -208,9 +208,8 @@ performance, and feature set available to developers.
 Supported and unsupported features
 ===============================================================================
 
-The following section maps GPU-accelerated JAX features to their supported
-ROCm and JAX versions. The GPU accelerated JAX modules listed in the following
-table:
+The following table maps GPU-accelerated JAX modules to their supported
+ROCm and JAX versions.
 
 .. list-table::
     :header-rows: 1
@@ -247,12 +246,12 @@ table:
       - 0.3.20
       - 5.1.0
     * - ``jax.dlpack``
-      - Exchange tensor data between JAX and other libraries that support the
+      - For exchanging tensor data between JAX and other libraries that support the
         DLPack standard.
       - 0.1.57
       - 5.0.0
     * - ``jax.distributed``
-      - Enabling to scale computations across multiple devices on a single
+      - Enables the scaling of computations across multiple devices on a single
         machine or across multiple machines.
       - 0.1.74
       - 5.0.0
@@ -262,11 +261,11 @@ table:
       - 0.1.66
       - 5.0.0 
     * - ``jax.image``
-      - Image manipulation functions like resize, scale and translation.
+      - Contains image manipulation functions like resize, scale and translation.
       - 0.1.57
       - 5.0.0
     * - ``jax.nn``
-      - Common functions for neural network libraries.
+      - Contains common functions for neural network libraries.
       - 0.1.56
       - 5.0.0
     * - ``jax.ops``
@@ -275,15 +274,15 @@ table:
       - 0.1.57
       - 5.0.0
     * - ``jax.profiler``
-      - Module for JAX’s tracing and time profiling features.
+      - Contains JAX’s tracing and time profiling features.
       - 0.1.57
       - 5.0.0
     * - ``jax.stages``
-      - Interfaces to stages of the compiled execution process.
+      - Contains interfaces to stages of the compiled execution process.
       - 0.3.4
       - 5.0.0
     * - ``jax.tree``
-      - Utilities for working with tree-like container data structures.
+      - Provides utilities for working with tree-like container data structures.
       - 0.4.26
       - 5.6.0
     * - ``jax.tree_util``
@@ -292,8 +291,7 @@ table:
       - 0.1.65
       - 5.0.0
     * - ``jax.typing``
-      - Module is where JAX-specific static type annotations live. Still work in
-        progress.
+      - Provides JAX-specific static type annotations.
       - 0.3.18
       - 5.1.0
     * - ``jax.extend``

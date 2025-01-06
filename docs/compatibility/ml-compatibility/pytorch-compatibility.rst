@@ -196,7 +196,7 @@ Click |docker-icon| to see the image on Docker Hub.
 Critical ROCm libraries for PyTorch
 ================================================================================
 
-The functionality of PyTorch with ROCm is shaped by its underlying library
+The functionality of PyTorch with ROCm is determined by its underlying library
 dependencies. These critical ROCm components affect the capabilities,
 performance, and feature set available to developers.
 
@@ -275,7 +275,7 @@ performance, and feature set available to developers.
         ``torch.nn.Conv2d``, ``torch.nn.ReLU``, and ``torch.nn.LSTM``.
     * - `MIGraphX <https://github.com/ROCm/AMDMIGraphX>`_
       - 2.11.0
-      - Add graph-level optimizations, ONNX models and mixed precision support
+      - Adds graph-level optimizations, ONNX models and mixed precision support
         and enable Ahead-of-Time (AOT) Compilation.
       - Speeds up inference models and executes ONNX models for
         compatibility with other frameworks.
@@ -301,19 +301,19 @@ performance, and feature set available to developers.
         Handles communication in multi-GPU setups.
     * - `rocDecode <https://github.com/ROCm/rocDecode>`_
       - 0.8.0
-      - Provide hardware-accelerated data decoding capabilities, particularly
+      - Provides hardware-accelerated data decoding capabilities, particularly
         for image, video, and other dataset formats.
       - Can be integrated in ``torch.utils.data``, ``torchvision.transforms``
         and ``torch.distributed``.
     * - `rocJPEG <https://github.com/ROCm/rocJPEG>`_
       - 0.6.0
-      - Provide hardware-accelerated JPEG image decoding and encoding.
+      - Provides hardware-accelerated JPEG image decoding and encoding.
       - GPU accelerated ``torchvision.io.decode_jpeg`` and
         ``torchvision.io.encode_jpeg`` and can be integrated in
         ``torch.utils.data`` and ``torchvision``.
     * - `RPP <https://github.com/ROCm/RPP>`_
       - 1.9.1
-      - Speed up data augmentation, transformation, and other preprocessing step.
+      - Speeds up data augmentation, transformation, and other preprocessing steps.
       - Easy to integrate into PyTorch's ``torch.utils.data`` and
         ``torchvision`` data load workloads.
     * - `rocThrust <https://github.com/ROCm/rocThrust>`_
@@ -478,13 +478,13 @@ leveraging ROCm and CUDA as the underlying frameworks.
       - 0.4.0
       - 3.8
     * - Tensor operations on GPU
-      - Perform tensor operations such as addition and matrix multiplications on
+      - Performs tensor operations such as addition and matrix multiplications on
         the GPU.
       - 0.4.0
       - 3.8
     * - Streams and events
       - Streams allow overlapping computation and communication for optimized
-        performance, events enable synchronization.
+        performance. Events enable synchronization.
       - 1.6.0
       - 3.8
     * - Memory management
@@ -494,13 +494,13 @@ leveraging ROCm and CUDA as the underlying frameworks.
       - 0.3.0
       - 1.9.2
     * - Running process lists of memory management
-      - Return a human-readable printout of the running processes and their GPU
-        memory use for a given device with functions like 
+      - Returns a human-readable printout of the running processes and their GPU
+        memory use for a given device with functions like
         ``torch.cuda.memory_stats()`` and ``torch.cuda.memory_summary()``.
       - 1.8.0
       - 4.0
     * - Communication collectives
-      - A set of APIs that enable efficient communication between multiple GPUs,
+      - Set of APIs that enable efficient communication between multiple GPUs,
         allowing for distributed computing and data parallelism.
       - 1.9.0
       - 5.0
@@ -663,14 +663,14 @@ of computational resources and scalability for large-scale tasks.
       - Since PyTorch
       - Since ROCm
     * - TensorPipe
-      - TensorPipe is a point-to-point communication library integrated into
+      - A point-to-point communication library integrated into
         PyTorch for distributed training. It is designed to handle tensor data
         transfers efficiently between different processes or devices, including
         those on separate machines.
       - 1.8
       - 5.4
     * - Gloo
-      - Gloo is designed for multi-machine and multi-GPU setups, enabling
+      - Designed for multi-machine and multi-GPU setups, enabling
         efficient communication and synchronization between processes. Gloo is
         one of the default backends for PyTorch's Distributed Data Parallel
         (DDP) and RPC frameworks, alongside other backends like NCCL and MPI.
@@ -722,11 +722,11 @@ The following ``torchaudio`` features are GPU-accelerated.
       - Since torchaudio version
       - Since ROCm
     * - ``torchaudio.transforms.Spectrogram``
-      - Generate spectrogram of an input waveform using STFT.
+      - Generates spectrogram of an input waveform using STFT.
       - 0.6.0
       - 4.5
     * - ``torchaudio.transforms.MelSpectrogram``
-      - Generate the mel-scale spectrogram of raw audio signals.
+      - Generates the mel-scale spectrogram of raw audio signals.
       - 0.9.0
       - 4.5
     * - ``torchaudio.transforms.MFCC``
@@ -734,7 +734,7 @@ The following ``torchaudio`` features are GPU-accelerated.
       - 0.9.0
       - 4.5
     * - ``torchaudio.transforms.Resample``
-      - Resample a signal from one frequency to another
+      - Resamples a signal from one frequency to another.
       - 0.9.0
       - 4.5
 
@@ -772,7 +772,7 @@ The following ``torchvision`` features are GPU-accelerated.
       - 0.1.6
       - 2.x
     * - ``torchvision.io``
-      - Video decoding and frame extraction using GPU acceleration with NVIDIA’s
+      - Enables video decoding and frame extraction using GPU acceleration with NVIDIA’s
         NVDEC and nvJPEG (rocJPEG) on CUDA-enabled GPUs.
       - 0.4.0
       - 6.3
