@@ -620,11 +620,6 @@ ROCm.
     * - ``jax.experimental.sparsify``
       - Converts a dense matrix to a sparse matrix representation.
       - Experimental
-    * - Semi-structured sparsity
-      - Semi-structured sparsity typically involves setting values to zero in
-        certain parts of a tensor or matrix according to patterns that are
-        either predefined or learned.
-      - Experimental
 
 Use cases and recommendations
 ================================================================================
