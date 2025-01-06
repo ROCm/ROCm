@@ -188,6 +188,7 @@ Interop
 Intersphinx
 Intra
 Ioffe
+JAX's
 Jinja
 JSON
 Jupyter
@@ -665,6 +666,7 @@ mutex
 mvffr
 namespace
 namespaces
+nanoGPT
 num
 numref
 ocl
