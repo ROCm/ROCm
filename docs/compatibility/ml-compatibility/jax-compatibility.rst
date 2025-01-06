@@ -617,13 +617,6 @@ ROCm.
     * - XLA int4 support
       - 4-bit integer (int4) precision in the XLA compiler.
       - 0.4.0
-    * - Graph support
-      - Does not expose Graphs as a standalone feature, its reliance on XLA for
-        computation allows Graph solutions to be used internally for GPU
-        workloads. Modules like ``jax.jit`` and ``jax.pmap``, especially in
-        cases with static graphs, benefit from Graph-based optimizations to
-        improve kernel launch efficiency and execution speed on AMD GPUs.
-      - 0.4.17
     * - ``jax.experimental.sparsify``
       - Converts a dense matrix to a sparse matrix representation.
       - Experimental
