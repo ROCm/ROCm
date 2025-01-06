@@ -21,7 +21,7 @@ build_rocfft() {
     if [ -n "$GPU_ARCHS" ]; then
         GPU_TARGETS="$GPU_ARCHS"
     else
-        GPU_TARGETS="gfx908;gfx90a;gfx940;gfx941;gfx942;gfx1030;gfx1100;gfx1101"
+        GPU_TARGETS="gfx908;gfx90a;gfx940;gfx941;gfx942;gfx1030;gfx1100;gfx1101;gfx1102;gfx1200;gfx1201"
     fi
 
     CXX="${ROCM_PATH}/bin/hipcc" \
@@ -34,7 +34,6 @@ build_rocfft() {
         -DBUILD_CLIENTS_SAMPLES=ON  \
         -DBUILD_CLIENTS_TESTS=ON \
         -DBUILD_CLIENTS_RIDER=ON  \
-        -DCPACK_SET_DESTDIR=OFF  \
         "$COMPONENT_SRC"
 
     cmake --build "$BUILD_DIR" -- -j${PROC}

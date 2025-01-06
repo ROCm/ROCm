@@ -9,6 +9,10 @@ BUILD_DEV=ON
 build_mivisionx() {
     echo "Start build"
 
+    if [ "${ENABLE_STATIC_BUILDS}" == "true" ]; then
+        ack_and_skip_static
+    fi
+
     mkdir -p $BUILD_DIR && cd $BUILD_DIR
     if [ "${ENABLE_ADDRESS_SANITIZER}" == "true" ]; then
        set_asan_env_vars
@@ -21,7 +25,7 @@ build_mivisionx() {
     if [ -n "$GPU_ARCHS" ]; then
         GPU_TARGETS="$GPU_ARCHS"
     else
-        GPU_TARGETS="gfx908;gfx90a;gfx940;gfx941;gfx942;gfx1030;gfx1100"
+        GPU_TARGETS="gfx908;gfx90a;gfx940;gfx941;gfx942;gfx1030;gfx1100;gfx1101;gfx1102;gfx1200;gfx1201"
     fi
 
     cmake \
@@ -40,8 +44,7 @@ build_mivisionx() {
     cpack -G ${PKGTYPE^^}
 
     rm -rf _CPack_Packages/ && find -name '*.o' -delete
-    mkdir -p $PACKAGE_DIR
-    cp ${BUILD_DIR}/*.${PKGTYPE} $PACKAGE_DIR
+    mkdir -p $PACKAGE_DIR && cp ${BUILD_DIR}/*.${PKGTYPE} $PACKAGE_DIR
 
     show_build_cache_stats
 }

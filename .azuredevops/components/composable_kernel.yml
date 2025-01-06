@@ -101,6 +101,7 @@ jobs:
       gpuTarget: $(JOB_GPU_TARGET)
 
 - job: composable_kernel_testing
+  timeoutInMinutes: 90
   dependsOn: composable_kernel
   condition: and(succeeded(), eq(variables.ENABLE_GFX942_TESTS, 'true'), not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])))
   variables:

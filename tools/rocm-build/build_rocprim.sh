@@ -16,12 +16,17 @@ build_rocprim() {
        ASAN_CMAKE_PARAMS="false"
     fi
 
+    SHARED_LIBS="ON"
+    if [ "${ENABLE_STATIC_BUILDS}" == "true" ]; then
+        SHARED_LIBS="OFF"
+    fi
+
     mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
 
     if [ -n "$GPU_ARCHS" ]; then
         GPU_TARGETS="$GPU_ARCHS"
     else
-        GPU_TARGETS="gfx908:xnack-;gfx90a:xnack-;gfx90a:xnack+;gfx940;gfx941;gfx942;gfx1030;gfx1100;gfx1101"
+        GPU_TARGETS="gfx908:xnack-;gfx90a:xnack-;gfx90a:xnack+;gfx940;gfx941;gfx942;gfx1030;gfx1100;gfx1101;gfx1102;gfx1200;gfx1201"
     fi
 
     init_rocm_common_cmake_params
@@ -31,8 +36,8 @@ build_rocprim() {
         "${rocm_math_common_cmake_params[@]}" \
         -DAMDGPU_TARGETS=${GPU_TARGETS} \
         -DBUILD_BENCHMARK=OFF \
-	-DBUILD_SHARED_LIBS=ON \
         -DBUILD_TEST=ON \
+        -DBUILD_SHARED_LIBS=$SHARED_LIBS \
         -DCMAKE_MODULE_PATH="${ROCM_PATH}/lib/cmake/hip;${ROCM_PATH}/hip/cmake" \
         "$COMPONENT_SRC"
 

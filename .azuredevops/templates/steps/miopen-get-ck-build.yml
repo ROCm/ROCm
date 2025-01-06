@@ -36,7 +36,7 @@ steps:
 
       if [ -z "$CK_BUILD_ID" ]; then
         echo "Did not find specific CK build ID"
-        LATEST_BUILD_URL="$AZ_API/build/builds?definitions=$(COMPOSABLE_KERNEL_PIPELINE_ID)&status=completed&result=succeeded&\$top=1&api-version=7.1"
+        LATEST_BUILD_URL="$AZ_API/build/builds?definitions=$(COMPOSABLE_KERNEL_PIPELINE_ID)&statusFilter=completed&resultFilter=succeeded&\$top=1&api-version=7.1"
         CK_BUILD_ID=$(curl -s $LATEST_BUILD_URL | jq '.value[0].id')
         echo "Found latest CK build ID: $CK_BUILD_ID"
         EXIT_CODE=1

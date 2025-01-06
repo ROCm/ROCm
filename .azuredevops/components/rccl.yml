@@ -8,15 +8,16 @@ parameters:
 - name: aptPackages
   type: object
   default:
-    - python3-pip
     - cmake
-    - libboost-program-options-dev
-    - googletest
-    - libfftw3-dev
     - git
-    - ninja-build
-    - libstdc++-12-dev
+    - googletest
+    - libboost-program-options-dev
+    - libdrm-dev
+    - libfftw3-dev
     - libnuma-dev
+    - libstdc++-12-dev
+    - ninja-build
+    - python3-pip
 - name: rocmDependencies
   type: object
   default:

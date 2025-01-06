@@ -42,11 +42,10 @@ ROCm documentation is organized into the following categories:
 * [Fine-tune LLMs and inference optimization](./how-to/llm-fine-tuning-optimization/index.rst)
 * [System optimization](./how-to/system-optimization/index.rst)
 * [AMD Instinct MI300X performance validation and tuning](./how-to/tuning-guides/mi300x/index.rst)
-* [GPU cluster networking](https://rocm.docs.amd.com/projects/gpu-cluster-networking/en/latest/index.html)
 * [System debugging](./how-to/system-debugging.md)
-* [Use MPI](./how-to/gpu-enabled-mpi.rst)
 * [Use advanced compiler features](./conceptual/compiler-topics.md)
-* [Set the number of CUs](./how-to/setting-cus)  
+* [Set the number of CUs](./how-to/setting-cus)
+* [Troubleshoot BAR access limitation](./how-to/Bar-Memory.rst)  
 * [ROCm examples](https://github.com/amd/rocm-examples)
 :::
 
@@ -58,7 +57,7 @@ ROCm documentation is organized into the following categories:
 * [File structure (Linux FHS)](./conceptual/file-reorg.md)
 * [GPU isolation techniques](./conceptual/gpu-isolation.md)
 * [Using CMake](./conceptual/cmake-packages.rst)
-* [ROCm & PCIe atomics](./conceptual/More-about-how-ROCm-uses-PCIe-Atomics.rst)
+* [PCIe atomics in ROCm](./conceptual/pcie-atomics.rst)
 * [Inception v3 with PyTorch](./conceptual/ai-pytorch-inception.md)
 * [Oversubscription of hardware resources](./conceptual/oversubscription.rst)
 :::
@@ -71,6 +70,7 @@ ROCm documentation is organized into the following categories:
 * [ROCm tools, compilers, and runtimes](./reference/rocm-tools.md)
 * [Accelerator and  GPU hardware specifications](./reference/gpu-arch-specs.rst)
 * [Precision support](./reference/precision-support.rst)
+* [Graph safe support](./reference/graph-safe-support.rst)
 :::
 <!-- markdownlint-enable MD051 -->
 

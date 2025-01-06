@@ -10,9 +10,9 @@ ROCm is a software stack, composed primarily of open-source software, that
 provides the tools for programming AMD Graphics Processing Units (GPUs), from
 low-level kernels to high-level end-user applications.
 
-.. image:: data/rocm-software-stack-6_3_0.jpg
+.. image:: data/rocm-software-stack-6_3_1.jpg
   :width: 800
-  :alt: AMD's ROCm software stack and neighboring technologies.
+  :alt: AMD's ROCm software stack and enabling technologies.
   :align: center
 
 Specifically, ROCm provides the tools for

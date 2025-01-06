@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
     <remote name="rocm-org" fetch="https://github.com/ROCm/" />
-    <default revision="refs/tags/rocm-6.3.0"
+    <default revision="refs/tags/rocm-6.3.1"
      remote="rocm-org"
      sync-c="true"
      sync-j="4" />

@@ -13,7 +13,7 @@ printUsage() {
     echo "  -a,  --address_sanitizer  Enable address sanitizer"
     echo "  -o,  --outdir <pkg_type>  Print path of output directory containing packages of
         type referred to by pkg_type"
-    echo "  -s,  --static             Build static lib (.a).  build instead of dynamic/shared(.so) "
+    echo "  -s,  --static           Component/Build does not support static builds just accepting this param & ignore. No effect of the param on this build"
     echo "  -h,  --help             Prints this help"
     echo
     return 0
@@ -41,7 +41,7 @@ RDC_PKG_NAME_ROOT="rdc"
 RDC_PKG_NAME="${RDC_PKG_NAME_ROOT}"
 GRPC_PROTOC_ROOT="${RDC_BUILD_DIR}/grpc"
 GRPC_SEARCH_ROOT="/usr/grpc"
-GRPC_DESIRED_VERSION="1.59.1" # do not include 'v'
+GRPC_DESIRED_VERSION="1.61.0"
 
 RDC_LIB_RPATH='$ORIGIN'
 RDC_LIB_RPATH=$RDC_LIB_RPATH:'$ORIGIN/..'
@@ -70,7 +70,7 @@ do
         (-d | --documentation )
                 BUILD_DOCS="yes" ;;
         (-s | --static)
-                SHARED_LIBS="OFF" ; shift ;;
+                ack_and_skip_static ;;
         (-o | --outdir)
                 TARGET="outdir"; PKGTYPE=$2 ; OUT_DIR_SPECIFIED=1 ; ((CLEAN_OR_OUT|=2)) ; shift 2 ;;
         (-p | --package)
@@ -111,49 +111,20 @@ find_grpc() {
         GRPC_PROTOC_ROOT=$GRPC_SEARCH_ROOT
 }
 
-build_grpc() {
-    if find_grpc; then
-        return 0
-    fi
-    echo "GRPC SEARCH FAILED! Building from scratch..."
-
-    mkdir -p $PACKAGE_ROOT/build
-    pushd $PACKAGE_ROOT/build
-
-    if [ ! -d $PACKAGE_ROOT/build/grpc/.git ]; then
-        git clone \
-            --shallow-submodules \
-            --recurse-submodules \
-            $DASH_JAY \
-            -b v${GRPC_DESIRED_VERSION} \
-            --depth 1 \
-            https://github.com/grpc/grpc
-    fi
-
-    cd grpc
-    mkdir -p cmake/build
-    cd cmake/build
-
-    cmake \
-        -DgRPC_INSTALL=ON \
-        -DgRPC_BUILD_TESTS=OFF \
-        -DBUILD_SHARED_LIBS=ON \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_INSTALL_PREFIX=${GRPC_PROTOC_ROOT} \
-        ../..
-    cmake --build . -- $DASH_JAY
-    cmake --build . -- install
-
-    cp ../../LICENSE ${GRPC_PROTOC_ROOT}
-    popd
-}
-
 rdc_backwards_compat_cmake_params() {
     grep -q "RDC_CLIENT_INSTALL_PREFIX" "$RDC_ROOT/CMakeLists.txt" &&
         echo "-DRDC_CLIENT_INSTALL_PREFIX=$PACKAGE_ROOT"
 }
 
 build_rdc() {
+    if ! find_grpc; then
+        echo "ERROR: GRPC SEARCH FAILED!"
+        echo "You are expected to have gRPC [${GRPC_DESIRED_VERSION}] in [${GRPC_SEARCH_ROOT}]"
+        # Compiling gRPC as part of the RDC build takes too long and times out the build job
+        return 1
+    fi
+    echo "gRPC [${GRPC_DESIRED_VERSION}] found!"
+
     echo "Building RDC"
     echo "RDC_BUILD_DIR: ${RDC_BUILD_DIR}"
     echo "GRPC_PROTOC_ROOT: ${GRPC_PROTOC_ROOT}"
@@ -226,7 +197,7 @@ verifyEnvSetup
 case $TARGET in
     (clean) clean_rdc ;;
     (clean_grpc) clean_grpc ;;
-    (build) build_grpc; build_rdc ;;
+    (build) build_rdc ;;
     (outdir) print_output_directory ;;
     (*) die "Invalid target $TARGET" ;;
 esac

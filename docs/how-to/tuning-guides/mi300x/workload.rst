@@ -92,7 +92,7 @@ involves configuring tensor parallelism, leveraging advanced features, and
 ensuring efficient execution. Here’s how to optimize vLLM performance:
 
 * Tensor parallelism: Configure the
-  :ref:`tensor-parallel-size parameter <mi300x-vllm-optimize-tp-gemm>` to distribute
+  :ref:`tensor-parallel-size parameter <mi300x-vllm-multiple-gpus>` to distribute
   tensor computations across multiple GPUs. Adjust parameters such as
   ``batch-size``, ``input-len``, and ``output-len`` based on your workload.
 

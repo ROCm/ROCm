@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -ex
+
 source "$(dirname "${BASH_SOURCE[0]}")/compute_helper.sh"
 
 set_component_src rpp
@@ -22,6 +23,10 @@ rpp_specific_cmake_params() {
 build_rpp() {
     echo "Start build"
 
+    if [ "${ENABLE_STATIC_BUILDS}" == "true" ]; then
+        ack_and_skip_static
+    fi
+
     if [ ! -e $COMPONENT_SRC/CMakeLists.txt ]; then
         echo "Skipping RPP build as source is not available"
         mkdir -p $COMPONENT_SRC
@@ -35,12 +40,6 @@ build_rpp() {
 
     mkdir -p $BUILD_DIR && cd $BUILD_DIR
 
-    if [ -n "$GPU_ARCHS" ]; then
-        GPU_TARGETS="$GPU_ARCHS"
-    else
-        GPU_TARGETS="gfx908;gfx90a;gfx940;gfx941;gfx942;gfx1030;gfx1100"
-    fi
-
     init_rocm_common_cmake_params
 
     cmake \
@@ -49,7 +48,6 @@ build_rpp() {
         -DBACKEND=HIP \
         -DCMAKE_INSTALL_LIBDIR=$(getInstallLibDir) \
         $(rpp_specific_cmake_params) \
-        -DAMDGPU_TARGETS=${GPU_TARGETS} \
         -DCMAKE_SHARED_LINKER_FLAGS_INIT="-fno-openmp-implicit-rpath -Wl,--enable-new-dtags,--build-id=sha1,--rpath,${ROCM_LIB_RPATH}:${DEPS_DIR}/lib:${ROCM_LLVM_LIB_RPATH}" \
         -DCMAKE_PREFIX_PATH="${DEPS_DIR};${ROCM_PATH}" \
         "$COMPONENT_SRC"

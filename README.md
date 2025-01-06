@@ -76,8 +76,8 @@ The Build time will reduce significantly if we limit the GPU Architecture/s agai
 
 mkdir -p ~/WORKSPACE/      # Or any folder name other than WORKSPACE
 cd ~/WORKSPACE/
-export ROCM_VERSION=6.3.0
-~/bin/repo init -u http://github.com/ROCm/ROCm.git -b roc-6.3.x -m tools/rocm-build/rocm-${ROCM_VERSION}.xml
+export ROCM_VERSION=6.3.1
+~/bin/repo init -u http://github.com/ROCm/ROCm.git -b develop -m tools/rocm-build/rocm-${ROCM_VERSION}.xml
 ~/bin/repo sync
 
 # --------------------------------------
@@ -87,11 +87,11 @@ export ROCM_VERSION=6.3.0
 # Option 1: Start a docker container
 # Pulling required base docker images:
 # Ubuntu20.04 built from ROCm/tools/rocm-build/docker/ubuntu20/Dockerfile
-docker pull rocm/rocm-build-ubuntu-20.04:6.2
+docker pull rocm/rocm-build-ubuntu-20.04:6.3
 # Ubuntu22.04 built from ROCm/tools/rocm-build/docker/ubuntu22/Dockerfile
-docker pull rocm/rocm-build-ubuntu-22.04:6.2
+docker pull rocm/rocm-build-ubuntu-22.04:6.3
 # Ubuntu24.04 built from ROCm/tools/rocm-build/docker/ubuntu24/Dockerfile
-docker pull rocm/rocm-build-ubuntu-24.04:6.2
+docker pull rocm/rocm-build-ubuntu-24.04:6.3
 
 # Start docker container and mount the source code folder:
 docker run -ti \

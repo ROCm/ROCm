@@ -90,6 +90,7 @@ Dask
 DataFrame
 DataLoader
 DataParallel
+Debian
 DeepSpeed
 Dependabot
 Deprecations
@@ -106,6 +107,7 @@ FFT
 FFTs
 FFmpeg
 FHS
+FIXME
 FMA
 FP
 FX
@@ -130,6 +132,7 @@ GiB
 GIM
 GL
 GLXT
+Gloo
 GMI
 GPG
 GPR
@@ -147,6 +150,7 @@ HCA
 HGX
 HIPCC
 HIPExtension
+HIPification
 HIPIFY
 HPC
 HPCG
@@ -189,6 +193,7 @@ Jupyter
 KFD
 KFDTest
 KiB
+KMD
 KV
 KVM
 Keras
@@ -211,6 +216,7 @@ MiB
 MIGraphX
 MIOpen
 MIOpenGEMM
+MIOpen's
 MIVisionX
 MLM
 MMA
@@ -240,6 +246,7 @@ MyEnvironment
 MyST
 NBIO
 NBIOs
+NCCL
 NIC
 NICs
 NLI
@@ -285,6 +292,7 @@ PCC
 PCI
 PCIe
 PEFT
+PEQT
 PIL
 PILImage
 POR
@@ -314,6 +322,7 @@ RDMA
 RDNA
 README
 RHEL
+RMW
 RNN
 RNNs
 ROC
@@ -330,6 +339,7 @@ ROCmSoftwarePlatform
 ROCmValidationSuite
 ROCprofiler
 ROCr
+RPP
 RST
 RW
 Radeon
@@ -337,6 +347,7 @@ RelWithDebInfo
 Req
 Rickle
 RoCE
+Runfile
 Ryzen
 SALU
 SBIOS
@@ -349,6 +360,7 @@ SENDMSG
 SGPR
 SGPRs
 SHA
+SHARK's
 SIGQUIT
 SIMD
 SIMDs
@@ -393,9 +405,14 @@ TensorFlow
 TensorParallel
 ToC
 TorchAudio
+torchaudio
+TorchElastic
 TorchMIGraphX
+torchrec
 TorchScript
 TorchServe
+torchserve
+torchtext
 TorchVision
 TransferBench
 TrapStatus
@@ -502,6 +519,9 @@ copyable
 cpp
 csn
 cuBLAS
+cuda
+cuDNN
+cudnn
 cuFFT
 cuLIB
 cuRAND
@@ -518,6 +538,7 @@ dbgapi
 de
 deallocation
 debuggability
+debian
 denoise
 denoised
 denoises
@@ -570,6 +591,7 @@ hipBLASLt's
 hipblaslt
 hipCUB
 hipFFT
+hipFORT
 hipLIB
 hipRAND
 hipSOLVER
@@ -591,6 +613,7 @@ hpp
 hsa
 hsakmt
 hyperparameter
+hyperparameters
 iDRAC
 ib_core
 inband
@@ -663,6 +686,7 @@ prebuilt
 precompiled
 preconditioner
 preconfigured
+preemptible
 prefetch
 prefetchable
 prefill
@@ -679,6 +703,7 @@ profilers
 protobuf
 pseudorandom
 py
+recommender
 quantile
 quantizer
 quasirandom
@@ -704,6 +729,7 @@ rocALUTION
 rocBLAS
 rocDecode
 rocFFT
+rocHPCG
 rocJPEG
 rocLIB
 rocMLIR

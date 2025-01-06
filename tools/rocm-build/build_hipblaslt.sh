@@ -8,6 +8,10 @@ set_component_src hipBLASLt
 build_hipblaslt() {
     echo "Start build"
 
+    if [ "${ENABLE_STATIC_BUILDS}" == "true" ]; then
+        ack_and_skip_static
+    fi
+
     if [ "${ENABLE_ADDRESS_SANITIZER}" == "true" ]; then
        set_asan_env_vars
        set_address_sanitizer_on
@@ -40,7 +44,6 @@ build_hipblaslt() {
         -DBUILD_CLIENTS_SAMPLES=ON \
         -DBUILD_CLIENTS_TESTS=ON \
         -DBUILD_CLIENTS_BENCHMARKS=ON \
-        -DCPACK_SET_DESTDIR=OFF \
         -DBUILD_ADDRESS_SANITIZER="${ADDRESS_SANITIZER}" \
         "$COMPONENT_SRC"
 

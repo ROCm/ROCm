@@ -4,14 +4,14 @@ source "$(dirname "${BASH_SOURCE[0]}")/compute_helper.sh"
 set_component_src rocDecode
 BUILD_DEV=ON
 build_rocdecode() {
-    if [ "$DISTRO_ID" = "centos-7" ] || [ "$DISTRO_ID" = "sles-15.4" ] ; then
-     echo "Not building rocDecode for ${DISTRO_ID}. Exiting..." 
-     return 0
+    echo "Start build"
+
+    if [ "${ENABLE_STATIC_BUILDS}" == "true" ]; then
+        ack_and_skip_static
     fi
 
-    echo "Start build"
     mkdir -p $BUILD_DIR && cd $BUILD_DIR
-    python3 ${COMPONENT_SRC}/rocDecode-setup.py --developer OFF
+#    python3 ${COMPONENT_SRC}/rocDecode-setup.py --developer OFF
     
     cmake -DROCM_DEP_ROCMCORE=ON ${COMPONENT_SRC}
     make -j8

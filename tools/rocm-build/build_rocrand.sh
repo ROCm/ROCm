@@ -8,6 +8,11 @@ set_component_src rocRAND
 build_rocrand() {
     echo "Start build"
 
+    SHARED_LIBS="ON"
+    if [ "${ENABLE_STATIC_BUILDS}" == "true" ]; then
+        SHARED_LIBS="OFF"
+    fi
+
     if [ "${ENABLE_ADDRESS_SANITIZER}" == "true" ]; then
          set_asan_env_vars
          set_address_sanitizer_on
@@ -31,6 +36,7 @@ build_rocrand() {
     cmake \
         ${LAUNCHER_FLAGS} \
         "${rocm_math_common_cmake_params[@]}" \
+        -DBUILD_SHARED_LIBS=$SHARED_LIBS \
         -DAMDGPU_TARGETS=${GPU_TARGETS} \
         -DBUILD_TEST=ON \
         -DBUILD_BENCHMARK=ON \

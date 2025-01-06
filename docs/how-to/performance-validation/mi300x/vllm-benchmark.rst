@@ -399,9 +399,6 @@ Further reading
 - To learn how to optimize inference on LLMs, see
   :doc:`Fine-tuning LLMs and inference optimization </how-to/llm-fine-tuning-optimization/index>`.
 
-- For a list of other ready-made Docker images for ROCm, see the
-  :doc:`Docker image support matrix <rocm-install-on-linux:reference/docker-image-support-matrix>`.
-
 - To compare with the previous version of the ROCm vLLM Docker image for performance validation, refer to
   `LLM inference performance validation on AMD Instinct MI300X (ROCm 6.2.0) <https://rocm.docs.amd.com/en/docs-6.2.0/how-to/performance-validation/mi300x/vllm-benchmark.html>`_.
 

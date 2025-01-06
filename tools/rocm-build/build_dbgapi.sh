@@ -15,7 +15,7 @@ printUsage() {
             type referred to by pkg_type"
     echo "  -h,  --help               Prints this help"
     echo "  -M,  --skip_man_pages     Do not build the 'docs' target"
-    echo "  -s,  --static             Supports static CI by accepting this param & not bailing out. No effect of the param though"
+    echo "  -s,  --static             Component/Build does not support static builds just accepting this param & ignore. No effect of the param on this build"
     echo
     echo "Possible values for <type>:"
     echo "  deb -> Debian format (default)"
@@ -65,7 +65,7 @@ do
                 set_asan_env_vars
                 set_address_sanitizer_on ;;
         (-s | --static)
-                SHARED_LIBS="OFF" ;;
+                ack_and_skip_static ;;
         (-o | --outdir)
                 TARGET="outdir"; PKGTYPE=$2 ; ((CLEAN_OR_OUT|=2)) ; shift 1 ;;
         (-M | --skip_man_pages) DODOCSBUILD=false;;

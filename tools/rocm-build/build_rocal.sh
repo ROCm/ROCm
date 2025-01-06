@@ -7,11 +7,6 @@ set_component_src rocAL
 
 build_rocal() {
 
-    if [ "$DISTRO_ID" = "mariner-2.0" ] ; then
-     echo "Not building rocal for ${DISTRO_ID}. Exiting..."
-     return 0
-    fi
-
     echo "Start build"
 
     # Enable ASAN

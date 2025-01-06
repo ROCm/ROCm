@@ -9,6 +9,10 @@ set_component_src hipTensor
 build_hiptensor() {
     echo "Start build hipTensor"
 
+    if [ "${ENABLE_STATIC_BUILDS}" == "true" ]; then
+        ack_and_skip_static
+    fi
+
     if [ "${ENABLE_ADDRESS_SANITIZER}" == "true" ]; then
         set_asan_env_vars
         set_address_sanitizer_on
@@ -17,7 +21,6 @@ build_hiptensor() {
     cd "$COMPONENT_SRC"
     mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
     init_rocm_common_cmake_params
-
 
     if [ -n "$GPU_ARCHS" ]; then
         GPU_TARGETS="$GPU_ARCHS"

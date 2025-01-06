@@ -8,6 +8,10 @@ set_component_src rocWMMA
 build_rocwmma() {
     echo "Start build"
 
+    if [ "${ENABLE_STATIC_BUILDS}" == "true" ]; then
+        ack_and_skip_static
+    fi
+
     if [ ! -e $COMPONENT_SRC/CMakeLists.txt ]; then
         echo "Skipping rocWMMA as source is not available"
         mkdir -p $COMPONENT_SRC
@@ -21,19 +25,11 @@ build_rocwmma() {
     fi
     mkdir -p $BUILD_DIR && cd $BUILD_DIR
 
-    if [ -n "$GPU_ARCHS" ]; then
-        GPU_TARGETS="$GPU_ARCHS"
-    else
-        GPU_TARGETS="gfx908:xnack-;gfx90a:xnack-;gfx90a:xnack+;gfx940;gfx941;gfx942;gfx1100;gfx1101"
-    fi
-
     init_rocm_common_cmake_params
-
     CXX=$(set_build_variables CXX)\
     cmake \
         "${rocm_math_common_cmake_params[@]}" \
         ${LAUNCHER_FLAGS} \
-        -DAMDGPU_TARGETS=${GPU_TARGETS} \
         -DROCWMMA_BUILD_VALIDATION_TESTS=ON \
         -DROCWMMA_VALIDATE_WITH_ROCBLAS=ON \
         -DROCWMMA_BUILD_BENCHMARK_TESTS=ON \

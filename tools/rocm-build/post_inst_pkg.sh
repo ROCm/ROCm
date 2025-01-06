@@ -5,6 +5,12 @@ set -x
 
 UNTAR_COMPONENT_NAME=$1
 
+# Static supported components
+STATIC_SUPPORTED_COMPONENTS="comgr devicelibs hip_on_rocclr hipblas hipblas-common hipcc hiprand hipsolver hipsparse lightning openmp_extras rocblas rocm rocm_smi_lib rocm-cmake rocm-core rocminfo rocprim rocprofiler_register rocr rocrand rocsolver rocsparse"
+if [ "${ENABLE_STATIC_BUILDS}" == "true" ] && ! echo "$STATIC_SUPPORTED_COMPONENTS" | grep -qE "(^| )$UNTAR_COMPONENT_NAME( |$)"; then
+    echo "Static build is not enabled for $UNTAR_COMPONENT_NAME ..skipping!!"
+    exit 0
+fi
 
 copy_pkg_files_to_rocm() {
     local comp_folder=$1
@@ -61,16 +67,15 @@ case $UNTAR_COMPONENT_NAME in
         elif [ -e "${ROCM_PATH}/llvm/bin/rocm.cfg" ]; then
             sed -i '/-frtlib-add-rpath/d' ${ROCM_PATH}/llvm/bin/rocm.cfg
         fi
+
+        ln -s "${ROCM_PATH}/lib/llvm/bin/amdclang" "${ROCM_PATH}/bin/amdclang" || true
+        ln -s "${ROCM_PATH}/lib/llvm/bin/amdclang++" "${ROCM_PATH}/bin/amdclang++" || true
         ;;
     (hipify_clang)
-        copy_pkg_files_to_rocm hipify hipify-clang
+	chmod +x ${ROCM_PATH}/bin/hipify-perl
         ;;
     (hip_on_rocclr)
         rm -f ${ROCM_PATH}/bin/hipcc.bat
-        ;;
-    (openmp_extras)
-        copy_pkg_files_to_rocm openmp-extras openmp-extras-runtime
-        copy_pkg_files_to_rocm openmp-extras openmp-extras-dev
         ;;
     (rocblas)
         copy_pkg_files_to_rocm rocblas rocblas-dev

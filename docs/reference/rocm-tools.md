@@ -1,7 +1,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="description" content="ROCm API libraries & tools">
-  <meta name="keywords" content="ROCm, API, libraries, tools, artificial intelligence, development,
+  <meta name="keywords" content="ROCm, API, libraries, tools, AI, artificial intelligence, development,
   Communications, C++ primitives, Fast Fourier transforms, FFTs, random number generators, linear
   algebra, AMD">
 </head>

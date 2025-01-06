@@ -13,6 +13,7 @@ printUsage() {
     echo "  -a,  --address_sanitizer  Enable address sanitizer"
     echo "  -o,  --outdir <pkg_type>  Print path of output directory containing packages of
        type referred to by pkg_type"
+    echo "  -s,  --static             Component/Build does not support static builds just accepting this param for configuring package deps"
     echo "  -h,  --help               Prints this help"
     echo
     echo "Possible values for <type>:"
@@ -23,20 +24,25 @@ printUsage() {
     return 0
 }
 
-packageMajorVersion="17.60"
+PROJ_NAME="openmp-extras"
+packageMajorVersion="18.63"
 packageMinorVersion="0"
 packageVersion="${packageMajorVersion}.${packageMinorVersion}.${ROCM_LIBPATCH_VERSION}"
-BUILD_PATH="$(getBuildPath openmp-extras)"
-DEB_PATH="$(getDebPath openmp-extras)"
-RPM_PATH="$(getRpmPath openmp-extras)"
+BUILD_PATH="$(getBuildPath $PROJ_NAME)"
+DEB_PATH="$(getDebPath $PROJ_NAME)"
+RPM_PATH="$(getRpmPath $PROJ_NAME)"
 TARGET="build"
 MAKEOPTS="$DASH_JAY"
+STATIC_PKG_DEPS="OFF"
 
 export INSTALL_PREFIX=${ROCM_INSTALL_PATH}
 
-while [ "$1" != "" ];
+VALID_STR=`getopt -o hcraso:p: --long help,clean,release,address_sanitizer,static,outdir,package: -- "$@"`
+eval set -- "$VALID_STR"
+
+while true ;
 do
-    case $1 in
+    case "$1" in
         -c  | --clean )
             TARGET="clean" ;;
         -p  | --package )
@@ -52,8 +58,11 @@ do
             export SANITIZER=1 ;;
         -o  | --outdir )
             shift 1; PKGTYPE=$1 ; TARGET="outdir" ;;
+	-s | --static )
+            export STATIC_PKG_DEPS="ON" ;;
         -h  | --help )
             printUsage ; exit 0 ;;
+        --)     shift; break;;
         *)
             MAKEARG=$@ ; break ;;
     esac
@@ -124,6 +133,23 @@ build_openmp_extras() {
      export AOMP_JENKINS_BUILD_LIST="extras openmp pgmath flang flang_runtime"
      echo "BEGIN Build of openmp-extras"
      "$AOMP_REPOS"/aomp/bin/build_aomp.sh $MAKEARG
+
+     local llvm_ver=`$INSTALL_PREFIX/lib/llvm/bin/clang --print-resource-dir | sed 's^/llvm/lib/clang/^ ^' | awk '{print $2}'`
+     if [ ! -e $ROCM_INSTALL_PATH/lib/llvm/lib/clang/$llvm_ver/include/omp.h ] ; then
+       if [ ! -h $ROCM_INSTALL_PATH/lib/llvm/lib/clang/$llvm_ver/include/omp.h ] ; then
+         ln -s ../../../../include/omp.h $ROCM_INSTALL_PATH/lib/llvm/lib/clang/$llvm_ver/include/omp.h
+       fi
+     fi
+     if [ ! -e $ROCM_INSTALL_PATH/lib/llvm/lib/clang/$llvm_ver/include/ompt.h ] ; then
+       if [ ! -h $ROCM_INSTALL_PATH/lib/llvm/lib/clang/$llvm_ver/include/ompt.h ] ; then
+         ln -s ../../../../include/ompt.h $ROCM_INSTALL_PATH/lib/llvm/lib/clang/$llvm_ver/include/ompt.h
+       fi
+     fi
+     if [ ! -e $ROCM_INSTALL_PATH/lib/llvm/lib/clang/$llvm_ver/include/omp-tools.h ] ; then
+       if [ ! -h $ROCM_INSTALL_PATH/lib/llvm/lib/clang/$llvm_ver/include/omp-tools.h ] ; then
+         ln -s ../../../../include/omp-tools.h $ROCM_INSTALL_PATH/lib/llvm/lib/clang/$llvm_ver/include/omp-tools.h
+       fi
+     fi
      popd
 }
 
@@ -133,20 +159,30 @@ package_openmp_extras_deb() {
         local packageArch="amd64"
         local packageMaintainer="Openmp Extras Support <openmp-extras.support@amd.com>"
         local packageSummary="OpenMP Extras provides openmp and flang libraries."
-        local packageSummaryLong="openmp-extras $packageVersion is based on LLVM 15 and is used for offloading to Radeon GPUs."
+        local packageSummaryLong="openmp-extras $packageVersion is based on LLVM 17 and is used for offloading to Radeon GPUs."
         local debDependencies="rocm-llvm, rocm-device-libs, rocm-core"
         local debRecommends="gcc, g++"
         local controlFile="$packageDeb/openmp-extras/DEBIAN/control"
 
         if [ "$packageName" == "openmp-extras-runtime" ]; then
           packageType="runtime"
-          debDependencies="rocm-core, hsa-rocr"
+          if [ "$STATIC_PKG_DEPS" == "OFF" ]; then
+            debDependencies="rocm-core, hsa-rocr"
+          else
+            echo "static package dependency configuration for runtime" ;
+            debDependencies="rocm-core, hsa-rocr-static-dev"
+          fi
         else
           local debProvides="openmp-extras"
           local debConflicts="openmp-extras"
           local debReplaces="openmp-extras"
           packageType="devel"
-          debDependencies="$debDependencies, openmp-extras-runtime, hsa-rocr-dev"
+          if [ "$STATIC_PKG_DEPS" == "OFF" ]; then
+            debDependencies="$debDependencies, openmp-extras-runtime, hsa-rocr-dev"
+          else
+            echo "Enabled static package dependency configuration for dev" ;
+            debDependencies="$debDependencies, openmp-extras-runtime, hsa-rocr-static-dev"
+          fi
         fi
 
         if [ -f "$BUILD_PATH"/build/installed_files.txt ] && [ ! -d "$INSTALL_PREFIX"/openmp-extras/devel ]; then
@@ -209,6 +245,9 @@ package_openmp_extras_deb() {
           cp -r "$AOMP_REPOS"/aomp/examples/fortran "$packageDeb"/openmp-extras"$copyPath"/share/openmp-extras/examples
           cp -r "$AOMP_REPOS"/aomp/examples/openmp "$packageDeb"/openmp-extras"$copyPath"/share/openmp-extras/examples
           cp -r "$AOMP_REPOS"/aomp/examples/tools "$packageDeb"/openmp-extras"$copyPath"/share/openmp-extras/examples
+          if [ -e "$AOMP_REPOS/aomp/examples/Makefile.help" ]; then
+            cp "$AOMP_REPOS"/aomp/examples/Makefile* "$packageDeb"/openmp-extras"$copyPath"/share/openmp-extras/examples
+          fi
           clean_examples "$packageDeb"/openmp-extras"$copyPath"/share/openmp-extras/examples
         fi
 
@@ -260,7 +299,7 @@ package_openmp_extras_asan_deb() {
         local packageArch="amd64"
         local packageMaintainer="Openmp Extras Support <openmp-extras.support@amd.com>"
         local packageSummary="AddressSanitizer OpenMP Extras provides instrumented openmp and flang libraries."
-        local packageSummaryLong="openmp-extras $packageVersion is based on LLVM 15 and is used for offloading to Radeon GPUs."
+        local packageSummaryLong="openmp-extras $packageVersion is based on LLVM 17 and is used for offloading to Radeon GPUs."
         local debDependencies="hsa-rocr-asan, rocm-core-asan"
         local debRecommends="gcc, g++"
         local controlFile="$packageDeb/openmp-extras/DEBIAN/control"
@@ -317,22 +356,25 @@ package_openmp_extras_rpm() {
         local packageRpm="$packageDir/rpm"
         local specFile="$packageDir/$packageName.spec"
         local packageSummary="OpenMP Extras provides openmp and flang libraries."
-        local packageSummaryLong="openmp-extras $packageVersion is based on LLVM 15 and is used for offloading to Radeon GPUs."
+        local packageSummaryLong="openmp-extras $packageVersion is based on LLVM 17 and is used for offloading to Radeon GPUs."
         local rpmRequires="rocm-llvm, rocm-device-libs, rocm-core"
         if [ "$packageName" == "openmp-extras-runtime" ]; then
           packageType="runtime"
-          rpmRequires="rocm-core, hsa-rocr"
+          if [ "$STATIC_PKG_DEPS" == "OFF" ]; then
+            rpmRequires="rocm-core, hsa-rocr"
+          else
+            rpmRequires="rocm-core, hsa-rocr-static-devel"
+          fi
         else
           local rpmProvides="openmp-extras"
           local rpmObsoletes="openmp-extras"
           packageType="devel"
-          rpmRequires="$rpmRequires, openmp-extras-runtime, hsa-rocr-devel"
+          if [ "$STATIC_PKG_DEPS" == "OFF" ]; then
+            rpmRequires="$rpmRequires, openmp-extras-runtime, hsa-rocr-devel"
+          else
+            rpmRequires="$rpmRequires, openmp-extras-runtime, hsa-rocr-static-devel"
+          fi
         fi
-
-        rm -f "$AOMP_REPOS"/aomp/examples/*.sh
-        rm -f "$AOMP_REPOS"/aomp/examples/fortran/*.sh
-        rm -f "$AOMP_REPOS"/aomp/examples/openmp/*.sh
-
 
         if [ "$packageType" == "runtime" ]; then
           rm -rf "$packageDir"
@@ -354,6 +396,7 @@ package_openmp_extras_rpm() {
           echo "Group:      System Environment/Libraries"
           echo "License:    MIT and ASL 2.0 and ASL 2.0 with exceptions"
           echo "Vendor:     Advanced Micro Devices, Inc."
+          echo "Prefix:     $INSTALL_PREFIX"
           echo "Requires:   $rpmRequires"
           echo "%if %is_devel"
           echo "Provides:   $rpmProvides"
@@ -435,6 +478,9 @@ package_openmp_extras_rpm() {
           echo "  cp -r $AOMP_REPOS/aomp/examples/fortran \$RPM_BUILD_ROOT$copyPath/share/openmp-extras/examples"
           echo "  cp -r $AOMP_REPOS/aomp/examples/openmp \$RPM_BUILD_ROOT$copyPath/share/openmp-extras/examples"
           echo "  cp -r $AOMP_REPOS/aomp/examples/tools \$RPM_BUILD_ROOT$copyPath/share/openmp-extras/examples"
+          if [ -e "$AOMP_REPOS/aomp/examples/Makefile.help" ]; then
+            echo "  cp $AOMP_REPOS/aomp/examples/Makefile* \$RPM_BUILD_ROOT$copyPath/share/openmp-extras/examples"
+          fi
           clean_examples \$RPM_BUILD_ROOT$copyPath/share/openmp-extras/examples
           echo "%endif"
           echo "%clean"
@@ -461,7 +507,7 @@ package_openmp_extras_asan_rpm() {
         local packageRpm="$packageDir/rpm"
         local specFile="$packageDir/$packageName.spec"
         local packageSummary="AddressSanitizer OpenMP Extras provides instrumented openmp and flang libraries."
-        local packageSummaryLong="openmp-extras $packageVersion is based on LLVM 15 and is used for offloading to Radeon GPUs."
+        local packageSummaryLong="openmp-extras $packageVersion is based on LLVM 17 and is used for offloading to Radeon GPUs."
         local rpmRequires="hsa-rocr-asan, rocm-core-asan"
         local asanLibDir="runtime"
 
@@ -527,7 +573,6 @@ package_openmp_extras_asan_rpm() {
         mv $packageRpm/RPMS/x86_64/*.rpm $RPM_PATH
 }
 
-
 package_openmp_extras() {
     local DISTRO_NAME=$(cat /etc/os-release | grep -e ^NAME=)
     local installPath="$ROCM_INSTALL_PATH/lib/llvm"
@@ -563,21 +608,23 @@ package_tests_deb(){
     local packageArch="amd64"
     local packageMaintainer="Openmp Extras Support <openmp-extras.support@amd.com>"
     local packageSummary="Tests for openmp-extras."
-    local packageSummaryLong="Tests for openmp-extras $packageMajorVersion-$packageMinorVersion is based on LLVM 15 and is used for offloading to Radeon GPUs."
-    local debDependencies="rocm-core"
-    local debRecommends="gcc, g++"
+    local packageSummaryLong="Tests for openmp-extras $packageMajorVersion-$packageMinorVersion is based on LLVM 17 and is used for offloading to Radeon GPUs."
+    local debDependencies="openmp-extras-dev, rocm-core"
+    local debRecommends=""
     local controlFile="$packageDeb/openmp-extras/DEBIAN/control"
     local installPath="$ROCM_INSTALL_PATH/share/openmp-extras/tests"
     local packageName="openmp-extras-tests"
 
     rm -rf "$packageDir"
 
-    mkdir -p $packageDeb/openmp-extras$installPath; mkdir -p $packageDeb/openmp-extras$copyPath/bin
+    mkdir -p $packageDeb/openmp-extras"$installPath"
     if [ -e $(dirname $controlFile) ]; then
         rm $(dirname $controlFile)
     fi
     mkdir -p "$(dirname $controlFile)"
-    cp -r "$AOMP_REPOS/aomp/test/smoke" "$packageDeb$installPath"
+    cp -r "$AOMP_REPOS/aomp/." "$packageDeb/openmp-extras/$installPath"
+    rm -rf "$packageDeb"/openmp-extras"$installPath"/.git "$packageDeb"/openmp-extras"$installPath"/.github
+    cp "$OUT_DIR/build/lightning/bin/FileCheck" "$packageDeb/openmp-extras/$installPath/bin"
     {
       echo "Package: $packageName"
       echo "Architecture: $packageArch"
@@ -603,11 +650,12 @@ package_tests_rpm(){
     local packageName="openmp-extras-tests"
     local specFile="$packageDir/$packageName.spec"
     local packageSummary="Tests for openmp-extras."
-    local packageSummaryLong="Tests for openmp-extras $packageVersion is based on LLVM 15 and is used for offloading to Radeon GPUs."
+    local packageSummaryLong="Tests for openmp-extras $packageVersion is based on LLVM 18 and is used for offloading to Radeon GPUs."
 
     rm -rf "$packageDir"
-    mkdir -p "$packageRpm$installPath"
+    mkdir -p "$packageRpm/openmp-extras/$installPath"
     {
+      echo "AutoReqProv: no"
       echo "Name:       $packageName"
       echo "Version:    $packageVersion"
       echo "Release:    ${CPACK_RPM_PACKAGE_RELEASE}%{?dist}"
@@ -615,7 +663,10 @@ package_tests_rpm(){
       echo "Group:      System Environment/Libraries"
       echo "License:    Advanced Micro Devices, Inc."
       echo "Vendor:     Advanced Micro Devices, Inc."
+      echo "Prefix:     $INSTALL_PREFIX"
+      echo "Requires:   $rpmRequires"
       echo "%define debug_package %{nil}"
+      # Redefining __os_install_post to remove stripping
       echo "%define __os_install_post %{nil}"
       echo "%description"
       echo "$packageSummaryLong"
@@ -625,18 +676,21 @@ package_tests_rpm(){
       echo "%build"
 
       echo "%install"
-      echo "mkdir -p  \$RPM_BUILD_ROOT$copyPath/share/aomp/tests"
-      echo "cp -R $AOMP_REPOS/aomp/test/smoke \$RPM_BUILD_ROOT$copyPath/share/aomp/tests"
+      echo "mkdir -p  \$RPM_BUILD_ROOT$installPath"
+      echo "cp -R $AOMP_REPOS/aomp/. \$RPM_BUILD_ROOT$installPath"
+      echo "rm -rf \$RPM_BUILD_ROOT$installPath/.git \$RPM_BUILD_ROOT$installPath/.github"
+      echo "cp $OUT_DIR/build/lightning/bin/FileCheck \$RPM_BUILD_ROOT$installPath/bin"
       echo 'find $RPM_BUILD_ROOT \! -type d | sed "s|$RPM_BUILD_ROOT||"> files.list'
 
       echo "%clean"
       echo "rm -rf \$RPM_BUILD_ROOT"
 
       echo "%files -f files.list"
+      echo "$installPath"
       echo "%defattr(-,root,root,-)"
 
       echo "%postun"
-      echo "rm -rf $ROCM_INSTALL_PATH/share/aomp"
+      echo "rm -rf $installPath"
     } > $specFile
     rpmbuild --define "_topdir $packageRpm" -ba $specFile
     mv $packageRpm/RPMS/x86_64/*.rpm $RPM_PATH
@@ -665,7 +719,7 @@ print_output_directory() {
 
 case $TARGET in
     (clean) clean_openmp_extras ;;
-    (build) build_openmp_extras; package_openmp_extras ;;
+    (build) build_openmp_extras; package_openmp_extras; package_tests ;;
     (outdir) print_output_directory ;;
     (*) die "Invalid target $TARGET" ;;
 esac

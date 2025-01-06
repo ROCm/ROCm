@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+    <remote name="rocm-org" fetch="https://github.com/ROCm/" />
+    <default revision="refs/tags/rocm-6.3.1"
+     remote="rocm-org"
+     sync-c="true"
+     sync-j="4" />
+<!--list of projects for ROCm-->
+    <project name="ROCm" revision="roc-6.3.x" />
+    <project name="ROCK-Kernel-Driver" />
+    <project name="ROCR-Runtime" />
+    <project name="amdsmi" />
+    <project name="rdc" />
+    <project name="rocm_bandwidth_test" />
+    <project name="rocm_smi_lib" />
+    <project name="rocm-core" />
+    <project name="rocm-examples" />
+    <project name="rocminfo" />
+    <project name="rocprofiler" />
+    <project name="rocprofiler-register" />
+    <project name="rocprofiler-sdk" />
+    <project name="rocprofiler-compute" />
+    <project name="rocprofiler-systems" />
+    <project name="roctracer" />
+<!--HIP Projects-->
+    <project name="HIP" />
+    <project name="hip-tests" />
+    <project name="HIPIFY" />
+    <project name="clr" />
+    <project name="hipother" />
+<!-- The following projects are all associated with the AMDGPU LLVM compiler -->
+    <project name="half" />
+    <project name="llvm-project" />
+<!-- gdb projects -->
+    <project name="ROCdbgapi" />
+    <project name="ROCgdb" />
+    <project name="rocr_debug_agent" />
+<!-- ROCm Libraries -->
+    <project groups="mathlibs" name="AMDMIGraphX" />
+    <project groups="mathlibs" name="MIOpen" />
+    <project groups="mathlibs" name="MIVisionX" />
+    <project groups="mathlibs" name="ROCmValidationSuite" />
+    <project groups="mathlibs" name="Tensile" />
+    <project groups="mathlibs" name="composable_kernel" />
+    <project groups="mathlibs" name="hipBLAS-common" />
+    <project groups="mathlibs" name="hipBLAS" />
+    <project groups="mathlibs" name="hipBLASLt" />
+    <project groups="mathlibs" name="hipCUB" />
+    <project groups="mathlibs" name="hipFFT" />
+    <project groups="mathlibs" name="hipRAND" />
+    <project groups="mathlibs" name="hipSOLVER" />
+    <project groups="mathlibs" name="hipSPARSE" />
+    <project groups="mathlibs" name="hipSPARSELt" />
+    <project groups="mathlibs" name="hipTensor" />
+    <project groups="mathlibs" name="hipfort" />
+    <project groups="mathlibs" name="rccl" />
+    <project groups="mathlibs" name="rocAL" />
+    <project groups="mathlibs" name="rocALUTION" />
+    <project groups="mathlibs" name="rocBLAS" />
+    <project groups="mathlibs" name="rocDecode" />
+    <project groups="mathlibs" name="rocJPEG" />
+    <project groups="mathlibs" name="rocPyDecode" />
+    <project groups="mathlibs" name="rocFFT" />
+    <project groups="mathlibs" name="rocPRIM" />
+    <project groups="mathlibs" name="rocRAND" />
+    <project groups="mathlibs" name="rocSOLVER" />
+    <project groups="mathlibs" name="rocSPARSE" />
+    <project groups="mathlibs" name="rocThrust" />
+    <project groups="mathlibs" name="rocWMMA" />
+    <project groups="mathlibs" name="rocm-cmake" />
+    <project groups="mathlibs" name="rpp" />
+    <project groups="mathlibs" name="TransferBench" />
+<!-- Projects for OpenMP-Extras -->
+    <project name="aomp" path="openmp-extras/aomp" />
+    <project name="aomp-extras" path="openmp-extras/aomp-extras" />
+    <project name="flang" path="openmp-extras/flang" />
+</manifest>

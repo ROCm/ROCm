@@ -37,7 +37,6 @@ PACKAGE_INCLUDE="$(getIncludePath)"
 BUILD_DIR="$(getBuildPath $API_NAME)"
 PACKAGE_DEB="$(getPackageRoot)/deb/$API_NAME"
 PACKAGE_RPM="$(getPackageRoot)/rpm/$API_NAME"
-ROCM_WHEEL_DIR="${BUILD_DIR}/_wheel"
 PACKAGE_PREFIX="$ROCM_INSTALL_PATH"
 BUILD_TYPE="Debug"
 MAKE_OPTS="$DASH_JAY"
@@ -74,8 +73,7 @@ while true; do
             shift
         ;;
         -s | --static)
-            SHARED_LIBS="OFF"
-            shift
+            ack_and_skip_static
         ;;
         -w | --wheel)
             WHEEL_PACKAGE=true
@@ -113,7 +111,6 @@ fi
 
 clean() {
     echo "Cleaning $PROJ_NAME"
-    rm -rf "$ROCM_WHEEL_DIR"
     rm -rf "$BUILD_DIR"
     rm -rf "$PACKAGE_DEB"
     rm -rf "$PACKAGE_RPM"
@@ -177,18 +174,6 @@ build_rocprofiler-sdk() {
     fi
 }
 
-create_wheel_package() {
-    echo "Creating rocprofiler sdk wheel package"
-    mkdir -p "$ROCM_WHEEL_DIR"
-    cp -f "$SCRIPT_ROOT"/generate_setup_py.py "$ROCM_WHEEL_DIR"
-    cp -f "$SCRIPT_ROOT"/repackage_wheel.sh "$ROCM_WHEEL_DIR"
-    cd "$ROCM_WHEEL_DIR"
-    # Currently only supports python3.6
-    ./repackage_wheel.sh "$BUILD_DIR"/*.rpm python3.6
-    # Copy the wheel created to RPM folder which will be uploaded to artifactory
-    copy_if WHL "WHL" "$PACKAGE_RPM" "$ROCM_WHEEL_DIR"/dist/*.whl
-}
-
 print_output_directory() {
     case ${PKGTYPE} in
         "deb")
@@ -213,10 +198,5 @@ case "$TARGET" in
     outdir) print_output_directory ;;
     *) die "Invalid target $TARGET" ;;
 esac
-
-if [[ $WHEEL_PACKAGE == true ]]; then
-    echo "Wheel Package build started !!!!"
-    create_wheel_package
-fi
 
 echo "Operation complete"

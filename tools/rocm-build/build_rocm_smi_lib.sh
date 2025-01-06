@@ -23,6 +23,7 @@ printUsage() {
     return 0
 }
 
+PROJ_NAME="rsmi"
 PACKAGE_ROOT="$(getPackageRoot)"
 TARGET="build"
 
@@ -30,8 +31,8 @@ PACKAGE_LIB=$(getLibPath)
 PACKAGE_INCLUDE="$(getIncludePath)"
 
 RSMI_BUILD_DIR=$(getBuildPath rsmi)
-RSMI_PACKAGE_DEB_DIR="$(getPackageRoot)/deb/rsmi"
-RSMI_PACKAGE_RPM_DIR="$(getPackageRoot)/rpm/rsmi"
+RSMI_PACKAGE_DEB_DIR="$(getPackageRoot)/deb/$PROJ_NAME"
+RSMI_PACKAGE_RPM_DIR="$(getPackageRoot)/rpm/$PROJ_NAME"
 RSMI_BUILD_TYPE="debug"
 BUILD_TYPE="Debug"
 

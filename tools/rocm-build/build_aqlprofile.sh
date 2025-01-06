@@ -11,7 +11,9 @@ printUsage() {
     echo "  -p,  --package <type>     Specify packaging format"
     echo "  -r,  --release            Make a release build instead of a debug build"
     echo "  -o,  --outdir <pkg_type>  Print path of output directory containing packages of
-            type referred to by pkg_type"
+                                      type referred to by pkg_type"
+    echo "  -s,  --static             Component/Build does not support static builds just accepting this param & ignore. 
+                                      No effect of the param on this build"
     echo "  -h,  --help               Prints this help"
     echo
     echo "Possible values for <type>:"

@@ -8,13 +8,13 @@ parameters:
 - name: aptPackages
   type: object
   default:
+    - clang
     - cmake
+    - imagemagick
     - libopencv-dev
     - libsndfile1-dev
     - libstdc++-12-dev
-    - imagemagick
     - ninja-build
-    - clang
 - name: pipModules
   type: object
   default:
@@ -83,7 +83,7 @@ jobs:
         -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm
         -DHALF_INCLUDE_DIRS=$(Agent.BuildDirectory)/rocm/include
         -DCMAKE_BUILD_TYPE=Release
-        -DAMDGPU_TARGETS=$(JOB_GPU_TARGET)
+        -DGPU_TARGETS=$(JOB_GPU_TARGET)
         -GNinja
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
     parameters:
@@ -156,7 +156,7 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        git clone https://github.com/NIFTI-Imaging/nifti_clib.git
+        git clone -b v3.0.1 https://github.com/NIFTI-Imaging/nifti_clib.git
         cd nifti_clib
         mkdir build
         cd build

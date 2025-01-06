@@ -537,6 +537,8 @@ installation was successful, refer to the
 :doc:`rocm-install-on-linux:install/post-install`.
 Should verification fail, consult :doc:`/how-to/system-debugging`.
 
+.. _mi300x-hardware-verification-with-rocm:
+
 Hardware verification with ROCm
 -------------------------------
 

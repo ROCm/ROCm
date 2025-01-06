@@ -5,6 +5,10 @@ parameters:
 - name: checkoutRef
   type: string
   default: ''
+- name: aptPackages
+  type: object
+  default:
+    - libdrm-dev
 
 jobs:
 - job: rocm_smi_lib
@@ -16,6 +20,9 @@ jobs:
   workspace:
     clean: all
   steps:
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/checkout.yml
     parameters:

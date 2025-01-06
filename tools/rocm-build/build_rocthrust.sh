@@ -4,12 +4,15 @@ set -ex
 
 source "$(dirname "${BASH_SOURCE[0]}")/compute_helper.sh"
 
-ENABLE_ADDRESS_SANITIZER=false
 build_release=true
 set_component_src rocThrust
 
 build_rocthrust() {
     echo "Start build"
+
+    if [ "${ENABLE_STATIC_BUILDS}" == "true" ]; then
+        ack_and_skip_static
+    fi
 
     cd $COMPONENT_SRC
 
@@ -21,19 +24,12 @@ build_rocthrust() {
 
     mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
 
-    if [ -n "$GPU_ARCHS" ]; then
-        GPU_TARGETS="$GPU_ARCHS"
-    else
-        GPU_TARGETS="gfx908:xnack-;gfx90a:xnack-;gfx90a:xnack+;gfx940;gfx941;gfx942;gfx1030;gfx1100;gfx1101"
-    fi
-
     init_rocm_common_cmake_params
 
     CXX=$(set_build_variables CXX)\
     cmake \
         ${LAUNCHER_FLAGS} \
         "${rocm_math_common_cmake_params[@]}" \
-        -DAMDGPU_TARGETS=${GPU_TARGETS} \
         -DCMAKE_MODULE_PATH="${ROCM_PATH}/lib/cmake/hip;${ROCM_PATH}/hip/cmake" \
         -DROCPRIM_ROOT="${ROCM_PATH}/rocprim" \
         -DBUILD_TEST=ON \

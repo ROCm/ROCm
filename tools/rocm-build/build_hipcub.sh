@@ -9,6 +9,10 @@ set_component_src hipCUB
 build_hipcub() {
     echo "Start build"
 
+    if [ "${ENABLE_STATIC_BUILDS}" == "true" ]; then
+        ack_and_skip_static
+    fi
+
     cd $COMPONENT_SRC
     if [ "${ENABLE_ADDRESS_SANITIZER}" == "true" ]; then
          set_asan_env_vars
@@ -22,7 +26,7 @@ build_hipcub() {
     if [ -n "$GPU_ARCHS" ]; then
         GPU_TARGETS="$GPU_ARCHS"
     else
-        GPU_TARGETS="gfx908:xnack-;gfx90a:xnack-;gfx90a:xnack+;gfx940;gfx941;gfx942;gfx1030;gfx1100;gfx1101"
+        GPU_TARGETS="gfx908:xnack-;gfx90a:xnack-;gfx90a:xnack+;gfx940;gfx941;gfx942;gfx1030;gfx1100;gfx1101;gfx1102;gfx1200;gfx1201"
     fi
 
     CXX=$(set_build_variables CXX)\

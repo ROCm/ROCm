@@ -9,12 +9,21 @@ set_component_src hipSOLVER
 build_hipsolver() {
     echo "Start build"
 
+    if [ "${ENABLE_STATIC_BUILDS}" == "true" ]; then
+        CXX_FLAG="-DCMAKE_CXX_COMPILER=${ROCM_PATH}/llvm/bin/clang++"
+    fi
+
     cd $COMPONENT_SRC
 
-    CXX="g++"
+    CXX="amdclang++"
     if [ "${ENABLE_ADDRESS_SANITIZER}" == "true" ]; then
        set_asan_env_vars
        set_address_sanitizer_on
+    fi
+
+    SHARED_LIBS="ON"
+    if [ "${ENABLE_STATIC_BUILDS}" == "true" ]; then
+        SHARED_LIBS="OFF"
     fi
 
     echo "C compiler: $CC"
@@ -30,13 +39,15 @@ build_hipsolver() {
     init_rocm_common_cmake_params
     cmake \
         -DUSE_CUDA=OFF \
+	-DCMAKE_CXX_COMPILER=${CXX} \
         ${LAUNCHER_FLAGS} \
         "${rocm_math_common_cmake_params[@]}" \
+        -DBUILD_SHARED_LIBS=$SHARED_LIBS \
         -DBUILD_CLIENTS_TESTS=ON \
         -DBUILD_CLIENTS_BENCHMARKS=ON \
         -DBUILD_CLIENTS_SAMPLES=ON \
-        -DCPACK_SET_DESTDIR=OFF \
         -DBUILD_ADDRESS_SANITIZER="${ADDRESS_SANITIZER}" \
+        ${CXX_FLAG} \
         "$COMPONENT_SRC"
 
     cmake --build "$BUILD_DIR" -- -j${PROC}

@@ -8,7 +8,7 @@ printUsage() {
     echo
     echo "Options:"
     echo "  -c,  --clean              Clean output and delete all intermediate work"
-    echo "  -s,  --static             Build static lib (.a).  build instead of dynamic/shared(.so) "
+    echo "  -s,  --static             Component/Build does not support static builds just accepting this param & ignore. No effect of the param on this build"
     echo "  -p,  --package <type>     Specify packaging format"
     echo "  -r,  --release            Make a release build instead of a debug build"
     echo "  -a,  --address_sanitizer  Enable address sanitizer"
@@ -42,9 +42,9 @@ SHARED_LIBS="ON"
 CLEAN_OR_OUT=0
 MAKETARGET="deb"
 PKGTYPE="deb"
-GPU_LIST="gfx900,gfx906,gfx908,gfx90a,gfx940,gfx941,gfx942,gfx1030,gfx1100,gfx1101,gfx1102"
+GPU_LIST="gfx900,gfx906,gfx908,gfx90a,gfx940,gfx941,gfx942,gfx1030,gfx1031,gfx1100,gfx1101,gfx1102,gfx1200,gfx1201"
 
-VALID_STR=$(getopt -o hcraso:p: --long help,clean,release,static,address_sanitizer,outdir:,package: -- "$@")
+VALID_STR=$(getopt -o hcraswo:p: --long help,clean,release,static,wheel,address_sanitizer,outdir:,package: -- "$@")
 eval set -- "$VALID_STR"
 
 while true; do
@@ -68,7 +68,7 @@ while true; do
         shift
         ;;
     -s | --static)
-        SHARED_LIBS="OFF"
+        ack_and_skip_static
         shift
         ;;
     -o | --outdir)
@@ -131,7 +131,9 @@ build_rocprofiler() {
             -DBUILD_SHARED_LIBS=$SHARED_LIBS \
             -DENABLE_LDCONFIG=OFF \
             -DUSE_PROF_API=1 \
+            -DUSE_GET_ROCM_PATH_API=1 \
             -DGPU_TARGETS="$GPU_LIST" \
+            -DPython3_EXECUTABLE=$(which python3) \
             -DPROF_API_HEADER_PATH="$WORK_ROOT/roctracer/inc/ext" \
             -DHIP_HIPCC_FLAGS=$HIP_HIPCC_FLAGS";--offload-arch=$GPU_LIST" \
             -DCPACK_OBJCOPY_EXECUTABLE="${ROCM_INSTALL_PATH}/llvm/bin/llvm-objcopy" \

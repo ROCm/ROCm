@@ -11,7 +11,6 @@ printUsage() {
     echo "Usage: $(basename "${BASH_SOURCE}") [options ...]"
     echo
     echo "Options:"
-    echo "  -t,  --alt                   Build the 'alt' variant"
     echo "  -c,  --clean                 Clean output and delete all intermediate work"
     echo "  -d,  --debug                 Build a debug version of llvm (excludes packaging)"
     echo "  -r,  --release               Build a release version of the package"
@@ -33,14 +32,14 @@ printUsage() {
     return 0
 }
 
+PROJ_NAME="lightning"
 ROCM_LLVM_LIB_RPATH='\$ORIGIN'
 ROCM_LLVM_EXE_RPATH='\$ORIGIN/../lib:\$ORIGIN/../../../lib'
 
 PACKAGE_OUT="$(getPackageRoot)"
-
-BUILD_PATH="$(getBuildPath lightning)"
-DEB_PATH="$(getDebPath lightning)"
-RPM_PATH="$(getRpmPath lightning)"
+BUILD_PATH="$(getBuildPath $PROJ_NAME)"
+DEB_PATH="$(getDebPath $PROJ_NAME)"
+RPM_PATH="$(getRpmPath $PROJ_NAME)"
 INSTALL_PATH="${ROCM_INSTALL_PATH}/lib/llvm"
 LLVM_ROOT_LCL="${LLVM_ROOT}"
 ROCM_WHEEL_DIR="${BUILD_PATH}/_wheel"
@@ -48,20 +47,12 @@ ROCM_WHEEL_DIR="${BUILD_PATH}/_wheel"
 TARGET="all"
 MAKEOPTS="$DASH_JAY"
 BUILD_TYPE="Release"
-case "${JOB_NAME}" in
-   ( *"rel"*                  | \
-     *"afar"*                 | \
-     *"nfar"*                 )
-       ENABLE_ASSERTIONS=0 ;;
-     ( * )
-       ENABLE_ASSERTIONS=1 ;;
-esac
+ENABLE_ASSERTIONS=0
 SHARED_LIBS="ON"
 
 BUILD_LLVM_DYLIB="OFF"
 
 FLANG_NEW=0
-BUILD_ALT=0
 CLEAN_OR_OUT=0;
 PKGTYPE="deb"
 MAKETARGET="deb"
@@ -74,10 +65,10 @@ BUILD_MANPAGES="ON"
 STATIC_FLAG=
 
 SANITIZER_AMDGPU=1
-HSA_INC_PATH="$WORK_ROOT/ROCR-Runtime/src/inc"
-COMGR_INC_PATH="$WORK_ROOT/llvm-project/amd/comgr/include"
+    HSA_INC_PATH="$WORK_ROOT/ROCR-Runtime/runtime/hsa-runtime/inc/"
+COMGR_INC_PATH="$COMGR_ROOT/include"
 
-VALID_STR=`getopt -o htcV:v:draAswlo:BPNM --long help,alt,clean,assert_llvm_ver_major:,assert_llvm_ver_minor:,debug,release,address_sanitizer,no_address_sanitizer,static,build_llvm_static,wheel,build,package,skip_lit_tests,skip_man_pages,outdir: -- "$@"`
+VALID_STR=`getopt -o hcV:v:draAswlo:BPNM --long help,clean,assert_llvm_ver_major:,assert_llvm_ver_minor:,debug,release,address_sanitizer,no_address_sanitizer,static,build_llvm_static,wheel,build,package,skip_lit_tests,skip_man_pages,outdir: -- "$@"`
 eval set -- "$VALID_STR"
 
 set_dwarf_version(){
@@ -96,11 +87,10 @@ set_dwarf_version(){
 
 while true ;
 do
+    #echo "processing $1"
     case "$1" in
         (-h | --help)
                 printUsage ; exit 0;;
-        (-t | --alt)
-                BUILD_ALT=1 ; shift ;;
         (-c | --clean)
                 TARGET="clean" ; ((CLEAN_OR_OUT|=1)) ; shift ;;
         (-V | --assert_llvm_ver_major)
@@ -115,7 +105,7 @@ do
                 set_dwarf_version
                 SANITIZER_AMDGPU=1 ;
                 HSA_INC_PATH="$WORK_ROOT/hsa/runtime/opensrc/hsa-runtime/inc" ;
-                COMGR_INC_PATH="$WORK_ROOT/external/llvm-project/amd/comgr/include" ; shift ;;
+                COMGR_INC_PATH="$COMGR_ROOT/include" ; shift ;;
         (-A | --no_address_sanitizer)
                 SANITIZER_AMDGPU=0 ;
                 unset HSA_INC_PATH ;
@@ -155,21 +145,9 @@ LLVM_PROJECTS="clang;lld;clang-tools-extra"
 ENABLE_RUNTIMES="compiler-rt;libunwind"
 BOOTSTRAPPING_BUILD_LIBCXX=0
 BUILD_AMDCLANG="ON"
-if [ $BUILD_ALT -eq 1 ]; then
-    BUILD_PATH="${BUILD_PATH}-alt"
-    DEB_PATH="${DEB_PATH}-alt"
-    RPM_PATH="${RPM_PATH}-alt"
-    INSTALL_PATH="${INSTALL_PATH}/alt"
-    LLVM_ROOT_LCL="${LLVM_ALT_ROOT}"
-    BUILD_AMDCLANG="OFF"
-    BUILD_MANPAGES="OFF"
-    SANITIZER_AMDGPU=0
-    unset HSA_INC_PATH
-    unset COMGR_INC_PATH
-else
-    ENABLE_RUNTIMES="$ENABLE_RUNTIMES;libcxx;libcxxabi";
-    BOOTSTRAPPING_BUILD_LIBCXX=1
-fi
+
+ENABLE_RUNTIMES="$ENABLE_RUNTIMES;libcxx;libcxxabi"
+BOOTSTRAPPING_BUILD_LIBCXX=1
 
 clean_lightning() {
     rm -rf "$ROCM_WHEEL_DIR"
@@ -188,22 +166,14 @@ setup_llvm_info() {
     local LLVM_URL_BRANCH
 
     if [[ "${JOB_NAME}" == *rel* ]]; then
-      if [ $BUILD_ALT -eq 1 ]; then
-        LLVM_URL_BRANCH=$(git rev-parse HEAD)
-      else
         LLVM_URL_NAME="https://github.com/RadeonOpenCompute/llvm-project"
         LLVM_BRANCH_NAME="roc-${ROCM_VERSION}"
         LLVM_URL_BRANCH="${LLVM_URL_NAME} ${LLVM_BRANCH_NAME}"
-      fi
     else
-      LLVM_REMOTE_NAME=$(git remote)
-      LLVM_URL_NAME=$(git config --get remote."${LLVM_REMOTE_NAME}".url)
-      if [ $BUILD_ALT -eq 1 ]; then
-        LLVM_BRANCH_NAME=$(repo manifest | sed -n 's/.*path="external\/llvm-project-alt\/llvm-project".* upstream="\([^"]*\)".*/\1/p' )
-      else
+        LLVM_REMOTE_NAME=$(git remote)
+        LLVM_URL_NAME=$(git config --get remote."${LLVM_REMOTE_NAME}".url)
         LLVM_BRANCH_NAME=$(repo manifest | sed -n 's/.*path="external\/llvm-project".* upstream="\([^"]*\)".*/\1/p' )
-      fi
-      LLVM_URL_BRANCH="${LLVM_URL_NAME} ${LLVM_BRANCH_NAME}"
+        LLVM_URL_BRANCH="${LLVM_URL_NAME} ${LLVM_BRANCH_NAME}"
     fi
 
     LLVM_COMMIT_GITDATE=$(git show -s --format=@%ct | xargs | date -f - --utc +%y%U%w)
@@ -283,24 +253,27 @@ build_lightning() {
     mkdir -p "$BUILD_PATH"
     pushd "$BUILD_PATH"
 
+    eval EXTRA_LLVM_CMAKE_PARAMS_ARRAY=($EXTRA_LLVM_CMAKE_PARAMS)
+
     if [ ! -e Makefile ]; then
         echo "Building LLVM CMake environment"
-        if [ -e "$LLVM_ROOT_LCL/../flang/AFARrelease" ]; then
+        LLVM_PROJECTS="$LLVM_PROJECTS;mlir"
+        if [ -e "$LLVM_ROOT_LCL/../flang/EnableFlangBuild" ]; then
             FLANG_NEW=1
-            LLVM_PROJECTS="$LLVM_PROJECTS;flang;mlir"
+            LLVM_PROJECTS="$LLVM_PROJECTS;flang"
             ENABLE_RUNTIMES="$ENABLE_RUNTIMES;openmp";
         else
-
-          if [[ "${JOB_NAME}" != *afar* ]] && [ -e "$LLVM_ROOT_LCL/../flang/DoROCmRelease" ]; then
-            FLANG_NEW=1
-            LLVM_PROJECTS="$LLVM_PROJECTS;flang;mlir"
-          else
-            echo "NOT building project flang"
-          fi
+            if [[ "${JOB_NAME}" != *afar* ]] && [ -e "$LLVM_ROOT_LCL/../flang/DoROCmRelease" ]; then
+              FLANG_NEW=1
+              LLVM_PROJECTS="$LLVM_PROJECTS;flang"
+            else
+                echo "NOT building project flang"
+            fi
         fi
         set -x
         cmake $(rocm_cmake_params) ${GEN_NINJA} \
               ${STATIC_FLAG} \
+              ${PYTHON_VERSION_WORKAROUND} \
               -DCMAKE_INSTALL_PREFIX="$INSTALL_PATH" \
               -DLLVM_TARGETS_TO_BUILD="AMDGPU;X86" \
               -DLLVM_ENABLE_PROJECTS="$LLVM_PROJECTS" \
@@ -342,6 +315,7 @@ build_lightning() {
               -DCLANG_LINK_FLANG_LEGACY=ON \
               -DCMAKE_CXX_STANDARD=17 \
               -DFLANG_INCLUDE_DOCS=OFF \
+              "${EXTRA_LLVM_CMAKE_PARAMS_ARRAY[@]}" \
               "$LLVM_ROOT_LCL"
         set +x
         echo "CMake complete"
@@ -368,18 +342,10 @@ build_lightning() {
      esac
 
     if [ $SKIP_LIT_TESTS -eq 0 ]; then
-        if [ $RHEL_BUILD -eq 1 ] && [ $BUILD_ALT != 1 ]; then
-            if [ $FLANG_NEW -eq 1 ]; then
-                cmake --build . -- $MAKEOPTS check-lld check-mlir
-            else
-                cmake --build . -- $MAKEOPTS check-lld
-            fi
-        elif [ "$DISTRO_NAME" != "sles" ] && [ $BUILD_ALT != 1 ]; then
-            if [ $FLANG_NEW -eq 1 ]; then
-                cmake --build . -- $MAKEOPTS check-llvm check-clang check-lld check-mlir
-            else
-                cmake --build . -- $MAKEOPTS check-llvm check-clang check-lld
-            fi
+        if [ $RHEL_BUILD -eq 1 ]; then
+            cmake --build . -- $MAKEOPTS check-lld check-mlir
+        elif [ "$DISTRO_NAME" != "sles" ]; then
+            cmake --build . -- $MAKEOPTS check-llvm check-clang check-lld check-mlir
         fi
     fi
     cmake --build . -- $MAKEOPTS clang-tidy
@@ -396,23 +362,15 @@ package_lightning_dynamic(){
 
     get_llvm_version
     local llvmParsedVersion="${LLVM_VERSION_MAJOR}.${LLVM_VERSION_MINOR}.${LLVM_VERSION_PATCH}"
+    local packageName="rocm-llvm"
+    local packageSummary="ROCm compiler"
+    local packageSummaryLong="ROCm compiler based on LLVM $llvmParsedVersion"
+    local installPath="$ROCM_INSTALL_PATH/lib/llvm/"
 
-    if [ $BUILD_ALT -eq 1 ]; then
-        local packageName="rocm-llvm-alt"
-        local packageSummary="Proprietary ROCm compiler"
-        local packageSummaryLong="ROCm compiler, including proprietary optimizations, based on LLVM $llvmParsedVersion"
-        local installPath="$ROCM_INSTALL_PATH/lib/llvm/alt"
-    else
-        local packageName="rocm-llvm"
-        local packageSummary="ROCm compiler"
-        local packageSummaryLong="ROCm compiler based on LLVM $llvmParsedVersion"
-        local installPath="$ROCM_INSTALL_PATH/lib/llvm/"
-
-        if [ "$BUILD_LLVM_DYLIB" == "ON" ] ; then
-          local packageNameCore="rocm-llvm-core"
-          local packageSummaryCore="ROCm core compiler dylibs"
-          local packageSummaryLongCore="ROCm compiler based on LLVM $llvmParsedVersion"
-        fi
+    if [ "$BUILD_LLVM_DYLIB" == "ON" ] ; then
+      local packageNameCore="rocm-llvm-core"
+      local packageSummaryCore="ROCm core compiler dylibs"
+      local packageSummaryLongCore="ROCm compiler based on LLVM $llvmParsedVersion"
     fi
 
     local packageArch="amd64"
@@ -433,9 +391,6 @@ package_lightning_dynamic(){
     local prermFile="$packageDeb/DEBIAN/prerm"
     local specFile="$packageDir/$packageName.spec"
     local debDependencies="python3, libc6, libstdc++6|libstdc++8, libstdc++-5-dev|libstdc++-7-dev|libstdc++-11-dev, libgcc-5-dev|libgcc-7-dev|libgcc-11-dev, rocm-core"
-    if [ $BUILD_ALT -eq 1 ]; then
-        debDependencies="${debDependencies}, rocm-llvm"
-    fi
     local debRecommends="gcc, g++, gcc-multilib, g++-multilib"
 
     local packageRpm="$packageDir/rpm"
@@ -508,42 +463,33 @@ package_lightning_dynamic(){
           debDependencies="${debDependencies}, ${packageNameCore}"
         fi
 
-        if [ $BUILD_ALT -eq 0 ] ; then
-          cp -r "$LLVM_ROOT_LCL/LICENSE.TXT" "$packageDeb/$licenseDir"
-        else
-          cp -r "$LLVM_PROJECT_ALT_ROOT/EULA" "$packageDeb/$licenseDir"
-          cp -r "$LLVM_PROJECT_ALT_ROOT/DISCLAIMER.txt" "$packageDeb/$licenseDir"
-        fi
+        cp -r "$LLVM_ROOT_LCL/LICENSE.TXT" "$packageDeb/$licenseDir"
         cp -r "$distBin" "$packageDeb/$installPath/bin"
         cp -r "$distInc" "$packageDeb/$installPath/include"
         cp -r "$distLib" "$packageDeb/$installPath/lib"
         if [ "$BUILD_MANPAGES" == "ON" ]; then
-            if [ $BUILD_ALT -eq 0 ]; then
-                for i in "${man_pages[@]}"; do
-                    gzip -f "$distMan/man1/$i"
+            for i in "${man_pages[@]}"; do
+                gzip -f "$distMan/man1/$i"
+            done
+            if [ -f "$distMan/man1/clang.1.gz" ]; then
+                for i in "${amd_man_pages[@]}"; do
+                    ln -sf "clang.1.gz" "$distMan/man1/$i"
                 done
-                if [ -f "$distMan/man1/clang.1.gz" ]; then
-                    for i in "${amd_man_pages[@]}"; do
-                        ln -sf "clang.1.gz" "$distMan/man1/$i"
-                    done
-                fi
             fi
         fi
         cp -r "$distMan" "$packageDeb/$installPath/share"
 
-        if [ $BUILD_ALT -eq 0 ]; then
-            touch "$postinstFile" "$prermFile"
-            echo "mkdir -p \"$ROCM_INSTALL_PATH/bin\"" >> $postinstFile
-            for i in "${amd_compiler_commands[@]}"; do
-                if [ -f "$packageDeb/$installPath/bin/$i" ]; then
-                    echo "ln -s \"../lib/llvm/bin/$i\" \"$ROCM_INSTALL_PATH/bin/$i\"" >> $postinstFile
-                    echo "rm -f \"$ROCM_INSTALL_PATH/bin/$i\"" >> $prermFile
-                fi
-            done
-            echo "rmdir --ignore-fail-on-non-empty \"$ROCM_INSTALL_PATH/bin\"" >> $prermFile
-            chmod 0555 "$postinstFile" "$prermFile"
-            cp -P "$backwardsCompatibleSymlink" "$packageDeb/$ROCM_INSTALL_PATH"
-        fi
+        touch "$postinstFile" "$prermFile"
+        echo "mkdir -p \"$ROCM_INSTALL_PATH/bin\"" >> $postinstFile
+        for i in "${amd_compiler_commands[@]}"; do
+            if [ -f "$packageDeb/$installPath/bin/$i" ]; then
+                echo "ln -s \"../lib/llvm/bin/$i\" \"$ROCM_INSTALL_PATH/bin/$i\"" >> $postinstFile
+                echo "rm -f \"$ROCM_INSTALL_PATH/bin/$i\"" >> $prermFile
+            fi
+        done
+        echo "rmdir --ignore-fail-on-non-empty \"$ROCM_INSTALL_PATH/bin\"" >> $prermFile
+        chmod 0555 "$postinstFile" "$prermFile"
+        cp -P "$backwardsCompatibleSymlink" "$packageDeb/$ROCM_INSTALL_PATH"
 
         echo "Package: $packageName"  > $controlFile
         echo "Architecture: $packageArch" >> $controlFile
@@ -613,16 +559,12 @@ package_lightning_dynamic(){
         echo "Release:    ${JOB_DESIGNATOR}${SLES_BUILD_ID_PREFIX}${BUILD_ID}%{?dist}" >> $specFile
         echo "Summary:    $packageSummary" >> $specFile
         echo "Group:      System Environment/Libraries" >> $specFile
-        if [ $BUILD_ALT -eq 1 ]; then
-          echo "License:    AMD Proprietary" >> $specFile
-        else
-          echo "License:    ASL 2.0 with exceptions" >> $specFile
-        fi
+        echo "License:    ASL 2.0 with exceptions" >> $specFile
         echo "Requires:   $rpmRequires" >> $specFile
-
-        if [ $BUILD_ALT -eq 1 ]; then
-          echo "%define _build_id_links none" >> $specFile
-        fi
+        # The following is commented as Centos 7 has a version of rpm
+        # that does not understand it. When we no longer support Centos 7
+        # then we should have a correct recommends line.
+        #echo "Recommends: $rpmRecommends" >> $specFile
 
         echo "%description" >> $specFile
         echo "$packageSummaryLong" >> $specFile
@@ -638,28 +580,20 @@ package_lightning_dynamic(){
         echo "mkdir -p  \$RPM_BUILD_ROOT/$installPath/share/man" >> $specFile
         echo "mkdir -p  \$RPM_BUILD_ROOT/$licenseDir" >> $specFile
 
-        if [ $BUILD_ALT -eq 0 ]; then
-          echo "cp -R $LLVM_ROOT_LCL/LICENSE.TXT \$RPM_BUILD_ROOT/$licenseDir" >> $specFile
-          echo "cp -P $backwardsCompatibleSymlink \$RPM_BUILD_ROOT/$ROCM_INSTALL_PATH" >> $specFile
-        else
-          echo "cp -R $LLVM_PROJECT_ALT_ROOT/EULA \$RPM_BUILD_ROOT/$licenseDir" >> $specFile
-          echo "cp -R $LLVM_PROJECT_ALT_ROOT/DISCLAIMER.txt \$RPM_BUILD_ROOT/$licenseDir" >> $specFile
-        fi
-
+        echo "cp -R $LLVM_ROOT_LCL/LICENSE.TXT \$RPM_BUILD_ROOT/$licenseDir" >> $specFile
+        echo "cp -P $backwardsCompatibleSymlink \$RPM_BUILD_ROOT/$ROCM_INSTALL_PATH" >> $specFile
         echo "cp -R $distBin \$RPM_BUILD_ROOT/$installPath" >> $specFile
         echo "cp -R $distInc \$RPM_BUILD_ROOT/$installPath" >> $specFile
         echo "cp -R $distLib \$RPM_BUILD_ROOT/$installPath" >> $specFile
         if [ "$BUILD_MANPAGES" == "ON" ]; then
-          if [ $BUILD_ALT -eq 0 ]; then
-              for i in "${man_pages[@]}"; do
-                  echo "gzip -f $distMan/man1/$i" >> $specFile
-              done
-              if [ -f "$distMan/man1/clang.1.gz" ]; then
-                  for i in "${amd_man_pages[@]}"; do
-                      echo "ln -sf clang.1.gz \"$distMan/man1/$i\"" >> $specFile
-                  done
-              fi
-          fi
+            for i in "${man_pages[@]}"; do
+                echo "gzip -f $distMan/man1/$i" >> $specFile
+            done
+            if [ -f "$distMan/man1/clang.1.gz" ]; then
+                for i in "${amd_man_pages[@]}"; do
+                    echo "ln -sf clang.1.gz \"$distMan/man1/$i\"" >> $specFile
+                done
+            fi
         fi
         echo "cp -R $distMan \$RPM_BUILD_ROOT/$installPath/share" >> $specFile
 
@@ -676,25 +610,20 @@ package_lightning_dynamic(){
         echo "$ROCM_INSTALL_PATH" >> $specFile
 
         echo "%post" >> $specFile
-        if [ $BUILD_ALT -eq 0 ]; then
-            echo "mkdir -p \"$ROCM_INSTALL_PATH/bin\"" >> $specFile
-            for i in "${amd_compiler_commands[@]}"; do
-                if [ -f "$distBin/$i" ]; then
-                    echo "ln -sf ../lib/llvm/bin/$i \"$ROCM_INSTALL_PATH/bin/$i\"" >> $specFile
-                fi
-            done
-        fi
+        echo "mkdir -p \"$ROCM_INSTALL_PATH/bin\"" >> $specFile
+        for i in "${amd_compiler_commands[@]}"; do
+            if [ -f "$distBin/$i" ]; then
+                echo "ln -sf ../lib/llvm/bin/$i \"$ROCM_INSTALL_PATH/bin/$i\"" >> $specFile
+            fi
+        done
 
         echo "%preun" >> $specFile
-        if [ $BUILD_ALT -eq 0 ]; then
-            for i in "${amd_compiler_commands[@]}"; do
-                if [ -f "$distBin/$i" ]; then
-                    echo "rm -f \"$ROCM_INSTALL_PATH/bin/$i\"" >> $specFile
-                fi
-            done
-            echo "rmdir --ignore-fail-on-non-empty \"$ROCM_INSTALL_PATH/bin\"" >> $specFile
-        fi
-
+        for i in "${amd_compiler_commands[@]}"; do
+            if [ -f "$distBin/$i" ]; then
+                echo "rm -f \"$ROCM_INSTALL_PATH/bin/$i\"" >> $specFile
+            fi
+        done
+        echo "rmdir --ignore-fail-on-non-empty \"$ROCM_INSTALL_PATH/bin\"" >> $specFile
         echo "%postun" >> $specFile
 
         rpmbuild --define "_topdir $packageRpm" -ba $specFile
@@ -711,32 +640,17 @@ package_lightning_static() {
     get_llvm_version
     local llvmParsedVersion="${LLVM_VERSION_MAJOR}.${LLVM_VERSION_MINOR}.${LLVM_VERSION_PATCH}"
 
-    if [ $BUILD_ALT -eq 1 ]; then
-        local packageName="rocm-llvm-alt"
-        local packageSummary="Proprietary ROCm core compiler"
-        local packageSummaryLong="ROCm core compiler, including proprietary optimizations based on LLVM $llvmParsedVersion"
-        if [ "$PACKAGEEXT" = "deb" ]; then
-            local packageNameExtra="rocm-llvm-alt-dev"
-        else
-            local packageNameExtra="rocm-llvm-alt-devel"
-        fi
-        local packageSummaryExtra="Proprietary ROCm compiler dev tools"
-        local packageSummaryLongExtra="ROCm compiler dev tools and documentation, including proprietary optimizations, based on LLVM $llvmParsedVersion"
-        local installPath="$ROCM_INSTALL_PATH/lib/llvm/alt"
+    local packageName="rocm-llvm"
+    local packageSummary="ROCm core compiler"
+    local packageSummaryLong="ROCm core compiler based on LLVM $llvmParsedVersion"
+    if [ "$PACKAGEEXT" = "deb" ]; then
+        local packageNameExtra="rocm-llvm-dev"
     else
-        local packageName="rocm-llvm"
-        local packageSummary="ROCm core compiler"
-        local packageSummaryLong="ROCm core compiler based on LLVM $llvmParsedVersion"
-        if [ "$PACKAGEEXT" = "deb" ]; then
-            local packageNameExtra="rocm-llvm-dev"
-        else
-            local packageNameExtra="rocm-llvm-devel"
-        fi
-        local packageSummaryExtra="ROCm compiler dev tools"
-        local packageSummaryLongExtra="ROCm compiler dev tools and documentation, based on LLVM $llvmParsedVersion"
-        local installPath="$ROCM_INSTALL_PATH/lib/llvm/"
-
+        local packageNameExtra="rocm-llvm-devel"
     fi
+    local packageSummaryExtra="ROCm compiler dev tools"
+    local packageSummaryLongExtra="ROCm compiler dev tools and documentation, based on LLVM $llvmParsedVersion"
+    local installPath="$ROCM_INSTALL_PATH/lib/llvm/"
 
     local packageArch="amd64"
     local packageVersion="${llvmParsedVersion}.${LLVM_COMMIT_GITDATE}"
@@ -746,7 +660,6 @@ package_lightning_static() {
     local distLib="$INSTALL_PATH/lib"
     local distMan="$INSTALL_PATH/share/man"
     local licenseDir="$ROCM_INSTALL_PATH/share/doc/$packageName"
-    local licenseDirExtra="$ROCM_INSTALL_PATH/share/doc/$packageNameExtra"
     local packageDir="$BUILD_PATH/package"
     local backwardsCompatibleSymlink="$ROCM_INSTALL_PATH/llvm"
 
@@ -756,9 +669,6 @@ package_lightning_static() {
     local prermFile="$packageDeb/DEBIAN/prerm"
     local specFile="$packageDir/$packageName.spec"
     local debDependencies="python3, libc6, libstdc++6|libstdc++8, libstdc++-5-dev|libstdc++-7-dev|libstdc++-11-dev, libgcc-5-dev|libgcc-7-dev|libgcc-11-dev, rocm-core"
-    if [ $BUILD_ALT -eq 1 ]; then
-        debDependencies="${debDependencies}, rocm-llvm"
-    fi
     local debRecommends="gcc, g++, gcc-multilib, g++-multilib"
 
     local packageRpm="$packageDir/rpm"
@@ -767,10 +677,6 @@ package_lightning_static() {
     local specFileExtra="$packageDir/$packageNameExtra.spec"
     local rpmRequires="rocm-core"
     local rpmRequiresExtra="rocm-core, $packageName"
-    if [ $BUILD_ALT -eq 1 ]; then
-        rpmRequires+=", rocm-llvm"
-        rpmRequiresExtra+=", rocm-llvm-devel"
-    fi
     local rpmRecommends="gcc, gcc-c++, devtoolset-7-gcc-c++"
 
     rm -rf "$packageDir"
@@ -807,12 +713,7 @@ package_lightning_static() {
         mkdir -p "$DEB_PATH"
         mkdir -p "$packageDeb/$licenseDir"
 
-        if [ $BUILD_ALT -eq 0 ] ; then
-          cp -r "$LLVM_ROOT_LCL/LICENSE.TXT" "$packageDeb/$licenseDir"
-        else
-          cp -r "$LLVM_PROJECT_ALT_ROOT/EULA" "$packageDeb/$licenseDir"
-          cp -r "$LLVM_PROJECT_ALT_ROOT/DISCLAIMER.txt" "$packageDeb/$licenseDir"
-        fi
+        cp -r "$LLVM_ROOT_LCL/LICENSE.TXT" "$packageDeb/$licenseDir"
 
         mkdir -p "$packageDeb/$installPath/bin"
         for i in "${core_bin[@]}"; do
@@ -838,36 +739,32 @@ package_lightning_static() {
         done
 
         if [ "$BUILD_MANPAGES" == "ON" ]; then
-            if [ $BUILD_ALT -eq 0 ]; then
-                mkdir -p "$packageDeb/$installPath/share/man1"
-                for i in "${core_man_pages[@]}"; do
-                    if [ -f "$distMan/man1/$i" ]; then
-                        gzip -f "$distMan/man1/$i"
-                        cp -d "$distMan/man1/${i}.gz" "$packageDeb/$installPath/share/man1/"
-                    fi
-                done
-                if [ -f "$distMan/man1/clang.1.gz" ]; then
-                    for i in "${amd_man_pages[@]}"; do
-                        ln -sf "clang.1.gz" "$distMan/man1/$i"
-                        cp -d "$distMan/man1/${i}" "$packageDeb/$installPath/share/man1/"
-                    done
+            mkdir -p "$packageDeb/$installPath/share/man1"
+            for i in "${core_man_pages[@]}"; do
+                if [ -f "$distMan/man1/$i" ]; then
+                    gzip -f "$distMan/man1/$i"
+                    cp -d "$distMan/man1/${i}.gz" "$packageDeb/$installPath/share/man1/"
                 fi
+            done
+            if [ -f "$distMan/man1/clang.1.gz" ]; then
+                for i in "${amd_man_pages[@]}"; do
+                    ln -sf "clang.1.gz" "$distMan/man1/$i"
+                    cp -d "$distMan/man1/${i}" "$packageDeb/$installPath/share/man1/"
+                done
             fi
         fi
 
-        if [ $BUILD_ALT -eq 0 ]; then
-            touch "$postinstFile" "$prermFile"
-            echo "mkdir -p \"$ROCM_INSTALL_PATH/bin\"" >> $postinstFile
-            for i in "${amd_compiler_commands[@]}"; do
-                if [ -f "$packageDeb/$installPath/bin/$i" ]; then
-                    echo "ln -s \"../lib/llvm/bin/$i\" \"$ROCM_INSTALL_PATH/bin/$i\"" >> $postinstFile
-                    echo "rm -f \"$ROCM_INSTALL_PATH/bin/$i\"" >> $prermFile
-                fi
-            done
-            echo "rmdir --ignore-fail-on-non-empty \"$ROCM_INSTALL_PATH/bin\"" >> $prermFile
-            chmod 0555 "$postinstFile" "$prermFile"
-            cp -P "$backwardsCompatibleSymlink" "$packageDeb/$ROCM_INSTALL_PATH"
-        fi
+        touch "$postinstFile" "$prermFile"
+        echo "mkdir -p \"$ROCM_INSTALL_PATH/bin\"" >> $postinstFile
+        for i in "${amd_compiler_commands[@]}"; do
+            if [ -f "$packageDeb/$installPath/bin/$i" ]; then
+                echo "ln -s \"../lib/llvm/bin/$i\" \"$ROCM_INSTALL_PATH/bin/$i\"" >> $postinstFile
+                echo "rm -f \"$ROCM_INSTALL_PATH/bin/$i\"" >> $prermFile
+            fi
+        done
+        echo "rmdir --ignore-fail-on-non-empty \"$ROCM_INSTALL_PATH/bin\"" >> $prermFile
+        chmod 0555 "$postinstFile" "$prermFile"
+        cp -P "$backwardsCompatibleSymlink" "$packageDeb/$ROCM_INSTALL_PATH"
 
         {
             echo "Package: $packageName"
@@ -892,14 +789,6 @@ package_lightning_static() {
         mkdir -p "$packageDeb/$installPath"
         mkdir "${controlFile%/*}"
         mkdir -p "$DEB_PATH"
-        mkdir -p "$packageDeb/$licenseDirExtra"
-
-        if [ $BUILD_ALT -eq 0 ] ; then
-          cp -r "$LLVM_ROOT_LCL/LICENSE.TXT" "$packageDeb/$licenseDirExtra"
-        else
-          cp -r "$LLVM_PROJECT_ALT_ROOT/EULA" "$packageDeb/$licenseDirExtra"
-          cp -r "$LLVM_PROJECT_ALT_ROOT/DISCLAIMER.txt" "$packageDeb/$licenseDirExtra"
-        fi
 
         mkdir -p "$packageDeb/$installPath/bin"
         for i in "$distBin"/*; do
@@ -922,21 +811,16 @@ package_lightning_static() {
         fi
 
         if [ "$BUILD_MANPAGES" == "ON" ]; then
-            if [ $BUILD_ALT -eq 0 ]; then
-                mkdir -p "$packageDeb/$installPath/share/man1"
-                for i in "${dev_man_pages[@]}"; do
-                    if [ -f "$distMan/man1/$i" ]; then
-                        gzip -f "$distMan/man1/$i"
-                        cp -d "$distMan/man1/${i}.gz" "$packageDeb/$installPath/share/man1/"
-                    fi
-                done
-            fi
+            mkdir -p "$packageDeb/$installPath/share/man1"
+            for i in "${dev_man_pages[@]}"; do
+                if [ -f "$distMan/man1/$i" ]; then
+                    gzip -f "$distMan/man1/$i"
+                    cp -d "$distMan/man1/${i}.gz" "$packageDeb/$installPath/share/man1/"
+                fi
+            done
         fi
 
         debDependencies="${debDependencies}, ${packageName}"
-        if [ $BUILD_ALT -eq 1 ]; then
-            debDependencies="${debDependencies}, rocm-llvm-dev"
-        fi
 
         echo "Package: $packageNameExtra"  > $controlFile
         echo "Architecture: $packageArch" >> $controlFile
@@ -979,13 +863,8 @@ package_lightning_static() {
         echo "mkdir -p  \$RPM_BUILD_ROOT/$installPath/bin" >> $specFile
         echo "mkdir -p  \$RPM_BUILD_ROOT/$licenseDir" >> $specFile
 
-        if [ $BUILD_ALT -eq 0 ]; then
-            echo "cp -R $LLVM_ROOT_LCL/LICENSE.TXT \$RPM_BUILD_ROOT/$licenseDir" >> $specFile
-            echo "cp -P $backwardsCompatibleSymlink \$RPM_BUILD_ROOT/$ROCM_INSTALL_PATH" >> $specFile
-        else
-            echo "cp -R $LLVM_PROJECT_ALT_ROOT/EULA \$RPM_BUILD_ROOT/$licenseDir" >> $specFile
-            echo "cp -R $LLVM_PROJECT_ALT_ROOT/DISCLAIMER.txt \$RPM_BUILD_ROOT/$licenseDir" >> $specFile
-        fi
+        echo "cp -R $LLVM_ROOT_LCL/LICENSE.TXT \$RPM_BUILD_ROOT/$licenseDir" >> $specFile
+        echo "cp -P $backwardsCompatibleSymlink \$RPM_BUILD_ROOT/$ROCM_INSTALL_PATH" >> $specFile
 
         for i in "${core_bin[@]}"; do
             if [ -f "$distBin/$i" ]; then
@@ -995,9 +874,7 @@ package_lightning_static() {
 
         echo "cp -d \"$distBin/flang\" \$RPM_BUILD_ROOT/$installPath/bin/" >> $specFile
 
-        if [ $BUILD_ALT -eq 0 ]; then
-            echo "cp -d \"$distBin\"/*.cfg \$RPM_BUILD_ROOT/$installPath/bin/" >> $specFile
-        fi
+        echo "cp -d \"$distBin\"/*.cfg \$RPM_BUILD_ROOT/$installPath/bin/" >> $specFile
 
         echo "mkdir -p \$RPM_BUILD_ROOT/$installPath/lib/clang" >> $specFile
         echo "cp -R \"$distLib/clang/\" \$RPM_BUILD_ROOT/$installPath/lib/" >> $specFile
@@ -1014,20 +891,18 @@ package_lightning_static() {
         done
 
         if [ "$BUILD_MANPAGES" == "ON" ]; then
-            if [ $BUILD_ALT -eq 0 ]; then
-                echo "mkdir -p  \$RPM_BUILD_ROOT/$installPath/share/man/man1" >> $specFile
-                for i in "${core_man_pages[@]}"; do
-                    if [ -f "$distMan/man1/$i" ]; then
-                        echo "gzip -f $distMan/man1/$i" >> $specFile
-                        echo "cp -d $distMan/man1/${i}.gz \$RPM_BUILD_ROOT/$installPath/share/man/man1/" >> $specFile
-                    fi
-                done
-                if [ -f "$distMan/man1/clang.1.gz" ]; then
-                    for i in "${amd_man_pages[@]}"; do
-                        echo "ln -sf clang.1.gz \"$distMan/man1/$i\"" >> $specFile
-                        echo "cp -d $distMan/man1/${i} \$RPM_BUILD_ROOT/$installPath/share/man/man1/" >> $specFile
-                    done
+            echo "mkdir -p  \$RPM_BUILD_ROOT/$installPath/share/man/man1" >> $specFile
+            for i in "${core_man_pages[@]}"; do
+                if [ -f "$distMan/man1/$i" ]; then
+                    echo "gzip -f $distMan/man1/$i" >> $specFile
+                    echo "cp -d $distMan/man1/${i}.gz \$RPM_BUILD_ROOT/$installPath/share/man/man1/" >> $specFile
                 fi
+            done
+            if [ -f "$distMan/man1/clang.1.gz" ]; then
+                for i in "${amd_man_pages[@]}"; do
+                    echo "ln -sf clang.1.gz \"$distMan/man1/$i\"" >> $specFile
+                    echo "cp -d $distMan/man1/${i} \$RPM_BUILD_ROOT/$installPath/share/man/man1/" >> $specFile
+                done
             fi
         fi
 
@@ -1039,24 +914,20 @@ package_lightning_static() {
             echo "$ROCM_INSTALL_PATH"
 
             echo "%post"
-            if [ $BUILD_ALT -eq 0 ]; then
-                echo "mkdir -p \"$ROCM_INSTALL_PATH/bin\""
-                for i in "${amd_compiler_commands[@]}"; do
-                    if [ -f "$distBin/$i" ]; then
-                        echo "ln -sf ../lib/llvm/bin/$i \"$ROCM_INSTALL_PATH/bin/$i\""
-                    fi
-                done
-            fi
+            echo "mkdir -p \"\$RPM_INSTALL_PREFIX0/bin\""
+            for i in "${amd_compiler_commands[@]}"; do
+                if [ -f "$distBin/$i" ]; then
+                    echo "ln -sf ../lib/llvm/bin/$i \"\$RPM_INSTALL_PREFIX0/bin/$i\""
+                fi
+            done
 
             echo "%preun"
-            if [ $BUILD_ALT -eq 0 ]; then
-                for i in "${amd_compiler_commands[@]}"; do
-                    if [ -f "$distBin/$i" ]; then
-                        echo "rm -f \"$ROCM_INSTALL_PATH/bin/$i\""
-                    fi
-                done
-                echo "rmdir --ignore-fail-on-non-empty \"$ROCM_INSTALL_PATH/bin\""
-            fi
+            for i in "${amd_compiler_commands[@]}"; do
+                if [ -f "$distBin/$i" ]; then
+                    echo "rm -f \"\$RPM_INSTALL_PREFIX0/bin/$i\""
+                fi
+            done
+            echo "rmdir --ignore-fail-on-non-empty \"\$RPM_INSTALL_PREFIX0/bin\""
 
             echo "%postun"
         } >> "$specFile"
@@ -1071,16 +942,13 @@ package_lightning_static() {
         echo "Release:    ${JOB_DESIGNATOR}${SLES_BUILD_ID_PREFIX}${BUILD_ID}%{?dist}" >> $specFileExtra
         echo "Summary:    $packageSummaryExtra" >> $specFileExtra
         echo "Group:      System Environment/Libraries" >> $specFileExtra
-        if [ $BUILD_ALT -eq 1 ]; then
-          echo "License:    AMD Proprietary" >> $specFileExtra
-        else
-          echo "License:    ASL 2.0 with exceptions" >> $specFileExtra
-        fi
+        echo "License:    ASL 2.0 with exceptions" >> $specFileExtra
+        echo "Prefix:     $ROCM_INSTALL_PATH" >> $specFileExtra
         echo "Requires:   $rpmRequiresExtra" >> $specFileExtra
-
-        if [ $BUILD_ALT -eq 1 ]; then
-          echo "%define _build_id_links none" >> $specFileExtra
-        fi
+        # The following is commented as Centos 7 has a version of rpm
+        # that does not understand it. When we no longer support Centos 7
+        # then we should have a correct recommends line.
+        #echo "Recommends: $rpmRecommends" >> $specFileExtra
 
         echo "%description" >> $specFileExtra
         echo "$packageSummaryLongExtra" >> $specFileExtra
@@ -1093,15 +961,8 @@ package_lightning_static() {
         echo "mkdir -p  \$RPM_BUILD_ROOT/$installPath/bin" >> $specFileExtra
         echo "mkdir -p  \$RPM_BUILD_ROOT/$installPath/include" >> $specFileExtra
         echo "mkdir -p  \$RPM_BUILD_ROOT/$installPath/lib" >> $specFileExtra
-        echo "mkdir -p  \$RPM_BUILD_ROOT/$licenseDirExtra" >> $specFileExtra
 
-        if [ $BUILD_ALT -eq 0 ]; then
-          echo "cp -R $LLVM_ROOT_LCL/LICENSE.TXT \$RPM_BUILD_ROOT/$licenseDirExtra" >> $specFileExtra
-          echo "cp -P $backwardsCompatibleSymlink \$RPM_BUILD_ROOT/$ROCM_INSTALL_PATH" >> $specFileExtra
-        else
-          echo "cp -R $LLVM_PROJECT_ALT_ROOT/EULA \$RPM_BUILD_ROOT/$licenseDirExtra" >> $specFileExtra
-          echo "cp -R $LLVM_PROJECT_ALT_ROOT/DISCLAIMER.txt \$RPM_BUILD_ROOT/$licenseDirExtra" >> $specFileExtra
-        fi
+        echo "cp -P $backwardsCompatibleSymlink \$RPM_BUILD_ROOT/$ROCM_INSTALL_PATH" >> $specFileExtra
 
         for i in "$distBin"/*; do
             bin=$(basename "$i")
@@ -1122,15 +983,13 @@ package_lightning_static() {
         fi
 
         if [ "$BUILD_MANPAGES" == "ON" ]; then
-            if [ $BUILD_ALT -eq 0 ]; then
-                echo "mkdir -p  \$RPM_BUILD_ROOT/$installPath/share/man/man1" >> $specFileExtra
-                for i in "${extra_man_pages[@]}"; do
-                    if [ -f "$distMan/man1/$i" ]; then
-                        echo "gzip -f $distMan/man1/$i" >> $specFileExtra
-                        echo "cp -d \"$distMan/man1/${i}.gz\" \$RPM_BUILD_ROOT/$installPath/share/man/man1/" >> $specFileExtra
-                    fi
-                done
-            fi
+            echo "mkdir -p  \$RPM_BUILD_ROOT/$installPath/share/man/man1" >> $specFileExtra
+            for i in "${dev_man_pages[@]}"; do
+                if [ -f "$distMan/man1/$i" ]; then
+                    echo "gzip -f $distMan/man1/$i" >> $specFileExtra
+                    echo "cp -d \"$distMan/man1/${i}.gz\" \$RPM_BUILD_ROOT/$installPath/share/man/man1/" >> $specFileExtra
+                fi
+            done
         fi
 
         echo "%clean" >> $specFileExtra
@@ -1266,9 +1125,7 @@ print_output_directory() {
 build() {
     mkdir -p "${INSTALL_PATH}"
     build_lightning
-    if [ $BUILD_ALT -eq 0 ] ; then
-        create_compiler_config_files
-    fi
+    create_compiler_config_files
 }
 
 create_wheel_package() {

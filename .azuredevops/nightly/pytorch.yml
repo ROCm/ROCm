@@ -142,6 +142,10 @@ parameters:
     - binary_ufuncs
     - autograd
 #    - inductor/torchinductor takes too long
+# set to false to disable torchvision build and test
+- name: includeVision
+  type: boolean
+  default: false
 
 trigger: none
 pr: none
@@ -238,6 +242,12 @@ jobs:
         sudo ln -s $(Build.SourcesDirectory)/builder /builder
       workingDirectory: $(Build.SourcesDirectory)
   - task: Bash@3
+    displayName: Temporarily Patch CK Submodule
+    inputs:
+      targetType: inline
+      script: git pull origin develop
+      workingDirectory: $(Build.SourcesDirectory)/pytorch/third_party/composable_kernel
+  - task: Bash@3
     displayName: Install patchelf
     inputs:
       targetType: inline
@@ -296,59 +306,60 @@ jobs:
       sourceDir: /remote/wheelhouserocm$(ROCM_VERSION)
       contentsString: '*.whl'
 # common helper source for pytorch vision and audio
-  - task: Bash@3
-    displayName: git clone pytorch test-infra
-    inputs:
-      targetType: inline
-      script: git clone https://github.com/pytorch/test-infra.git --depth=1 --recurse-submodules
-      workingDirectory: $(Build.SourcesDirectory)
-  - task: Bash@3
-    displayName: install package helper
-    inputs:
-      targetType: inline
-      script: python3 -m pip install test-infra/tools/pkg-helpers
-      workingDirectory: $(Build.SourcesDirectory)
-  - task: Bash@3
-    displayName: pytorch pkg helpers
-    inputs:
-      targetType: inline
-      script: CU_VERSION=${CU_VERSION} CHANNEL=${CHANNEL} python -m pytorch_pkg_helpers
-# get torch vision source and build
-  - task: Bash@3
-    displayName: git clone pytorch vision
-    inputs:
-      targetType: inline
-      script: git clone https://github.com/pytorch/vision.git --depth=1 --recurse-submodules
-      workingDirectory: $(Build.SourcesDirectory)
-  - task: Bash@3
-    displayName: Build vision
-    inputs:
-      targetType: inline
-      script: >-
-        TORCH_PACKAGE_NAME=torch.$(ROCM_BRANCH).$(JOB_GPU_TARGET)
-        TORCHVISION_PACKAGE_NAME=torchvision.$(ROCM_BRANCH).$(JOB_GPU_TARGET)
-        PYTORCH_VERSION=$(cat $(Build.SourcesDirectory)/pytorch/version.txt | cut -da -f1)post$(date -u +%Y%m%d)
-        BUILD_VERSION=$(cat $(Build.SourcesDirectory)/vision/version.txt | cut -da -f1)post$(date -u +%Y%m%d)
-        python3 setup.py bdist_wheel
-      workingDirectory: $(Build.SourcesDirectory)/vision
-  - task: Bash@3
-    displayName: Relocate vision
-    inputs:
-      targetType: inline
-      script: python3 packaging/wheel/relocate.py
-      workingDirectory: $(Build.SourcesDirectory)/vision
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-prepare-package.yml
-    parameters:
-      sourceDir: $(Build.SourcesDirectory)/vision/dist
-      contentsString: '*.whl'
-      clean: false
+  - ${{ if eq(parameters.includeVision, true) }}:
+    - task: Bash@3
+      displayName: git clone pytorch test-infra
+      inputs:
+        targetType: inline
+        script: git clone https://github.com/pytorch/test-infra.git --depth=1 --recurse-submodules
+        workingDirectory: $(Build.SourcesDirectory)
+    - task: Bash@3
+      displayName: install package helper
+      inputs:
+        targetType: inline
+        script: python3 -m pip install test-infra/tools/pkg-helpers
+        workingDirectory: $(Build.SourcesDirectory)
+    - task: Bash@3
+      displayName: pytorch pkg helpers
+      inputs:
+        targetType: inline
+        script: CU_VERSION=${CU_VERSION} CHANNEL=${CHANNEL} python -m pytorch_pkg_helpers
+  # get torch vision source and build
+    - task: Bash@3
+      displayName: git clone pytorch vision
+      inputs:
+        targetType: inline
+        script: git clone https://github.com/pytorch/vision.git --depth=1 --recurse-submodules
+        workingDirectory: $(Build.SourcesDirectory)
+    - task: Bash@3
+      displayName: Build vision
+      inputs:
+        targetType: inline
+        script: >-
+          TORCH_PACKAGE_NAME=torch.$(ROCM_BRANCH).$(JOB_GPU_TARGET)
+          TORCHVISION_PACKAGE_NAME=torchvision.$(ROCM_BRANCH).$(JOB_GPU_TARGET)
+          PYTORCH_VERSION=$(cat $(Build.SourcesDirectory)/pytorch/version.txt | cut -da -f1)post$(date -u +%Y%m%d)
+          BUILD_VERSION=$(cat $(Build.SourcesDirectory)/vision/version.txt | cut -da -f1)post$(date -u +%Y%m%d)
+          python3 setup.py bdist_wheel
+        workingDirectory: $(Build.SourcesDirectory)/vision
+    - task: Bash@3
+      displayName: Relocate vision
+      inputs:
+        targetType: inline
+        script: python3 packaging/wheel/relocate.py
+        workingDirectory: $(Build.SourcesDirectory)/vision
+    - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-prepare-package.yml
+      parameters:
+        sourceDir: $(Build.SourcesDirectory)/vision/dist
+        contentsString: '*.whl'
+        clean: false
   - task: PublishPipelineArtifact@1
     displayName: 'wheel file Publish'
     retryCountOnTaskFailure: 3
     inputs:
       targetPath: $(Build.BinariesDirectory)
 
-- job: torchvision_testing
+- job: pytorch_testing
   dependsOn: pytorch
   condition: and(succeeded(), eq(variables.ENABLE_GFX942_TESTS, 'true'), not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])))
   variables:
@@ -401,12 +412,13 @@ jobs:
       targetType: inline
       script: git clone https://github.com/pytorch/pytorch.git --depth=1 --recurse-submodules
       workingDirectory: $(Build.SourcesDirectory)
-  - task: Bash@3
-    displayName: git clone pytorch vision
-    inputs:
-      targetType: inline
-      script: git clone https://github.com/pytorch/vision.git --depth=1 --recurse-submodules
-      workingDirectory: $(Build.SourcesDirectory)
+  - ${{ if eq(parameters.includeVision, true) }}:
+    - task: Bash@3
+      displayName: git clone pytorch vision
+      inputs:
+        targetType: inline
+        script: git clone https://github.com/pytorch/vision.git --depth=1 --recurse-submodules
+        workingDirectory: $(Build.SourcesDirectory)
   - task: Bash@3
     displayName: Install Wheel Files
     inputs:
@@ -510,13 +522,14 @@ jobs:
           script: pytest test/test_${{ torchTest }}.py
 # Reference on what tests to run for torchvision found in private repo:
 # https://github.com/ROCm/rocAutomation/blob/jenkins-pipelines/pytorch/pytorch_ci/test_torchvision.sh#L51
-  - task: Bash@3
-    displayName: Test vision/transforms
-    continueOnError: true
-    inputs:
-      targetType: inline
-      script: pytest test/test_transforms.py
-      workingDirectory: $(Build.SourcesDirectory)/vision
+  - ${{ if eq(parameters.includeVision, true) }}:
+    - task: Bash@3
+      displayName: Test vision/transforms
+      continueOnError: true
+      inputs:
+        targetType: inline
+        script: pytest test/test_transforms.py
+        workingDirectory: $(Build.SourcesDirectory)/vision
   - task: Bash@3
     displayName: Uninstall Wheel Files
     inputs:
