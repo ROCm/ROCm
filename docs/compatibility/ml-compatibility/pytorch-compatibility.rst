@@ -23,7 +23,7 @@ release cycles for PyTorch on ROCm:
   - Offers :ref:`Docker images <pytorch-docker-compat>` with ROCm and PyTorch
     pre-installed.
 
-  - ROCm PyTorch repository: `<https://github.com/rocm/pytorch>`__
+  - ROCm PyTorch repository: `<https://github.com/ROCm/pytorch>`__
 
   - See the :doc:`ROCm PyTorch installation guide <rocm-install-on-linux:install/3rd-party/pytorch-install>` to get started.
 

@@ -22,7 +22,7 @@ support:
 
   - Offers AMD-validated and community :ref:`Docker images <jax-docker-compat>` with ROCm and JAX pre-installed.
 
-  - `ROCm JAX repository <https://github.com/rocm/jax>`_
+  - ROCm JAX repository: `<https://github.com/ROCm/jax>`__
 
   - See the :doc:`ROCm JAX installation guide <rocm-install-on-linux:install/3rd-party/jax-install>`
     to get started.
@@ -37,12 +37,10 @@ support:
 
 .. note::
 
-  The official `ROCm JAX Docker images <https://hub.docker.com/r/rocm/jax>`_
-  are fully tested by AMD and are released on a quarterly cadence along with
-  new ROCm releases.
-  The `community JAX Docker images for ROCm <https://hub.docker.com/r/rocm/jax-community>`_
-  are built and released on a cadence that matches the upstream JAX release
-  cadence and kept current with the latest ROCM version available.
+   AMD releases official ``ROCm JAX Docker images <https://hub.docker.com/r/rocm/jax>`_
+   quarterly alongside new ROCm releases. These images undergo full AMD testing.
+   `Community ROCm JAX Docker images <https://hub.docker.com/r/rocm/jax-community>`_
+   follow upstream JAX releases and use the latest available ROCm version.
 
 .. _jax-docker-compat:
 
