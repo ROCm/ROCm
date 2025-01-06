@@ -48,9 +48,14 @@ the stable release of ROCm to maintain consistency.
 Docker image compatibility
 ================================================================================
 
+.. |docker-icon| raw:: html
+
+   <i class="fab fa-docker"></i>
+
 AMD validates and publishes ready-made `PyTorch <https://hub.docker.com/r/rocm/pytorch>`_
 images with ROCm backends on Docker Hub. The following Docker image tags and
 associated inventories are validated for `ROCm 6.3.0 <https://repo.radeon.com/rocm/apt/6.3/>`_.
+Click |docker-icon| to see the image on Docker Hub.
 
 .. list-table:: PyTorch Docker image components
     :header-rows: 1
