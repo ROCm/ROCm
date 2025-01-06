@@ -60,6 +60,7 @@ parameters:
     - roctracer
     - rocWMMA
     - rpp
+    - TransferBench
 
 trigger: none
 pr: none

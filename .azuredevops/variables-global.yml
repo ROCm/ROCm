@@ -343,5 +343,9 @@ variables:
   value: 78
 - name: RPP_TAGGED_PIPELINE_ID
   value: 39
+- name: TRANSFERBENCH_PIPELINE_ID
+  value: 265
+- name: TRANSFERBENCH_TAGGED_PIPELINE_ID
+  value: 266
 - name: BOOST_DEPENDENCY_PIPELINE_ID
   value: 250

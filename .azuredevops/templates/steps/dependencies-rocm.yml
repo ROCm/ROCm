@@ -91,6 +91,7 @@ parameters:
     roctracer: $(ROCTRACER_PIPELINE_ID)
     rocWMMA: $(ROCWMMA_PIPELINE_ID)
     rpp: $(RPP_PIPELINE_ID)
+    TransferBench: $(TRANSFERBENCH_PIPELINE_ID)
 - name: taggedPipelineIdentifiers
   type: object
   default:
@@ -155,6 +156,7 @@ parameters:
     roctracer: $(ROCTRACER_TAGGED_PIPELINE_ID)
     rocWMMA: $(ROCWMMA_TAGGED_PIPELINE_ID)
     rpp: $(RPP_TAGGED_PIPELINE_ID)
+    TransferBench: $(TRANSFERBENCH_TAGGED_PIPELINE_ID)
 # set to true if you're calling this template file multiple files in same pipeline
 # only leave last call false to optimize sequence
 - name: skipLibraryLinking
