@@ -110,7 +110,7 @@ associated inventories are tested for `ROCm 6.2.4 <https://repo.radeon.com/rocm/
 Critical ROCm libraries for JAX
 ================================================================================
 
-The functionality of JAX with ROCm is shaped by its underlying library
+The functionality of JAX with ROCm is determined by its underlying library
 dependencies. These critical ROCm components affect the capabilities,
 performance, and feature set available to developers.
 
