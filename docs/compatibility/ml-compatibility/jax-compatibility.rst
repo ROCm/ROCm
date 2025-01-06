@@ -50,7 +50,7 @@ Docker image compatibility
 AMD validates and publishes ready-made `JAX <https://hub.docker.com/r/rocm/jax/>`_
 images with ROCm backends on Docker Hub. The following Docker image tags and
 associated inventories are validated for
-`ROCm 6.3.0 <https://repo.radeon.com/rocm/apt/6.3/>`_.
+`ROCm 6.3.1 <https://repo.radeon.com/rocm/apt/6.3.1/>`_.
 
 .. list-table:: JAX Docker image components
     :header-rows: 1
@@ -61,14 +61,14 @@ associated inventories are validated for
       - Python
     * - .. raw:: html
 
-           <a href="https://hub.docker.com/layers/rocm/jax/rocm6.3-jax0.4.31-py3.12/images/sha256-800ec9750573618760a3b0ffc56f99811830a3b45bec77059d55e9f7823c54ef?context=explore"><i class="fab fa-docker fa-lg"></i> rocm/jax</a>
+           <a href="https://hub.docker.com/layers/rocm/jax/rocm6.3.1-jax0.4.31-py3.12/images/sha256-085a0cd5207110922f1fca684933a9359c66d42db6c5aba4760ed5214fdabde0"><i class="fab fa-docker fa-lg"></i> rocm/jax</a>
 
       - `0.4.31 <https://github.com/ROCm/jax/releases/tag/rocm-jax-v0.4.31>`_
       - Ubuntu 24.04
       - `3.12.7 <https://www.python.org/downloads/release/python-3127/>`_
     * - .. raw:: html
 
-           <a href="https://hub.docker.com/layers/rocm/jax/rocm6.3-jax0.4.31-py3.10/images/sha256-54998ca513b1ea055e67a279e4d64bd569a1ae56c01076d34bd4e7366d33dbc7?context=explore"><i class="fab fa-docker fa-lg"></i> rocm/jax</a>
+           <a href="https://hub.docker.com/layers/rocm/jax/rocm6.3.1-jax0.4.31-py3.10/images/sha256-f88eddad8f47856d8640b694da4da347ffc1750d7363175ab7dc872e82b43324"><i class="fab fa-docker fa-lg"></i> rocm/jax</a>
 
       - `0.4.31 <https://github.com/ROCm/jax/releases/tag/rocm-jax-v0.4.31>`_
       - Ubuntu 22.04
