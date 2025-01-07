@@ -410,7 +410,8 @@ ensuring optimal resource utilization and performance.
 Unsupported TensorFlow features
 ===============================================================================
 
-The following are GPU-acclerated TensorFlow features not currently supported by ROCm.
+The following are GPU-acclerated TensorFlow features not currently supported by
+ROCm.
 
 .. list-table::
     :header-rows: 1
@@ -422,24 +423,12 @@ The following are GPU-acclerated TensorFlow features not currently supported by 
       - Mixed precision with TF32 is used for matrix multiplications,
         convolutions, and other linear algebra operations, particularly in
         deep learning workloads like CNNs and transformers.
-      -
-    * - RNN support
-      - Currently only LSTM with double bias is supported with float32 input
-        and weight.
-      -
-    * - XLA int4 support
-      - 4-bit integer (int4) precision in the XLA compiler.
-      -
-    * - Graph support
-      - Does not expose Graphs as a standalone feature, its reliance on XLA for
-        computation allows Graph solutions to be used internally for GPU
-        workloads.
-      -
-    * - Semi-structured sparsity
-      - Semi-structured sparsity typically involves setting values to zero in
-        certain parts of a tensor or matrix according to patterns that are
-        either predefined or learned.
-      -
+      - 2.4
+   * - ``tf.distribute.TPUStrategy``
+     - Efficiently trains models on Google TPUs.
+     - 1.9
+     - ❌
+
 
 Use cases and recommendations
 ===============================================================================
