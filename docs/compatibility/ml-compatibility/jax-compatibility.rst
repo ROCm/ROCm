@@ -660,5 +660,4 @@ Use cases and recommendations
   performance for deep learning and other high-performance computing tasks on
   the MI300X GPU.
 
-For more use cases and recommendations, see `ROCm JAX blog posts <https://rocm.blogs.amd.com/blog/tag/jax.html>`_
-
+For more use cases and recommendations, see `ROCm JAX blog posts <https://rocm.blogs.amd.com/blog/tag/jax.html>`_.

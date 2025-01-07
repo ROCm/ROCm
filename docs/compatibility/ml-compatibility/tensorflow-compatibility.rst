@@ -472,4 +472,4 @@ Use cases and recommendations
   for a better experience on AMD GPUs. This guide aims to help data scientists
   and ML practitioners adapt their code for AMD GPUs.
 
-For more use cases and recommendations, see the `ROCm Tensorflow blog posts <https://rocm.blogs.amd.com/blog/tag/tensorflow.html>`_
+For more use cases and recommendations, see the `ROCm Tensorflow blog posts <https://rocm.blogs.amd.com/blog/tag/tensorflow.html>`_.

@@ -919,4 +919,4 @@ Use cases and recommendations
   describes how PyTorch integrates with ROCm for AI workloads It outlines the use of PyTorch on the ROCm platform and
   focuses on how to efficiently leverage AMD GPU hardware for training and inference tasks in AI applications.
 
-For more use cases and recommendations, see `ROCm PyTorch blog posts <https://rocm.blogs.amd.com/blog/tag/pytorch.html>`_
+For more use cases and recommendations, see `ROCm PyTorch blog posts <https://rocm.blogs.amd.com/blog/tag/pytorch.html>`_.
