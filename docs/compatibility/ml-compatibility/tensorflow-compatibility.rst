@@ -432,7 +432,7 @@ across multiple machines.
 Unsupported TensorFlow features
 ===============================================================================
 
-The following are GPU-acclerated TensorFlow features not currently supported by
+The following are GPU-accelerated TensorFlow features not currently supported by
 ROCm.
 
 .. list-table::
