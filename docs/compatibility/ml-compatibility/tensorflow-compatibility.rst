@@ -161,7 +161,7 @@ introduced as a dependency.
         Broadcast.
       - Distributed data parallel training (``tf.distribute.MirroredStrategy``).
         Handles communication in multi-GPU setups.
-  * - `rocThrust <https://github.com/ROCm/rocThrust>`_
+    * - `rocThrust <https://github.com/ROCm/rocThrust>`_
       - 3.3.0
       - Provides a C++ template library for parallel algorithms like sorting,
         reduction, and scanning.
@@ -446,10 +446,9 @@ ROCm.
         convolutions, and other linear algebra operations, particularly in
         deep learning workloads like CNNs and transformers.
       - 2.4
-   * - ``tf.distribute.TPUStrategy``
-     - Efficiently trains models on Google TPUs.
-     - 1.9
-     - ❌
+    * - ``tf.distribute.TPUStrategy``
+      - Efficiently trains models on Google TPUs.
+      - 1.9
 
 Use cases and recommendations
 ===============================================================================
