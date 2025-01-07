@@ -296,20 +296,20 @@ are as follows:
 Features
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The list provides an overview of key features in TensorFlow and their
-corresponding availability in ROCm.
+This table provides an overview of key features in TensorFlow and their
+availability in ROCm.
 
 .. list-table::
     :header-rows: 1
 
-    * - Features
+    * - Module
       - Description
       - Since TensorFlow
       - Since ROCm
     * - ``tf.linalg`` (Linear Algebra)
       - Operations for matrix and tensor computations, such as
         ``tf.linalg.matmul`` (matrix multiplication), ``tf.linalg.inv``
-        (matrix inversion) and ``tf.linalg.cholesky`` (cholesky decomposition).
+        (matrix inversion) and ``tf.linalg.cholesky`` (Cholesky decomposition).
         These leverage GPUs for high-performance linear algebra operations.
       - 1.4
       - 1.8.2
@@ -388,13 +388,13 @@ corresponding availability in ROCm.
 Distributed library features
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Enabling to scale computations across multiple devices on a single machine or
+Enables developers to scale computations across multiple devices on a single machine or
 across multiple machines.
 
 .. list-table::
    :header-rows: 1
 
-   * - Data Type
+   * - Feature
      - Description
      - Since TensorFlow
      - Since ROCm

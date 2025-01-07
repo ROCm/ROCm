@@ -605,7 +605,7 @@ ROCm.
 .. list-table::
     :header-rows: 1
 
-    * - Data type
+    * - Feature
       - Description
       - Since JAX
     * - Mixed Precision with TF32

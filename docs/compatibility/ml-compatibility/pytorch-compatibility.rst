@@ -469,7 +469,7 @@ leveraging ROCm and CUDA as the underlying frameworks.
 .. list-table::
     :header-rows: 1
 
-    * - Data type
+    * - Feature
       - Description
       - Since PyTorch
       - Since ROCm
@@ -544,7 +544,7 @@ PyTorch interacts with the CUDA or ROCm environment.
 .. list-table::
     :header-rows: 1
 
-    * - Data type
+    * - Feature
       - Description
       - Since PyTorch
       - Since ROCm
@@ -588,12 +588,12 @@ PyTorch interacts with the CUDA or ROCm environment.
 torch.backends.cudnn
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Supported ``torch`` options:
+Supported ``torch`` options include:
 
 .. list-table::
     :header-rows: 1
 
-    * - Data type
+    * - Option
       - Description
       - Since PyTorch
       - Since ROCm
@@ -618,7 +618,7 @@ training and inference.
 .. list-table::
     :header-rows: 1
 
-    * - Data type
+    * - Feature
       - Description
       - Since PyTorch
       - Since ROCm
@@ -658,7 +658,7 @@ of computational resources and scalability for large-scale tasks.
 .. list-table::
     :header-rows: 1
 
-    * - Features
+    * - Feature
       - Description
       - Since PyTorch
       - Since ROCm
@@ -683,7 +683,7 @@ torch.compiler
 .. list-table::
     :header-rows: 1
 
-    * - Features
+    * - Feature
       - Description
       - Since PyTorch
       - Since ROCm
@@ -717,7 +717,7 @@ The following ``torchaudio`` features are GPU-accelerated.
 .. list-table::
     :header-rows: 1
 
-    * - Features
+    * - Feature
       - Description
       - Since torchaudio version
       - Since ROCm
@@ -750,7 +750,7 @@ The following ``torchvision`` features are GPU-accelerated.
 .. list-table::
     :header-rows: 1
 
-    * - Features
+    * - Feature
       - Description
       - Since torchvision version
       - Since ROCm
@@ -834,7 +834,7 @@ The following are GPU-accelerated PyTorch features not currently supported by RO
     :widths: 30, 60, 10
     :header-rows: 1
 
-    * - Data type
+    * - Feature
       - Description
       - Since PyTorch
     * - APEX batch norm
