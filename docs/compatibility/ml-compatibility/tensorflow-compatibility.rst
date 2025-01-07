@@ -161,6 +161,13 @@ introduced as a dependency.
         Broadcast.
       - Distributed data parallel training (``tf.distribute.MirroredStrategy``).
         Handles communication in multi-GPU setups.
+  * - `rocThrust <https://github.com/ROCm/rocThrust>`_
+      - 3.3.0
+      - Provides a C++ template library for parallel algorithms like sorting,
+        reduction, and scanning.
+      - Reduction operations like ``tf.reduce_sum``, ``tf.cumsum`` for computing
+        the cumulative sum of elements along a given axis or ``tf.unique`` to
+        finds unique elements in a tensor can use rocThrust.
 
 Supported and unsupported features
 ===============================================================================
@@ -286,7 +293,6 @@ are as follows:
       - 1.4.0
       - 1.7
 
-
 Features
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -294,97 +300,96 @@ The list provides an overview of key features in TensorFlow and their
 corresponding availability in ROCm.
 
 .. list-table::
-   :header-rows: 1
+    :header-rows: 1
 
-   * - Features
-     - Description
-     - Since TensorFlow
-     - Since ROCm
-   * - Device Management
-     - Utilities for managing and interacting with GPUs.
-     - 2.0.0
-     - 2.0.0
-   * - Tensor Operations on GPU
-     - Perform tensor operations such as addition and matrix multiplications
-       on the GPU.
-     - 1.12.0
-     - 1.8.2
-   * - Streams and Events
-     - Overlapping computation and communication for optimized performance,
-       events enable synchronization.
-     - 2.4.0
-     - 3.5.0
-   * - Memory Management
-     - Set memory growth and limit GPU memory usage.
-     - 1.12.0
-     - 2.6.0
-   * - Communication Collectives
-     - Efficient communication between multiple GPUs, allowing for distributed
-       computing and data parallelism.
-     - 2.12.1
-     - 2.16.5
-   * - XLA (Accelerated Linear Algebra)
-     - JIT compilation for optimized performance
-     - 2.1.0
-     - 2.6.0
-     ROCm 5.1.3 + tensorflow 2.9.1
-   * - TensorBoard
-     - Visualization tool for monitoring and debugging models
-     - ?
-     - ?
-   * - Distributed Training
-     - Support for distributed training using multiple GPUs.
-     - ?
-     - ?
-
-.. Need to validate and extend.
-
-Automatic mixed precision
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-AMP automatically uses lower precision (e.g., ``float16``) for some operations
-to speed up training while maintaining model accuracy. This can significantly
-improve the performance and efficiency of training deep learning models on
-GPUs.
-
-To enable AMP in TensorFlow, use the ``tf.keras.mixed_precision`` module by
-
-.. code-block:: python
-
-    tf.keras.mixed_precision.set_global_policy('mixed_float16')
-
-
-.. list-table::
-   :header-rows: 1
-
-   * - Data Type
-     - Description
-     - Since TensorFlow
-     - Since ROCm
-   * - Autocasting
-     - Automatically chooses the appropriate precision (``float16`` or
-       ``float32``) for tensor operations to optimize performance.
-     - 2.1
-     - 4.0.0
-   * - Gradient Scaling
-     - Prevents underflow by multiplying the network's losses by a scale factor
-       before backpropagation and scaling gradients by the same factor.
-     - 2.1
-     - 4.0.0
-   * - CUDA op-specific behavior
-     - TensorFlow operations can automatically use CUDA-specific optimizations
-       whether they are part of a ``tf.Module``, as a function, or a tensor
-       method. These ops always benefit from CUDA optimizations if available.
-     - 1.5
-     - ❌
+    * - Features
+      - Description
+      - Since TensorFlow
+      - Since ROCm
+    * - ``tf.linalg`` (Linear Algebra)
+      - Operations for matrix and tensor computations, such as
+        ``tf.linalg.matmul`` (matrix multiplication), ``tf.linalg.inv``
+        (matrix inversion) and ``tf.linalg.cholesky`` (cholesky decomposition).
+        These leverage GPUs for high-performance linear algebra operations.
+      - 1.4
+      - 1.8.2
+    * - ``tf.nn`` (Neural Network Operations)
+      - GPU-accelerated building blocks for deep learning models, such as 2D
+        convolutions with ``tf.nn.conv2d``, max pooling operations with
+        ``tf.nn.max_pool``, activation functions like ``tf.nn.relu`` or softmax
+        for output layers with ``tf.nn.softmax``.
+      - 1.0
+      - 1.8.2
+    * - ``tf.image`` (Image Processing)
+      - GPU-accelerated functions for image preprocessing and augmentations,
+        such as resize images with ``tf.image.resize``, flip images horizontally
+        with ``tf.image.flip_left_right`` and adjust image brightness randomly
+        with ``tf.image.random_brightness``.
+      - 1.1
+      - 1.8.2
+    * - ``tf.keras`` (High-Level API)
+      - GPU acceleration for Keras layers and models, including dense layers
+        (``tf.keras.layers.Dense``), convolutional layers
+        (``tf.keras.layers.Conv2D``) and recurrent layers
+        (``tf.keras.layers.LSTM``).
+      - 1.4
+      - 1.8.2
+    * - ``tf.math`` (Mathematical Operations)
+      - GPU-accelerated mathematical operations, such as sum across dimensions
+        with ``tf.math.reduce_sum``, elementwise exponentiation with
+        ``tf.math.exp`` and sigmoid activation (``tf.math.sigmoid``).
+      - 1.5
+      - 1.8.2
+    * - ``tf.signal`` (Signal Processing)
+      - Functions for spectral analysis and signal transformations.
+      - 1.13
+      - 2.1
+    * - ``tf.data`` (Data Input Pipeline)
+      - GPU-accelerated data preprocessing for efficient input pipelines, 
+        Prefetching with ``tf.data.experimental.AUTOTUNE``. GPU-enabled
+        transformations like map and batch. 
+      - 1.4
+      - 1.8.2
+    * - ``tf.distribute`` (Distributed Training)
+      - Enabling to scale computations across multiple devices on a single
+        machine or across multiple machines.
+      - 1.13
+      - 2.1
+    * - ``tf.random`` (Random Number Generation)
+      - GPU-accelerated random number generation
+      - 1.12
+      - 1.9.2
+    * - ``tf.TensorArray`` (Dynamic Array Operations)
+      - Enables dynamic tensor manipulation on GPUs.
+      - 1.0
+      - 1.8.2
+    * - ``tf.sparse`` (Sparse Tensor Operations)
+      - GPU-accelerated sparse matrix manipulations.
+      - 1.9
+      - 1.9.0
+    * - ``tf.experimental.numpy``
+      - GPU-accelerated NumPy-like API for numerical computations.
+      - 2.4
+      - 4.1.1
+    * - ``tf.RaggedTensor``
+      - Handling of variable-length sequences and ragged tensors with GPU
+        support.
+      - 1.13
+      - 2.1
+    * - ``tf.function`` with XLA (Accelerated Linear Algebra)
+      - Enable GPU-accelerated functions in optimization.
+      - 1.14
+      - 2.4
+    * - ``tf.quantization``
+      - Quantized operations for inference, accelerated on GPUs.
+      - 1.12 
+      - 1.9.2
 
 Distributed library features
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-TensorFlow offers powerful distributed training support through strategies and
-libraries for efficient and scalable machine learning. Key features include
-synchronous and asynchronous training across multiple GPUs and machines,
-ensuring optimal resource utilization and performance.
+Enabling to scale computations across multiple devices on a single machine or
+across multiple machines.
 
 .. list-table::
    :header-rows: 1
@@ -423,7 +428,6 @@ ensuring optimal resource utilization and performance.
        execution.
      - 1.10
      - 3.0
-.. Need to validate
 
 Unsupported TensorFlow features
 ===============================================================================
@@ -446,7 +450,6 @@ ROCm.
      - Efficiently trains models on Google TPUs.
      - 1.9
      - ❌
-
 
 Use cases and recommendations
 ===============================================================================
