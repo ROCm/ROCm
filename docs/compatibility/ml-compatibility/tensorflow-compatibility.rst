@@ -90,7 +90,7 @@ validated for `ROCm 6.3.1 <https://repo.radeon.com/rocm/apt/6.3.1/>`_.
 
            <a href="https://hub.docker.com/layers/rocm/tensorflow/rocm6.3.1-py3.10-tf2.16.0-dev/images/sha256-263e78414ae85d7bcd52a025a94131d0a279872a45ed632b9165336dfdcd4443"><i class="fab fa-docker fa-lg"></i> rocm/tensorflow</a>
 
-      - `tensorflow-rocm 2.16.0 <https://repo.radeon.com/rocm/manylinux/rocm-rel-6.3/tensorflow_rocm-2.17.0-cp310-cp310-manylinux_2_28_x86_64.whl>`_
+      - `tensorflow-rocm 2.16.2 <https://repo.radeon.com/rocm/manylinux/rocm-rel-6.3/tensorflow_rocm-2.16.2-cp312-cp312-manylinux_2_28_x86_64.whl>`_
       - dev
       - `Python 3.10 <https://www.python.org/downloads/release/python-31012/>`_
       - `TensorBoard 2.16.2 <https://github.com/tensorflow/tensorboard/tree/2.16.2>`_
