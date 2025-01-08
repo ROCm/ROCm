@@ -70,11 +70,29 @@ validated for `ROCm 6.3.1 <https://repo.radeon.com/rocm/apt/6.3.1/>`_.
 
     * - .. raw:: html
 
+           <a href="https://hub.docker.com/layers/rocm/tensorflow/rocm6.3.1-py3.10-tf2.17.0-dev/images/sha256-776837ffa945913f6c466bfe477810a11453d21d5b6afb200be1c36e48fbc08e"><i class="fab fa-docker fa-lg"></i> rocm/tensorflow</a>
+
+      - `tensorflow-rocm 2.17.0 <https://repo.radeon.com/rocm/manylinux/rocm-rel-6.3/tensorflow_rocm-2.17.0-cp310-cp310-manylinux_2_28_x86_64.whl>`_
+      - dev
+      - `Python 3.10 <https://www.python.org/downloads/release/python-31012/>`_
+      - `TensorBoard 2.17.0 <https://github.com/tensorflow/tensorboard/tree/2.17.0>`_
+
+    * - .. raw:: html
+
            <a href="https://hub.docker.com/layers/rocm/tensorflow/rocm6.3.1-py3.12-tf2.16.2-dev/images/sha256-c793e1483e30809c3c28fc5d7805bedc033c73da224f839fff370717cb100944"><i class="fab fa-docker fa-lg"></i> rocm/tensorflow</a>
 
       - `tensorflow-rocm 2.16.2 <https://repo.radeon.com/rocm/manylinux/rocm-rel-6.3/tensorflow_rocm-2.16.2-cp312-cp312-manylinux_2_28_x86_64.whl>`_
       - dev
       - `Python 3.12 <https://www.python.org/downloads/release/python-3124/>`_
+      - `TensorBoard 2.16.2 <https://github.com/tensorflow/tensorboard/tree/2.16.2>`_
+
+    * - .. raw:: html
+
+           <a href="https://hub.docker.com/layers/rocm/tensorflow/rocm6.3.1-py3.10-tf2.16.0-dev/images/sha256-263e78414ae85d7bcd52a025a94131d0a279872a45ed632b9165336dfdcd4443"><i class="fab fa-docker fa-lg"></i> rocm/tensorflow</a>
+
+      - `tensorflow-rocm 2.16.0 <https://repo.radeon.com/rocm/manylinux/rocm-rel-6.3/tensorflow_rocm-2.17.0-cp310-cp310-manylinux_2_28_x86_64.whl>`_
+      - dev
+      - `Python 3.10 <https://www.python.org/downloads/release/python-31012/>`_
       - `TensorBoard 2.16.2 <https://github.com/tensorflow/tensorboard/tree/2.16.2>`_
 
     * - .. raw:: html
@@ -85,15 +103,6 @@ validated for `ROCm 6.3.1 <https://repo.radeon.com/rocm/apt/6.3.1/>`_.
       - dev
       - `Python 3.10 <https://www.python.org/downloads/release/python-31012/>`_
       - `TensorBoard 2.15.2 <https://github.com/tensorflow/tensorboard/tree/2.15.2>`_
-
-    * - .. raw:: html
-
-           <a href="https://hub.docker.com/layers/rocm/tensorflow/rocm6.3.1-py3.10-tf0.37.1-dev/images/sha256-776837ffa945913f6c466bfe477810a11453d21d5b6afb200be1c36e48fbc08e"><i class="fab fa-docker fa-lg"></i> rocm/tensorflow</a>
-
-      - `tensorflow-rocm 2.17.0 <https://repo.radeon.com/rocm/manylinux/rocm-rel-6.3/tensorflow_rocm-2.17.0-cp310-cp310-manylinux_2_28_x86_64.whl>`_
-      - dev
-      - `Python 3.10 <https://www.python.org/downloads/release/python-31012/>`_
-      - `TensorBoard 2.17.0 <https://github.com/tensorflow/tensorboard/tree/2.17.0>`_
 
 Critical ROCm libraries for TensorFlow
 ===============================================================================
