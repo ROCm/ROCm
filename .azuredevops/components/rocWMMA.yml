@@ -12,6 +12,7 @@ parameters:
     - cmake
     - ninja-build
     - libboost-program-options-dev
+    - libdrm-dev
     - libgtest-dev
     - googletest
     - libfftw3-dev
@@ -82,7 +83,7 @@ jobs:
         -DCMAKE_BUILD_TYPE=Release
         -DROCWMMA_BUILD_TESTS=ON
         -DROCWMMA_BUILD_SAMPLES=OFF
-        -DAMDGPU_TARGETS=$(JOB_GPU_TARGET)
+        -DGPU_TARGETS=$(JOB_GPU_TARGET)
         -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON
         -GNinja
 # gfx1030 not supported in documentation

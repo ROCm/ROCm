@@ -10,6 +10,7 @@ parameters:
   default:
     - cmake
     - ninja-build
+    - libdrm-dev
     - libyaml-cpp-dev
     - libpci-dev
     - libpci3
