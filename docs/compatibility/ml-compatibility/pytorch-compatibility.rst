@@ -40,7 +40,7 @@ The upstream PyTorch includes an automatic HIPification solution that automatica
 source code from the CUDA backend. This approach allows PyTorch to support ROCm without requiring
 manual code modifications.
 
-ROCm's development is aligned with the stable release of PyTorch while upstream PyTorch testing uses
+Development of ROCm is aligned with the stable release of PyTorch while upstream PyTorch testing uses
 the stable release of ROCm to maintain consistency.
 
 .. _pytorch-docker-compat:
@@ -55,7 +55,7 @@ Docker image compatibility
 AMD validates and publishes ready-made `PyTorch <https://hub.docker.com/r/rocm/pytorch>`_
 images with ROCm backends on Docker Hub. The following Docker image tags and
 associated inventories are validated for `ROCm 6.3.0 <https://repo.radeon.com/rocm/apt/6.3/>`_.
-Click |docker-icon| to see the image on Docker Hub.
+Click the |docker-icon| icon to view the image on Docker Hub.
 
 .. list-table:: PyTorch Docker image components
     :header-rows: 1
@@ -469,7 +469,7 @@ leveraging ROCm and CUDA as the underlying frameworks.
 .. list-table::
     :header-rows: 1
 
-    * - Data type
+    * - Feature
       - Description
       - Since PyTorch
       - Since ROCm
@@ -537,14 +537,14 @@ torch.backends.cuda
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ``torch.backends.cuda`` is a PyTorch module that provides configuration options
-and flags to control the behavior of CUDA or ROCm operations. It is part of the
+and flags to control the behavior of ROCm or CUDA operations. It is part of the
 PyTorch backend configuration system, which allows users to fine-tune how
-PyTorch interacts with the CUDA or ROCm environment.
+PyTorch interacts with the ROCm or CUDA environment.
 
 .. list-table::
     :header-rows: 1
 
-    * - Data type
+    * - Feature
       - Description
       - Since PyTorch
       - Since ROCm
@@ -588,12 +588,12 @@ PyTorch interacts with the CUDA or ROCm environment.
 torch.backends.cudnn
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Supported ``torch`` options:
+Supported ``torch`` options include:
 
 .. list-table::
     :header-rows: 1
 
-    * - Data type
+    * - Option
       - Description
       - Since PyTorch
       - Since ROCm
@@ -618,7 +618,7 @@ training and inference.
 .. list-table::
     :header-rows: 1
 
-    * - Data type
+    * - Feature
       - Description
       - Since PyTorch
       - Since ROCm
@@ -658,7 +658,7 @@ of computational resources and scalability for large-scale tasks.
 .. list-table::
     :header-rows: 1
 
-    * - Features
+    * - Feature
       - Description
       - Since PyTorch
       - Since ROCm
@@ -683,7 +683,7 @@ torch.compiler
 .. list-table::
     :header-rows: 1
 
-    * - Features
+    * - Feature
       - Description
       - Since PyTorch
       - Since ROCm
@@ -717,7 +717,7 @@ The following ``torchaudio`` features are GPU-accelerated.
 .. list-table::
     :header-rows: 1
 
-    * - Features
+    * - Feature
       - Description
       - Since torchaudio version
       - Since ROCm
@@ -750,7 +750,7 @@ The following ``torchvision`` features are GPU-accelerated.
 .. list-table::
     :header-rows: 1
 
-    * - Features
+    * - Feature
       - Description
       - Since torchvision version
       - Since ROCm
@@ -834,7 +834,7 @@ The following are GPU-accelerated PyTorch features not currently supported by RO
     :widths: 30, 60, 10
     :header-rows: 1
 
-    * - Data type
+    * - Feature
       - Description
       - Since PyTorch
     * - APEX batch norm
@@ -919,4 +919,4 @@ Use cases and recommendations
   describes how PyTorch integrates with ROCm for AI workloads It outlines the use of PyTorch on the ROCm platform and
   focuses on how to efficiently leverage AMD GPU hardware for training and inference tasks in AI applications.
 
-For more use cases and recommendations, see `ROCm PyTorch blog posts <https://rocm.blogs.amd.com/blog/tag/pytorch.html>`_
+For more use cases and recommendations, see `ROCm PyTorch blog posts <https://rocm.blogs.amd.com/blog/tag/pytorch.html>`_.

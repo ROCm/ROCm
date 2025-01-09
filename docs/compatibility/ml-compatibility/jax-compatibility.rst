@@ -54,8 +54,8 @@ Docker image compatibility
 AMD validates and publishes ready-made `JAX <https://hub.docker.com/r/rocm/jax/>`_
 images with ROCm backends on Docker Hub. The following Docker image tags and
 associated inventories are validated for
-`ROCm 6.3.1 <https://repo.radeon.com/rocm/apt/6.3.1/>`_. Click |docker-icon|
-to see the image on Docker Hub.
+`ROCm 6.3.1 <https://repo.radeon.com/rocm/apt/6.3.1/>`_. Click the |docker-icon|
+icon to view the image on Docker Hub.
 
 .. list-table:: JAX Docker image components
     :header-rows: 1
@@ -605,7 +605,7 @@ ROCm.
 .. list-table::
     :header-rows: 1
 
-    * - Data type
+    * - Feature
       - Description
       - Since JAX
     * - Mixed Precision with TF32
@@ -660,5 +660,4 @@ Use cases and recommendations
   performance for deep learning and other high-performance computing tasks on
   the MI300X GPU.
 
-For more use cases and recommendations, see `ROCm JAX blog posts <https://rocm.blogs.amd.com/blog/tag/jax.html>`_
-
+For more use cases and recommendations, see `ROCm JAX blog posts <https://rocm.blogs.amd.com/blog/tag/jax.html>`_.

@@ -151,8 +151,9 @@ HCA
 HGX
 HIPCC
 HIPExtension
-HIPification
 HIPIFY
+HIPification
+HIPify
 HPC
 HPCG
 HPE
@@ -250,6 +251,7 @@ MyST
 NBIO
 NBIOs
 NCCL
+NCF
 NIC
 NICs
 NLI
@@ -711,6 +713,7 @@ protobuf
 pseudorandom
 py
 recommender
+recommenders
 quantile
 quantizer
 quasirandom

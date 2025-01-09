@@ -48,7 +48,7 @@ compatibility and system requirements.
       ,,,
       FRAMEWORK SUPPORT,.. _framework-support-compatibility-matrix:,,
       :doc:`PyTorch <../compatibility/ml-compatibility/pytorch-compatibility>`,"2.4, 2.3, 2.2, 1.13","2.4, 2.3, 2.2, 2.1, 2.0, 1.13","2.3, 2.2, 2.1, 2.0, 1.13"
-      :doc:`TensorFlow <rocm-install-on-linux:install/3rd-party/tensorflow-install>`,"2.17.0, 2.16.2, 2.15.1","2.17.0, 2.16.2, 2.15.1","2.16.1, 2.15.1, 2.14.1"
+      :doc:`TensorFlow <../compatibility/ml-compatibility/tensorflow-compatibility>`,"2.17.0, 2.16.2, 2.15.1","2.17.0, 2.16.2, 2.15.1","2.16.1, 2.15.1, 2.14.1"
       :doc:`JAX <../compatibility/ml-compatibility/jax-compatibility>`,0.4.31,0.4.31,0.4.26
       `ONNX Runtime <https://onnxruntime.ai/docs/build/eps.html#amd-migraphx>`_,1.17.3,1.17.3,1.17.3
       ,,,
@@ -94,7 +94,7 @@ compatibility and system requirements.
       :doc:`rocSOLVER <rocsolver:index>`,3.27.0,3.27.0,3.26.0
       :doc:`rocSPARSE <rocsparse:index>`,3.3.0,3.3.0,3.2.0
       :doc:`rocWMMA <rocwmma:index>`,1.6.0,1.6.0,1.5.0
-      :doc:`Tensile <tensile:index>`,4.42.0,4.42.0,4.41.0
+      :doc:`Tensile <tensile:src/index>`,4.42.0,4.42.0,4.41.0
       ,,,
       PRIMITIVES,.. _primitivelibs-support-compatibility-matrix:,,
       :doc:`hipCUB <hipcub:index>`,3.3.0,3.3.0,3.2.0
