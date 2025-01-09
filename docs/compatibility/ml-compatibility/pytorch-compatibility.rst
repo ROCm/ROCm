@@ -40,7 +40,7 @@ The upstream PyTorch includes an automatic HIPification solution that automatica
 source code from the CUDA backend. This approach allows PyTorch to support ROCm without requiring
 manual code modifications.
 
-ROCm's development is aligned with the stable release of PyTorch while upstream PyTorch testing uses
+Development of ROCm is aligned with the stable release of PyTorch while upstream PyTorch testing uses
 the stable release of ROCm to maintain consistency.
 
 .. _pytorch-docker-compat:
@@ -55,7 +55,7 @@ Docker image compatibility
 AMD validates and publishes ready-made `PyTorch <https://hub.docker.com/r/rocm/pytorch>`_
 images with ROCm backends on Docker Hub. The following Docker image tags and
 associated inventories are validated for `ROCm 6.3.0 <https://repo.radeon.com/rocm/apt/6.3/>`_.
-Click |docker-icon| to see the image on Docker Hub.
+Click the |docker-icon| icon to view the image on Docker Hub.
 
 .. list-table:: PyTorch Docker image components
     :header-rows: 1
@@ -537,9 +537,9 @@ torch.backends.cuda
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ``torch.backends.cuda`` is a PyTorch module that provides configuration options
-and flags to control the behavior of CUDA or ROCm operations. It is part of the
+and flags to control the behavior of ROCm or CUDA operations. It is part of the
 PyTorch backend configuration system, which allows users to fine-tune how
-PyTorch interacts with the CUDA or ROCm environment.
+PyTorch interacts with the ROCm or CUDA environment.
 
 .. list-table::
     :header-rows: 1

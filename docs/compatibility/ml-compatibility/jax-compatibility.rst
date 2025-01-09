@@ -54,8 +54,8 @@ Docker image compatibility
 AMD validates and publishes ready-made `JAX <https://hub.docker.com/r/rocm/jax/>`_
 images with ROCm backends on Docker Hub. The following Docker image tags and
 associated inventories are validated for
-`ROCm 6.3.1 <https://repo.radeon.com/rocm/apt/6.3.1/>`_. Click |docker-icon|
-to see the image on Docker Hub.
+`ROCm 6.3.1 <https://repo.radeon.com/rocm/apt/6.3.1/>`_. Click the |docker-icon|
+icon to view the image on Docker Hub.
 
 .. list-table:: JAX Docker image components
     :header-rows: 1

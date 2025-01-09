@@ -53,7 +53,7 @@ AMD validates and publishes ready-made `TensorFlow
 <https://hub.docker.com/r/rocm/tensorflow>`_ images with ROCm backends on
 Docker Hub. The following Docker image tags and associated inventories are
 validated for `ROCm 6.3.1 <https://repo.radeon.com/rocm/apt/6.3.1/>`_. Click
-|docker-icon| to see the image on Docker Hub.
+the |docker-icon| icon to view the image on Docker Hub.
 
 .. list-table:: TensorFlow Docker image components
     :header-rows: 1
@@ -112,10 +112,10 @@ validated for `ROCm 6.3.1 <https://repo.radeon.com/rocm/apt/6.3.1/>`_. Click
 Critical ROCm libraries for TensorFlow
 ===============================================================================
 
-TensorFlow depends on multiple components, and the supported features of those
+TensorFlow depends on multiple components and the supported features of those
 components can affect the TensorFlow ROCm supported feature set. The versions
-in the following table refer to the first TensorFlow version where the ROCm library was
-introduced as a dependency.
+in the following table refer to the first TensorFlow version where the ROCm
+library was introduced as a dependency.
 
 .. list-table::
     :widths: 25, 10, 35, 30
