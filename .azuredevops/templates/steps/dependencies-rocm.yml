@@ -349,18 +349,6 @@ steps:
 # gpu name will be specified by parameters.gpuTarget for components that are in componentsWithGPUTarget
 # e.g., gfx942 to only download artifacts from component for this gpu if applicable
 - ${{ each dependency in parameters.dependencyList }}:
-  - task: Bash@3
-    inputs:
-      targetType: inline
-      script: |
-        echo ${{ parameters.checkoutRef }}
-        echo ${{ variables['Build.DefinitionName'] }}
-        echo ${{ parameters.consolidatedList[variables['Build.DefinitionName']].stagingBranch }}
-        echo ${{ parameters.consolidatedList[variables['Build.DefinitionName']].mainlineBranch }}
-        echo ${{ dependency }}
-        echo ${{ parameters.consolidatedList[dependency].pipelineId }}
-        echo ${{ parameters.consolidatedList[dependency].stagingBranch }}
-        echo ${{ parameters.consolidatedList[dependency].mainlineBranch }}
   - ${{ if contains(dependency, ':') }}:
     - template: artifact-download.yml
       parameters:

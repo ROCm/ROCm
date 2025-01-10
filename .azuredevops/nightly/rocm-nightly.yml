@@ -5,7 +5,6 @@ parameters:
   values: 
     - staging
     - mainline
-# currently excludes clr
 - name: rocmDependencies
   type: object
   default:

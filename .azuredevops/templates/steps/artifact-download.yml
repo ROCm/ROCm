@@ -24,14 +24,6 @@ steps:
       else
         echo "##vso[task.setvariable variable=allowPartiallySucceededBuilds;]false"
       fi
-- task: Bash@3
-  displayName: echo
-  inputs:
-    targetType: inline
-    script: |
-      echo ${{ parameters.pipelineId }}
-      echo ${{ parameters.branchName }}
-      echo ${{ parameters.fileFilter }}
 - task: DownloadPipelineArtifact@2
   continueOnError: true
   displayName: Download ${{ parameters.componentName }}
