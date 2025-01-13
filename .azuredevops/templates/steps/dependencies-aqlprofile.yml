@@ -1,29 +1,16 @@
-parameters:
-- name: dependencySource
-  type: string
-  default: staging
-  values:
-    - staging
-    - tag-builds
-- name: repositoryUrl
-  type: object
-  default: 
-    staging: https://repo.radeon.com/rocm/apt/latest/pool/main/h/hsa-amd-aqlprofile/ # end slash is important for curl!
-    tag-builds: https://repo.radeon.com/rocm/apt/$(TAGGED_RELEASE)/pool/main/h/hsa-amd-aqlprofile/
-
 steps:
 - task: Bash@3
   displayName: Get aqlprofile package name
   inputs:
     targetType: inline
     script: |
-      export packageName=$(curl -s ${{ parameters.repositoryUrl[parameters.dependencySource] }} | grep -oP "href=\"\K[^\"]*$(lsb_release -rs)[^\"]*\.deb")
+      export packageName=$(curl -s https://repo.radeon.com/rocm/apt/latest/pool/main/h/hsa-amd-aqlprofile/ | grep -oP "href=\"\K[^\"]*$(lsb_release -rs)[^\"]*\.deb")
       echo "##vso[task.setvariable variable=packageName;isreadonly=true]$packageName"
 - task: Bash@3
   displayName: 'Download aqlprofile'
   inputs:
     targetType: inline
-    script: wget -nv ${{ parameters.repositoryUrl[parameters.dependencySource] }}$(packageName)
+    script: wget -nv https://repo.radeon.com/rocm/apt/latest/pool/main/h/hsa-amd-aqlprofile/$(packageName)
     workingDirectory: '$(Pipeline.Workspace)'
 - task: Bash@3
   displayName: 'Extract aqlprofile'
