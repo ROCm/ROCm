@@ -148,11 +148,6 @@ jobs:
     parameters:
       checkoutRepo: ${{ parameters.checkoutRepo }}
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-aqlprofile.yml
-    parameters:
-      ${{ if eq(parameters.checkoutRef, '') }}:
-        dependencySource: staging
-      ${{ elseif ne(parameters.checkoutRef, '') }}:
-        dependencySource: tag-builds
 # half version should be fixed to 5.6.0
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/local-artifact-download.yml
     parameters:

@@ -118,11 +118,6 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/local-artifact-download.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-aqlprofile.yml
-    parameters:
-      ${{ if eq(parameters.checkoutRef, '') }}:
-        dependencySource: staging
-      ${{ elseif ne(parameters.checkoutRef, '') }}:
-        dependencySource: tag-builds
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
     parameters:
       checkoutRef: ${{ parameters.checkoutRef }}

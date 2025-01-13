@@ -25,7 +25,6 @@ steps:
         echo "##vso[task.setvariable variable=allowPartiallySucceededBuilds;]false"
       fi
 - task: DownloadPipelineArtifact@2
-  continueOnError: true
   displayName: Download ${{ parameters.componentName }}
   inputs:
     buildType: 'specific'
@@ -39,7 +38,6 @@ steps:
     allowPartiallySucceededBuilds: $(allowPartiallySucceededBuilds)
     targetPath: '$(Pipeline.Workspace)/d'
 - task: ExtractFiles@1
-  continueOnError: true
   displayName: Extract ${{ parameters.componentName }}
   inputs:
     archiveFilePatterns: '$(Pipeline.Workspace)/d/**/*.tar.gz'
@@ -47,7 +45,6 @@ steps:
     cleanDestinationFolder: false
     overwriteExistingFiles: true
 - task: DeleteFiles@1
-  continueOnError: true
   displayName: Cleanup Compressed ${{ parameters.componentName }}
   inputs:
     SourceFolder: '$(Pipeline.Workspace)/d'
