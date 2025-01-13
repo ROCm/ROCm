@@ -1,3 +1,4 @@
+# download and install rocm dependencies through pipeline builds in the project
 parameters:
 - name: checkoutRef
   type: string
@@ -6,7 +7,7 @@ parameters:
   type: string
   default: null
   values:
-    - null
+    - null # empty strings aren't allowed as values, use null instead
     - staging
     - mainline
 - name: dependencyList
@@ -32,7 +33,7 @@ parameters:
   type: boolean
   default: false
 
-- name: consolidatedList
+- name: componentVarList
   type: object
   default:
     AMDMIGraphX:
@@ -353,55 +354,47 @@ steps:
     - template: artifact-download.yml
       parameters:
         componentName: ${{ split(dependency, ':')[0] }}
-        ${{ if parameters.consolidatedList[split(dependency, ':')[0]].hasGpuTarget }}:
+        pipelineId: ${{ parameters.componentVarList[split(dependency, ':')[0]].pipelineId }}
+        ${{ if parameters.componentVarList[split(dependency, ':')[0]].hasGpuTarget }}:
           fileFilter: "${{ split(dependency, ':')[1] }}*${{ parameters.gpuTarget }}"
         # dependencySource = staging
         ${{ if eq(parameters.dependencySource, 'staging')}}:
-          pipelineId: ${{ parameters.consolidatedList[split(dependency, ':')[0]].pipelineId }}
-          branchName: ${{ parameters.consolidatedList[split(dependency, ':')[0]].stagingBranch }}
+          branchName: ${{ parameters.componentVarList[split(dependency, ':')[0]].stagingBranch }}
         # dependencySource = mainline
         ${{ elseif eq(parameters.dependencySource, 'mainline')}}:
-          pipelineId: ${{ parameters.consolidatedList[split(dependency, ':')[0]].pipelineId }}
-          branchName: ${{ parameters.consolidatedList[split(dependency, ':')[0]].mainlineBranch }}
+          branchName: ${{ parameters.componentVarList[split(dependency, ':')[0]].mainlineBranch }}
         # checkoutRef = staging
-        ${{ elseif eq(parameters.checkoutRef, parameters.consolidatedList[variables['Build.DefinitionName']].stagingBranch) }}:
-          pipelineId: ${{ parameters.consolidatedList[split(dependency, ':')[0]].pipelineId }}
-          branchName: ${{ parameters.consolidatedList[split(dependency, ':')[0]].stagingBranch }}
+        ${{ elseif eq(parameters.checkoutRef, parameters.componentVarList[variables['Build.DefinitionName']].stagingBranch) }}:
+          branchName: ${{ parameters.componentVarList[split(dependency, ':')[0]].stagingBranch }}
         # checkoutRef = mainline
-        ${{ elseif eq(parameters.checkoutRef, parameters.consolidatedList[variables['Build.DefinitionName']].mainlineBranch) }}:
-          pipelineId: ${{ parameters.consolidatedList[split(dependency, ':')[0]].pipelineId }}
-          branchName: ${{ parameters.consolidatedList[split(dependency, ':')[0]].mainlineBranch }}
+        ${{ elseif eq(parameters.checkoutRef, parameters.componentVarList[variables['Build.DefinitionName']].mainlineBranch) }}:
+          branchName: ${{ parameters.componentVarList[split(dependency, ':')[0]].mainlineBranch }}
         # default = staging
         ${{ else }}:
-          pipelineId: ${{ parameters.consolidatedList[split(dependency, ':')[0]].pipelineId }}
-          branchName: ${{ parameters.consolidatedList[split(dependency, ':')[0]].stagingBranch }}
+          branchName: ${{ parameters.componentVarList[split(dependency, ':')[0]].stagingBranch }}
 # no colon (:) found in this item in the list
   - ${{ else }}:
     - template: artifact-download.yml
       parameters:
         componentName: ${{ dependency }}
-        ${{ if parameters.consolidatedList[dependency].hasGpuTarget }}:
+        pipelineId: ${{ parameters.componentVarList[dependency].pipelineId }}
+        ${{ if parameters.componentVarList[dependency].hasGpuTarget }}:
           fileFilter: ${{ parameters.gpuTarget }}
         # dependencySource = staging
         ${{ if eq(parameters.dependencySource, 'staging')}}:
-          pipelineId: ${{ parameters.consolidatedList[dependency].pipelineId }}
-          branchName: ${{ parameters.consolidatedList[dependency].stagingBranch }}
+          branchName: ${{ parameters.componentVarList[dependency].stagingBranch }}
         # dependencySource = mainline
         ${{ elseif eq(parameters.dependencySource, 'mainline')}}:
-          pipelineId: ${{ parameters.consolidatedList[dependency].pipelineId }}
-          branchName: ${{ parameters.consolidatedList[dependency].mainlineBranch }}
+          branchName: ${{ parameters.componentVarList[dependency].mainlineBranch }}
         # checkoutRef = staging
-        ${{ elseif eq(parameters.checkoutRef, parameters.consolidatedList[variables['Build.DefinitionName']].stagingBranch) }}:
-          pipelineId: ${{ parameters.consolidatedList[dependency].pipelineId }}
-          branchName: ${{ parameters.consolidatedList[dependency].stagingBranch }}
+        ${{ elseif eq(parameters.checkoutRef, parameters.componentVarList[variables['Build.DefinitionName']].stagingBranch) }}:
+          branchName: ${{ parameters.componentVarList[dependency].stagingBranch }}
         # checkoutRef = mainline
-        ${{ elseif eq(parameters.checkoutRef, parameters.consolidatedList[variables['Build.DefinitionName']].mainlineBranch) }}:
-          pipelineId: ${{ parameters.consolidatedList[dependency].pipelineId }}
-          branchName: ${{ parameters.consolidatedList[dependency].mainlineBranch }}
+        ${{ elseif eq(parameters.checkoutRef, parameters.componentVarList[variables['Build.DefinitionName']].mainlineBranch) }}:
+          branchName: ${{ parameters.componentVarList[dependency].mainlineBranch }}
         # default = staging
         ${{ else }}:
-          pipelineId: ${{ parameters.consolidatedList[dependency].pipelineId }}
-          branchName: ${{ parameters.consolidatedList[dependency].stagingBranch }}
+          branchName: ${{ parameters.componentVarList[dependency].stagingBranch }}
 # Set link to redirect llvm folder
 - ${{ if eq(parameters.skipLlvmSymlink, false) }}:
   - task: Bash@3
