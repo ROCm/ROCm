@@ -1,0 +1,72 @@
+parameters:
+- name: aptPackages
+  type: object
+  default: []
+- name: pipModules
+  type: object
+  default: []
+
+steps:
+  - task: DockerInstaller@0
+    inputs:
+      dockerVersion: '19.03.x'
+# dynamically write to a Dockerfile
+# first is to do base setup of users, groups, and expected apt packages
+# then, it is to install job-specific aptPackages and pipModules, if necessary
+# then, create a custom workspace directory in the container to copy artifacts and sources to
+# then, copy the installed rocm libraries and contents of source directory
+# then, create symbolic links for compilers
+# then, run ldconfig steps to link the shared libraries
+# finally, print out contents of the generated dockerfile
+  - task: Bash@3
+    displayName: Create Dockerfile
+    inputs:
+      targetType: inline
+      script: |
+        echo "FROM ubuntu:22.04" > Dockerfile
+        echo "ARG USERNAME=user" >> Dockerfile
+        echo "ARG USER_UID=1000" >> Dockerfile
+        echo "ARG USER_GID=\$USER_UID" >> Dockerfile
+        echo "ARG RENDER_GID" >> Dockerfile
+        echo "ARG AZ_AGENT_VERSION" >> Dockerfile
+        echo "ARG AZ_AGENT_POOL" >> Dockerfile
+        echo "ARG AZ_AGENT_ID" >> Dockerfile
+        echo "RUN groupadd --gid \$USER_GID \$USERNAME" >> Dockerfile
+        echo "RUN useradd --uid \$USER_UID --gid \$USER_GID -m \$USERNAME" >> Dockerfile
+        echo "RUN apt-get update" >> Dockerfile
+        echo "RUN apt-get install -y sudo" >> Dockerfile
+        echo "RUN echo \$USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/\$USERNAME" >> Dockerfile
+        echo "RUN chmod 0440 /etc/sudoers.d/\$USERNAME" >> Dockerfile
+        echo "RUN groupadd -g \$RENDER_GID render" >> Dockerfile
+        echo "RUN usermod -aG render,video \$USERNAME" >> Dockerfile
+        echo "RUN apt-get install -y cmake curl git gcc g++ gpg lsb-release lsof ninja-build pkg-config python3 python3-pip wget zip libdrm-dev libelf-dev libgtest-dev libhsakmt-dev libhwloc-dev libnuma-dev libstdc++-12-dev libtbb-dev
+" >> Dockerfile
+        echo "COPY pci.ids /usr/share/misc/pci.ids" >> Dockerfile
+        echo "USER \$USERNAME" >> Dockerfile
+        echo "WORKDIR /home/user" >> Dockerfile
+        if [ "${{ parameters.aptPackages }}" != "[]" ]; then
+          echo "apt-get install -y ${{ parameters.aptPackages | join(' ') }}" >> Dockerfile
+        fi
+        if [ "${{ parameters.pipModules }}" != "[]" ]; then
+          echo "RUN python3 -m pip install --upgrade pip && pip install ${{ parameters.pipModules | join(' ') }}" >> Dockerfile
+        fi
+        echo "RUN mkdir -p /home/user/workspace" >> Dockerfile
+        if [ -d "$(Agent.BuildDirectory)/rocm" ]; then
+          echo "COPY $(Agent.BuildDirectory)/rocm /home/user/workspace/rocm" >> Dockerfile
+        fi
+        if [ -d "$(Build.SourcesDirectory)" ] && [ "$(Build.SourcesDirectory)" != "" ]; then
+          echo "COPY $(Build.SourcesDirectory) /home/user/workspace/src" >> Dockerfile
+        fi
+        echo "RUN ln -s /home/user/workspace/rocm/llvm /home/user/workspace/rocm/lib/llvm" >> Dockerfile
+        echo "RUN for file in amdclang amdclang++ amdclang-cl amdclang-cpp amdflang amdlld aompcc mygpu mycpu offload-arch; do" >> Dockerfile
+        echo "RUN ln -s /home/user/workspace/rocm/llvm/bin/\$file /home/user/workspace/rocm/bin/\$file; done" >> Dockerfile
+        echo "RUN echo /home/user/workspace/rocm/lib | tee /etc/ld.so.conf.d/rocm-ci.conf" >> Dockerfile
+        echo "RUN echo /home/user/workspace/rocm/llvm/lib | tee -a /etc/ld.so.conf.d/rocm-ci.conf" >> Dockerfile
+        echo "RUN cat /etc/ld.so.conf.d/rocm-ci.conf" >> Dockerfile
+        echo "RUN ldconfig -v" >> Dockerfile
+        cat Dockerfile
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'ContainerService'
+      repository: 'rocmexternalcicd.azurecr.io/$(Build.DefinitionName)'
+      Dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
