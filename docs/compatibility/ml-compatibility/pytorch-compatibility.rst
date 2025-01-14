@@ -1,3 +1,5 @@
+:orphan:
+
 .. meta::
     :description: PyTorch compatibility
     :keywords: GPU, PyTorch compatibility
@@ -23,7 +25,7 @@ release cycles for PyTorch on ROCm:
   - Offers :ref:`Docker images <pytorch-docker-compat>` with ROCm and PyTorch
     pre-installed.
 
-  - ROCm PyTorch repository: `<https://github.com/ROCm/pytorch>`__
+  - ROCm PyTorch repository: `<https://github.com/ROCm/pytorch>`_
 
   - See the :doc:`ROCm PyTorch installation guide <rocm-install-on-linux:install/3rd-party/pytorch-install>` to get started.
 
@@ -31,7 +33,7 @@ release cycles for PyTorch on ROCm:
 
   - Provides the latest stable version of PyTorch but doesn't immediately support the latest ROCm version.
 
-  - Official PyTorch repository: `<https://github.com/pytorch/pytorch>`__
+  - Official PyTorch repository: `<https://github.com/pytorch/pytorch>`_
 
   - See the `Nightly and latest stable version installation guide <https://pytorch.org/get-started/locally/>`_
     or `Previous versions <https://pytorch.org/get-started/previous-versions/>`_ to get started.
@@ -52,8 +54,8 @@ Docker image compatibility
 
    <i class="fab fa-docker"></i>
 
-AMD validates and publishes ready-made `PyTorch <https://hub.docker.com/r/rocm/pytorch>`_
-images with ROCm backends on Docker Hub. The following Docker image tags and
+AMD validates and publishes ready-made `PyTorch images <https://hub.docker.com/r/rocm/pytorch>`_
+with ROCm backends on Docker Hub. The following Docker image tags and
 associated inventories are validated for `ROCm 6.3.0 <https://repo.radeon.com/rocm/apt/6.3/>`_.
 Click the |docker-icon| icon to view the image on Docker Hub.
 
@@ -82,7 +84,7 @@ Click the |docker-icon| icon to view the image on Docker Hub.
       - `3.12 <https://www.python.org/downloads/release/python-3128/>`_
       - `1.4.0 <https://github.com/ROCm/apex/tree/release/1.4.0>`_
       - `0.19.0 <https://github.com/pytorch/vision/tree/v0.19.0>`_
-      - `2.13.0 <https://github.com/tensorflow/tensorboard/tree/2.13>`_
+      - `2.13.0 <https://github.com/tensorflow/tensorboard/tree/2.13.0>`_
       - `master <https://bitbucket.org/icl/magma/src/master/>`_
       - `1.10.0 <https://github.com/openucx/ucx/tree/v1.10.0>`_
       - `4.0.7 <https://github.com/open-mpi/ompi/tree/v4.0.7>`_
@@ -97,7 +99,7 @@ Click the |docker-icon| icon to view the image on Docker Hub.
       - `3.10 <https://www.python.org/downloads/release/python-31016/>`_
       - `1.4.0 <https://github.com/ROCm/apex/tree/release/1.4.0>`_
       - `0.19.0 <https://github.com/pytorch/vision/tree/v0.19.0>`_
-      - `2.13.0 <https://github.com/tensorflow/tensorboard/tree/2.13>`_
+      - `2.13.0 <https://github.com/tensorflow/tensorboard/tree/2.13.0>`_
       - `master <https://bitbucket.org/icl/magma/src/master/>`_
       - `1.10.0 <https://github.com/openucx/ucx/tree/v1.10.0>`_
       - `4.0.7 <https://github.com/open-mpi/ompi/tree/v4.0.7>`_
@@ -109,10 +111,10 @@ Click the |docker-icon| icon to view the image on Docker Hub.
 
       - `2.4.0 <https://github.com/ROCm/pytorch/tree/release/2.4>`_
       - 22.04
-      - `3.9 <https://www.python.org/downloads/release/python-3918/>`_
+      - `3.9.18 <https://www.python.org/downloads/release/python-3918/>`_
       - `1.4.0 <https://github.com/ROCm/apex/tree/release/1.4.0>`_
       - `0.19.0 <https://github.com/pytorch/vision/tree/v0.19.0>`_
-      - `2.13.0 <https://github.com/tensorflow/tensorboard/tree/2.13>`_
+      - `2.13.0 <https://github.com/tensorflow/tensorboard/tree/2.13.0>`_
       - `master <https://bitbucket.org/icl/magma/src/master/>`_
       - `1.10.0 <https://github.com/openucx/ucx/tree/v1.10.0>`_
       - `4.0.7 <https://github.com/open-mpi/ompi/tree/v4.0.7>`_
@@ -127,7 +129,7 @@ Click the |docker-icon| icon to view the image on Docker Hub.
       - `3.10 <https://www.python.org/downloads/release/python-31016/>`_
       - `1.3.0 <https://github.com/ROCm/apex/tree/release/1.3.0>`_
       - `0.18.0 <https://github.com/pytorch/vision/tree/v0.18.0>`_
-      - `2.13.0 <https://github.com/tensorflow/tensorboard/tree/2.13>`_
+      - `2.13.0 <https://github.com/tensorflow/tensorboard/tree/2.13.0>`_
       - `master <https://bitbucket.org/icl/magma/src/master/>`_
       - `1.14.1 <https://github.com/openucx/ucx/tree/v1.14.1>`_
       - `4.1.5 <https://github.com/open-mpi/ompi/tree/v4.1.5>`_
@@ -142,7 +144,7 @@ Click the |docker-icon| icon to view the image on Docker Hub.
       - `3.10 <https://www.python.org/downloads/release/python-31016/>`_
       - `1.2.0 <https://github.com/ROCm/apex/tree/release/1.2.0>`_
       - `0.17.1 <https://github.com/pytorch/vision/tree/v0.17.1>`_
-      - `2.13.0 <https://github.com/tensorflow/tensorboard/tree/2.13>`_
+      - `2.13.0 <https://github.com/tensorflow/tensorboard/tree/2.13.0>`_
       - `master <https://bitbucket.org/icl/magma/src/master/>`_
       - `1.14.1 <https://github.com/openucx/ucx/tree/v1.14.1>`_
       - `4.1.5 <https://github.com/open-mpi/ompi/tree/v4.1.5>`_
@@ -154,7 +156,7 @@ Click the |docker-icon| icon to view the image on Docker Hub.
 
       - `2.2.1 <https://github.com/ROCm/pytorch/tree/release/2.2>`_
       - 20.04
-      - `3.9 <https://www.python.org/downloads/release/python-3921/>`_
+      - `3.9.21 <https://www.python.org/downloads/release/python-3921/>`_
       - `1.2.0 <https://github.com/ROCm/apex/tree/release/1.2.0>`_
       - `0.17.1 <https://github.com/pytorch/vision/tree/v0.17.1>`_
       - `2.13.0 <https://github.com/tensorflow/tensorboard/tree/2.13.0>`_
@@ -169,7 +171,7 @@ Click the |docker-icon| icon to view the image on Docker Hub.
 
       - `1.13.1 <https://github.com/ROCm/pytorch/tree/release/1.13>`_
       - 22.04
-      - `3.9 <https://www.python.org/downloads/release/python-3921/>`_
+      - `3.9.21 <https://www.python.org/downloads/release/python-3921/>`_
       - `1.0.0 <https://github.com/ROCm/apex/tree/release/1.0.0>`_
       - `0.14.0 <https://github.com/pytorch/vision/tree/v0.14.0>`_
       - `2.18.0 <https://github.com/tensorflow/tensorboard/tree/2.18>`_
@@ -184,7 +186,7 @@ Click the |docker-icon| icon to view the image on Docker Hub.
 
       - `1.13.1 <https://github.com/ROCm/pytorch/tree/release/1.13>`_
       - 20.04
-      - `3.9 <https://www.python.org/downloads/release/python-3921/>`_
+      - `3.9.21 <https://www.python.org/downloads/release/python-3921/>`_
       - `1.0.0 <https://github.com/ROCm/apex/tree/release/1.0.0>`_
       - `0.14.0 <https://github.com/pytorch/vision/tree/v0.14.0>`_
       - `2.18.0 <https://github.com/tensorflow/tensorboard/tree/2.18>`_
@@ -213,7 +215,7 @@ performance, and feature set available to developers.
         (GEMM), convolutions and transformations.
       - Speeds up ``torch.permute``, ``torch.view``, ``torch.matmul``,
         ``torch.mm``, ``torch.bmm``, ``torch.nn.Conv2d``, ``torch.nn.Conv3d``
-        and ``torch.nn.MultiheadAttention``. 
+        and ``torch.nn.MultiheadAttention``.
     * - `hipBLAS <https://github.com/ROCm/hipBLAS>`_
       - 2.3.0
       - Provides GPU-accelerated Basic Linear Algebra Subprograms (BLAS) for
@@ -243,7 +245,7 @@ performance, and feature set available to developers.
     * - `hipRAND <https://github.com/ROCm/hipRAND>`_
       - 2.11.0
       - Provides fast random number generation for GPUs.
-      - The ``torch.rand``, ``torch.randn`` and stochastic layers like 
+      - The ``torch.rand``, ``torch.randn`` and stochastic layers like
         ``torch.nn.Dropout``.
     * - `hipSOLVER <https://github.com/ROCm/hipSOLVER>`_
       - 2.3.0
@@ -865,7 +867,7 @@ The following are GPU-accelerated PyTorch features not currently supported by RO
     * - ``torch.backends.cuda`` / ``matmul.allow_bf16_reduced_precision_reduction``
       - Reduced precision reductions are allowed with bf16 GEMMs.
       - 2.0
-    * - ``torch.nn.functional`` / ``scaled_dot_product_attention`` 
+    * - ``torch.nn.functional`` / ``scaled_dot_product_attention``
       - Flash attention backend for SDPA to accelerate attention computation in
         transformer-based models.
       - 2.0

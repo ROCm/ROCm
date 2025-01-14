@@ -45,7 +45,7 @@ ROCm documentation is organized into the following categories:
 * [System debugging](./how-to/system-debugging.md)
 * [Use advanced compiler features](./conceptual/compiler-topics.md)
 * [Set the number of CUs](./how-to/setting-cus)
-* [Troubleshoot BAR access limitation](./how-to/Bar-Memory.rst)  
+* [Troubleshoot BAR access limitation](./how-to/Bar-Memory.rst)
 * [ROCm examples](https://github.com/amd/rocm-examples)
 :::
 
@@ -62,16 +62,15 @@ ROCm documentation is organized into the following categories:
 * [Oversubscription of hardware resources](./conceptual/oversubscription.rst)
 :::
 
-<!-- markdownlint-disable MD051 -->
 :::{grid-item-card} Reference
 :class-body: rocm-card-banner rocm-hue-6
-
+<!-- markdownlint-disable MD051 -->
 * [ROCm libraries](./reference/api-libraries.md)
 * [ROCm tools, compilers, and runtimes](./reference/rocm-tools.md)
 * [Accelerator and  GPU hardware specifications](./reference/gpu-arch-specs.rst)
 * [Precision support](./reference/precision-support.rst)
 * [Graph safe support](./reference/graph-safe-support.rst)
-:::
 <!-- markdownlint-enable MD051 -->
+:::
 
 ::::

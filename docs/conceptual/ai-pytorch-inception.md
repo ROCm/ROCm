@@ -53,7 +53,7 @@ The following sections contain case studies for the Inception V3 model.
 
 ### Inception V3 with PyTorch
 
-Convolution Neural Networks are forms of artificial neural networks commonly used for image processing. One of the core layers of such a network is the convolutional layer, which convolves the input with a weight tensor and passes the result to the next layer. Inception V3[^inception_arch] is an architectural development over the ImageNet competition-winning entry, AlexNet, using more profound and broader networks while attempting to meet computational and memory budgets.
+Convolution Neural Networks are forms of artificial neural networks commonly used for image processing. One of the core layers of such a network is the convolutional layer, which convolves the input with a weight tensor and passes the result to the next layer. Inception V3 is an architectural development over the ImageNet competition-winning entry, AlexNet, using more profound and broader networks while attempting to meet computational and memory budgets.
 
 The implementation uses PyTorch as a framework. This case study utilizes [TorchVision](https://pytorch.org/vision/stable/index.html), a repository of popular datasets and model architectures, for obtaining the model. TorchVision also provides pre-trained weights as a starting point to develop new models or fine-tune the model for a new task.
 
@@ -162,7 +162,7 @@ Follow these steps:
     docker run -it --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --device=/dev/kfd --device=/dev/dri --group-add video --ipc=host --shm-size 8G rocm/pytorch:latest
     ```
 
-2. Download an ImageNet database. For this example, the `tiny-imagenet-200`[^Stanford_deep_learning], a smaller ImageNet variant with 200 image classes and a training dataset with 100,000 images, was downsized to 64x64 color images.
+2. Download an ImageNet database. For this example, the `tiny-imagenet-200`, a smaller ImageNet variant with 200 image classes and a training dataset with 100,000 images, was downsized to 64x64 color images.
 
     ```bash
     wget http://cs231n.stanford.edu/tiny-imagenet-200.zip
@@ -366,7 +366,7 @@ Follow these steps:
     model.to(device)
     ```
 
-13. Set the loss criteria. For this example, Cross Entropy Loss[^cross_entropy] is used.
+13. Set the loss criteria. For this example, Cross Entropy Loss is used.
 
     ```py
     criterion = torch.nn.CrossEntropyLoss()
@@ -586,7 +586,7 @@ Follow these steps:
     import torch.optim as optim
     ```
 
-10. Set the loss criteria. For this example, Cross Entropy Loss[^cross_entropy] is used.
+10. Set the loss criteria. For this example, Cross Entropy Loss is used.
 
     ```py
     criterion = nn.CrossEntropyLoss()
