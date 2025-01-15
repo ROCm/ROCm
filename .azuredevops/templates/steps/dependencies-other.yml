@@ -34,7 +34,10 @@ steps:
     displayName: 'sudo apt-get install ...'
     inputs:
       targetType: inline
-      script: sudo DEBIAN_FRONTEND=noninteractive apt-get --yes install ${{ join(' ', parameters.aptPackages) }}
+      script: |
+        sudo DEBIAN_FRONTEND=noninteractive apt-get --yes install ${{ join(' ', parameters.aptPackages) }}
+        sudo apt-get clean
+        sudo rm -rf /var/lib/apt/lists/*
 - ${{ if gt(length(parameters.pipModules), 0) }}:
   - task: Bash@3
     displayName: 'pip install  ...'

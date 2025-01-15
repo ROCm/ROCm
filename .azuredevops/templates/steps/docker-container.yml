@@ -106,7 +106,7 @@ steps:
       inputs:
         workingDirectory: $(Pipeline.Workspace)
         targetType: inline
-        script: echo "RUN apt-get --yes --no-install-recommends install ${{ join(' ', parameters.baseAptPackages) }}" >> Dockerfile
+        script: echo "RUN apt-get install --yes --no-install-recommends ${{ join(' ', parameters.baseAptPackages) }}" >> Dockerfile
   - ${{ if eq(parameters.registerROCmPackages, true) }}:
     - task: Bash@3
       displayName: Register ROCm packages to Dockerfile
@@ -126,7 +126,7 @@ steps:
       inputs:
         workingDirectory: $(Pipeline.Workspace)
         targetType: inline
-        script: echo "RUN apt-get --yes --no-install-recommends install ${{ join(' ', parameters.aptPackages) }}" >> Dockerfile
+        script: echo "RUN apt-get install --yes --no-install-recommends ${{ join(' ', parameters.aptPackages) }}" >> Dockerfile
   - ${{ if gt(length(parameters.pipModules), 0) }}:
     - task: Bash@3
       displayName: Extra Python Modules to Dockerfile
@@ -179,6 +179,8 @@ steps:
         echo "RUN cat /etc/ld.so.conf.d/rocm-ci.conf" >> Dockerfile
         echo "RUN ldconfig -v" >> Dockerfile
         cat Dockerfile
+  - script: df -h
+    displayName: Disk space before build
   - task: Docker@2
     inputs:
       containerRegistry: 'ContainerService'
