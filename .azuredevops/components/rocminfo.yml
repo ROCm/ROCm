@@ -21,8 +21,7 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  pool:
-    vmImage: ${{ variables.BASE_BUILD_POOL }}
+  pool: ${{ variables.LOW_BUILD_POOL }}
   workspace:
     clean: all
   steps:
@@ -42,6 +41,7 @@ jobs:
         -DROCRTST_BLD_TYPE=release
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
 
 - job: rocminfo_testing
   dependsOn: rocminfo
@@ -82,3 +82,7 @@ jobs:
       testExecutable: './rocm/bin/rocm_agent_enumerator'
       testParameters: ''
       testPublishResults: false
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)

@@ -88,6 +88,14 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      gpuTarget: $(JOB_GPU_TARGET)
+      extraEnvVars:
+        - HIP_ROCCLR_HOME:::/home/user/workspace/rocm
+        - ROCM_PATH:::/home/user/workspace/rocm
 
 - job: rocprofiler_testing
   dependsOn: rocprofiler
@@ -138,3 +146,10 @@ jobs:
       testExecutable: LD_LIBRARY_PATH="$(Agent.BuildDirectory)/rocm/lib/rocprofiler:$(Agent.BuildDirectory)/rocm/share/rocprofiler/tests" share/rocprofiler/tests/runUnitTests
       testParameters: '--gtest_output=xml:./test_output.xml --gtest_color=yes'
       testDir: $(Agent.BuildDirectory)/rocm
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)
+      optSymLink: true

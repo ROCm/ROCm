@@ -48,8 +48,7 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  pool:
-    vmImage: ${{ variables.BASE_BUILD_POOL }}
+  pool: ${{ variables.LOW_BUILD_POOL }}
   workspace:
     clean: all
   strategy:
@@ -85,6 +84,11 @@ jobs:
       gpuTarget: $(JOB_GPU_TARGET)
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
+      gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
       gpuTarget: $(JOB_GPU_TARGET)
 
 - job: rpp_testing
@@ -126,7 +130,7 @@ jobs:
       script: |
         sudo apt-get install nasm
         sudo apt-get install wget
-        git clone -b 3.0.2 https://github.com/libjpeg-turbo/libjpeg-turbo.git 
+        git clone -b 3.0.2 https://github.com/libjpeg-turbo/libjpeg-turbo.git
         cd libjpeg-turbo
         mkdir build
         cd build
@@ -169,3 +173,9 @@ jobs:
       testDir: 'rpp-tests'
   - script: sudo rm /opt/rocm
     condition: always()
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)

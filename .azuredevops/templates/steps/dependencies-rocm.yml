@@ -16,7 +16,6 @@ parameters:
 - name: gpuTarget
   type: string
   default: ''
-
 # set to true if you're calling this template file multiple files in same pipeline
 # only leave last call false to optimize sequence
 - name: skipLibraryLinking

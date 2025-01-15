@@ -15,8 +15,7 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  pool:
-    vmImage: ${{ variables.BASE_BUILD_POOL }}
+  pool: ${{ variables.LOW_BUILD_POOL }}
   workspace:
     clean: all
   steps:
@@ -33,6 +32,9 @@ jobs:
         -DBUILD_TESTS=ON
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
 
 - job: amdsmi_testing
   dependsOn: amdsmi
@@ -63,3 +65,8 @@ jobs:
       testDir: '$(Agent.BuildDirectory)'
       testExecutable: './rocm/share/amd_smi/tests/amdsmitst'
       testParameters: '--gtest_output=xml:./test_output.xml --gtest_color=yes'
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)
