@@ -107,10 +107,10 @@ steps:
       targetType: inline
       script: |
         if [ -d "$(Agent.BuildDirectory)/rocm" ]; then
-          echo "COPY $(Agent.BuildDirectory)/rocm /home/user/workspace/rocm" >> Dockerfile
+          echo "COPY rocm /home/user/workspace/rocm" >> Dockerfile
         fi
         if [ -d "$(Build.SourcesDirectory)" ] && [ "$(Build.SourcesDirectory)" != "" ]; then
-          echo "COPY $(Build.SourcesDirectory) /home/user/workspace/src" >> Dockerfile
+          echo "COPY s /home/user/workspace/src" >> Dockerfile
         fi
   # Set link to redirect llvm folder
   - ${{ if eq(parameters.skipLlvmSymlink, false) }}:
