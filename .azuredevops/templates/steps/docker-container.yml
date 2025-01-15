@@ -59,11 +59,18 @@ parameters:
   default: 6.3.1
 
 steps:
-  - task: DockerInstaller@0
-    inputs:
-      dockerVersion: ${{ parameters.dockerVersion }}
-  - script: sudo systemctl status docker
-  - script: sudo systemctl start docker
+#  - task: DockerInstaller@0
+#    inputs:
+#      dockerVersion: ${{ parameters.dockerVersion }}
+# install docker
+  - script: |
+    sudo apt install --yes apt-transport-https
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    sudo apt update
+    sudo apt install docker -y
+    sudo systemctl status docker
+    sudo systemctl start docker
 # dynamically write to a Dockerfile
 # first is to do base setup of users, groups, and expected apt packages
 # then, it is to install job-specific aptPackages and pipModules, if necessary
