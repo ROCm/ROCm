@@ -47,6 +47,9 @@ parameters:
   values:
     - build
     - test
+- name: registerROCmPackages
+  type: boolean
+  default: false
 
 steps:
   - task: DockerInstaller@0
@@ -97,6 +100,19 @@ steps:
         workingDirectory: $(Pipeline.Workspace)
         targetType: inline
         script: echo "RUN apt-get --yes install ${{ join(' ', parameters.baseAptPackages) }}" >> Dockerfile
+  - ${{ if eq(parameters.registerROCmPackages, true) }}:
+    - task: Bash@3
+      displayName: Register ROCm packages to Dockerfile
+      inputs:
+        workingDirectory: $(Pipeline.Workspace)
+        targetType: inline
+        script: |
+          echo "RUN mkdir --parents --mode=0755 /etc/apt/keyrings" >> Dockerfile
+          echo "RUN wget https://repo.radeon.com/rocm/rocm.gpg.key -O - | gpg --dearmor | tee /etc/apt/keyrings/rocm.gpg > /dev/null" >> Dockerfile
+          echo "RUN echo \"deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/amdgpu/${{ variables.KEYRING_VERSION }}/ubuntu jammy main\" | tee /etc/apt/sources.list.d/amdgpu.list" >> Dockerfile
+          echo "RUN echo \"deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/rocm/apt/${{ variables.KEYRING_VERSION }} jammy main\" | tee --append /etc/apt/sources.list.d/rocm.list" >> Dockerfile
+          echo "RUN echo -e 'Package: *\nPin: release o=repo.radeon.com\nPin-Priority: 600' | tee /etc/apt/preferences.d/rocm-pin-600" >> Dockerfile
+          echo "RUN apt-get update" >> Dockerfile
   - ${{ if gt(length(parameters.aptPackages), 0) }}:
     - task: Bash@3
       displayName: Extra Apt Packages to Dockerfile
