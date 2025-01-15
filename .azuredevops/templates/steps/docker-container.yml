@@ -62,6 +62,8 @@ steps:
   - task: DockerInstaller@0
     inputs:
       dockerVersion: ${{ parameters.dockerVersion }}
+  - script: sudo systemctl status docker
+  - script: sudo systemctl start docker
 # dynamically write to a Dockerfile
 # first is to do base setup of users, groups, and expected apt packages
 # then, it is to install job-specific aptPackages and pipModules, if necessary
