@@ -90,15 +90,6 @@ steps:
           echo "RUN groupadd -g \$RENDER_GID render" >> Dockerfile
           echo "RUN usermod -aG render,video \$USERNAME" >> Dockerfile
           echo "COPY pci.ids /usr/share/misc/pci.ids" >> Dockerfile
-  - task: Bash@3
-    displayName: Workspace setup of Dockerfile
-    inputs:
-      workingDirectory: $(Pipeline.Workspace)
-      targetType: inline
-      script: |
-        echo "USER \$USERNAME" >> Dockerfile
-        echo "WORKDIR /home/user" >> Dockerfile
-        echo "RUN mkdir -p /home/user/workspace" >> Dockerfile
   - ${{ if gt(length(parameters.baseAptPackages), 0) }}:
     - task: Bash@3
       displayName: Base Apt Packages to Dockerfile
@@ -120,6 +111,15 @@ steps:
         workingDirectory: $(Pipeline.Workspace)
         targetType: inline
         script: echo "pip install -v ${{ join(' ', parameters.pipModules) }}" >> Dockerfile
+  - task: Bash@3
+    displayName: Workspace setup of Dockerfile
+    inputs:
+      workingDirectory: $(Pipeline.Workspace)
+      targetType: inline
+      script: |
+        echo "USER \$USERNAME" >> Dockerfile
+        echo "WORKDIR /home/user" >> Dockerfile
+        echo "RUN mkdir -p /home/user/workspace" >> Dockerfile
   - task: Bash@3
     displayName: Copy files to Dockerfile
     inputs:
