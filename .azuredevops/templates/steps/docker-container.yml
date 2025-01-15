@@ -105,14 +105,14 @@ steps:
       inputs:
         workingDirectory: $(Pipeline.Workspace)
         targetType: inline
-        script: echo "RUN DEBIAN_FRONTEND=noninteractive apt-get --yes install ${{ join(' ', parameters.baseAptPackages) }}" >> Dockerfile
+        script: echo "RUN apt-get --yes install ${{ join(' ', parameters.baseAptPackages) }}" >> Dockerfile
   - ${{ if gt(length(parameters.aptPackages), 0) }}:
     - task: Bash@3
       displayName: Extra Apt Packages to Dockerfile
       inputs:
         workingDirectory: $(Pipeline.Workspace)
         targetType: inline
-        script: echo "RUN DEBIAN_FRONTEND=noninteractive apt-get --yes install ${{ join(' ', parameters.aptPackages) }}" >> Dockerfile
+        script: echo "RUN apt-get --yes install ${{ join(' ', parameters.aptPackages) }}" >> Dockerfile
   - ${{ if gt(length(parameters.pipModules), 0) }}:
     - task: Bash@3
       displayName: Extra Python Modules to Dockerfile
