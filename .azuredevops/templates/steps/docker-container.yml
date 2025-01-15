@@ -1,15 +1,50 @@
 parameters:
+# this base set of packages should not be changed by calling script
+# should be common across all pipelines
+- name: baseAptPackages
+  type: object
+  default:
+    - cmake
+    - curl
+    - git
+    - gcc
+    - g++
+    - gpg
+    - libdrm-dev
+    - libelf-dev
+    - libgtest-dev
+    - libhsakmt-dev
+    - libhwloc-dev
+    - libnuma-dev
+    - libstdc++-12-dev
+    - libtbb-dev
+    - lsb-release
+    - lsof
+    - ninja-build
+    - pkg-config
+    - python3
+    - python3-pip
+    - wget
+    - zip
+# set to true if llvm-project is not downloaded in a particular call
+# or if you just don't want the symlink
+- name: skipLlvmSymlink
+  type: boolean
+  default: false
 - name: aptPackages
   type: object
   default: []
 - name: pipModules
   type: object
   default: []
+- name: dockerVersion
+  type: string
+  default: '27.5.0'
 
 steps:
   - task: DockerInstaller@0
     inputs:
-      dockerVersion: '19.03.x'
+      dockerVersion: ${{ parameters.dockerVersion }}
 # dynamically write to a Dockerfile
 # first is to do base setup of users, groups, and expected apt packages
 # then, it is to install job-specific aptPackages and pipModules, if necessary
@@ -19,7 +54,7 @@ steps:
 # then, run ldconfig steps to link the shared libraries
 # finally, print out contents of the generated dockerfile
   - task: Bash@3
-    displayName: Create Dockerfile
+    displayName: Create start of Dockerfile
     inputs:
       targetType: inline
       script: |
@@ -39,27 +74,54 @@ steps:
         echo "RUN chmod 0440 /etc/sudoers.d/\$USERNAME" >> Dockerfile
         echo "RUN groupadd -g \$RENDER_GID render" >> Dockerfile
         echo "RUN usermod -aG render,video \$USERNAME" >> Dockerfile
-        echo "RUN apt-get install -y cmake curl git gcc g++ gpg lsb-release lsof ninja-build pkg-config python3 python3-pip wget zip libdrm-dev libelf-dev libgtest-dev libhsakmt-dev libhwloc-dev libnuma-dev libstdc++-12-dev libtbb-dev
-" >> Dockerfile
         echo "COPY pci.ids /usr/share/misc/pci.ids" >> Dockerfile
         echo "USER \$USERNAME" >> Dockerfile
         echo "WORKDIR /home/user" >> Dockerfile
-        if [ "${{ parameters.aptPackages }}" != "[]" ]; then
-          echo "apt-get install -y ${{ parameters.aptPackages | join(' ') }}" >> Dockerfile
-        fi
-        if [ "${{ parameters.pipModules }}" != "[]" ]; then
-          echo "RUN python3 -m pip install --upgrade pip && pip install ${{ parameters.pipModules | join(' ') }}" >> Dockerfile
-        fi
         echo "RUN mkdir -p /home/user/workspace" >> Dockerfile
+  - ${{ if gt(length(parameters.baseAptPackages), 0) }}:
+    - task: Bash@3
+      displayName: Base Apt Packages to Dockerfile
+      inputs:
+        targetType: inline
+        script: echo "RUN DEBIAN_FRONTEND=noninteractive apt-get --yes install ${{ join(' ', parameters.baseAptPackages) }}" >> Dockerfile
+  - ${{ if gt(length(parameters.aptPackages), 0) }}:
+    - task: Bash@3
+      displayName: Extra Apt Packages to Dockerfile
+      inputs:
+        targetType: inline
+        script: echo "RUN DEBIAN_FRONTEND=noninteractive apt-get --yes install ${{ join(' ', parameters.aptPackages) }}" >> Dockerfile
+  - ${{ if gt(length(parameters.pipModules), 0) }}:
+    - task: Bash@3
+      displayName: Extra Python Modules to Dockerfile
+      inputs:
+        targetType: inline
+        script: echo "pip install -v ${{ join(' ', parameters.pipModules) }}" >> Dockerfile
+  - task: Bash@3
+    displayName: Copy files to Dockerfile
+    inputs:
+      targetType: inline
+      script: |
         if [ -d "$(Agent.BuildDirectory)/rocm" ]; then
           echo "COPY $(Agent.BuildDirectory)/rocm /home/user/workspace/rocm" >> Dockerfile
         fi
         if [ -d "$(Build.SourcesDirectory)" ] && [ "$(Build.SourcesDirectory)" != "" ]; then
           echo "COPY $(Build.SourcesDirectory) /home/user/workspace/src" >> Dockerfile
         fi
-        echo "RUN ln -s /home/user/workspace/rocm/llvm /home/user/workspace/rocm/lib/llvm" >> Dockerfile
-        echo "RUN for file in amdclang amdclang++ amdclang-cl amdclang-cpp amdflang amdlld aompcc mygpu mycpu offload-arch; do" >> Dockerfile
-        echo "RUN ln -s /home/user/workspace/rocm/llvm/bin/\$file /home/user/workspace/rocm/bin/\$file; done" >> Dockerfile
+  # Set link to redirect llvm folder
+  - ${{ if eq(parameters.skipLlvmSymlink, false) }}:
+    - task: Bash@3
+      displayName: Symlink from rocm/llvm to rocm/lib/llvm to Dockerfile
+      inputs:
+        targetType: inline
+        script: |
+          echo "RUN ln -s /home/user/workspace/rocm/llvm /home/user/workspace/rocm/lib/llvm" >> Dockerfile
+          echo "RUN for file in amdclang amdclang++ amdclang-cl amdclang-cpp amdflang amdlld aompcc mygpu mycpu offload-arch; do" >> Dockerfile
+          echo "RUN ln -s /home/user/workspace/rocm/llvm/bin/\$file /home/user/workspace/rocm/bin/\$file; done" >> Dockerfile
+  - task: Bash@3
+    displayName: ldconfig to Dockerfile
+    inputs:
+      targetType: inline
+      script: |
         echo "RUN echo /home/user/workspace/rocm/lib | tee /etc/ld.so.conf.d/rocm-ci.conf" >> Dockerfile
         echo "RUN echo /home/user/workspace/rocm/llvm/lib | tee -a /etc/ld.so.conf.d/rocm-ci.conf" >> Dockerfile
         echo "RUN cat /etc/ld.so.conf.d/rocm-ci.conf" >> Dockerfile
