@@ -1,3 +1,7 @@
+.. meta::
+   :description: Learn about AMD Instinct MI300X system settings, performance tuning, and workload optimization for HPC and AI.
+   :keywords: AMD, Instinct, MI300X, HPC, tuning, accelerator, GPU, resource utilization
+
 ************************
 AMD MI300X tuning guides
 ************************

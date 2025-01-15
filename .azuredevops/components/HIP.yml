@@ -62,13 +62,8 @@ jobs:
       checkoutRepo: hipother_repo
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
     parameters:
+      checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmDependenciesAMD }}
-      # CI case: download latest default branch build
-      ${{ if eq(parameters.checkoutRef, '') }}:
-        dependencySource: staging
-      # manual build case: triggered by ROCm/ROCm repo
-      ${{ elseif ne(parameters.checkoutRef, '') }}:
-        dependencySource: tag-builds
 # compile clr
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
@@ -118,13 +113,8 @@ jobs:
       checkoutRepo: hipother_repo
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
     parameters:
+      checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmDependenciesNvidia }}
-      # CI case: download latest default branch build
-      ${{ if eq(parameters.checkoutRef, '') }}:
-        dependencySource: staging
-      # manual build case: triggered by ROCm/ROCm repo
-      ${{ elseif ne(parameters.checkoutRef, '') }}:
-        dependencySource: tag-builds
   - script: 'ls -1R $(Agent.BuildDirectory)/rocm'
     displayName: 'Artifact listing'
 # compile clr

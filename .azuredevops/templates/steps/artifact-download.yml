@@ -6,154 +6,12 @@ parameters:
 - name: pipelineId
   type: string
   default: ''
-- name: useDefaultBranch
-  type: boolean
-  default: true
-# useMainlineBranch only processed if useDefaultBranch is false
-- name: useMainlineBranch
-  type: boolean
-  default: false
-- name: latestFromBranch
-  type: boolean
-  default: true
-- name: extractToMnt
-  type: boolean
-  default: false
-- name: fileFilter
-  type: string
-  default: ''
-- name: defaultBranchList
-  type: object
-  default:
-    AMDMIGraphX: develop
-    amdsmi: amd-staging
-    aomp-extras: aomp-dev
-    aomp: aomp-dev
-    clr: amd-staging
-    composable_kernel: develop
-    half: rocm
-    HIP: amd-staging
-    hip-tests: amd-staging
-    hipBLAS: develop
-    hipBLASLt: develop
-    hipBLAS-common: develop
-    hipCUB: develop
-    hipFFT: develop
-    hipfort: develop
-    HIPIFY: amd-staging
-    hipRAND: develop
-    hipSOLVER: develop
-    hipSPARSE: develop
-    hipSPARSELt: develop
-    hipTensor: develop
-    llvm-project: amd-staging
-    MIOpen: develop
-    MIVisionX: develop
-    omniperf: amd-staging
-    omnitrace: amd-staging
-    rccl: develop
-    rdc: amd-staging
-    rocAL: develop
-    rocALUTION: develop
-    rocBLAS: develop
-    ROCdbgapi : amd-staging
-    rocDecode: develop
-    rocFFT: develop
-    ROCgdb: amd-staging
-    rocJPEG: develop
-    rocm-cmake: develop
-    rocm-core: master
-    rocm-examples: develop
-    rocminfo: amd-staging
-    rocMLIR: develop
-    ROCmValidationSuite: master
-    rocm_bandwidth_test: master
-    rocm_smi_lib: amd-staging
-    rocPRIM: develop
-    rocprofiler: amd-staging
-    rocprofiler-compute: amd-staging
-    rocprofiler-register: amd-staging
-    rocprofiler-sdk: amd-staging
-    rocprofiler-systems: amd-staging
-    rocPyDecode: develop
-    ROCR-Runtime: amd-staging
-    rocRAND: develop
-    rocr_debug_agent: amd-staging
-    rocSOLVER: develop
-    rocSPARSE: develop
-    rocThrust: develop
-    roctracer: amd-staging
-    rocWMMA: develop
-    rpp: develop
-    TransferBench: develop
-- name: mainlineBranchList
-  type: object
-  default:
-    AMDMIGraphX: mainline
-    amdsmi: amd-mainline
-    aomp-extras: amd-mainline-open
-    aomp: amd-mainline-open
-    clr: amd-mainline
-    composable_kernel: mainline
-    half: rocm
-    HIP: amd-mainline
-    hip-tests: amd-mainline
-    hipBLAS: mainline
-    hipBLASLt: mainline
-    hipBLAS-common: mainline
-    hipCUB: mainline
-    hipFFT: mainline
-    hipfort: mainline
-    HIPIFY: amd-mainline
-    hipRAND: mainline
-    hipSOLVER: mainline
-    hipSPARSE: mainline
-    hipSPARSELt: mainline
-    hipTensor: mainline
-    llvm-project: amd-mainline-open
-    MIOpen: mainline
-    MIVisionX: mainline
-    omniperf: amd-mainline
-    omnitrace: amd-mainline
-    rccl: mainline
-    rdc: amd-mainline
-    rocAL: master # needs the yaml file
-    rocALUTION: mainline
-    rocBLAS: mainline
-    ROCdbgapi : amd-mainline
-    rocDecode: mainline
-    rocFFT: mainline
-    ROCgdb: amd-mainline-rocgdb-15
-    rocJPEG: mainline
-    rocm-cmake: mainline
-    rocm-core: amd-master
-    rocm-examples: develop # no mainline
-    rocminfo: amd-master
-    rocMLIR: mainline # needs the yaml file
-    ROCmValidationSuite: mainline
-    rocm_bandwidth_test: master
-    rocm_smi_lib: amd-mainline
-    rocPRIM: mainline
-    rocprofiler: amd-master
-    rocprofiler-compute: amd-mainline
-    rocprofiler-register: amd-mainline
-    rocprofiler-sdk: amd-mainline
-    rocprofiler-systems: amd-mainline
-    rocPyDecode: mainline
-    ROCR-Runtime: amd-master
-    rocRAND: mainline
-    rocr_debug_agent: amd-mainline
-    rocSOLVER: mainline
-    rocSPARSE: mainline
-    rocThrust: mainline
-    roctracer: amd-master
-    rocWMMA: mainline
-    rpp: mainline
-    TransferBench: mainline
-# BELOW REQUIRED IF useDefaultBranch false
 - name: branchName
   type: string
   default: '$(Build.SourceBranchName)' # for tagged builds
+- name: fileFilter
+  type: string
+  default: ''
 
 steps:
 - task: Bash@3
@@ -174,25 +32,16 @@ steps:
     definition: ${{ parameters.pipelineId }}
     specificBuildWithTriggering: true
     itemPattern: '**/*${{ parameters.fileFilter }}*'
-    ${{ if eq(parameters.latestFromBranch, true) }}:
-      ${{ if notIn(parameters.componentName, 'aomp') }}: # remove this once these pipelines are functional + up-to-date
-        buildVersionToDownload: latestFromBranch # default is 'latest'
-    ${{ if eq(parameters.useDefaultBranch, true) }}:
-      branchName: refs/heads/${{ parameters.defaultBranchList[parameters.componentName] }}
-    ${{ elseif eq(parameters.useMainlineBranch, true) }}:
-      branchName: refs/heads/${{ parameters.mainlineBranchList[parameters.componentName] }}
-    ${{ else }}:
-      branchName: ${{ parameters.branchName }}
+    ${{ if notIn(parameters.componentName, 'aomp') }}: # remove this once these pipelines are functional + up-to-date
+      buildVersionToDownload: latestFromBranch # default is 'latest'
+    branchName: refs/heads/${{ parameters.branchName }}
     allowPartiallySucceededBuilds: $(allowPartiallySucceededBuilds)
     targetPath: '$(Pipeline.Workspace)/d'
 - task: ExtractFiles@1
   displayName: Extract ${{ parameters.componentName }}
   inputs:
     archiveFilePatterns: '$(Pipeline.Workspace)/d/**/*.tar.gz'
-    ${{ if parameters.extractToMnt }}:
-      destinationFolder: '/mnt/rocm'
-    ${{ else }}:
-      destinationFolder: '$(Agent.BuildDirectory)/rocm'
+    destinationFolder: '$(Agent.BuildDirectory)/rocm'
     cleanDestinationFolder: false
     overwriteExistingFiles: true
 - task: DeleteFiles@1

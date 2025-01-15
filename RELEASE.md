@@ -328,7 +328,7 @@ Click {fab}`github` to go to the component's source code on GitHub.
             </tr>
             <tr>
                 <td><a href="https://rocm.docs.amd.com/projects/rocprofiler-sdk/en/docs-6.3.1/index.html">ROCprofiler-SDK</a></td>
-                <td>0.5.0</td>
+                <td>0.5.0&nbsp;&Rightarrow;&nbsp;<a href="#rocprofiler-sdk-0-5-0">0.5.0</a></td>
                 <td><a href="https://github.com/ROCm/rocprofiler-sdk/"><i
                             class="fab fa-github fa-lg"></i></a></td>
             </tr>
@@ -504,6 +504,13 @@ See the full [AMD SMI changelog](https://github.com/ROCm/amdsmi/blob/6.3.x/CHANG
 
 * Fixed a minor issue for users upgrading to ROCm 6.3 from 6.2 post-rename from `omnitrace`.
   See [ROCm Compute Profiler and ROCm Systems Profiler post-upgrade issues](#rocm-compute-profiler-and-rocm-systems-profiler-post-upgrade-issues).
+
+### **ROCprofiler-SDK** (0.5.0)
+
+#### Added
+
+* SIMD_UTILIZATION metric.
+* New rdc ops metrics.
 
 ## ROCm known issues
 

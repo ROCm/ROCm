@@ -1,5 +1,10 @@
 parameters:
-# currently excludes clr
+- name: dependencySource
+  type: string
+  default: staging
+  values: 
+    - staging
+    - mainline
 - name: rocmDependencies
   type: object
   default:
@@ -100,11 +105,11 @@ jobs:
     displayName: System disk space before ROCm
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
     parameters:
+      dependencySource: ${{ parameters.dependencySource }}
       dependencyList: ${{ parameters.rocmDependencies }}
-      dependencySource: staging
+      gpuTarget: $(JOB_GPU_TARGET)
       skipLibraryLinking: true
       skipLlvmSymlink: true
-      gpuTarget: $(JOB_GPU_TARGET)
   - script: df -h
     displayName: System disk space after ROCm
   - script: du -sh $(Agent.BuildDirectory)/rocm

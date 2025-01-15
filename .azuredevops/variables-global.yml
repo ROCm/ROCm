@@ -74,9 +74,9 @@ variables:
 - name: HALF_TAGGED_PIPELINE_ID
   value: 11
 - name: HALF560_PIPELINE_ID
-  value: 66
-- name: HALF560_TAGGED_PIPELINE_ID
-  value: 66
+  value: 68
+- name: HALF560_BUILD_ID
+  value: 621
 - name: HIP_PIPELINE_ID
   value: 93
 - name: HIP_TAGGED_PIPELINE_ID

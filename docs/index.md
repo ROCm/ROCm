@@ -1,9 +1,9 @@
-<head>
-  <meta charset="UTF-8">
-  <meta name="description" content="AMD ROCm documentation">
-  <meta name="keywords" content="documentation, guides, installation, compatibility, support,
-  reference, ROCm, AMD">
-</head>
+---
+myst:
+  html_meta:
+    "description": "Start building for HPC and AI with the performance-first AMD ROCm software stack. Explore how-to guides and reference docs."
+    "keywords": "Radeon, open, compute, platform, install, how, conceptual, reference, home, docs"
+---
 
 # AMD ROCm documentation
 
