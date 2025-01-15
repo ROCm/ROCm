@@ -51,6 +51,9 @@ parameters:
   type: boolean
   default: false
 
+variables:
+  - group: common
+  - template: /.azuredevops/variables-global.yml
 steps:
   - task: DockerInstaller@0
     inputs:
