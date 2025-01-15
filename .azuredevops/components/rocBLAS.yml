@@ -109,6 +109,10 @@ jobs:
         -DBUILD_CLIENTS_SAMPLES=OFF
         -DROCM_PATH=$(Agent.BuildDirectory)/rocm
         -GNinja
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
