@@ -56,6 +56,7 @@ steps:
   - task: Bash@3
     displayName: Create start of Dockerfile
     inputs:
+      workingDirectory: $(Pipeline.Workspace)
       targetType: inline
       script: |
         echo "FROM ubuntu:22.04" > Dockerfile
@@ -82,23 +83,27 @@ steps:
     - task: Bash@3
       displayName: Base Apt Packages to Dockerfile
       inputs:
+        workingDirectory: $(Pipeline.Workspace)
         targetType: inline
         script: echo "RUN DEBIAN_FRONTEND=noninteractive apt-get --yes install ${{ join(' ', parameters.baseAptPackages) }}" >> Dockerfile
   - ${{ if gt(length(parameters.aptPackages), 0) }}:
     - task: Bash@3
       displayName: Extra Apt Packages to Dockerfile
       inputs:
+        workingDirectory: $(Pipeline.Workspace)
         targetType: inline
         script: echo "RUN DEBIAN_FRONTEND=noninteractive apt-get --yes install ${{ join(' ', parameters.aptPackages) }}" >> Dockerfile
   - ${{ if gt(length(parameters.pipModules), 0) }}:
     - task: Bash@3
       displayName: Extra Python Modules to Dockerfile
       inputs:
+        workingDirectory: $(Pipeline.Workspace)
         targetType: inline
         script: echo "pip install -v ${{ join(' ', parameters.pipModules) }}" >> Dockerfile
   - task: Bash@3
     displayName: Copy files to Dockerfile
     inputs:
+      workingDirectory: $(Pipeline.Workspace)
       targetType: inline
       script: |
         if [ -d "$(Agent.BuildDirectory)/rocm" ]; then
@@ -112,6 +117,7 @@ steps:
     - task: Bash@3
       displayName: Symlink from rocm/llvm to rocm/lib/llvm to Dockerfile
       inputs:
+        workingDirectory: $(Pipeline.Workspace)
         targetType: inline
         script: |
           echo "RUN ln -s /home/user/workspace/rocm/llvm /home/user/workspace/rocm/lib/llvm" >> Dockerfile
@@ -120,6 +126,7 @@ steps:
   - task: Bash@3
     displayName: ldconfig to Dockerfile
     inputs:
+      workingDirectory: $(Pipeline.Workspace)
       targetType: inline
       script: |
         echo "RUN echo /home/user/workspace/rocm/lib | tee /etc/ld.so.conf.d/rocm-ci.conf" >> Dockerfile
@@ -131,4 +138,5 @@ steps:
     inputs:
       containerRegistry: 'ContainerService'
       repository: 'rocmexternalcicd.azurecr.io/$(Build.DefinitionName)'
-      Dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+      Dockerfile: '$(Pipeline.Workspace)/Dockerfile'
+      buildContext: '$(Pipeline.Workspace)'
