@@ -40,6 +40,13 @@ parameters:
 - name: dockerVersion
   type: string
   default: '27.5.0'
+# test environment involves gpu-related steps
+- name: environment
+  type: string
+  default: build
+  values:
+    - build
+    - test
 
 steps:
   - task: DockerInstaller@0
@@ -73,9 +80,22 @@ steps:
         echo "RUN apt-get install -y sudo" >> Dockerfile
         echo "RUN echo \$USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/\$USERNAME" >> Dockerfile
         echo "RUN chmod 0440 /etc/sudoers.d/\$USERNAME" >> Dockerfile
-        echo "RUN groupadd -g \$RENDER_GID render" >> Dockerfile
-        echo "RUN usermod -aG render,video \$USERNAME" >> Dockerfile
-        echo "COPY pci.ids /usr/share/misc/pci.ids" >> Dockerfile
+  - ${{ if eq(parameters.environment, 'test') }}:
+    - task: Bash@3
+      displayName: GPU setup of Dockerfile
+      inputs:
+        workingDirectory: $(Pipeline.Workspace)
+        targetType: inline
+        script: |
+          echo "RUN groupadd -g \$RENDER_GID render" >> Dockerfile
+          echo "RUN usermod -aG render,video \$USERNAME" >> Dockerfile
+          echo "COPY pci.ids /usr/share/misc/pci.ids" >> Dockerfile
+  - task: Bash@3
+    displayName: Workspace setup of Dockerfile
+    inputs:
+      workingDirectory: $(Pipeline.Workspace)
+      targetType: inline
+      script: |
         echo "USER \$USERNAME" >> Dockerfile
         echo "WORKDIR /home/user" >> Dockerfile
         echo "RUN mkdir -p /home/user/workspace" >> Dockerfile
