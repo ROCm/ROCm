@@ -82,6 +82,7 @@ steps:
         sudo usermod -aG docker $USER
         sudo systemctl status docker
         sudo systemctl start docker
+        docker info
 # dynamically write to a Dockerfile
 # first is to do base setup of users, groups, and expected apt packages
 # then, it is to install job-specific aptPackages and pipModules, if necessary
