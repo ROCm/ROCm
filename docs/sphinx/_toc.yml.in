@@ -175,7 +175,7 @@ subtrees:
 - caption: Contribute
   entries:
   - file: contribute/contributing.md
-    title: Contributing to the ROCm docmentation
+    title: Contributing to the ROCm documentation
     subtrees:
     - entries:
       - file: contribute/toolchain.md
