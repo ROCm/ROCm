@@ -36,7 +36,7 @@ The AutoGPTQ library implements the GPTQ algorithm.
       
       pip install auto-gptq --no-build-isolation --extra-index-url https://huggingface.github.io/autogptq-index/whl/rocm573/
 
-   Or, install AutoGPTQ from source for the appropriate ROCm version (for example, ROCm 6.1).
+   Or, install AutoGPTQ from source for the appropriate ROCm version (for example, ROCm 6.1.1).
 
    .. code-block:: shell
 
@@ -45,17 +45,17 @@ The AutoGPTQ library implements the GPTQ algorithm.
       cd AutoGPTQ
       
       # Speed up the compilation by specifying PYTORCH_ROCM_ARCH to target device.
-      PYTORCH_ROCM_ARCH=gfx942 ROCM_VERSION=6.1 pip install .
+      PYTORCH_ROCM_ARCH=gfx942 ROCM_VERSION=6.1.1 pip install .
       
       # Show the package after the installation 
 
-#. Run ``pip show auto-gptq`` to print information for the installed ``auto-gptq`` package. Its output should look like
+#. Run ``pip show auto_gptq`` to print information for the installed ``auto_gptq`` package. Its output should look like
    this:
 
    .. code-block:: shell
 
-      Name: auto-gptq
-      Version: 0.8.0.dev0+rocm6.1
+      Name: auto_gptq
+      Version: 0.8.0.dev0+rocm6.1.1
       ...
 
 Using GPTQ with AutoGPTQ
