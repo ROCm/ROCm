@@ -103,7 +103,7 @@ steps:
       inputs:
         workingDirectory: $(Pipeline.Workspace)
         targetType: inline
-        script: echo "RUN apt-get install --yes --no-install-recommends ${{ join(' ', parameters.baseAptPackages) }}" >> Dockerfile
+        script: echo "RUN apt-get install --yes ${{ join(' ', parameters.baseAptPackages) }}" >> Dockerfile
   - ${{ if eq(parameters.registerROCmPackages, true) }}:
     - task: Bash@3
       displayName: Register ROCm packages to Dockerfile
@@ -123,7 +123,7 @@ steps:
       inputs:
         workingDirectory: $(Pipeline.Workspace)
         targetType: inline
-        script: echo "RUN apt-get install --yes --no-install-recommends ${{ join(' ', parameters.aptPackages) }}" >> Dockerfile
+        script: echo "RUN apt-get install --yes ${{ join(' ', parameters.aptPackages) }}" >> Dockerfile
   - ${{ if gt(length(parameters.pipModules), 0) }}:
     - task: Bash@3
       displayName: Extra Python Modules to Dockerfile
