@@ -38,15 +38,15 @@ parameters:
 - name: rocmDependencies
   type: object
   default:
-    - rocm-cmake
-    - llvm-project
-    - ROCR-Runtime
-    - clr
-    - rocDecode
-    - half
-    - rpp
-    - MIVisionX
     - aomp
+    - clr
+    - half
+    - llvm-project
+    - MIVisionX
+    - rocDecode
+    - rocm-cmake
+    - ROCR-Runtime
+    - rpp
 - name: rocmTestDependencies
   type: object
   default:
@@ -55,6 +55,7 @@ parameters:
     - half
     - llvm-project
     - MIVisionX
+    - rocDecode
     - rocminfo
     - rocprofiler-register
     - ROCR-Runtime
