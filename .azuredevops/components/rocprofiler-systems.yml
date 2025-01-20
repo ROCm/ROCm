@@ -17,7 +17,12 @@ parameters:
     - clang
     - cmake
     - environment-modules
+    - ffmpeg
     - g++-12
+    - libavcodec-dev
+    - libavformat-dev
+    - libavutil-dev
+    - libdrm-amdgpu-dev
     - libdrm-dev
     - libfabric-dev
     - libiberty-dev
@@ -27,8 +32,9 @@ parameters:
     - libopenmpi-dev
     - m4
     - openmpi-bin
-    - software-properties-common
+    - pkg-config
     - python3-pip
+    - software-properties-common
     - texinfo
     - zlib1g-dev
 - name: pipModules
@@ -44,21 +50,21 @@ parameters:
     - clr
     - llvm-project
     - rccl
+    - rocDecode
     - rocm-core
     - rocm_smi_lib
     - rocminfo
     - ROCR-Runtime
-    - rocprofiler
     - rocprofiler-register
-    - roctracer
     - rocprofiler-sdk
 
 jobs:
 - job: rocprofiler_systems
+  timeoutInMinutes: 180
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  pool: ${{ variables.MEDIUM_BUILD_POOL }}
+  pool: ${{ variables.GFX942_TEST_POOL }}
   workspace:
     clean: all
   strategy:
@@ -70,6 +76,7 @@ jobs:
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
       pipModules: ${{ parameters.pipModules }}
+      registerRadeon: true
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/checkout.yml
     parameters:
@@ -113,7 +120,7 @@ jobs:
         -DDYNINST_BUILD_BOOST=ON
         -DROCPROFSYS_USE_PAPI=ON
         -DROCPROFSYS_USE_MPI=ON
-        -DAMDGPU_TARGETS=$(JOB_GPU_TARGET)
+        -DGPU_TARGETS=$(JOB_GPU_TARGET)
       multithreadFlag: -- -j32
   - task: Bash@3
     displayName: Set up rocprofiler-systems env
