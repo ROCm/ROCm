@@ -369,6 +369,12 @@ steps:
         # checkoutRef = mainline
         ${{ elseif eq(parameters.checkoutRef, parameters.componentVarList[variables['Build.DefinitionName']].mainlineBranch) }}:
           branchName: ${{ parameters.componentVarList[split(dependency, ':')[0]].mainlineBranch }}
+        # SourceBranchName = staging
+        ${{ elseif eq(variables['Build.SourceBranchName'], parameters.componentVarlist[variables['Build.DefinitionName']].stagingBranch) }}:
+          branchName: ${{ parameters.componentVarList[split(dependency, ':')[0]].stagingBranch }}
+        # SourceBranchName = mainline
+        ${{ elseif eq(variables['Build.SourceBranchName'], parameters.componentVarlist[variables['Build.DefinitionName']].mainlineBranch) }}:
+          branchName: ${{ parameters.componentVarList[split(dependency, ':')[0]].mainlineBranch }}
         # default = staging
         ${{ else }}:
           branchName: ${{ parameters.componentVarList[split(dependency, ':')[0]].stagingBranch }}
@@ -391,6 +397,12 @@ steps:
           branchName: ${{ parameters.componentVarList[dependency].stagingBranch }}
         # checkoutRef = mainline
         ${{ elseif eq(parameters.checkoutRef, parameters.componentVarList[variables['Build.DefinitionName']].mainlineBranch) }}:
+          branchName: ${{ parameters.componentVarList[dependency].mainlineBranch }}
+        # SourceBranchName = staging
+        ${{ elseif eq(variables['Build.SourceBranchName'], parameters.componentVarlist[variables['Build.DefinitionName']].stagingBranch) }}:
+          branchName: ${{ parameters.componentVarList[dependency].stagingBranch }}
+        # SourceBranchName = mainline
+        ${{ elseif eq(variables['Build.SourceBranchName'], parameters.componentVarlist[variables['Build.DefinitionName']].mainlineBranch) }}:
           branchName: ${{ parameters.componentVarList[dependency].mainlineBranch }}
         # default = staging
         ${{ else }}:
