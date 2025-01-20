@@ -166,7 +166,9 @@ jobs:
     value: $(Agent.BuildDirectory)/rocm
   - name: CMAKE_INCLUDE_PATH
     value: $(Agent.BuildDirectory)/rocm/include/rocal
-  pool: $(JOB_TEST_POOL)
+  pool:
+    name: $(JOB_TEST_POOL)
+    demands: firstRenderDeviceAccess
   workspace:
     clean: all
   strategy:
