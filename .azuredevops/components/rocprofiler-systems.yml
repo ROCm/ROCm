@@ -129,6 +129,8 @@ jobs:
       gpuTarget: $(JOB_GPU_TARGET)
 
 - job: rocprofiler_systems_testing
+  dependsOn: rocprofiler_systems
+  condition: and(succeeded(), eq(variables.ENABLE_GFX942_TESTS, 'true'), not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])))
   timeoutInMinutes: 180
   variables:
   - group: common
