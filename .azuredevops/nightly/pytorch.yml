@@ -177,8 +177,6 @@ jobs:
     value: 6.3.0
   - name: MKLROOT
     value: /opt/intel
-  - name: AOTRITON_INSTALLED_PREFIX
-    value: /opt/rocm/aotriton
   - name: DESIRED_PYTHON
     value: 3.10
   - name: PYTORCH_ROOT
@@ -276,12 +274,6 @@ jobs:
         sudo PYTORCH_ROCM_ARCH=$(JOB_GPU_TARGET) MKLROOT=$(MKLROOT) bash pytorch/.ci/docker/common/install_rocm_magma.sh
       workingDirectory: $(Build.SourcesDirectory)
   - task: Bash@3
-    displayName: Install AOTriton Shared Library
-    inputs:
-      targetType: inline
-      script: sudo bash ./common/install_aotriton.sh /opt/rocm
-      workingDirectory: $(Build.SourcesDirectory)/pytorch/.ci/docker
-  - task: Bash@3
     displayName: Run ROCm Build Script
     inputs:
       targetType: inline
@@ -293,7 +285,6 @@ jobs:
         DESIRED_PYTHON=$(DESIRED_PYTHON)
         PYTORCH_ROOT=$(PYTORCH_ROOT)
         CMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm
-        AOTRITON_INSTALLED_PREFIX=$(AOTRITON_INSTALLED_PREFIX)
         DESIRED_DEVTOOLSET=$(DESIRED_DEVTOOLSET)
         TORCH_PACKAGE_NAME=torch.$(ROCM_BRANCH).$(JOB_GPU_TARGET)
         PYTORCH_BUILD_VERSION=$(cat $(Build.SourcesDirectory)/pytorch/version.txt | cut -da -f1)
@@ -390,6 +381,12 @@ jobs:
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
       pipModules: ${{ parameters.pipModules }}
+# pytorch tests require an updated version of click, even if requirements is not called outright
+  - task: Bash@3
+    displayName: 'pip update click'
+    inputs:
+      targetType: inline
+      script: pip install --upgrade click
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
   - task: DownloadPipelineArtifact@2
     displayName: 'Download Pipeline Wheel Files'
@@ -463,7 +460,7 @@ jobs:
         python3 -c 'import torch; x = torch.rand(5, 3); print(x)'
 # Test artifact build script has too many if statements for different environments
 # Based off the snippet of interest for this environment, with some adjustments
-# https://github.com/pytorch/pytorch/blob/main/.ci/pytorch/build.sh#L335-L375
+# https://github.com/pytorch/pytorch/blob/main/.ci/pytorch/build.sh#L330-L371
 # Removing in-line comments since it does not fit with the yaml markup
   - task: Bash@3
     displayName: Build Pytorch Test Artifacts
