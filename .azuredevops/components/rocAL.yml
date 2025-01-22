@@ -38,15 +38,15 @@ parameters:
 - name: rocmDependencies
   type: object
   default:
-    - rocm-cmake
-    - llvm-project
-    - ROCR-Runtime
-    - clr
-    - rocDecode
-    - half
-    - rpp
-    - MIVisionX
     - aomp
+    - clr
+    - half
+    - llvm-project
+    - MIVisionX
+    - rocDecode
+    - rocm-cmake
+    - ROCR-Runtime
+    - rpp
 - name: rocmTestDependencies
   type: object
   default:
@@ -55,6 +55,7 @@ parameters:
     - half
     - llvm-project
     - MIVisionX
+    - rocDecode
     - rocminfo
     - rocprofiler-register
     - ROCR-Runtime
@@ -172,7 +173,9 @@ jobs:
     value: $(Agent.BuildDirectory)/rocm
   - name: CMAKE_INCLUDE_PATH
     value: $(Agent.BuildDirectory)/rocm/include/rocal
-  pool: $(JOB_TEST_POOL)
+  pool:
+    name: $(JOB_TEST_POOL)
+    demands: firstRenderDeviceAccess
   workspace:
     clean: all
   strategy:

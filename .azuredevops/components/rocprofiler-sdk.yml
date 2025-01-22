@@ -8,11 +8,13 @@ parameters:
 - name: aptPackages
   type: object
   default:
-    - cmake
-    - python3-pip
+    - build-essential
+    - libdrm-amdgpu-dev
     - libdrm-dev
     - libdw-dev
     - libelf-dev
+    - pkg-config
+    - python3-pip
 - name: pipModules
   type: object
   default:
@@ -27,7 +29,7 @@ parameters:
     - pandas
     - perfetto
     - pycobertura
-    - pytest
+    - pytest>=6.2.5
     - pyyaml
 - name: rocmDependencies
   type: object
@@ -40,11 +42,9 @@ parameters:
     - rocminfo
     - ROCR-Runtime
     - rocprofiler-register
-    - roctracer
-    - aomp
 
 jobs:
-- job: rocprofilersdk
+- job: rocprofiler_sdk
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
@@ -60,6 +60,7 @@ jobs:
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
       pipModules: ${{ parameters.pipModules }}
+      registerRadeon: true
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/checkout.yml
     parameters:
@@ -75,9 +76,59 @@ jobs:
       extraBuildFlags: >-
         -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm
         -DROCPROFILER_BUILD_TESTS=ON
-        -DROCPROFILER_BUILD_SAMPLES=OFF
-        -DAMDGPU_TARGETS=$(JOB_GPU_TARGET)
-      multithreadFlag: -- -j2
+        -DROCPROFILER_BUILD_SAMPLES=ON
+        -DROCPROFILER_BUILD_RELEASE=ON
+        -DGPU_TARGETS=$(JOB_GPU_TARGET)
+      multithreadFlag: -- -j4
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
+    parameters:
+      gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
+    parameters:
+      gpuTarget: $(JOB_GPU_TARGET)
+
+- job: rocprofiler_sdk_testing
+  dependsOn: rocprofiler_sdk
+  condition: and(succeeded(), eq(variables.ENABLE_GFX942_TESTS, 'true'), not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])))
+  variables:
+  - group: common
+  - template: /.azuredevops/variables-global.yml
+  pool: $(JOB_TEST_POOL)
+  workspace:
+    clean: all
+  strategy:
+    matrix:
+      gfx942:
+        JOB_GPU_TARGET: gfx942
+        JOB_TEST_POOL: ${{ variables.GFX942_TEST_POOL }}
+  steps:
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      registerRadeon: true
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/checkout.yml
+    parameters:
+      checkoutRepo: ${{ parameters.checkoutRepo }}
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-aqlprofile.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
+    parameters:
+      checkoutRef: ${{ parameters.checkoutRef }}
+      dependencyList: ${{ parameters.rocmDependencies }}
+      gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
+    parameters:
+      extraBuildFlags: >-
+        -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm
+        -DROCPROFILER_BUILD_TESTS=ON
+        -DROCPROFILER_BUILD_SAMPLES=ON
+        -DROCPROFILER_BUILD_RELEASE=ON
+        -DGPU_TARGETS=$(JOB_GPU_TARGET)
+      multithreadFlag: -- -j16
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
+    parameters:
+      componentName: rocprofiler-sdk
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)

@@ -1,3 +1,5 @@
+:orphan:
+
 .. meta::
    :description: JAX compatibility
    :keywords: GPU, JAX compatibility
@@ -22,14 +24,14 @@ support:
 
   - Offers AMD-validated and community :ref:`Docker images <jax-docker-compat>` with ROCm and JAX pre-installed.
 
-  - ROCm JAX repository: `<https://github.com/ROCm/jax>`__
+  - ROCm JAX repository: `ROCm/jax <https://github.com/ROCm/jax>`_
 
   - See the :doc:`ROCm JAX installation guide <rocm-install-on-linux:install/3rd-party/jax-install>`
     to get started.
 
 - Official JAX release:
 
-  - Official JAX repository: `<https://github.com/jax-ml/jax>`__
+  - Official JAX repository: `jax-ml/jax <https://github.com/jax-ml/jax>`_
 
   - See the `AMD GPU (Linux) installation section
     <https://jax.readthedocs.io/en/latest/installation.html#amd-gpu-linux>`_ in the JAX
@@ -51,8 +53,8 @@ Docker image compatibility
 
    <i class="fab fa-docker"></i>
 
-AMD validates and publishes ready-made `JAX <https://hub.docker.com/r/rocm/jax/>`_
-images with ROCm backends on Docker Hub. The following Docker image tags and
+AMD validates and publishes ready-made `ROCm JAX Docker images <https://hub.docker.com/r/rocm/jax>`_
+with ROCm backends on Docker Hub. The following Docker image tags and
 associated inventories are validated for
 `ROCm 6.3.1 <https://repo.radeon.com/rocm/apt/6.3.1/>`_. Click the |docker-icon|
 icon to view the image on Docker Hub.
@@ -79,8 +81,8 @@ icon to view the image on Docker Hub.
       - Ubuntu 22.04
       - `3.10.14 <https://www.python.org/downloads/release/python-31014/>`_
 
-AMD publishes community `JAX <https://hub.docker.com/r/rocm/jax-community>`_
-images with ROCm backends on Docker Hub. The following Docker image tags and
+AMD publishes `Community ROCm JAX Docker images <https://hub.docker.com/r/rocm/jax-community>`_
+with ROCm backends on Docker Hub. The following Docker image tags and
 associated inventories are tested for `ROCm 6.2.4 <https://repo.radeon.com/rocm/apt/6.2.4/>`_.
 
 .. list-table:: JAX community Docker image components
@@ -148,7 +150,7 @@ performance, and feature set available to developers.
       - 3.3.0
       - Provides a C++ template library for parallel algorithms for reduction,
         scan, sort and select.
-      - Reduction functions (``jax.numpy.sum``, ``jax.numpy.mean``, 
+      - Reduction functions (``jax.numpy.sum``, ``jax.numpy.mean``,
         ``jax.numpy.prod``, ``jax.numpy.max`` and ``jax.numpy.min``), prefix sum
         (``jax.numpy.cumsum``, ``jax.numpy.cumprod``) and sorting
         (``jax.numpy.sort``, ``jax.numpy.argsort``).
@@ -166,7 +168,7 @@ performance, and feature set available to developers.
       - Provides GPU-accelerated solvers for linear systems, eigenvalues, and
         singular value decompositions (SVD).
       - Solving linear systems (``jax.numpy.linalg.solve``), matrix
-        factorizations, SVD (``jax.numpy.linalg.svd``) and eigenvalue problems 
+        factorizations, SVD (``jax.numpy.linalg.svd``) and eigenvalue problems
         (``jax.numpy.linalg.eig``).
     * - `hipSPARSE <https://github.com/ROCm/hipSPARSE>`_
       - 3.1.2
@@ -259,7 +261,7 @@ ROCm and JAX versions.
       - Provides utilities for working with and managing data types in JAX
         arrays and computations.
       - 0.1.66
-      - 5.0.0 
+      - 5.0.0
     * - ``jax.image``
       - Contains image manipulation functions like resize, scale and translation.
       - 0.1.57
@@ -317,7 +319,7 @@ ROCm and JAX versions.
       - 5.3.0
     * - ``jax_triton``
       - Library that integrates the Triton deep learning compiler with JAX.
-      - jax_triton 0.2.0 
+      - jax_triton 0.2.0
       - 6.2.4
 
 jax.scipy module

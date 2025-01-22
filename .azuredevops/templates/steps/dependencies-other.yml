@@ -6,10 +6,26 @@ parameters:
 - name: pipModules
   type: object
   default: []
+- name: registerRadeon
+  type: boolean
+  default: false
 
 steps:
+- ${{ if eq(parameters.registerRadeon, true) }}:
+  - task: Bash@3
+    displayName: 'Register repo.radeon packages'
+    inputs:
+      targetType: inline
+      script: |
+        sudo mkdir --parents --mode=0755 /etc/apt/keyrings
+        wget https://repo.radeon.com/rocm/rocm.gpg.key -O - | gpg --dearmor | sudo tee /etc/apt/keyrings/rocm.gpg > /dev/null
+        echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/amdgpu/latest/ubuntu jammy main" | sudo tee /etc/apt/sources.list.d/amdgpu.list
+        echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/rocm/apt/latest jammy main" | sudo tee --append /etc/apt/sources.list.d/rocm.list
+        echo -e 'Package: *\nPin: release o=repo.radeon.com\nPin-Priority: 600' | sudo tee /etc/apt/preferences.d/rocm-pin-600
+        sudo apt update
 # firefox takes time to upgrade and is not needed for CI workloads, hold version
 - task: Bash@3
+  continueOnError: true
   displayName: 'sudo apt-mark hold firefox'
   inputs:
     targetType: inline

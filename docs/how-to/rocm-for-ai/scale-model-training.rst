@@ -132,4 +132,4 @@ The following developer blogs showcase examples of fine-tuning a model on an AMD
 * Recipes for fine-tuning Llama2 and 3 with ``llama-recipes``
 
   * `meta-llama/llama-recipes: Scripts for fine-tuning Meta Llama3 with composable FSDP & PEFT methods to cover
-    single/multi-node GPUs <https://github.com/meta-llama/llama-recipes/tree/main/recipes/quickstart/finetuning>`_
+    single/multi-node GPUs <https://github.com/meta-llama/llama-cookbook/tree/main/getting-started/finetuning>`_

@@ -510,7 +510,7 @@ See the full [AMD SMI changelog](https://github.com/ROCm/amdsmi/blob/6.3.x/CHANG
 #### Added
 
 * SIMD_UTILIZATION metric.
-* New rdc ops metrics.
+* New <a href="https://rocm.docs.amd.com/projects/rdc/en/docs-6.3.1/index.html">ROCm Data Center (RDC)</a> ops metrics.
 
 ## ROCm known issues
 

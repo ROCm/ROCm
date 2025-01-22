@@ -158,7 +158,7 @@ Operating systems and kernel versions
 
 Use this lookup table to confirm which operating system and kernel versions are supported with ROCm.
 
-.. csv-table:: 
+.. csv-table::
    :header: "OS", "Version", "Kernel"
    :widths: 40, 20, 40
    :stub-columns: 1
@@ -169,11 +169,11 @@ Use this lookup table to confirm which operating system and kernel versions are 
    `Ubuntu <https://ubuntu.com/about/release-cycle#ubuntu-kernel-release-cycle>`_, 22.04.5, "5.15 GA, 6.8 HWE"
    , 22.04.4, "5.15 GA, 6.5 HWE"
    ,,
-   `Red Hat Enterprise Linux (RHEL) <https://access.redhat.com/articles/3078#RHEL9>`_, 9.5, 5.14.0
+   `Red Hat Enterprise Linux (RHEL 9) <https://access.redhat.com/articles/3078#RHEL9>`_, 9.5, 5.14.0
    ,9.4, 5.14.0
    ,9.3, 5.14.0
    ,,
-   `Red Hat Enterprise Linux (RHEL) <https://access.redhat.com/articles/3078#RHEL8>`_, 8.10, 4.18.0
+   `Red Hat Enterprise Linux (RHEL 8) <https://access.redhat.com/articles/3078#RHEL8>`_, 8.10, 4.18.0
    ,8.9, 4.18.0
    ,,
    `SUSE Linux Enterprise Server (SLES) <https://www.suse.com/support/kb/doc/?id=000019587#SLE15SP4>`_, 15 SP6, 6.4.0
@@ -185,9 +185,9 @@ Use this lookup table to confirm which operating system and kernel versions are 
    `Debian <https://www.debian.org/download>`_,12, 6.1
 
 ..
-   Footnotes and ref anchors in below historical tables should be appended with "-past-60", to differentiate from the 
+   Footnotes and ref anchors in below historical tables should be appended with "-past-60", to differentiate from the
    footnote references in the above, latest, compatibility matrix.  It also allows to easily find & replace.
-   An easy way to work is to download the historical.CSV file, and update open it in excel. Then when content is ready, 
+   An easy way to work is to download the historical.CSV file, and update open it in excel. Then when content is ready,
    delete the columns you don't need, to build the current compatibility matrix to use in above table.  Find & replace all
    instances of "-past-60" to make it ready for above table.
 

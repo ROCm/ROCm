@@ -467,7 +467,7 @@ description, refer to the corresponding library data type support page.
         - ❌/❌
         - ❌/❌
       *
-        - rocRAND (:doc:`details <rocrand:data-type-support>`)
+        - rocRAND (:doc:`details <rocrand:api-reference/data-type-support>`)
         - -/❌
         - -/❌
         - -/✅

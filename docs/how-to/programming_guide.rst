@@ -1,3 +1,5 @@
+:orphan:
+
 .. meta::
     :description: Programming guide
     :keywords: HIP, programming guide, heterogeneous programming, AMD GPU programming
@@ -12,7 +14,7 @@ ROCm provides a robust environment for heterogeneous programs running on CPUs
 and AMD GPUs. ROCm supports various programming languages and frameworks to
 help developers access the power of AMD GPUs. The natively supported programming
 languages are HIP (Heterogeneous-Compute Interface for Portability) and
-OpenCL, but HIP bindings are available for Python and Fortran. 
+OpenCL, but HIP bindings are available for Python and Fortran.
 
 HIP is an API based on C++ that provides a runtime and kernel language for GPU
 programming and is the essential ROCm programming language. HIP is also designed
