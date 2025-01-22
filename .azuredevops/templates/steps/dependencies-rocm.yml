@@ -399,10 +399,10 @@ steps:
         # ${{ elseif eq(parameters.checkoutRef, parameters.componentVarList[variables['Build.DefinitionName']].mainlineBranch) }}:
         #   branchName: ${{ parameters.componentVarList[dependency].mainlineBranch }}
         # SourceBranchName = staging
-        ${{ elseif eq(variables['Build.SourceBranchName'], parameters.componentVarlist[variables['Build.DefinitionName']].stagingBranch) }}:
+        ${{ elseif eq(variables['Build.SourceBranchName'], 'self-ref') }}:
           branchName: ${{ parameters.componentVarList[dependency].stagingBranch }}
         # SourceBranchName = mainline
-        ${{ elseif eq(variables['Build.SourceBranchName'], 'self-ref') }}:
+        ${{ elseif eq(variables['Build.SourceBranchName'], parameters.componentVarlist[variables['Build.DefinitionName']].mainlineBranch) }}:
           branchName: ${{ parameters.componentVarList[dependency].mainlineBranch }}
         # default = staging
         ${{ else }}:
