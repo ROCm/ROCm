@@ -100,7 +100,7 @@ parameters:
 # force the docker to be created, regardless of failure condition
 - name: forceDockerCreation
   type: boolean
-  default: true
+  default: false
 
 steps:
 # these steps should only be run if there was a failure or warning
