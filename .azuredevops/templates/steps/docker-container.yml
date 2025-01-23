@@ -331,9 +331,9 @@ steps:
     inputs:
       containerRegistry: 'ContainerService'
       ${{ if ne(parameters.gpuTarget, '') }}:
-        repository: 'rocmexternalcicd.azurecr.io/$(Build.DefinitionName)-${{ parameters.environment }}-${{ parameters.gpuTarget }}'
+        repository: '$(Build.DefinitionName)-${{ parameters.environment }}-${{ parameters.gpuTarget }}'
       ${{ else }}:
-        repository: 'rocmexternalcicd.azurecr.io/$(Build.DefinitionName)-${{ parameters.environment }}'
+        repository: '$(Build.DefinitionName)-${{ parameters.environment }}'
       Dockerfile: '$(Pipeline.Workspace)/Dockerfile'
       buildContext: '$(Pipeline.Workspace)'
   - task: Bash@3
@@ -343,6 +343,6 @@ steps:
       workingDirectory: $(Pipeline.Workspace)
       targetType: inline
       ${{ if ne(parameters.gpuTarget, '') }}:
-        script: echo "rocmexternalcicd.azurecr.io/$(Build.DefinitionName)-${{ parameters.environment }}-${{ parameters.gpuTarget }}"
+        script: echo "rocmexternalcicd.azurecr.io/$(Build.DefinitionName)-${{ parameters.environment }}-${{ parameters.gpuTarget }}:$(Build.BuildId)"
       ${{ else }}:
-        script: echo "rocmexternalcicd.azurecr.io/$(Build.DefinitionName)-${{ parameters.environment }}"
+        script: echo "rocmexternalcicd.azurecr.io/$(Build.DefinitionName)-${{ parameters.environment }}:$(Build.BuildId)"
