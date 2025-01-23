@@ -41,8 +41,7 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  pool:
-    vmImage: ${{ variables.BASE_BUILD_POOL }}
+  pool: ${{ variables.LOW_BUILD_POOL }}
   workspace:
     clean: all
   strategy:
@@ -119,6 +118,12 @@ jobs:
     retryCountOnTaskFailure: 3
     inputs:
       targetPath: $(Build.ArtifactStagingDirectory)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      gpuTarget: $(JOB_GPU_TARGET)
+      optSymLink: true
 
 - job: rocPyDecode_testing
   dependsOn: rocPyDecode
@@ -214,3 +219,11 @@ jobs:
       script: |
         pip uninstall -y rocPyDecode
         pip uninstall -y hip-python
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)
+      pythonEnvVars: true
+  # note that this docker won't have hip-python installed via pip

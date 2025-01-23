@@ -20,6 +20,7 @@ parameters:
     - libva-amdgpu-dev
     - mesa-amdgpu-va-drivers
     - libdrm-dev
+    - python3-pip
 - name: rocmDependencies
   type: object
   default:
@@ -44,8 +45,7 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  pool:
-    vmImage: ${{ variables.BASE_BUILD_POOL }}
+  pool: ${{ variables.LOW_BUILD_POOL }}
   workspace:
     clean: all
   steps:
@@ -82,6 +82,10 @@ jobs:
         -GNinja
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      registerROCmPackages: true
 
 - job: rocDecode_testing
   dependsOn: rocDecode
@@ -138,3 +142,9 @@ jobs:
       testDir: 'rocDecode-tests'
   - script: sudo rm /opt/rocm
     condition: always()
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      registerROCmPackages: true
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)

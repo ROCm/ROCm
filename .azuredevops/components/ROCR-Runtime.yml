@@ -12,6 +12,7 @@ parameters:
     - libdrm-dev
     - libelf-dev
     - libnuma-dev
+    - python3-pip
 - name: rocmDependencies
   type: object
   default:
@@ -29,8 +30,7 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  pool:
-    vmImage: ${{ variables.BASE_BUILD_POOL }}
+  pool: ${{ variables.LOW_BUILD_POOL }}
   workspace:
     clean: all
   steps:
@@ -53,6 +53,9 @@ jobs:
         -DCMAKE_BUILD_TYPE=Release
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
 
 - job: ROCR_Runtime_testing
   dependsOn: ROCR_Runtime
@@ -135,3 +138,9 @@ jobs:
       testExecutable: ./rocrtst64
       testParameters: '--gtest_filter="-rocrtstNeg.Memory_Negative_Tests:rocrtstFunc.Memory_Max_Mem" --gtest_output=xml:./test_output.xml --gtest_color=yes'
       testDir: $(Build.SourcesDirectory)/rocrtst/suites/test_common/build/$(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)
+# docker image will be missing libhwloc5

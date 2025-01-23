@@ -71,6 +71,10 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      gpuTarget: $(JOB_GPU_TARGET)
 
 - job: hipTensor_testing
   timeoutInMinutes: 90
@@ -107,3 +111,8 @@ jobs:
       componentName: hipTensor
       testDir: '$(Agent.BuildDirectory)/rocm/bin/hiptensor'
       testParameters: '-E ".*-extended" -VV --output-on-failure --force-new-ctest-process --output-junit test_output.xml'
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)

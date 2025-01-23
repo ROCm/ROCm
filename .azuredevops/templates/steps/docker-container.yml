@@ -1,0 +1,348 @@
+parameters:
+# this base set of packages should not be changed by calling script
+# should be common across all pipelines
+- name: baseAptPackages
+  type: object
+  default:
+    - build-essential
+    - ca-certificates
+    - curl
+    - file
+    - git
+    - gcc
+    - g++
+    - gpg
+    - kmod
+    - libdrm-dev
+    - libelf-dev
+    - libgtest-dev
+    - libhsakmt-dev
+    - libhwloc-dev
+    - libnuma-dev
+    - libstdc++-12-dev
+    - libtbb-dev
+    - lsb-release
+    - lsof
+    - ninja-build
+    - pkg-config
+    - python3-dev
+    - python3-pip
+    - wget
+    - zip
+# optional array of additional apt packages to install
+- name: aptPackages
+  type: object
+  default: []
+# optional array of python modules to install
+- name: pipModules
+  type: object
+  default: []
+# optional array of workspace directories to install
+# sources, binaries, and rocm directories are copied by default
+- name: extraCopyDirectories
+  type: object
+  default: []
+# optional string to specify gpuTarget for the docker image string
+- name: gpuTarget
+  type: string
+  default: ''
+# test environment involves gpu-related steps
+# some jobs combine both build and test
+# some jobs differentiate based on gpu vendor
+- name: environment
+  type: string
+  default: build
+  values:
+    - build
+    - test
+    - combined
+    - amd
+    - nvidia
+# optional boolean prerequisites before install extra apt packages
+- name: registerROCmPackages
+  type: boolean
+  default: false
+- name: registerCUDAPackages
+  type: boolean
+  default: false
+- name: registerJPEGPackages
+  type: boolean
+  default: false
+# optional boolean for special setup steps to accomodate some components
+- name: installLatestCMake
+  type: boolean
+  default: false
+- name: installAOCL
+  type: boolean
+  default: false
+- name: aoclRepositoryUrl
+  type: string
+  default: https://download.amd.com/developer/eula/aocl/aocl-4-2
+- name: aoclPackageName
+  type: string
+  default: aocl-linux-gcc-4.2.0_1_amd64.deb
+- name: optSymLink
+  type: boolean
+  default: false
+- name: pythonEnvVars
+  type: boolean
+  default: false
+# optional string to add to PATH
+- name: extraPaths
+  type: string
+  default: ''
+# optional array of environment variables to set
+# each array element expected to be in format of
+# key:value
+- name: extraEnvVars
+  type: object
+  default: []
+# force the docker to be created, regardless of failure condition
+- name: forceDockerCreation
+  type: boolean
+  default: false
+
+steps:
+# these steps should only be run if there was a failure or warning
+# dynamically write to a Dockerfile
+# first is to do base setup of users, groups
+  - task: Bash@3
+    condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+    displayName: Create start of Dockerfile
+    inputs:
+      workingDirectory: $(Pipeline.Workspace)
+      targetType: inline
+      script: |
+        echo "FROM ubuntu:22.04" > Dockerfile
+        echo "ARG USERNAME=user" >> Dockerfile
+        echo "ARG USER_UID=1000" >> Dockerfile
+        echo "ARG USER_GID=\$USER_UID" >> Dockerfile
+        echo "RUN groupadd --gid \$USER_GID \$USERNAME" >> Dockerfile
+        echo "RUN useradd --uid \$USER_UID --gid \$USER_GID -m \$USERNAME" >> Dockerfile
+        echo "RUN apt-get update" >> Dockerfile
+        echo "RUN apt-get install -y sudo" >> Dockerfile
+        echo "RUN echo \$USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/\$USERNAME" >> Dockerfile
+        echo "RUN chmod 0440 /etc/sudoers.d/\$USERNAME" >> Dockerfile
+# for test jobs, setup GPU-related users and group
+  - ${{ if eq(parameters.environment, 'test') }}:
+    - task: Bash@3
+      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      displayName: GPU setup of Dockerfile
+      inputs:
+        workingDirectory: $(Pipeline.Workspace)
+        targetType: inline
+        script: |
+          echo "RUN groupadd render" >> Dockerfile
+          echo "RUN usermod -aG render,video \$USERNAME" >> Dockerfile
+# now install a common set of packages through apt
+  - ${{ if gt(length(parameters.baseAptPackages), 0) }}:
+    - task: Bash@3
+      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      displayName: Base Apt Packages to Dockerfile
+      inputs:
+        workingDirectory: $(Pipeline.Workspace)
+        targetType: inline
+        script: echo "RUN apt-get install --yes ${{ join(' ', parameters.baseAptPackages) }}" >> Dockerfile
+# iterate through possible apt repos that might need to be added to the docker container
+  - ${{ if eq(parameters.registerROCmPackages, true) }}:
+    - task: Bash@3
+      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      displayName: Register ROCm packages to Dockerfile
+      inputs:
+        workingDirectory: $(Pipeline.Workspace)
+        targetType: inline
+        script: |
+          echo "RUN mkdir --parents --mode=0755 /etc/apt/keyrings" >> Dockerfile
+          echo "RUN wget https://repo.radeon.com/rocm/rocm.gpg.key -O - | gpg --dearmor | tee /etc/apt/keyrings/rocm.gpg > /dev/null" >> Dockerfile
+          echo "RUN echo \"deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/amdgpu/latest/ubuntu jammy main\" | tee /etc/apt/sources.list.d/amdgpu.list" >> Dockerfile
+          echo "RUN echo \"deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/rocm/apt/latest jammy main\" | tee --append /etc/apt/sources.list.d/rocm.list" >> Dockerfile
+          echo "RUN printf 'Package: *\\nPin: release o=repo.radeon.com\\nPin-Priority: 600' > /etc/apt/preferences.d/rocm-pin-600" >> Dockerfile
+          echo "RUN apt-get update" >> Dockerfile
+  - ${{ if eq(parameters.registerCUDAPackages, true) }}:
+    - task: Bash@3
+      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      displayName: Register CUDA packages to Dockerfile
+      inputs:
+        workingDirectory: $(Pipeline.Workspace)
+        targetType: inline
+        script: |
+          echo "RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb" >> Dockerfile
+          echo "RUN dpkg -i cuda-keyring_1.1-1_all.deb" >> Dockerfile
+          echo "RUN rm -f cuda-keyring_1.1-1_all.deb" >> Dockerfile
+          echo 'RUN apt-get update' >> Dockerfile
+  - ${{ if eq(parameters.registerJPEGPackages, true) }}:
+    - task: Bash@3
+      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      displayName: Register libjpeg-turbo packages to Dockerfile
+      inputs:
+        workingDirectory: $(Pipeline.Workspace)
+        targetType: inline
+        script: |
+          echo "RUN mkdir --parents --mode=0755 /etc/apt/keyrings" >> Dockerfile
+          echo "RUN wget https://packagecloud.io/dcommander/libjpeg-turbo/gpgkey -O - | gpg --dearmor | tee /etc/apt/trusted.gpg.d/libjpeg-turbo.gpg > /dev/null" >> Dockerfile
+          echo "RUN echo \"deb [signed-by=/etc/apt/trusted.gpg.d/libjpeg-turbo.gpg] https://packagecloud.io/dcommander/libjpeg-turbo/any/ any main\" | sudo tee /etc/apt/sources.list.d/libjpeg-turbo.list" >> Dockerfile
+          echo "RUN apt update" >> Dockerfile
+# install AOCL to docker container, if needed
+  - ${{ if eq(parameters.installAOCL, true) }}:
+    - task: Bash@3
+      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      displayName: aocl install to Dockerfile
+      inputs:
+        workingDirectory: $(Pipeline.Workspace)
+        targetType: inline
+        script: |
+          echo "RUN wget -nv ${{ parameters.aoclRepositoryUrl }}/${{ parameters.aoclPackageName }}" >> Dockerfile
+          echo "RUN apt install -y ./${{ parameters.aoclPackageName }}" >> Dockerfile
+          echo "RUN rm -f ${{ parameters.aoclPackageName }}" >> Dockerfile
+# since apt repo list is updated, install the extra apt packages
+  - ${{ if gt(length(parameters.aptPackages), 0) }}:
+    - task: Bash@3
+      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      displayName: Extra Apt Packages to Dockerfile
+      inputs:
+        workingDirectory: $(Pipeline.Workspace)
+        targetType: inline
+        script: echo "RUN apt-get install --yes ${{ join(' ', parameters.aptPackages) }}" >> Dockerfile
+# install latest cmake to docker container, if needed
+  - ${{ if eq(parameters.installLatestCMake, true) }}:
+    - task: Bash@3
+      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      displayName: latest cmake install to Dockerfile
+      inputs:
+        workingDirectory: $(Pipeline.Workspace)
+        targetType: inline
+        script: |
+            echo "RUN apt purge cmake -y" >> Dockerfile
+            echo "RUN pip install cmake --upgrade" >> Dockerfile
+# setup workspace where binaries, sources, and dependencies from the job will be copied to
+  - task: Bash@3
+    condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+    displayName: Workspace setup of Dockerfile
+    inputs:
+      workingDirectory: $(Pipeline.Workspace)
+      targetType: inline
+      script: |
+        echo "USER \$USERNAME" >> Dockerfile
+        echo "WORKDIR /home/user" >> Dockerfile
+        echo "RUN mkdir -p /home/user/workspace" >> Dockerfile
+# pip install is done here as non-root
+  - ${{ if gt(length(parameters.pipModules), 0) }}:
+    - task: Bash@3
+      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      displayName: Extra Python Modules to Dockerfile
+      inputs:
+        workingDirectory: $(Pipeline.Workspace)
+        targetType: inline
+        script: echo "RUN pip install -v ${{ join(' ', parameters.pipModules) }}" >> Dockerfile
+# copy common directories
+  - task: Bash@3
+    condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+    displayName: Copy base directories to Dockerfile
+    inputs:
+      workingDirectory: $(Pipeline.Workspace)
+      targetType: inline
+      script: |
+        if [ -d "$(Agent.BuildDirectory)/rocm" ]; then
+          echo "COPY rocm /home/user/workspace/rocm" >> Dockerfile
+        fi
+        if [ -d "$(Build.SourcesDirectory)" ] && [ "$(Build.SourcesDirectory)" != "" ]; then
+          echo "COPY s /home/user/workspace/src" >> Dockerfile
+        fi
+        if [ -d "$(Build.BinariesDirectory)" ] && [ "$(Build.BinariesDirectory)" != "" ]; then
+          echo "COPY b /home/user/workspace/bin" >> Dockerfile
+        fi
+# copy extra directories, if applicable to the job
+  - ${{ each extraCopyDirectory in parameters.extraCopyDirectories }}:
+    - task: Bash@3
+      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      displayName: Copy ${{ extraCopyDirectory }} to Dockerfile
+      inputs:
+        workingDirectory: $(Pipeline.Workspace)
+        targetType: inline
+        script: |
+          if [ -d "${{ extraCopyDirectory }}" ]; then
+            echo "COPY ${{ extraCopyDirectory }} /home/user/workspace/${{ extraCopyDirectory }}" >> Dockerfile
+          fi
+# setup ldconfig
+  - task: Bash@3
+    condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+    displayName: ldconfig to Dockerfile
+    inputs:
+      workingDirectory: $(Pipeline.Workspace)
+      targetType: inline
+      script: |
+        echo "USER root" >> Dockerfile
+        echo "RUN echo /home/user/workspace/rocm/lib | tee /etc/ld.so.conf.d/rocm-ci.conf" >> Dockerfile
+        echo "RUN echo /home/user/workspace/rocm/llvm/lib | tee -a /etc/ld.so.conf.d/rocm-ci.conf" >> Dockerfile
+        echo "RUN cat /etc/ld.so.conf.d/rocm-ci.conf" >> Dockerfile
+        echo "RUN ldconfig -v" >> Dockerfile
+# create /opt/rocm symbolic link, if needed
+  - ${{ if eq(parameters.optSymLink, true) }}:
+    - task: Bash@3
+      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      displayName: /opt/rocm symbolic link to Dockerfile
+      inputs:
+        workingDirectory: $(Pipeline.Workspace)
+        targetType: inline
+        script: |
+          echo "USER root" >> Dockerfile
+          echo "RUN ln -s /home/user/workspace/rocm /opt/rocm" >> Dockerfile
+# set environment variables needed for some python-based components
+  - ${{ if eq(parameters.pythonEnvVars, true) }}:
+    - task: Bash@3
+      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      displayName: python environment variables
+      inputs:
+        workingDirectory: $(Pipeline.Workspace)
+        targetType: inline
+        script: |
+          echo "USER root" >> Dockerfile
+          echo "ENV PYTHON_USER_SITE=$(python3 -m site --user-site)" >> Dockerfile
+          echo "ENV PYTHON_DIST_PACKAGES=$(python3 -c 'import sysconfig; print(sysconfig.get_paths()[\"purelib\"])')" >> Dockerfile
+          echo "ENV PYBIND11_PATH=$(python3 -c 'import pybind11; print(pybind11.get_cmake_dir())')" >> Dockerfile
+# add to PATH environment variable
+  - ${{ if ne(parameters.extraPaths, '') }}:
+    - task: Bash@3
+      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      displayName: Add to PATH in Dockerfile
+      inputs:
+        workingDirectory: $(Pipeline.Workspace)
+        targetType: inline
+        script: echo "ENV PATH='${{ parameters.extraPaths }}:\$PATH'" >> Dockerfile
+# set extra environment variables, if applicable to the job
+# use ::: as delimiter to allow for colons to be in the environment variable values
+  - ${{ each extraEnvVar in parameters.extraEnvVars }}:
+    - task: Bash@3
+      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      displayName: Set ${{ extraEnvVar }} to Dockerfile
+      inputs:
+        workingDirectory: $(Pipeline.Workspace)
+        targetType: inline
+        script: echo "ENV ${{ split(extraEnvVar, ':::')[0] }}='${{ split(extraEnvVar, ':::')[1] }}'" >> Dockerfile
+  - task: Bash@3
+    condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+    displayName: Print Dockerfile
+    inputs:
+      workingDirectory: $(Pipeline.Workspace)
+      targetType: inline
+      script: cat Dockerfile
+  - task: Docker@2
+    condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+    inputs:
+      containerRegistry: 'ContainerService'
+      ${{ if ne(parameters.gpuTarget, '') }}:
+        repository: 'rocmexternalcicd.azurecr.io/$(Build.DefinitionName)-${{ parameters.environment }}-${{ parameters.gpuTarget }}'
+      ${{ else }}:
+        repository: 'rocmexternalcicd.azurecr.io/$(Build.DefinitionName)-${{ parameters.environment }}'
+      Dockerfile: '$(Pipeline.Workspace)/Dockerfile'
+      buildContext: '$(Pipeline.Workspace)'
+  - task: Bash@3
+    condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+    displayName: Docker Image URL
+    inputs:
+      workingDirectory: $(Pipeline.Workspace)
+      targetType: inline
+      ${{ if ne(parameters.gpuTarget, '') }}:
+        script: echo "rocmexternalcicd.azurecr.io/$(Build.DefinitionName)-${{ parameters.environment }}-${{ parameters.gpuTarget }}"
+      ${{ else }}:
+        script: echo "rocmexternalcicd.azurecr.io/$(Build.DefinitionName)-${{ parameters.environment }}"

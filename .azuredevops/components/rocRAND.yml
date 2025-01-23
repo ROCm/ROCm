@@ -9,10 +9,11 @@ parameters:
   type: object
   default:
     - cmake
-    - ninja-build
+    - git
     - googletest
     - libgtest-dev
-    - git
+    - ninja-build
+    - python3-pip
 - name: rocmDependencies
   type: object
   default:
@@ -37,8 +38,7 @@ jobs:
   - template: /.azuredevops/variables-global.yml
   - name: HIP_ROCCLR_HOME
     value: $(Build.BinariesDirectory)/rocm
-  pool:
-    vmImage: ${{ variables.BASE_BUILD_POOL }}
+  pool: ${{ variables.LOW_BUILD_POOL }}
   workspace:
     clean: all
   strategy:
@@ -72,6 +72,12 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      gpuTarget: $(JOB_GPU_TARGET)
+      extraEnvVars:
+        - HIP_ROCCLR_HOME:::/home/user/workspace/rocm
 
 - job: rocRAND_testing
   dependsOn: rocRAND
@@ -106,3 +112,8 @@ jobs:
     parameters:
       componentName: rocRAND
       testDir: '$(Agent.BuildDirectory)/rocm/bin/rocRAND'
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)

@@ -66,8 +66,7 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  pool:
-    vmImage: ${{ variables.BASE_BUILD_POOL }}
+  pool: ${{ variables.LOW_BUILD_POOL }}
   workspace:
     clean: all
   strategy:
@@ -155,6 +154,14 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      registerJPEGPackages: true
+      gpuTarget: $(JOB_GPU_TARGET)
+      extraCopyDirectories:
+        - /opt/libjpeg-turbo
 
 - job: rocAL_testing
   dependsOn: rocAL
@@ -228,3 +235,13 @@ jobs:
       script: |
         sudo rm /etc/ld.so.conf.d/libjpeg-turbo.conf
         sudo ldconfig -v
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      registerJPEGPackages: true
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)
+      extraCopyDirectories:
+        - /opt/libjpeg-turbo
+# docker image will be missing the ldconfig to libjpeg-turbo

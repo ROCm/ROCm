@@ -106,3 +106,10 @@ jobs:
       targetType: inline
       script: find -name gdb.log -exec cat {} \;
       workingDirectory: $(Build.SourcesDirectory)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      environment: combined
+      gpuTarget: $(JOB_GPU_TARGET)
+      extraEnvVars:
+        - PKG_CONFIG_PATH:::/home/user/workspace/rocm/share/pkgconfig

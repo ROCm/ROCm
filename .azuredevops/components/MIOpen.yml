@@ -113,6 +113,13 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      gpuTarget: $(JOB_GPU_TARGET)
+      extraCopyDirectories:
+        - miopen-deps
 
 - job: MIOpen_testing
   timeoutInMinutes: 180
@@ -185,3 +192,11 @@ jobs:
     parameters:
       componentName: MIOpen
       testParameters: '-VV --output-on-failure --force-new-ctest-process --output-junit test_output.xml --exclude-regex test_rnn_seq_api'
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)
+      extraCopyDirectories:
+        - miopen-deps
