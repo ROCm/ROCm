@@ -11,6 +11,7 @@ parameters:
     - cmake
     - libdrm-dev
     - python3-pip
+    - pkg-config
 
 jobs:
 - job: amdsmi
