@@ -71,6 +71,13 @@ jobs:
       checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
+  - task: Bash@3
+    displayName: Add Python site-packages binaries to path
+    inputs:
+      targetType: inline
+      script: |
+        USER_BASE=$(python3 -m site --user-base)
+        echo "##vso[task.prependpath]$USER_BASE/bin"
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
       extraBuildFlags: >-
@@ -117,6 +124,13 @@ jobs:
       checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
+  - task: Bash@3
+    displayName: Add Python site-packages binaries to path
+    inputs:
+      targetType: inline
+      script: |
+        USER_BASE=$(python3 -m site --user-base)
+        echo "##vso[task.prependpath]$USER_BASE/bin"
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
       extraBuildFlags: >-
