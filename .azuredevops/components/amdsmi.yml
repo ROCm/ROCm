@@ -9,6 +9,7 @@ parameters:
   type: object
   default:
     - libdrm-dev
+    - python3-pip
 
 jobs:
 - job: amdsmi

@@ -20,6 +20,7 @@ parameters:
     - libva-amdgpu-dev
     - mesa-amdgpu-va-drivers
     - libdrm-dev
+    - python3-pip
 - name: rocmDependencies
   type: object
   default:

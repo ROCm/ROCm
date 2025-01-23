@@ -9,9 +9,10 @@ parameters:
   type: object
   default:
     - cmake
-    - ninja-build
     - doxygen
     - graphviz
+    - ninja-build
+    - python3-pip
 - name: pipModules
   type: object
   default:

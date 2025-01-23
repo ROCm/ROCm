@@ -15,6 +15,7 @@ parameters:
     - git
     - googletest
     - libgtest-dev
+    - python3-pip
 - name: rocmDependencies
   type: object
   default:

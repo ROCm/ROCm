@@ -16,6 +16,7 @@ parameters:
     - git
     - gfortran
     - libgtest-dev
+    - python3-pip
 - name: rocmDependencies
   type: object
   default:

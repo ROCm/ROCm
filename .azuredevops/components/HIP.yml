@@ -13,6 +13,7 @@ parameters:
     - ocl-icd-libopencl1
     - ocl-icd-opencl-dev
     - opencl-headers
+    - python3-pip
 - name: pipModules
   type: object
   default:

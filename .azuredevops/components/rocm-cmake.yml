@@ -11,6 +11,7 @@ parameters:
     - doxygen
     - doxygen-doc
     - ninja-build
+    - python3-pip
     - python3-sphinx
 - name: pipModules
   type: object

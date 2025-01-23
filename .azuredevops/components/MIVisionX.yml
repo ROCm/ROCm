@@ -24,6 +24,7 @@ parameters:
     - libopencv-dev
     - protobuf-compiler
     - libprotoc-dev
+    - python3-pip
 - name: pipModules
   type: object
   default:
