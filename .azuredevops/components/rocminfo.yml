@@ -9,6 +9,8 @@ parameters:
   type: object
   default:
     - cmake
+    - libdrm-amdgpu-dev
+    - libdrm-dev
     - python3-pip
 - name: rocmDependencies
   type: object
@@ -33,6 +35,7 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
+      registerRadeon: true
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/checkout.yml
     parameters:
