@@ -8,6 +8,7 @@ parameters:
 - name: aptPackages
   type: object
   default:
+    - cmake
     - libdrm-dev
     - python3-pip
 

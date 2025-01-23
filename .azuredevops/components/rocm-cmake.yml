@@ -8,6 +8,7 @@ parameters:
 - name: aptPackages
   type: object
   default:
+    - cmake
     - doxygen
     - doxygen-doc
     - ninja-build
