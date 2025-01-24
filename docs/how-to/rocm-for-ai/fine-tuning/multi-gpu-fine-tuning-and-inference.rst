@@ -1,6 +1,6 @@
 .. meta::
    :description: Model fine-tuning and inference on a multi-GPU system
-   :keywords: ROCm, LLM, fine-tuning, usage, tutorial, multi-GPU, distributed, inference
+   :keywords: ROCm, LLM, fine-tuning, usage, tutorial, multi-GPU, distributed, inference, accelerators, PyTorch, HuggingFace, torchtune
 
 *****************************************************
 Fine-tuning and inference using multiple accelerators
@@ -233,4 +233,4 @@ GPU model fine-tuning and inference with LLMs.
       INFO:torchtune.utils.logging:Learning rate scheduler is initialized.
       1|111|Loss: 1.5790324211120605:   7%|█                                          | 114/1618
 
-Read more about inference frameworks in :doc:`LLM inference frameworks <llm-inference-frameworks>`.
+Read more about inference frameworks in :doc:`LLM inference frameworks <../inference/llm-inference-frameworks>`.

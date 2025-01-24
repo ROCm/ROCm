@@ -1,6 +1,6 @@
 .. meta::
-   :description: Learn how to validate LLM inference performance on MI300X accelerators using AMD MAD and the unified
-                 ROCm Docker image.
+   :description: Learn how to validate LLM inference performance on MI300X accelerators using AMD MAD and the
+                 ROCm vLLM Docker image.
    :keywords: model, MAD, automation, dashboarding, validate
 
 ***********************************************************
@@ -385,19 +385,22 @@ Further reading
 ===============
 
 - For application performance optimization strategies for HPC and AI workloads,
-  including inference with vLLM, see :doc:`/how-to/tuning-guides/mi300x/workload`.
+  including inference with vLLM, see :doc:`../inference-optimization/workload`.
 
 - To learn more about the options for latency and throughput benchmark scripts,
   see `<https://github.com/ROCm/vllm/tree/main/benchmarks>`_.
 
 - To learn more about system settings and management practices to configure your system for
-  MI300X accelerators, see :doc:`/how-to/system-optimization/mi300x`.
+  MI300X accelerators, see :doc:`../../system-optimization/mi300x`.
 
 - To learn how to run LLM models from Hugging Face or your own model, see
-  :doc:`Using ROCm for AI </how-to/rocm-for-ai/index>`.
+  :doc:`Using ROCm for AI <../index>`.
 
 - To learn how to optimize inference on LLMs, see
-  :doc:`Fine-tuning LLMs and inference optimization </how-to/llm-fine-tuning-optimization/index>`.
+  :doc:`Inference optimization <../inference-optimization/index>`.
+
+- To learn how to fine-tune LLMs, see
+  :doc:`Fine-tuning LLMs <../fine-tuning/index>`.
 
 - To compare with the previous version of the ROCm vLLM Docker image for performance validation, refer to
   `LLM inference performance validation on AMD Instinct MI300X (ROCm 6.2.0) <https://rocm.docs.amd.com/en/docs-6.2.0/how-to/performance-validation/mi300x/vllm-benchmark.html>`_.

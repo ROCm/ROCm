@@ -1,6 +1,6 @@
 .. meta::
    :description: Model fine-tuning and inference on a single-GPU system
-   :keywords: ROCm, LLM, fine-tuning, usage, tutorial, single-GPU, LoRA, PEFT, inference
+   :keywords: ROCm, LLM, fine-tuning, usage, tutorial, single-GPU, LoRA, PEFT, inference, SFTTrainer
 
 ****************************************************
 Fine-tuning and inference using a single accelerator
@@ -80,7 +80,7 @@ Setting up the base implementation environment
 #. Install the required dependencies.
 
    bitsandbytes is a library that facilitates quantization to improve the efficiency of deep learning models. Learn more
-   about its use in :doc:`model-quantization`.
+   about its use in :doc:`../inference-optimization/model-quantization`.
 
    See the :ref:`Optimizations for model fine-tuning <fine-tuning-llms-concept-optimizations>` for a brief discussion on
    PEFT and TRL.
@@ -507,4 +507,4 @@ If using multiple accelerators, see
 popular libraries that simplify fine-tuning and inference in a multi-accelerator system.
 
 Read more about inference frameworks like vLLM and Hugging Face TGI in
-:doc:`LLM inference frameworks <llm-inference-frameworks>`.
+:doc:`LLM inference frameworks <../inference/llm-inference-frameworks>`.

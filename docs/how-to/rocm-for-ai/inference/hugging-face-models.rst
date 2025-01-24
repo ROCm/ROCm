@@ -1,5 +1,5 @@
 .. meta::
-   :description: How to use ROCm for AI
+   :description: How to run models from Hugging Face on AMD GPUs.
    :keywords: ROCm, AI, LLM, Hugging Face, Optimum, Flash Attention, GPTQ, ONNX, tutorial
 
 ********************************

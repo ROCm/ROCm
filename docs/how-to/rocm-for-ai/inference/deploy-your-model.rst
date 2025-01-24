@@ -1,5 +1,5 @@
 .. meta::
-   :description: How to use ROCm for AI
+   :description: How to deploy your model for AI inference using vLLM and Hugging Face TGI.
    :keywords: ROCm, AI, LLM, train, fine-tune, deploy, FSDP, DeepSpeed, LLaMA, tutorial
 
 ********************
@@ -119,4 +119,4 @@ TGI walkthrough
 vLLM and Hugging Face TGI are robust solutions for anyone looking to deploy LLMs for applications that demand high
 performance, low latency, and scalability.
 
-Visit the topics in :doc:`Using ROCm for AI <index>` to learn about other ROCm-aware solutions for AI development.
+Visit the topics in :doc:`Using ROCm for AI <../index>` to learn about other ROCm-aware solutions for AI development.

@@ -1,5 +1,5 @@
 .. meta::
-   :description: AMD Instinct MI300A system settings
+   :description: Learn about AMD Instinct MI300A system settings and performance tuning.
    :keywords: AMD, Instinct, MI300A, HPC, tuning, BIOS settings, NBIO, ROCm,
               environment variable, performance, accelerator, GPU, EPYC, GRUB,
               operating system

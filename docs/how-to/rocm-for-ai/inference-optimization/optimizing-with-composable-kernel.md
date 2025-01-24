@@ -1,8 +1,9 @@
-<head>
-  <meta charset="UTF-8">
-  <meta name="description" content="SmoothQuant model inference on AMD Instinct MI300X using Composable Kernel">
-  <meta name="keywords" content="Mixed Precision, Kernel, Inference, Linear Algebra">
-</head>
+---
+myst:
+  html_meta:
+    "description": "How to optimize machine learning workloads with Composable Kernel (CK)."
+    "keywords": "mixed, precision, kernel, inference, linear, algebra, ck, GEMM"
+---
 
 # Optimizing with Composable Kernel
 
@@ -32,7 +33,7 @@ The template parameters of the instance are grouped into four parameter types:
 ================
  ### Figure 2
 ================ -->
-```{figure} ../../data/how-to/llm-fine-tuning-optimization/ck-template_parameters.jpg
+```{figure} ../../../data/how-to/llm-fine-tuning-optimization/ck-template_parameters.jpg
 The template parameters of the selected GEMM kernel are classified into four groups. These template parameter groups should be defined properly before running the instance.
 ```
 
@@ -126,7 +127,7 @@ The row and column, and stride information of input matrices are also passed to 
 ================
  ### Figure 3
 ================ -->
-```{figure} ../../data/how-to/llm-fine-tuning-optimization/ck-kernel_launch.jpg
+```{figure} ../../../data/how-to/llm-fine-tuning-optimization/ck-kernel_launch.jpg
 Templated kernel launching consists of kernel instantiation, making arguments by passing in actual application parameters, creating an invoker, and running the instance through the invoker.
 ```
 
@@ -155,7 +156,7 @@ The first operation in the process is to perform the multiplication of input mat
 ================
  ### Figure 4
 ================ -->
-```{figure} ../../data/how-to/llm-fine-tuning-optimization/ck-operation_flow.jpg
+```{figure} ../../../data/how-to/llm-fine-tuning-optimization/ck-operation_flow.jpg
 Operation flow.
 ```
 
@@ -171,7 +172,7 @@ Here, we use [DeviceBatchedGemmMultiD_Xdl](https://github.com/ROCm/composable_ke
 ================
  ### Figure 5
 ================ -->
-```{figure} ../../data/how-to/llm-fine-tuning-optimization/ck-root_instance.jpg
+```{figure} ../../../data/how-to/llm-fine-tuning-optimization/ck-root_instance.jpg
 Use the ‘DeviceBatchedGemmMultiD_Xdl’ instance as a root.
 ```
 
@@ -421,7 +422,7 @@ Run `python setup.py install` to build and install the extension. It should look
 ================
  ### Figure 6
 ================ -->
-```{figure} ../../data/how-to/llm-fine-tuning-optimization/ck-compilation.jpg
+```{figure} ../../../data/how-to/llm-fine-tuning-optimization/ck-compilation.jpg
 Compilation and installation of the INT8 kernels.
 ```
 
@@ -433,7 +434,7 @@ The implementation architecture of running SmoothQuant models on MI300X GPUs is 
 ================
  ### Figure 7
 ================ -->
-```{figure} ../../data/how-to/llm-fine-tuning-optimization/ck-inference_flow.jpg
+```{figure} ../../../data/how-to/llm-fine-tuning-optimization/ck-inference_flow.jpg
 The implementation architecture of running SmoothQuant models on AMD MI300X accelerators.
 ```
 
@@ -459,7 +460,7 @@ Figure 8 shows the performance comparisons between the original FP16 and the Smo
 ================
  ### Figure 8
 ================ -->
-```{figure} ../../data/how-to/llm-fine-tuning-optimization/ck-comparisons.jpg
+```{figure} ../../../data/how-to/llm-fine-tuning-optimization/ck-comparisons.jpg
 Performance comparisons between the original FP16 and the SmoothQuant-quantized INT8 models on a single MI300X accelerator.
 ```
 

@@ -152,7 +152,7 @@ address any new bottlenecks that may emerge.
 
 ROCm provides a prebuilt optimized Docker image that has everything required to implement
 the tips in this section. It includes ROCm, vLLM, PyTorch, and tuning files in the CSV 
-format. For more information, see :doc:`/how-to/performance-validation/mi300x/vllm-benchmark`.
+format. For more information, see :doc:`../inference/vllm-benchmark`.
 
 .. _mi300x-profiling-tools:
 
@@ -173,7 +173,7 @@ tools available depending on their specific profiling needs.
   For more information, see
   :doc:`ROCm Compute Profiler documentation <rocprofiler-compute:index>`.
 
-Refer to :doc:`/how-to/llm-fine-tuning-optimization/profiling-and-debugging`
+Refer to :doc:`profiling-and-debugging`
 to explore commonly used profiling tools and their usage patterns.
 
 Once performance bottlenecks are identified, you can implement an informed workload
@@ -412,7 +412,7 @@ usage with ROCm.
 ROCm provides a prebuilt optimized Docker image for validating the performance
 of LLM inference with vLLM on the MI300X accelerator. The Docker image includes
 ROCm, vLLM, PyTorch, and tuning files in the CSV format. For more information,
-see :doc:`/how-to/performance-validation/mi300x/vllm-benchmark`.
+see :doc:`../inference/vllm-benchmark`.
 
 .. _mi300x-vllm-throughput-measurement:
 
@@ -1304,7 +1304,7 @@ performance (reduce latency) and improve benchmarking stability.
 CK provides a rich set of template parameters for generating flexible accelerated 
 computing kernels for difference application scenarios.
 
-See :doc:`/how-to/llm-fine-tuning-optimization/optimizing-with-composable-kernel`
+See :doc:`optimizing-with-composable-kernel`
 for an overview of Composable Kernel GEMM kernels, information on tunable
 parameters, and examples.
 
