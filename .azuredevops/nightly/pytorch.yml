@@ -344,11 +344,25 @@ jobs:
         sourceDir: $(Build.SourcesDirectory)/vision/dist
         contentsString: '*.whl'
         clean: false
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
+    parameters:
+      gpuTarget: $(JOB_GPU_TARGET)
   - task: PublishPipelineArtifact@1
     displayName: 'wheel file Publish'
     retryCountOnTaskFailure: 3
     inputs:
       targetPath: $(Build.BinariesDirectory)
+  - task: Bash@3
+    displayName: Save pipeline artifact file name
+    inputs:
+      workingDirectory: $(Pipeline.Workspace)
+      targetType: inline
+      script: |
+        whlFile=$(find "$(Build.BinariesDirectory)" -type f -name "*.whl" | head -n 1)
+        if [ -n "$whlFile" ]; then
+          echo $(basename "$whlFile") >> pipelineArtifacts.txt
+        fi
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
 
 - job: pytorch_testing
   dependsOn: pytorch

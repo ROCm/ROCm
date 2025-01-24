@@ -84,6 +84,7 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
       artifactName: amd
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
@@ -137,6 +138,7 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
       artifactName: nvidia
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}

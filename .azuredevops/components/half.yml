@@ -58,6 +58,7 @@ jobs:
         make test03
         ./bin/test
       workingDirectory: $(Build.SourcesDirectory)/test
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}

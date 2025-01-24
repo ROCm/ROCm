@@ -127,6 +127,15 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      gpuTarget: $(JOB_GPU_TARGET)
+      registerROCmPackages: true
+      optSymLink: true
+      extraPaths: /home/user/workspace/rocm/bin:/home/user/workspace/rocm/llvm/bin
 
 - job: rocprofiler_systems_testing
   dependsOn: rocprofiler_systems
@@ -227,7 +236,8 @@ jobs:
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
       pipModules: ${{ parameters.pipModules }}
-      environment: combined
+      environment: test
+      registerROCmPackages: true
       gpuTarget: $(JOB_GPU_TARGET)
       optSymLink: true
       extraPaths: /home/user/workspace/rocm/bin:/home/user/workspace/rocm/llvm/bin

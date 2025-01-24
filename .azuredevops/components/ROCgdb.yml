@@ -92,6 +92,7 @@ jobs:
         sudo rm -rf /opt/rocm
         sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
         echo "##vso[task.prependpath]/opt/rocm/bin"
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
   - task: Bash@3
     displayName: check-gdb

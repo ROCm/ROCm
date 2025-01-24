@@ -88,7 +88,7 @@ jobs:
         -DROCM_PATH=$(Agent.BuildDirectory)/rocm
         -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm;$(PYTHON_USER_SITE)/pybind11;$(PYTHON_DIST_PACKAGES)/pybind11;$(PYBIND11_PATH)
         -DCMAKE_BUILD_TYPE=Release
-        -DAMDGPU_TARGETS=$(JOB_GPU_TARGET)
+        -DGPU_TARGETS=$(JOB_GPU_TARGET)
         -DCMAKE_INSTALL_PREFIX_PYTHON=$(Build.BinariesDirectory)
         -GNinja
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
@@ -118,6 +118,17 @@ jobs:
     retryCountOnTaskFailure: 3
     inputs:
       targetPath: $(Build.ArtifactStagingDirectory)
+  - task: Bash@3
+    displayName: Save pipeline artifact file names
+    inputs:
+      workingDirectory: $(Pipeline.Workspace)
+      targetType: inline
+      script: |
+        whlFile=$(find "$(Build.ArtifactStagingDirectory)" -type f -name "*.whl" | head -n 1)
+        if [ -n "$whlFile" ]; then
+          echo $(basename "$whlFile") >> pipelineArtifacts.txt
+        fi
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
@@ -203,7 +214,7 @@ jobs:
         -DROCM_PATH=$(Agent.BuildDirectory)/rocm
         -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm;$(PYTHON_USER_SITE)/pybind11;$(PYTHON_DIST_PACKAGES)/pybind11;$(PYBIND11_PATH)
         -DCMAKE_BUILD_TYPE=Release
-        -DAMDGPU_TARGETS=$(JOB_GPU_TARGET)
+        -DGPU_TARGETS=$(JOB_GPU_TARGET)
         ..
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml

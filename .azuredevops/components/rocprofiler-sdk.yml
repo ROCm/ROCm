@@ -93,6 +93,12 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      gpuTarget: $(JOB_GPU_TARGET)
 
 - job: rocprofiler_sdk_testing
   dependsOn: rocprofiler_sdk
@@ -143,14 +149,9 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
     parameters:
       componentName: rocprofiler-sdk
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
-    parameters:
-      gpuTarget: $(JOB_GPU_TARGET)
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
-    parameters:
-      gpuTarget: $(JOB_GPU_TARGET)
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
       pipModules: ${{ parameters.pipModules }}
+      environment: test
       gpuTarget: $(JOB_GPU_TARGET)

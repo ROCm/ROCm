@@ -106,6 +106,7 @@ jobs:
       testExecutable: make
       testParameters: test-hipify
       testPublishResults: false
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}

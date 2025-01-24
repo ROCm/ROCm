@@ -338,7 +338,7 @@ steps:
       buildContext: '$(Pipeline.Workspace)'
   - task: Bash@3
     condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
-    displayName: Docker Image URL
+    displayName: "!! Docker Image URL !!"
     inputs:
       workingDirectory: $(Pipeline.Workspace)
       targetType: inline

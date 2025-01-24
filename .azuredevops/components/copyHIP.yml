@@ -31,3 +31,4 @@ jobs:
       sourceDir: $(Agent.BuildDirectory)/rocm
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml

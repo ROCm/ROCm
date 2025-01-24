@@ -35,6 +35,7 @@ jobs:
         -DBUILD_TESTS=ON
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}

@@ -75,6 +75,7 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}

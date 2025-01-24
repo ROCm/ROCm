@@ -1,0 +1,32 @@
+# Every publish artifact call should be coupled with a script that
+# prints out the artifact name to a common text file
+# This template parses that text file line by line and prints out the download URL
+# for each artifact, so that they are easily accessible to the public
+# replace trailing '=' with their count in the encoded string
+steps:
+- task: Bash@3
+  displayName: "!! Download Links !!"
+  condition: always()
+  continueOnError: true
+  inputs:
+    workingDirectory: $(Pipeline.Workspace)
+    targetType: inline
+    script: |
+      URL_BEGIN="https://artprodcus3.artifacts.visualstudio.com/"
+      URL_MIDDLE="/_apis/artifact/"
+      URL_END="/content?format=file&subPath=%2F"
+      FORMATTED_JOB_NAME=$(echo $(Agent.JobName) | sed 's/ /./g; s/[-_]//g')
+      ARTIFACT_STRING="pipelineartifact://ROCm-CI/projectId/$(DOWNLOAD_PROJECT_ID)/buildId/$(Build.BuildId)/artifactName/${FORMATTED_JOB_NAME}"
+      ENCODED_STRING=$(echo -n "${ARTIFACT_STRING}" | base64 -w 0)
+      PADDING_COUNT=$(echo -n "${ENCODED_STRING}" | awk -F= '{print NF-1}')
+      if [ "$PADDING_COUNT" -gt 0 ]; then
+        FINAL_ENCODED_STRING=$(echo -n "${ENCODED_STRING}" | sed "s/=*$/${PADDING_COUNT}/")
+      else
+        FINAL_ENCODED_STRING="${ENCODED_STRING}0"
+      fi
+      while IFS= read -r fileName; do
+        echo "File Name:"
+        echo "$fileName"
+        printf "Download Link:\n%s%s/%s%s%s%s%s\n\n" "${URL_BEGIN}" "${DOWNLOAD_ORGANIZATION_ID}" "${DOWNLOAD_PROJECT_ID}" "${URL_MIDDLE}" "${FINAL_ENCODED_STRING}" "${URL_END}" "${fileName}"
+      done < pipelineArtifacts.txt
+      rm pipelineArtifacts.txt

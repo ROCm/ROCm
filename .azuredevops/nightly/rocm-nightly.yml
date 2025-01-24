@@ -130,3 +130,10 @@ jobs:
     retryCountOnTaskFailure: 3
     inputs:
       targetPath: '$(Build.ArtifactStagingDirectory)'
+  - task: Bash@3
+    displayName: Save pipeline artifact file name
+    inputs:
+      workingDirectory: $(Pipeline.Workspace)
+      targetType: inline
+      script: echo "$(Build.DefinitionName)_$(Build.BuildNumber)_ubuntu2204_$(JOB_GPU_TARGET).tar.gz" >> pipelineArtifacts.txt
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml

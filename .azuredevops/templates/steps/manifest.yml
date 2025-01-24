@@ -138,3 +138,13 @@ steps:
   inputs:
     tabName: Manifest
     reportDir: $(Build.ArtifactStagingDirectory)/manifest_$(Build.DefinitionName)_$(Build.SourceBranchName)_$(Build.BuildId)_$(Build.BuildNumber)_ubuntu2204_${{ parameters.artifactName }}_${{ parameters.gpuTarget }}.html
+- task: Bash@3
+  displayName: Save manifest artifact file name
+  condition: always()
+  continueOnError: true
+  inputs:
+    workingDirectory: $(Pipeline.Workspace)
+    targetType: inline
+    script: |
+      echo "manifest_$(Build.DefinitionName)_$(Build.SourceBranchName)_$(Build.BuildId)_$(Build.BuildNumber)_ubuntu2204_${{ parameters.artifactName }}_${{ parameters.gpuTarget }}.html" >> pipelineArtifacts.txt
+      echo "manifest_$(Build.DefinitionName)_$(Build.SourceBranchName)_$(Build.BuildId)_$(Build.BuildNumber)_ubuntu2204_${{ parameters.artifactName }}_${{ parameters.gpuTarget }}.json" >> pipelineArtifacts.txt
