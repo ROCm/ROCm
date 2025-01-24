@@ -1,12 +1,12 @@
 .. meta::
-   :description: How to fine-tune LLMs with ROCm
-   :keywords: ROCm, LLM, fine-tuning, usage, tutorial, profiling, debugging, performance, Triton
+   :description: How to use ROCm profiling and debugging tools.
+   :keywords: ROCm, LLM, fine-tuning, usage, MI300X, tutorial, profiling, debugging, performance, Triton
 
 ***********************
 Profiling and debugging
 ***********************
 
-This section provides an index for further documentation on  profiling and
+This section provides an index for further documentation on profiling and
 debugging tools and their common usage patterns.
 
 See :ref:`AMD Instinct MI300X™ workload optimization <mi300x-profiling-start>`

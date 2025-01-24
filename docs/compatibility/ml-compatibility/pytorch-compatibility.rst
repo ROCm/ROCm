@@ -896,21 +896,21 @@ The following are GPU-accelerated PyTorch features not currently supported by RO
 Use cases and recommendations
 ================================================================================
 
-* :doc:`Using ROCm for AI: training a model </how-to/rocm-for-ai/train-a-model>` provides
+* :doc:`Using ROCm for AI: training a model </how-to/rocm-for-ai/training/train-a-model>` provides
   guidance on how to leverage the ROCm platform for training AI models. It covers the steps, tools, and best practices
   for optimizing training workflows on AMD GPUs using PyTorch features.
 
-* :doc:`Single-GPU fine-tuning and inference </how-to/llm-fine-tuning-optimization/single-gpu-fine-tuning-and-inference>`
+* :doc:`Single-GPU fine-tuning and inference </how-to/rocm-for-ai/fine-tuning/single-gpu-fine-tuning-and-inference>`
   describes and demonstrates how to use the ROCm platform for the fine-tuning and inference of
   machine learning models, particularly large language models (LLMs), on systems with a single AMD
   Instinct MI300X accelerator. This page provides a detailed guide for setting up, optimizing, and
   executing fine-tuning and inference workflows in such environments.
 
-* :doc:`Multi-GPU fine-tuning and inference optimization </how-to/llm-fine-tuning-optimization/multi-gpu-fine-tuning-and-inference>`
+* :doc:`Multi-GPU fine-tuning and inference optimization </how-to/rocm-for-ai/fine-tuning/multi-gpu-fine-tuning-and-inference>`
   describes and demonstrates the fine-tuning and inference of machine learning models on systems
   with multi MI300X accelerators.
 
-* The :doc:`Instinct MI300X workload optimization guide </how-to/tuning-guides/mi300x/workload>` provides detailed
+* The :doc:`Instinct MI300X workload optimization guide </how-to/rocm-for-ai/inference-optimization/workload>` provides detailed
   guidance on optimizing workloads for the AMD Instinct MI300X accelerator using ROCm. This guide is aimed at helping
   users achieve optimal performance for deep learning and other high-performance computing tasks on the MI300X
   accelerator.

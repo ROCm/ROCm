@@ -105,7 +105,7 @@ Fine-tuning your model
 ROCm supports multiple techniques for :ref:`optimizing fine-tuning <fine-tuning-llms-concept-optimizations>`, for
 example, LoRA, QLoRA, PEFT, and FSDP.
 
-Learn more about challenges and solutions for model fine-tuning in :doc:`../llm-fine-tuning-optimization/index`.
+Learn more about challenges and solutions for model fine-tuning in :doc:`../fine-tuning/index`.
 
 The following developer blogs showcase examples of fine-tuning a model on an AMD accelerator or GPU.
 

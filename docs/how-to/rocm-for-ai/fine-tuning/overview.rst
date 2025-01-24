@@ -1,6 +1,6 @@
 .. meta::
-   :description: How to fine-tune LLMs with ROCm
-   :keywords: ROCm, LLM, fine-tuning, usage, tutorial, optimzation, LoRA, walkthrough
+   :description: Conceptual overview of fine-tuning LLMs
+   :keywords: ROCm, LLM, Llama, fine-tuning, usage, tutorial, optimzation, LoRA, walkthrough, PEFT, Reinforcement
 
 ***************************************
 Conceptual overview of fine-tuning LLMs
@@ -41,7 +41,7 @@ The weight update is as follows: :math:`W_{updated} = W + ΔW`.
 If the weight matrix :math:`W` contains 7B parameters, then the weight update matrix :math:`ΔW` should also
 contain 7B parameters. Therefore, the :math:`ΔW` calculation is computationally and memory intensive.
 
-.. figure:: ../../data/how-to/llm-fine-tuning-optimization/weight-update.png
+.. figure:: ../../../data/how-to/llm-fine-tuning-optimization/weight-update.png
    :alt: Weight update diagram
 
    (a) Weight update in regular fine-tuning. (b) Weight update in LoRA where the product of matrix A (:math:`M\times K`)

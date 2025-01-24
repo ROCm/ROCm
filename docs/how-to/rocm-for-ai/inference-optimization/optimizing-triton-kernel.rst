@@ -1,6 +1,6 @@
 .. meta::
-   :description: How to fine-tune LLMs with ROCm
-   :keywords: ROCm, LLM, fine-tuning, usage, tutorial, Triton, kernel, performance, optimization
+   :description: How to optimize Triton kernels for ROCm.
+   :keywords: ROCm, LLM, fine-tuning, usage, MI300X, tutorial, Triton, kernel, performance, optimization
 
 *************************
 Optimizing Triton kernels
@@ -13,7 +13,7 @@ and CUDA kernel optimization.
 
 Refer to the
 :ref:`Triton kernel performance optimization <mi300x-triton-kernel-performance-optimization>`
-section of the :doc:`/how-to/tuning-guides/mi300x/workload` guide
+section of the :doc:`workload` guide
 for detailed information.
 
 Triton kernel performance optimization includes the following topics.

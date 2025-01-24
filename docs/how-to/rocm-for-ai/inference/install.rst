@@ -1,5 +1,5 @@
 .. meta::
-   :description: How to use ROCm for AI
+   :description: How to install ROCm and popular machine learning frameworks.
    :keywords: ROCm, AI, LLM, train, fine-tune, FSDP, DeepSpeed, LLaMA, tutorial
 
 .. _rocm-for-ai-install:
@@ -59,4 +59,4 @@ images with the framework pre-installed.
 
 * :doc:`JAX for ROCm <rocm-install-on-linux:install/3rd-party/jax-install>`
 
-The sections that follow in :doc:`Training a model <train-a-model>` are geared for a ROCm with PyTorch installation.
+The sections that follow in :doc:`Training a model <../training/train-a-model>` are geared for a ROCm with PyTorch installation.

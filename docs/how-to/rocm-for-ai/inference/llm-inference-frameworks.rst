@@ -1,5 +1,5 @@
 .. meta::
-   :description: How to fine-tune LLMs with ROCm
+   :description: How to implement the LLM inference frameworks with ROCm acceleration.
    :keywords: ROCm, LLM, fine-tuning, usage, tutorial, inference, vLLM, TGI, text generation inference
 
 ************************
@@ -8,8 +8,8 @@ LLM inference frameworks
 
 This section discusses how to implement `vLLM <https://docs.vllm.ai/en/latest>`_ and `Hugging Face TGI
 <https://huggingface.co/docs/text-generation-inference/en/index>`_ using
-:doc:`single-accelerator <single-gpu-fine-tuning-and-inference>` and
-:doc:`multi-accelerator <multi-gpu-fine-tuning-and-inference>` systems.
+:doc:`single-accelerator <../fine-tuning/single-gpu-fine-tuning-and-inference>` and
+:doc:`multi-accelerator <../fine-tuning/multi-gpu-fine-tuning-and-inference>` systems.
 
 .. _fine-tuning-llms-vllm:
 
@@ -68,7 +68,7 @@ Installing vLLM
 
          The following log message is displayed in your command line indicates that the server is listening for requests.
 
-         .. image:: ../../data/how-to/llm-fine-tuning-optimization/vllm-single-gpu-log.png
+         .. image:: ../../../data/how-to/llm-fine-tuning-optimization/vllm-single-gpu-log.png
             :alt: vLLM API server log message
             :align: center
 
@@ -141,7 +141,7 @@ Installing vLLM
 
    ROCm provides a prebuilt optimized Docker image for validating the performance of LLM inference with vLLM
    on the MI300X accelerator. The Docker image includes ROCm, vLLM, PyTorch, and tuning files in CSV
-   format. For more information, see :doc:`/how-to/performance-validation/mi300x/vllm-benchmark`.
+   format. For more information, see :doc:`vllm-benchmark`.
 
 .. _fine-tuning-llms-tgi:
 

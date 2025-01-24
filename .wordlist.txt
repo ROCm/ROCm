@@ -582,6 +582,7 @@ gRPC
 galb
 gcc
 gdb
+gemm
 gfortran
 gfx
 githooks
@@ -646,6 +647,7 @@ len
 libfabric
 libjpeg
 libs
+linalg
 linearized
 linter
 linux
@@ -718,6 +720,7 @@ quantile
 quantizer
 quasirandom
 queueing
+radeon
 rccl
 rdc
 rdma

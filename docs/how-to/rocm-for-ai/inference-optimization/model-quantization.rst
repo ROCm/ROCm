@@ -1,5 +1,5 @@
 .. meta::
-   :description: How to fine-tune LLMs with ROCm
+   :description: How to use model quantization techniques to speed up inference.
    :keywords: ROCm, LLM, fine-tuning, usage, tutorial, quantization, GPTQ, transformers, bitsandbytes
 
 *****************************
