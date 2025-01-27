@@ -83,6 +83,7 @@ jobs:
       aptPackages: ${{ parameters.aptPackages }}
       gpuTarget: $(JOB_GPU_TARGET)
       registerROCmPackages: true
+      forceDockerCreation: true
 
 - job: rocJPEG_testing
   dependsOn: rocJPEG
@@ -146,3 +147,4 @@ jobs:
       gpuTarget: $(JOB_GPU_TARGET)
       registerROCmPackages: true
       optSymLink: true
+      forceDockerCreation: true
