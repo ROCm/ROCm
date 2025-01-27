@@ -82,6 +82,7 @@ jobs:
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
       gpuTarget: $(JOB_GPU_TARGET)
+      registerROCmPackages: true
 
 - job: rocJPEG_testing
   dependsOn: rocJPEG
@@ -143,4 +144,5 @@ jobs:
       aptPackages: ${{ parameters.aptPackages }}
       environment: test
       gpuTarget: $(JOB_GPU_TARGET)
+      registerROCmPackages: true
       optSymLink: true

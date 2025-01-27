@@ -21,17 +21,18 @@ parameters:
 - name: rocmDependencies
   type: object
   default:
-    - rocm-cmake
-    - llvm-project
-    - ROCR-Runtime
-    - clr
-    - rocminfo
-    - rocm_smi_lib
-    - rocprofiler-register
-    - rocm-core
-    - HIPIFY
     - aomp
     - aomp-extras
+    - clr
+    - HIPIFY
+    - llvm-project
+    - rocm-cmake
+    - rocm-core
+    - rocm_smi_lib
+    - rocminfo
+    - rocprofiler-register
+    - ROCR-Runtime
+    - roctracer
 - name: rocmTestDependencies
   type: object
   default:
@@ -46,6 +47,7 @@ parameters:
     - rocminfo
     - rocprofiler-register
     - ROCR-Runtime
+    - roctracer
 
 jobs:
 - job: rccl
