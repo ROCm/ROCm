@@ -105,6 +105,7 @@ jobs:
       extraEnvVars:
         - HIP_ROCCLR_HOME:::/home/user/workspace/rocm
       installLatestCMake: true
+      forceDockerCreation: true
 
 - job: rccl_testing
   timeoutInMinutes: 120
@@ -147,3 +148,4 @@ jobs:
       aptPackages: ${{ parameters.aptPackages }}
       environment: test
       gpuTarget: $(JOB_GPU_TARGET)
+      forceDockerCreation: true
