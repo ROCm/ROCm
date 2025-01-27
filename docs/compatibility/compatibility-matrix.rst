@@ -31,8 +31,8 @@ compatibility and system requirements.
       ,"RHEL 9.5, 9.4","RHEL 9.5, 9.4","RHEL 9.4, 9.3"
       ,RHEL 8.10,RHEL 8.10,"RHEL 8.10, 8.9"
       ,"SLES 15 SP6, SP5","SLES 15 SP6, SP5","SLES 15 SP6, SP5"
-      ,Oracle Linux 8.10 [#mi300x]_,Oracle Linux 8.10 [#mi300x]_,Oracle Linux 8.9 [#mi300x]_
-      ,Debian 12 [#mi300x]_,,
+      ,Oracle Linux 8.10 [#mi300x]__,Oracle Linux 8.10 [#mi300x]__,Oracle Linux 8.9 [#mi300x]__
+      ,Debian 12 [#mi300x]__,,
       ,.. _architecture-support-compatibility-matrix:,,
       :doc:`Architecture <rocm-install-on-linux:reference/system-requirements>`,CDNA3,CDNA3,CDNA3
       ,CDNA2,CDNA2,CDNA2
