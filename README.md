@@ -50,7 +50,7 @@ The following example shows how to use the repo tool to download the ROCm source
 ```bash
 mkdir -p ~/ROCm/
 cd ~/ROCm/
-export ROCM_VERSION=6.3.1
+export ROCM_VERSION=6.3.2
 ~/bin/repo init -u http://github.com/ROCm/ROCm.git -b roc-6.3.x -m tools/rocm-build/rocm-${ROCM_VERSION}.xml
 ~/bin/repo sync
 ```
@@ -77,7 +77,7 @@ The Build time will reduce significantly if we limit the GPU Architecture/s agai
 
 mkdir -p ~/WORKSPACE/      # Or any folder name other than WORKSPACE
 cd ~/WORKSPACE/
-export ROCM_VERSION=6.3.1
+export ROCM_VERSION=6.3.2
 ~/bin/repo init -u http://github.com/ROCm/ROCm.git -b develop -m tools/rocm-build/rocm-${ROCM_VERSION}.xml
 ~/bin/repo sync
 
