@@ -30,15 +30,16 @@ if os.environ.get("READTHEDOCS", "") == "True":
 project = "ROCm Documentation"
 author = "Advanced Micro Devices, Inc."
 copyright = "Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved."
-version = "6.3.1"
-release = "6.3.1"
+version = "6.3.2"
+release = "6.3.2"
 setting_all_article_info = True
 all_article_info_os = ["linux", "windows"]
 all_article_info_author = ""
 
 # pages with specific settings
 article_pages = [
-    {"file": "about/release-notes", "os": ["linux", "windows"], "date": "2024-12-20"},
+    {"file": "about/release-notes", "os": ["linux"], "date": "2025-01-27"},
+    {"file": "compatibility/compatibility-matrix", "os": ["linux"]},
     {"file": "compatibility/ml-compatibility/pytorch-compatibility", "os": ["linux"]},
     {"file": "compatibility/ml-compatibility/tensorflow-compatibility", "os": ["linux"]},
     {"file": "compatibility/ml-compatibility/jax-compatibility", "os": ["linux"]},
