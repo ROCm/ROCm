@@ -15,44 +15,17 @@ a prebuilt, optimized environment designed for validating large language model
 ROCm vLLM Docker image integrates vLLM and PyTorch tailored specifically for the
 MI300X accelerator and includes the following components:
 
-* `ROCm 6.2.1 <https://github.com/ROCm/ROCm>`_
+* `ROCm 6.3.1 <https://github.com/ROCm/ROCm>`_
 
-* `vLLM 0.6.4 <https://docs.vllm.ai/en/latest>`_
+* `vLLM 0.6.6 <https://docs.vllm.ai/en/latest>`_
 
-* `PyTorch 2.5.0 <https://github.com/pytorch/pytorch>`_
-
-* Tuning files (in CSV format)
+* `PyTorch 2.7.0 (2.7.0a0+git3a58512) <https://github.com/pytorch/pytorch>`_
 
 With this Docker image, you can quickly validate the expected inference
 performance numbers on the MI300X accelerator. This topic also provides tips on
-optimizing performance with popular AI models.
-
-.. hlist::
-   :columns: 6
-
-   * Llama 3.1 8B
-
-   * Llama 3.1 70B
-
-   * Llama 3.1 405B
-
-   * Llama 2 7B
-
-   * Llama 2 70B
-
-   * Mixtral 8x7B
-
-   * Mixtral 8x22B
-
-   * Mixtral 7B
-
-   * Qwen2 7B
-
-   * Qwen2 72B
-
-   * JAIS 13B
-
-   * JAIS 30B
+optimizing performance with popular AI models. See the lists of
+:ref:`available models for MAD-integrated benchmarking <vllm-benchmark-mad-models>`
+and :ref:`standalone benchmarking <vllm-benchmark-standalone-options>`.
 
 .. _vllm-benchmark-vllm:
 
@@ -91,7 +64,7 @@ MI300X accelerator with the prebuilt vLLM Docker image.
 
    .. code-block:: shell
 
-      docker pull rocm/vllm:rocm6.2_mi300_ubuntu20.04_py3.9_vllm_0.6.4
+      docker pull rocm/vllm:rocm6.3.1_mi300_ubuntu22.04_py3.12_vllm_0.6.6
 
 Once setup is complete, you can choose between two options to reproduce the
 benchmark results:
@@ -130,45 +103,89 @@ Although the following models are preconfigured to collect latency and
 throughput performance data, you can also change the benchmarking parameters.
 Refer to the :ref:`Standalone benchmarking <vllm-benchmark-standalone>` section.
 
+.. _vllm-benchmark-mad-models:
+
 Available models
 ----------------
 
-.. hlist::
-   :columns: 3
+.. list-table::
+   :header-rows: 1
+   :widths: 2, 3
 
-   * ``pyt_vllm_llama-3.1-8b``
+   * - Model name
+     - Tag
 
-   * ``pyt_vllm_llama-3.1-70b``
+   * - `Llama 3.1 8B <https://huggingface.co/meta-llama/Llama-3.1-8B>`_
+     - ``pyt_vllm_llama-3.1-8b``
 
-   * ``pyt_vllm_llama-3.1-405b``
+   * - `Llama 3.1 70B <https://huggingface.co/meta-llama/Llama-3.1-70B-Instruct>`_
+     - ``pyt_vllm_llama-3.1-70b``
 
-   * ``pyt_vllm_llama-2-7b``
+   * - `Llama 3.1 405B <https://huggingface.co/meta-llama/Llama-3.1-405B-Instruct>`_
+     - ``pyt_vllm_llama-3.1-405b``
 
-   * ``pyt_vllm_llama-2-70b``
+   * - `Llama 3.2 11B Vision <https://huggingface.co/meta-llama/Llama-3.2-11B-Vision-Instruct>`_
+     - ``pyt_vllm_llama-3.2-11b-vision-instruct``
 
-   * ``pyt_vllm_mixtral-8x7b``
+   * - `Llama 2 7B <https://huggingface.co/meta-llama/Llama-2-7b-chat-hf>`_
+     - ``pyt_vllm_llama-2-7b``
 
-   * ``pyt_vllm_mixtral-8x22b``
+   * - `Llama 2 70B <https://huggingface.co/meta-llama/Llama-2-70b-chat-hf>`_
+     - ``pyt_vllm_llama-2-70b``
 
-   * ``pyt_vllm_mistral-7b``
+   * - `Mixtral MoE 8x7B <https://huggingface.co/mistralai/Mixtral-8x7B-Instruct-v0.1>`_
+     - ``pyt_vllm_mixtral-8x7b``
 
-   * ``pyt_vllm_qwen2-7b``
+   * - `Mixtral MoE 8x22B <https://huggingface.co/mistralai/Mixtral-8x22B-Instruct-v0.1>`_
+     - ``pyt_vllm_mixtral-8x22b``
 
-   * ``pyt_vllm_qwen2-72b``
+   * - `Mistral 7B <https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3>`_
+     - ``pyt_vllm_mistral-7b``
 
-   * ``pyt_vllm_jais-13b``
+   * - `Qwen2 7B <https://huggingface.co/Qwen/Qwen2-7B-Instruct>`_
+     - ``pyt_vllm_qwen2-7b``
 
-   * ``pyt_vllm_jais-30b``
+   * - `Qwen2 72B <https://huggingface.co/Qwen/Qwen2-72B-Instruct>`_
+     - ``pyt_vllm_qwen2-72b``
 
-   * ``pyt_vllm_llama-3.1-8b_fp8``
+   * - `JAIS 13B <https://huggingface.co/core42/jais-13b-chat>`_
+     - ``pyt_vllm_jais-13b``
 
-   * ``pyt_vllm_llama-3.1-70b_fp8``
+   * - `JAIS 30B <https://huggingface.co/core42/jais-30b-chat-v3>`_
+     - ``pyt_vllm_jais-30b``
 
-   * ``pyt_vllm_llama-3.1-405b_fp8``
+   * - `DBRX Instruct <https://huggingface.co/databricks/dbrx-instruct>`_
+     - ``pyt_vllm_dbrx-instruct``
 
-   * ``pyt_vllm_mixtral-8x7b_fp8``
+   * - `Gemma 2 27B <https://huggingface.co/google/gemma-2-27b>`_
+     - ``pyt_vllm_gemma-2-27b``
 
-   * ``pyt_vllm_mixtral-8x22b_fp8``
+   * - `C4AI Command R+ 08-2024 <https://huggingface.co/CohereForAI/c4ai-command-r-plus-08-2024>`_
+     - ``pyt_vllm_c4ai-command-r-plus-08-2024``
+
+   * - `DeepSeek MoE 16B <https://huggingface.co/deepseek-ai/deepseek-moe-16b-chat>`_
+     - ``pyt_vllm_deepseek-moe-16b-chat``
+
+   * - `Llama 3.1 70B FP8 <https://huggingface.co/amd/Llama-3.1-70B-Instruct-FP8-KV>`_
+     - ``pyt_vllm_llama-3.1-70b_fp8``
+
+   * - `Llama 3.1 405B FP8 <https://huggingface.co/amd/Llama-3.1-405B-Instruct-FP8-KV>`_
+     - ``pyt_vllm_llama-3.1-405b_fp8``
+
+   * - `Mixtral MoE 8x7B FP8 <https://huggingface.co/amd/Mixtral-8x7B-Instruct-v0.1-FP8-KV>`_
+     - ``pyt_vllm_mixtral-8x7b_fp8``
+
+   * - `Mixtral MoE 8x22B FP8 <https://huggingface.co/amd/Mixtral-8x22B-Instruct-v0.1-FP8-KV>`_
+     - ``pyt_vllm_mixtral-8x22b_fp8``
+
+   * - `Mistral 7B FP8 <https://huggingface.co/amd/Mistral-7B-v0.1-FP8-KV>`_
+     - ``pyt_vllm_mistral-7b_fp8``
+
+   * - `DBRX Instruct FP8 <https://huggingface.co/amd/dbrx-instruct-FP8-KV>`_
+     - ``pyt_vllm_dbrx_fp8``
+
+   * - `C4AI Command R+ 08-2024 FP8 <https://huggingface.co/amd/c4ai-command-r-plus-FP8-KV>`_
+     - ``pyt_vllm_command-r-plus_fp8``
 
 .. _vllm-benchmark-standalone:
 
@@ -181,8 +198,8 @@ snippet.
 
 .. code-block::
 
-   docker pull rocm/vllm:rocm6.2_mi300_ubuntu20.04_py3.9_vllm_0.6.4
-   docker run -it --device=/dev/kfd --device=/dev/dri --group-add video --shm-size 128G --security-opt seccomp=unconfined --security-opt apparmor=unconfined --cap-add=SYS_PTRACE -v $(pwd):/workspace --env HUGGINGFACE_HUB_CACHE=/workspace --name vllm_v0.6.4 rocm/vllm:rocm6.2_mi300_ubuntu20.04_py3.9_vllm_0.6.4
+   docker pull rocm/vllm:rocm6.3.1_mi300_ubuntu22.04_py3.12_vllm_0.6.6
+   docker run -it --device=/dev/kfd --device=/dev/dri --group-add video --shm-size 16G --security-opt seccomp=unconfined --security-opt apparmor=unconfined --cap-add=SYS_PTRACE -v $(pwd):/workspace --env HUGGINGFACE_HUB_CACHE=/workspace --name vllm_v0.6.6 rocm/vllm:rocm6.3.1_mi300_ubuntu22.04_py3.12_vllm_0.6.6
 
 In the Docker container, clone the ROCm MAD repository and navigate to the
 benchmark scripts directory at ``~/MAD/scripts/vllm``.
@@ -224,8 +241,8 @@ See the :ref:`examples <vllm-benchmark-run-benchmark>` for more information.
 
 .. _vllm-benchmark-standalone-options:
 
-Options
--------
+Options and available models
+----------------------------
 
 .. list-table::
    :header-rows: 1
@@ -248,72 +265,100 @@ Options
      - Measure both throughput and latency
 
    * - ``$model_repo``
-     - ``meta-llama/Meta-Llama-3.1-8B-Instruct``
-     - Llama 3.1 8B
+     - ``meta-llama/Llama-3.1-8B-Instruct``
+     - `Llama 3.1 8B <https://huggingface.co/meta-llama/Llama-3.1-8B>`_
 
    * - (``float16``)
-     - ``meta-llama/Meta-Llama-3.1-70B-Instruct``
-     - Llama 3.1 70B
+     - ``meta-llama/Llama-3.1-70B-Instruct``
+     - `Llama 3.1 70B <https://huggingface.co/meta-llama/Llama-3.1-70B-Instruct>`_
 
    * -
-     - ``meta-llama/Meta-Llama-3.1-405B-Instruct``
-     - Llama 3.1 405B
+     - ``meta-llama/Llama-3.1-405B-Instruct``
+     - `Llama 3.1 405B <https://huggingface.co/meta-llama/Llama-3.1-405B-Instruct>`_
+
+   * -
+     - ``meta-llama/Llama-3.2-11B-Vision-Instruct``
+     - `Llama 3.2 11B Vision <https://huggingface.co/meta-llama/Llama-3.2-11B-Vision-Instruct>`_
 
    * -
      - ``meta-llama/Llama-2-7b-chat-hf``
-     - Llama 2 7B
+     - `Llama 2 7B <https://huggingface.co/meta-llama/Llama-2-7b-chat-hf>`_
 
    * -
      - ``meta-llama/Llama-2-70b-chat-hf``
-     - Llama 2 70B
+     - `Llama 2 7B <https://huggingface.co/meta-llama/Llama-2-70b-chat-hf>`_
 
    * -
      - ``mistralai/Mixtral-8x7B-Instruct-v0.1``
-     - Mixtral 8x7B
+     - `Mixtral MoE 8x7B <https://huggingface.co/mistralai/Mixtral-8x7B-Instruct-v0.1>`_
 
    * -
      - ``mistralai/Mixtral-8x22B-Instruct-v0.1``
-     - Mixtral 8x22B
+     - `Mixtral MoE 8x22B <https://huggingface.co/mistralai/Mixtral-8x22B-Instruct-v0.1>`_
 
    * -
      - ``mistralai/Mistral-7B-Instruct-v0.3``
-     - Mixtral 7B
+     - `Mistral 7B <https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3>`_
 
    * -
      - ``Qwen/Qwen2-7B-Instruct``
-     - Qwen2 7B
+     - `Qwen2 7B <https://huggingface.co/Qwen/Qwen2-7B-Instruct>`_
 
    * -
      - ``Qwen/Qwen2-72B-Instruct``
-     - Qwen2 72B
+     - `Qwen2 72B <https://huggingface.co/Qwen/Qwen2-72B-Instruct>`_
 
    * -
      - ``core42/jais-13b-chat``
-     - JAIS 13B
+     - `JAIS 30B <https://huggingface.co/core42/jais-13b-chat>`_
 
    * -
      - ``core42/jais-30b-chat-v3``
-     - JAIS 30B
-
-   * - ``$model_repo``
-     - ``amd/Meta-Llama-3.1-8B-Instruct-FP8-KV``
-     - Llama 3.1 8B
-
-   * - (``float8``)
-     - ``amd/Meta-Llama-3.1-70B-Instruct-FP8-KV``
-     - Llama 3.1 70B
+     - `JAIS 30B <https://huggingface.co/core42/jais-30b-chat-v3>`_
 
    * -
-     - ``amd/Meta-Llama-3.1-405B-Instruct-FP8-KV``
-     - Llama 3.1 405B
+     - ``databricks/dbrx-instruct``
+     - `DBRX Instruct <https://huggingface.co/databricks/dbrx-instruct>`_
+
+   * -
+     - ``google/gemma-2-27b``
+     - `Gemma 2 27B <https://huggingface.co/google/gemma-2-27b>`_
+
+   * -
+     - ``CohereForAI/c4ai-command-r-plus-08-2024``
+     - `C4AI Command R+ 08-2024 <https://huggingface.co/CohereForAI/c4ai-command-r-plus-08-2024>`_
+
+   * -
+     - ``deepseek-ai/deepseek-moe-16b-chat``
+     - `DeepSeek MoE 16B <https://huggingface.co/deepseek-ai/deepseek-moe-16b-chat>`_
+
+   * - ``$model_repo``
+     - ``amd/Llama-3.1-70B-Instruct-FP8-KV``
+     - `Llama 3.1 70B FP8 <https://huggingface.co/amd/Llama-3.1-70B-Instruct-FP8-KV>`_
+
+   * - (``float8``)
+     - ``amd/Llama-3.1-405B-Instruct-FP8-KV``
+     - `Llama 3.1 405B FP8 <https://huggingface.co/amd/Llama-3.1-405B-Instruct-FP8-KV>`_
 
    * -
      - ``amd/Mixtral-8x7B-Instruct-v0.1-FP8-KV``
-     - Mixtral 8x7B
+     - `Mixtral MoE 8x7B FP8 <https://huggingface.co/amd/Mixtral-8x7B-Instruct-v0.1-FP8-KV>`_
 
    * -
      - ``amd/Mixtral-8x22B-Instruct-v0.1-FP8-KV``
-     - Mixtral 8x22B
+     - `Mixtral MoE 8x22B FP8 <https://huggingface.co/amd/Mixtral-8x22B-Instruct-v0.1-FP8-KV>`_
+
+   * -
+     - ``amd/Mistral-7B-v0.1-FP8-KV``
+     - `Mistral 7B FP8 <https://huggingface.co/amd/Mistral-7B-v0.1-FP8-KV>`_
+
+   * -
+     - ``amd/dbrx-instruct-FP8-KV``
+     - `DBRX Instruct FP8 <https://huggingface.co/amd/dbrx-instruct-FP8-KV>`_
+
+   * -
+     - ``amd/c4ai-command-r-plus-FP8-KV``
+     - `C4AI Command R+ 08-2024 FP8 <https://huggingface.co/amd/c4ai-command-r-plus-FP8-KV>`_
 
    * - ``$num_gpu``
      - 1 or 8
@@ -335,34 +380,34 @@ options and their descriptions.
 Example 1: latency benchmark
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
  
-Use this command to benchmark the latency of the Llama 3.1 8B model on one GPU with the ``float16`` and ``float8`` data types.
+Use this command to benchmark the latency of the Llama 3.1 70B model on 8 GPUs with the ``float16`` and ``float8`` data types.
 
 .. code-block::
 
-   ./vllm_benchmark_report.sh -s latency -m meta-llama/Meta-Llama-3.1-8B-Instruct -g 1 -d float16
-   ./vllm_benchmark_report.sh -s latency -m amd/Meta-Llama-3.1-8B-Instruct-FP8-KV -g 1 -d float8
+   ./vllm_benchmark_report.sh -s latency -m meta-llama/Llama-3.1-70B-Instruct -g 8 -d float16
+   ./vllm_benchmark_report.sh -s latency -m amd/Llama-3.1-70B-Instruct-FP8-KV -g 8 -d float8
 
 Find the latency reports at:
 
-- ``./reports_float16/summary/Meta-Llama-3.1-8B-Instruct_latency_report.csv``
+- ``./reports_float16/summary/Llama-3.1-70B-Instruct_latency_report.csv``
 
-- ``./reports_float8/summary/Meta-Llama-3.1-8B-Instruct-FP8-KV_latency_report.csv``
+- ``./reports_float8/summary/Llama-3.1-70B-Instruct-FP8-KV_latency_report.csv``
 
 Example 2: throughput benchmark
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Use this command to benchmark the throughput of the Llama 3.1 8B model on one GPU with the ``float16`` and ``float8`` data types.
+Use this command to benchmark the throughput of the Llama 3.1 70B model on 8 GPUs with the ``float16`` and ``float8`` data types.
 
 .. code-block:: shell
 
-   ./vllm_benchmark_report.sh -s throughput -m meta-llama/Meta-Llama-3.1-8B-Instruct -g 1 -d float16
-   ./vllm_benchmark_report.sh -s throughput -m amd/Meta-Llama-3.1-8B-Instruct-FP8-KV -g 1 -d float8
+   ./vllm_benchmark_report.sh -s throughput -m meta-llama/Llama-3.1-70B-Instruct -g 8 -d float16
+   ./vllm_benchmark_report.sh -s throughput -m amd/Llama-3.1-70B-Instruct-FP8-KV -g 8 -d float8
 
 Find the throughput reports at:
 
-- ``./reports_float16/summary/Meta-Llama-3.1-8B-Instruct_throughput_report.csv``
+- ``./reports_float16/summary/Llama-3.1-70B-Instruct_throughput_report.csv``
 
-- ``./reports_float8/summary/Meta-Llama-3.1-8B-Instruct-FP8-KV_throughput_report.csv``
+- ``./reports_float8/summary/Llama-3.1-70B-Instruct-FP8-KV_throughput_report.csv``
 
 .. raw:: html
 
@@ -402,6 +447,28 @@ Further reading
 - To learn how to fine-tune LLMs, see
   :doc:`Fine-tuning LLMs <../fine-tuning/index>`.
 
-- To compare with the previous version of the ROCm vLLM Docker image for performance validation, refer to
-  `LLM inference performance validation on AMD Instinct MI300X (ROCm 6.2.0) <https://rocm.docs.amd.com/en/docs-6.2.0/how-to/performance-validation/mi300x/vllm-benchmark.html>`_.
+- To compare with the previous version of the ROCm vLLM Docker image for
+  performance validation, refer to `LLM inference performance validation on AMD
+  Instinct MI300X (ROCm 6.3.0 documentation)
+  <https://rocm.docs.amd.com/en/docs-6.3.0/how-to/performance-validation/mi300x/vllm-benchmark.html>`_.
 
+Changelog
+=========
+
+The following summarizes notable changes since the previous release of the ROCm vLLM Docker.
+
+* The ROCm software version was incremented from 6.2.1 to 6.3.1.
+
+* The vLLM version was incremented from 0.6.4 to 0.6.6.
+
+* The PyTorch version number was incremented from 2.5.0 to 2.7.0
+  (2.7.0a0+git3a58512).
+
+* Improved ``fp8`` throughput performance.
+
+* The ``float16`` data type benchmark test was updated to include the following
+  models: Llama 3.2 11B Vision, DBRX Instruct, Gemma 2 27B, C4AI Command R+
+  08-2024, DeepSeek MoE 16B.
+
+* The ``float8`` data type benchmark test was added to include the following
+  models: Mistral 7B, DBRX Instruct, C4AI Command R+ 08-202.
