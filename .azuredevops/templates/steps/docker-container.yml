@@ -119,8 +119,8 @@ steps:
         echo "ARG USER_GID=\$USER_UID" >> Dockerfile
         echo "RUN groupadd --gid \$USER_GID \$USERNAME" >> Dockerfile
         echo "RUN useradd --uid \$USER_UID --gid \$USER_GID -m \$USERNAME" >> Dockerfile
-        echo "RUN apt-get update" >> Dockerfile
-        echo "RUN apt-get install -y sudo" >> Dockerfile
+        echo "RUN DEBIAN_FRONTEND=noninteractive apt-get --yes update" >> Dockerfile
+        echo "RUN DEBIAN_FRONTEND=noninteractive apt-get --yes install sudo" >> Dockerfile
         echo "RUN echo \$USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/\$USERNAME" >> Dockerfile
         echo "RUN chmod 0440 /etc/sudoers.d/\$USERNAME" >> Dockerfile
 # for test jobs, setup GPU-related users and group
@@ -142,7 +142,7 @@ steps:
       inputs:
         workingDirectory: $(Pipeline.Workspace)
         targetType: inline
-        script: echo "RUN apt-get install --yes ${{ join(' ', parameters.baseAptPackages) }}" >> Dockerfile
+        script: echo "RUN DEBIAN_FRONTEND=noninteractive apt-get --yes install ${{ join(' ', parameters.baseAptPackages) }}" >> Dockerfile
 # iterate through possible apt repos that might need to be added to the docker container
   - ${{ if eq(parameters.registerROCmPackages, true) }}:
     - task: Bash@3
@@ -157,7 +157,7 @@ steps:
           echo "RUN echo \"deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/amdgpu/latest/ubuntu jammy main\" | tee /etc/apt/sources.list.d/amdgpu.list" >> Dockerfile
           echo "RUN echo \"deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/rocm/apt/latest jammy main\" | tee --append /etc/apt/sources.list.d/rocm.list" >> Dockerfile
           echo "RUN printf 'Package: *\\nPin: release o=repo.radeon.com\\nPin-Priority: 600' > /etc/apt/preferences.d/rocm-pin-600" >> Dockerfile
-          echo "RUN apt-get update" >> Dockerfile
+          echo "RUN DEBIAN_FRONTEND=noninteractive apt-get --yes update" >> Dockerfile
   - ${{ if eq(parameters.registerCUDAPackages, true) }}:
     - task: Bash@3
       condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
@@ -169,7 +169,7 @@ steps:
           echo "RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb" >> Dockerfile
           echo "RUN dpkg -i cuda-keyring_1.1-1_all.deb" >> Dockerfile
           echo "RUN rm -f cuda-keyring_1.1-1_all.deb" >> Dockerfile
-          echo 'RUN apt-get update' >> Dockerfile
+          echo 'RUN DEBIAN_FRONTEND=noninteractive apt-get --yes update' >> Dockerfile
   - ${{ if eq(parameters.registerJPEGPackages, true) }}:
     - task: Bash@3
       condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
@@ -181,7 +181,7 @@ steps:
           echo "RUN mkdir --parents --mode=0755 /etc/apt/keyrings" >> Dockerfile
           echo "RUN wget https://packagecloud.io/dcommander/libjpeg-turbo/gpgkey -O - | gpg --dearmor | tee /etc/apt/trusted.gpg.d/libjpeg-turbo.gpg > /dev/null" >> Dockerfile
           echo "RUN echo \"deb [signed-by=/etc/apt/trusted.gpg.d/libjpeg-turbo.gpg] https://packagecloud.io/dcommander/libjpeg-turbo/any/ any main\" | sudo tee /etc/apt/sources.list.d/libjpeg-turbo.list" >> Dockerfile
-          echo "RUN apt update" >> Dockerfile
+          echo "RUN DEBIAN_FRONTEND=noninteractive apt-get --yes update" >> Dockerfile
 # install AOCL to docker container, if needed
   - ${{ if eq(parameters.installAOCL, true) }}:
     - task: Bash@3
@@ -192,7 +192,7 @@ steps:
         targetType: inline
         script: |
           echo "RUN wget -nv ${{ parameters.aoclRepositoryUrl }}/${{ parameters.aoclPackageName }}" >> Dockerfile
-          echo "RUN apt install -y ./${{ parameters.aoclPackageName }}" >> Dockerfile
+          echo "RUN DEBIAN_FRONTEND=noninteractive apt-get --yes install ./${{ parameters.aoclPackageName }}" >> Dockerfile
           echo "RUN rm -f ${{ parameters.aoclPackageName }}" >> Dockerfile
 # since apt repo list is updated, install the extra apt packages
   - ${{ if gt(length(parameters.aptPackages), 0) }}:
@@ -202,7 +202,7 @@ steps:
       inputs:
         workingDirectory: $(Pipeline.Workspace)
         targetType: inline
-        script: echo "RUN apt-get install --yes ${{ join(' ', parameters.aptPackages) }}" >> Dockerfile
+        script: echo "RUN DEBIAN_FRONTEND=noninteractive apt-get --yes install ${{ join(' ', parameters.aptPackages) }}" >> Dockerfile
 # install latest cmake to docker container, if needed
   - ${{ if eq(parameters.installLatestCMake, true) }}:
     - task: Bash@3
@@ -212,7 +212,7 @@ steps:
         workingDirectory: $(Pipeline.Workspace)
         targetType: inline
         script: |
-            echo "RUN apt purge cmake -y" >> Dockerfile
+            echo "RUN DEBIAN_FRONTEND=noninteractive apt-get --yes purge cmake" >> Dockerfile
             echo "RUN pip install cmake --upgrade" >> Dockerfile
 # setup workspace where binaries, sources, and dependencies from the job will be copied to
   - task: Bash@3
