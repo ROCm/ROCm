@@ -89,7 +89,10 @@ subtrees:
             title: Profile and debug
           - file: how-to/rocm-for-ai/inference-optimization/workload.rst
             title: Workload tuning
-  
+
+      - url: https://rocm.docs.amd.com/projects/ai-developer-hub/en/latest/
+        title: AI tutorials
+
   - file: how-to/rocm-for-hpc/index.rst
     title: Use ROCm for HPC
   - file: how-to/system-optimization/index.rst
@@ -125,8 +128,7 @@ subtrees:
     title: Troubleshoot BAR access limitation  
   - url: https://github.com/amd/rocm-examples
     title: ROCm examples
-  - url: https://rocm.docs.amd.com/projects/ai-developer-hub/en/latest/
-    title: AI tutorials
+
 
 - caption: Conceptual
   entries:
