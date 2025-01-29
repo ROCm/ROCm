@@ -16,6 +16,8 @@ Throughout the following topics, this guide discusses the goals and :ref:`challe
 model <fine-tuning-llms-concept-challenge>` like Llama 2. In the
 sections that follow, you'll find practical guides on libraries and tools to accelerate your fine-tuning.
 
+For AI fine-tuning tutorials in Jupyter Notebook format, see `Tutorials for AI developers <https://rocm.docs.amd.com/projects/ai-developer-hub/en/latest/>`_.
+
 - :doc:`Conceptual overview of fine-tuning LLMs <overview>`
 
 - :doc:`Fine-tuning and inference <fine-tuning-and-inference>` using a

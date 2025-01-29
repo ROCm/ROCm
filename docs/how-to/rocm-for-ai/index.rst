@@ -12,6 +12,8 @@ You can use ROCm to perform distributed training, which enables you to train mod
  
 Overall, ROCm can be used to improve the performance and efficiency of your AI applications. With its training, fine-tuning, and inference support, ROCm provides a complete solution for optimizing AI workflows and achieving the optimum results possible on AMD GPUs. 
 
+For AI tutorials in Jupyter Notebook format, see `Tutorials for AI developers <https://rocm.docs.amd.com/projects/ai-developer-hub/en/latest/>`_.
+
 In this guide, you'll learn how to use ROCm for AI:
 
 - :doc:`Training <training/index>`

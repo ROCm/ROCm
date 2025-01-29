@@ -46,6 +46,7 @@ ROCm documentation is organized into the following categories:
 * [Set the number of CUs](./how-to/setting-cus)
 * [Troubleshoot BAR access limitation](./how-to/Bar-Memory.rst)
 * [ROCm examples](https://github.com/amd/rocm-examples)
+* [AI tutorials](https://rocm.docs.amd.com/projects/ai-developer-hub/en/latest/)
 :::
 
 :::{grid-item-card} Conceptual
