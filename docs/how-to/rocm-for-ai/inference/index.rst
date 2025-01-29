@@ -11,7 +11,8 @@ Understanding the ROCm™ software platform’s architecture and capabilities is
 
 Throughout the following topics, this section provides a comprehensive guide to setting up and deploying AI inference on AMD GPUs. This includes instructions on how to install ROCm, how to use Hugging Face Transformers to manage pre-trained models for natural language processing (NLP) tasks, how to validate vLLM on AMD Instinct™ MI300X accelerators and illustrate how to deploy trained models in production environments. 
 
-For AI inference tutorials in Jupyter Notebook format, see `Tutorials for AI developers <https://rocm.docs.amd.com/projects/ai-developer-hub/en/latest/>`_.
+The AI Developer Hub contains `AMD ROCm tutorials <https://rocm.docs.amd.com/projects/ai-developer-hub/en/latest/>`_ for
+training, fine-tuning, and inference. It leverages popular machine learning frameworks on AMD GPUs.
 
 - :doc:`Installing ROCm and machine learning frameworks <install>`
 

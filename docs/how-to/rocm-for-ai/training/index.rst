@@ -14,7 +14,8 @@ Training models on AMD GPUs with the ROCm™ software platform allows you to use
  
 The ROCm software platform makes it easier to train models on AMD GPUs while maintaining compatibility with existing code and tools. The platform also provides features like multi-GPU support, allowing for scaling and parallelization of model training across multiple GPUs to enhance performance. 
 
-For AI training tutorials in Jupyter Notebook format, see `Tutorials for AI developers <https://rocm.docs.amd.com/projects/ai-developer-hub/en/latest/>`_.
+The AI Developer Hub contains `AMD ROCm tutorials <https://rocm.docs.amd.com/projects/ai-developer-hub/en/latest/>`_ for
+training, fine-tuning, and inference. It leverages popular machine learning frameworks on AMD GPUs.
 
 In this guide, you'll learn about:
 
