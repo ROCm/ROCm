@@ -399,12 +399,9 @@ Further reading
 - To learn how to optimize inference on LLMs, see
   :doc:`Inference optimization <../inference-optimization/index>`.
 
-<<<<<<< HEAD:docs/how-to/performance-validation/mi300x/vllm-benchmark.rst
-=======
 - To learn how to fine-tune LLMs, see
   :doc:`Fine-tuning LLMs <../fine-tuning/index>`.
 
->>>>>>> develop:docs/how-to/rocm-for-ai/inference/vllm-benchmark.rst
 - To compare with the previous version of the ROCm vLLM Docker image for performance validation, refer to
   `LLM inference performance validation on AMD Instinct MI300X (ROCm 6.2.0) <https://rocm.docs.amd.com/en/docs-6.2.0/how-to/performance-validation/mi300x/vllm-benchmark.html>`_.
 
