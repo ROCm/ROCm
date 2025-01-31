@@ -37,6 +37,8 @@ parameters:
     - clr
     - llvm-project
     - rccl
+    - rocDecode
+    - rocJPEG
     - rocm-cmake
     - rocm-core
     - rocminfo
@@ -99,6 +101,7 @@ jobs:
       aptPackages: ${{ parameters.aptPackages }}
       pipModules: ${{ parameters.pipModules }}
       gpuTarget: $(JOB_GPU_TARGET)
+      registerROCmPackages: true
 
 - job: rocprofiler_sdk_testing
   dependsOn: rocprofiler_sdk
@@ -155,3 +158,4 @@ jobs:
       pipModules: ${{ parameters.pipModules }}
       environment: test
       gpuTarget: $(JOB_GPU_TARGET)
+      registerROCmPackages: true

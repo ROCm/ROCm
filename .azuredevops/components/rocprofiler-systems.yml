@@ -46,13 +46,14 @@ parameters:
 - name: rocmDependencies
   type: object
   default:
+    - amdsmi
     - aomp
     - clr
     - llvm-project
     - rccl
     - rocDecode
+    - rocJPEG
     - rocm-core
-    - rocm_smi_lib
     - rocminfo
     - ROCR-Runtime
     - rocprofiler-register
