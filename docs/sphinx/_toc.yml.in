@@ -127,7 +127,7 @@ subtrees:
   - file: how-to/setting-cus
     title: Set the number of CUs
   - file: how-to/Bar-Memory.rst
-    title: Troubleshoot BAR access limitation  
+    title: Troubleshoot BAR access limitation
   - url: https://github.com/amd/rocm-examples
     title: ROCm examples
 
@@ -185,6 +185,8 @@ subtrees:
       title: ROCm libraries
     - file: reference/rocm-tools.md
       title: ROCm tools, compilers, and runtimes
+    - file: reference/env-variables.rst
+      title: Environment variables
     - file: reference/gpu-arch-specs.rst
       title: Hardware specifications
     - file: reference/precision-support.rst

@@ -94,7 +94,7 @@ external_toc_path = "./sphinx/_toc.yml"
 # Add the _extensions directory to Python's search path
 sys.path.append(str(Path(__file__).parent / 'extension'))
 
-extensions = ["rocm_docs", "sphinx_reredirects", "sphinx_sitemap", "sphinxcontrib.datatemplates", "version-ref"]
+extensions = ["rocm_docs", "sphinx_reredirects", "sphinx_sitemap", "sphinxcontrib.datatemplates", "remote-content", "version-ref"]
 
 compatibility_matrix_file = str(Path(__file__).parent / 'compatibility/compatibility-matrix-historical-6.0.csv')
 

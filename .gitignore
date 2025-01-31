@@ -1,6 +1,7 @@
 .venv
 .vscode
 build
+__pycache__
 
 # documentation artifacts
 _build/
