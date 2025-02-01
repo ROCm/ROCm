@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
     <remote name="rocm-org" fetch="https://github.com/ROCm/" />
+    <remote name="nod-ai" fetch="https://github.com/nod-ai"/>
     <default revision="refs/heads/amd-mainline"
      remote="rocm-org"
      sync-c="true"
@@ -75,4 +76,6 @@
     <project name="aomp" path="openmp-extras/aomp" /> 
     <project name="aomp-extras" path="openmp-extras/aomp-extras" /> 
     <project name="flang" path="openmp-extras/flang" /> 
+<!-- TheRock CI Project -->
+    <project name="TheRock" revision="refs/heads/main" remote="nod-ai"/> 
 </manifest>
