@@ -23,6 +23,8 @@ variables:
   value: rocm-ci_ultra_build_pool
 - name: ON_PREM_BUILD_POOL
   value: rocm-ci_build_pool
+- name: LARGE_DISK_BUILD_POOL
+  value: rocm-ci_larger_base_disk_pool
 - name: GFX942_TEST_POOL
   value: gfx942_test_pool
 - name: LATEST_RELEASE_VERSION
