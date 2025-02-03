@@ -23,18 +23,16 @@ variables:
   value: rocm-ci_ultra_build_pool
 - name: ON_PREM_BUILD_POOL
   value: rocm-ci_build_pool
-- name: LARGE_DISK_BUILD_POOL
-  value: rocm-ci_larger_base_disk_pool
 - name: GFX942_TEST_POOL
   value: gfx942_test_pool
+- name: LATEST_RELEASE_VERSION
+  value: 6.3.2
+- name: REPO_RADEON_VERSION
+  value: 6.3.2
+- name: NEXT_RELEASE_VERSION
+  value: 6.4.0
 - name: LATEST_RELEASE_TAG
-  value: rocm-6.1.0
-- name: DOCKER_IMAGE_NAME
-  value: rocm/dev-ubuntu-22.04
-- name: LATEST_DOCKER_VERSION
-  value: 6.1
-- name: KEYRING_VERSION
-  value: 6.3
+  value: rocm-6.3.2
 - name: AMDMIGRAPHX_GFX942_TEST_PIPELINE_ID
   value: 197
 - name: AMDMIGRAPHX_PIPELINE_ID
@@ -151,8 +149,6 @@ variables:
   value: 105
 - name: HIPTENSOR_TAGGED_PIPELINE_ID
   value: 56
-- name: LAST_RELEASE
-  value: 6.1.0
 - name: LLVM_PROJECT_PIPELINE_ID
   value: 2
 - name: LLVM_PROJECT_TAGGED_PIPELINE_ID
@@ -183,10 +179,6 @@ variables:
   value: 100
 - name: RDC_TAGGED_PIPELINE_ID
   value: 59
-- name: REIMAGE_ORG
-  value: AGS-ROCm-CI
-- name: REIMAGE_REPO
-  value: cirrascale-reimage-automation
 - name: ROCAL_PIPELINE_ID
   value: 151
 - name: ROCALUTION_GFX942_TEST_PIPELINE_ID
