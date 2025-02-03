@@ -147,7 +147,7 @@ compatibility and system requirements.
 
 .. rubric:: Footnotes
 
-.. [#mi300x] Oracle Linux and Debian are supported only on AMD Instinct MI300X.
+.. [#mi300x] Oracle Linux, Debian, and Azure Linux are supported only on AMD Instinct MI300X.
 .. [#mi300_620] **For ROCm 6.2.0** - MI300X (gfx942) is supported on listed operating systems *except* Ubuntu 22.04.5 [6.8 HWE] and Ubuntu 22.04.4 [6.5 HWE].
 .. [#kfd_support] ROCm provides forward and backward compatibility between the AMD Kernel-mode GPU Driver (KMD) and its user space software for +/- 2 releases. These are the compatibility combinations that are currently supported.
 .. [#ROCT-rocr] Starting from ROCm 6.3.0, the ROCT Thunk Interface is included as part of the ROCr runtime package.
@@ -212,7 +212,7 @@ Expand for full historical view of:
 
    .. rubric:: Footnotes
 
-   .. [#mic300x-past-60] Oracle Linux and Debian are supported only on AMD Instinct MI300X.
+   .. [#mic300x-past-60] Oracle Linux, Debian, and Azure Linux are supported only on AMD Instinct MI300X.
    .. [#mi300_624-past-60] **For ROCm 6.2.4** - MI300X (gfx942) is supported on listed operating systems *except* Ubuntu 22.04.5 [6.8 HWE] and Ubuntu 22.04.4 [6.5 HWE].
    .. [#mi300_622-past-60] **For ROCm 6.2.2** - MI300X (gfx942) is supported on listed operating systems *except* Ubuntu 22.04.5 [6.8 HWE] and Ubuntu 22.04.4 [6.5 HWE].
    .. [#mi300_621-past-60] **For ROCm 6.2.1** - MI300X (gfx942) is supported on listed operating systems *except* Ubuntu 22.04.5 [6.8 HWE] and Ubuntu 22.04.4 [6.5 HWE].
