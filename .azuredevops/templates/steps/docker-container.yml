@@ -154,8 +154,8 @@ steps:
         script: |
           echo "RUN mkdir --parents --mode=0755 /etc/apt/keyrings" >> Dockerfile
           echo "RUN wget https://repo.radeon.com/rocm/rocm.gpg.key -O - | gpg --dearmor | tee /etc/apt/keyrings/rocm.gpg > /dev/null" >> Dockerfile
-          echo "RUN echo \"deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/amdgpu/${{ variables.REPO_RADEON_VERSION }}/ubuntu jammy main\" | tee /etc/apt/sources.list.d/amdgpu.list" >> Dockerfile
-          echo "RUN echo \"deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/rocm/apt/${{ variables.REPO_RADEON_VERSION }} jammy main\" | tee --append /etc/apt/sources.list.d/rocm.list" >> Dockerfile
+          echo "RUN echo \"deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/amdgpu/$(REPO_RADEON_VERSION)/ubuntu jammy main\" | tee /etc/apt/sources.list.d/amdgpu.list" >> Dockerfile
+          echo "RUN echo \"deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/rocm/apt/$(REPO_RADEON_VERSION) jammy main\" | tee --append /etc/apt/sources.list.d/rocm.list" >> Dockerfile
           echo "RUN printf 'Package: *\\nPin: release o=repo.radeon.com\\nPin-Priority: 600' > /etc/apt/preferences.d/rocm-pin-600" >> Dockerfile
           echo "RUN DEBIAN_FRONTEND=noninteractive apt-get --yes update" >> Dockerfile
   - ${{ if eq(parameters.registerCUDAPackages, true) }}:
