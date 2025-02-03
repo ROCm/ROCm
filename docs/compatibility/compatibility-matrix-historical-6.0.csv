@@ -7,6 +7,7 @@ ROCm Version,6.3.1,6.3.0,6.2.4,6.2.2,6.2.1,6.2.0, 6.1.2, 6.1.1, 6.1.0, 6.0.2, 6.
       ,"SLES 15 SP6, SP5","SLES 15 SP6, SP5","SLES 15 SP6, SP5","SLES 15 SP6, SP5","SLES 15 SP6, SP5","SLES 15 SP6, SP5","SLES 15 SP5, SP4","SLES 15 SP5, SP4","SLES 15 SP5, SP4","SLES 15 SP5, SP4","SLES 15 SP5, SP4"
       ,,,,,,,CentOS 7.9,CentOS 7.9,CentOS 7.9,CentOS 7.9,CentOS 7.9
       ,Oracle Linux 8.10 [#mic300x-past-60]_,Oracle Linux 8.10 [#mic300x-past-60]_,Oracle Linux 8.9 [#mic300x-past-60]_,Oracle Linux 8.9 [#mic300x-past-60]_,Oracle Linux 8.9 [#mic300x-past-60]_,Oracle Linux 8.9 [#mic300x-past-60]_,Oracle Linux 8.9 [#mic300x-past-60]_,Oracle Linux 8.9 [#mic300x-past-60]_,,,
+,Azure Linux 3.0 [#mic300x-past-60]_,,,,,,,,,,
 ,Debian 12 [#mic300x-past-60]_,,,,,,,,,,
       ,.. _architecture-support-compatibility-matrix-past-60:,,,,,,,,,,
       :doc:`Architecture <rocm-install-on-linux:reference/system-requirements>`,CDNA3,CDNA3,CDNA3,CDNA3,CDNA3,CDNA3,CDNA3,CDNA3,CDNA3,CDNA3,CDNA3
@@ -36,7 +37,7 @@ ROCm Version,6.3.1,6.3.0,6.2.4,6.2.2,6.2.1,6.2.0, 6.1.2, 6.1.1, 6.1.0, 6.0.2, 6.
       CUB,2.3.2,2.3.2,2.2.0,2.2.0,2.2.0,2.2.0,2.1.0,2.1.0,2.1.0,2.0.1,2.0.1
 ,,,,,,,,,,,
       ,,,,,,,,,,,
-      KMD & USER SPACE [#kfd_support-past-60]_,.. _kfd-userspace-support-compatibility-matrix-past-60:,,,,,,,,,
+      KMD & USER SPACE [#kfd_support-past-60]_,.. _kfd-userspace-support-compatibility-matrix-past-60:,,,,,,,,,,
       Tested user space versions,"6.3.x, 6.2.x, 6.1.x","6.3.x, 6.2.x, 6.1.x","6.3.x, 6.2.x, 6.1.x, 6.0.x","6.3.x, 6.2.x, 6.1.x, 6.0.x","6.3.x, 6.2.x, 6.1.x, 6.0.x","6.3.x, 6.2.x, 6.1.x, 6.0.x","6.3.x, 6.2.x, 6.1.x, 6.0.x, 5.7.x","6.3.x, 6.2.x, 6.1.x, 6.0.x, 5.7.x","6.3.x, 6.2.x, 6.1.x, 6.0.x, 5.7.x","6.2.x, 6.1.x, 6.0.x, 5.7.x, 5.6.x","6.2.x, 6.1.x, 6.0.x, 5.7.x, 5.6.x"
       ,,,,,,,,,,,
       ML & COMPUTER VISION,.. _mllibs-support-compatibility-matrix-past-60:,,,,,,,,,,

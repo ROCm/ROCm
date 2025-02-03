@@ -183,6 +183,7 @@ Use this lookup table to confirm which operating system and kernel versions are 
    ,8.9, 5.15.0
    ,,
    `Debian <https://www.debian.org/download>`_,12, 6.1
+   `Azure Linux <https://techcommunity.microsoft.com/blog/linuxandopensourceblog/azure-linux-3-0-now-in-preview-on-azure-kubernetes-service-v1-31/4287229>`_,3.0, 6.6
 
 ..
    Footnotes and ref anchors in below historical tables should be appended with "-past-60", to differentiate from the 
