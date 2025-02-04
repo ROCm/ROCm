@@ -29,8 +29,7 @@ The release notes provide a summary of notable changes since the previous ROCm r
 - [ROCm upcoming changes](#rocm-upcoming-changes)
 
 ```{note}
-If you’re using Radeon™ PRO or Radeon GPUs in a workstation setting with a
-display connected, continue to use ROCm 6.2.3. See the [Use ROCm on Radeon GPUs](https://rocm.docs.amd.com/projects/radeon/en/latest/index.html)
+If you’re using Radeon™ PRO or Radeon GPUs in a workstation setting with a display connected, see the [Use ROCm on Radeon GPUs](https://rocm.docs.amd.com/projects/radeon/en/latest/docs/compatibility/native_linux/native_linux_compatibility.html)
 documentation to verify compatibility and system requirements.
 ```
 ## Release highlights
