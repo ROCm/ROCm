@@ -65,8 +65,8 @@ jobs:
     value: $(Agent.BuildDirectory)/rocm/llvm/bin/clang-offload-bundler
   - name: TENSILE_ROCM_PATH
     value: $(Agent.BuildDirectory)/rocm/bin/hipcc
-  - name: PATH
-    value: $(Agent.BuildDirectory)/rocm/llvm/bin:$(Agent.BuildDirectory)/rocm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+  - name: ROCM_PATH
+    value: $(Agent.BuildDirectory)/rocm
   - name: DAY_STRING
     value: $[format('{0:ddMMyyyy}', pipeline.startTime)]
   pool: ${{ variables.ULTRA_BUILD_POOL }}
