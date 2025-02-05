@@ -380,7 +380,7 @@ options and their descriptions.
 Example 1: latency benchmark
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
  
-Use this command to benchmark the latency of the Llama 3.1 70B model on 8 GPUs with the ``float16`` and ``float8`` data types.
+Use this command to benchmark the latency of the Llama 3.1 70B model on eight GPUs with the ``float16`` and ``float8`` data types.
 
 .. code-block::
 
