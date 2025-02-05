@@ -396,7 +396,7 @@ Find the latency reports at:
 Example 2: throughput benchmark
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Use this command to benchmark the throughput of the Llama 3.1 70B model on 8 GPUs with the ``float16`` and ``float8`` data types.
+Use this command to benchmark the throughput of the Llama 3.1 70B model on eight GPUs with the ``float16`` and ``float8`` data types.
 
 .. code-block:: shell
 
