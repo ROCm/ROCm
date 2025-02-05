@@ -439,7 +439,7 @@ Further reading
   MI300X accelerators, see :doc:`../../system-optimization/mi300x`.
 
 - To learn how to run LLM models from Hugging Face or your own model, see
-  :doc:`Using ROCm for AI <../index>`.
+  :doc:`Using ROCm for AI <hugging-face-models>`.
 
 - To learn how to optimize inference on LLMs, see
   :doc:`Inference optimization <../inference-optimization/index>`.
