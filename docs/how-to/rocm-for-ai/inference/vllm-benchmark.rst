@@ -66,7 +66,7 @@ MI300X accelerator with the prebuilt vLLM Docker image.
 
       docker pull rocm/vllm:rocm6.3.1_mi300_ubuntu22.04_py3.12_vllm_0.6.6
 
-Once setup is complete, you can choose between two options to reproduce the
+Once the setup is complete, you can choose between two options to reproduce the
 benchmark results:
 
 -  :ref:`MAD-integrated benchmarking <vllm-benchmark-mad>`
