@@ -96,8 +96,8 @@ jobs:
         -DCMAKE_TOOLCHAIN_FILE=toolchain-linux.cmake
         -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm/llvm;$(Agent.BuildDirectory)/rocm
         -DCMAKE_BUILD_TYPE=Release
-        -DCMAKE_CXX_COMPILER=$(Agent.BuildDirectory)/rocm/bin/hipcc
-        -DCMAKE_C_COMPILER=$(Agent.BuildDirectory)/rocm/bin/hipcc
+        -DCMAKE_CXX_COMPILER=$(Agent.BuildDirectory)/rocm/bin/amdclang++
+        -DCMAKE_C_COMPILER=$(Agent.BuildDirectory)/rocm/bin/amdclang
         -DGPU_TARGETS=$(JOB_GPU_TARGET)
         -DTensile_CODE_OBJECT_VERSION=default
         -DTensile_LOGIC=asm_full
