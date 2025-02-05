@@ -23,7 +23,7 @@ MI300X accelerator and includes the following components:
 
 With this Docker image, you can quickly validate the expected inference
 performance numbers for the MI300X accelerator. This topic also provides tips on
-optimizing performance with popular AI models. FOr more information, see the lists of
+optimizing performance with popular AI models. For more information, see the lists of
 :ref:`available models for MAD-integrated benchmarking <vllm-benchmark-mad-models>`
 and :ref:`standalone benchmarking <vllm-benchmark-standalone-options>`.
 
