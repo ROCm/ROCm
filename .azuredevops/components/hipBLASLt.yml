@@ -59,12 +59,8 @@ jobs:
     value: $(Build.BinariesDirectory)/rocm
   - name: TENSILE_ROCM_ASSEMBLER_PATH
     value: $(Agent.BuildDirectory)/rocm/llvm/bin/amdclang
-  - name: CMAKE_CXX_COMPILER
-    value: $(Agent.BuildDirectory)/rocm/bin/hipcc
   - name: TENSILE_ROCM_OFFLOAD_BUNDLER_PATH
     value: $(Agent.BuildDirectory)/rocm/llvm/bin/clang-offload-bundler
-  - name: TENSILE_ROCM_PATH
-    value: $(Agent.BuildDirectory)/rocm/bin/hipcc
   - name: ROCM_PATH
     value: $(Agent.BuildDirectory)/rocm
   - name: DAY_STRING
@@ -154,9 +150,7 @@ jobs:
       extraEnvVars:
         - HIP_ROCCLR_HOME:::/home/user/workspace/rocm
         - TENSILE_ROCM_ASSEMBLER_PATH:::/home/user/workspace/rocm/llvm/bin/amdclang
-        - CMAKE_CXX_COMPILER:::/home/user/workspace/rocm/bin/hipcc
         - TENSILE_ROCM_OFFLOAD_BUNDLER_PATH:::/home/user/workspace/rocm/llvm/bin/clang-offload-bundler
-        - TENSILE_ROCM_PATH:::/home/user/workspace/rocm/bin/hipcc
         - ROCM_PATH:::/home/user/workspace/rocm
       extraCopyDirectories:
         - deps
