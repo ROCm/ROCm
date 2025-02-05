@@ -310,7 +310,7 @@ Options and available models
 
    * -
      - ``core42/jais-13b-chat``
-     - `JAIS 30B <https://huggingface.co/core42/jais-13b-chat>`_
+     - `JAIS 13B <https://huggingface.co/core42/jais-13b-chat>`_
 
    * -
      - ``core42/jais-30b-chat-v3``
