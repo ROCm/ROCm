@@ -157,6 +157,7 @@ jobs:
         - CMAKE_CXX_COMPILER:::/home/user/workspace/rocm/bin/hipcc
         - TENSILE_ROCM_OFFLOAD_BUNDLER_PATH:::/home/user/workspace/rocm/llvm/bin/clang-offload-bundler
         - TENSILE_ROCM_PATH:::/home/user/workspace/rocm/bin/hipcc
+        - ROCM_PATH:::/home/user/workspace/rocm
       extraCopyDirectories:
         - deps
 
