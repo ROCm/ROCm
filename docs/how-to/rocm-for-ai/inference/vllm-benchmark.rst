@@ -22,8 +22,8 @@ MI300X accelerator and includes the following components:
 * `PyTorch 2.7.0 (2.7.0a0+git3a58512) <https://github.com/pytorch/pytorch>`_
 
 With this Docker image, you can quickly validate the expected inference
-performance numbers on the MI300X accelerator. This topic also provides tips on
-optimizing performance with popular AI models. See the lists of
+performance numbers for the MI300X accelerator. This topic also provides tips on
+optimizing performance with popular AI models. FOr more information, see the lists of
 :ref:`available models for MAD-integrated benchmarking <vllm-benchmark-mad-models>`
 and :ref:`standalone benchmarking <vllm-benchmark-standalone-options>`.
 
@@ -66,7 +66,7 @@ MI300X accelerator with the prebuilt vLLM Docker image.
 
       docker pull rocm/vllm:rocm6.3.1_mi300_ubuntu22.04_py3.12_vllm_0.6.6
 
-Once the setup is complete, you can choose between two options to reproduce the
+Once the setup is complete, choose between two options to reproduce the
 benchmark results:
 
 -  :ref:`MAD-integrated benchmarking <vllm-benchmark-mad>`
@@ -447,26 +447,32 @@ Further reading
 - To learn how to fine-tune LLMs, see
   :doc:`Fine-tuning LLMs <../fine-tuning/index>`.
 
-Changelog
-=========
+Previous versions
+=================
 
-This section summarizes notable changes since the previous release of the ROCm
-vLLM Docker. See documentation for the previous release in `LLM inference
-performance validation on AMD Instinct MI300X (ROCm 6.3.0 documentation)
-<https://rocm.docs.amd.com/en/docs-6.3.0/how-to/performance-validation/mi300x/vllm-benchmark.html>`_.
+This table lists previous versions of the ROCm vLLM Docker image for inference
+performance validation. For detailed information about available models for
+benchmarking, see the version-specific documentation.
 
-* The ROCm software version was incremented from 6.2.1 to 6.3.1.
+.. list-table::
+   :header-rows: 1
+   :stub-columns: 1
 
-* The vLLM version was incremented from 0.6.4 to 0.6.6.
+   * - ROCm version
+     - vLLM version
+     - PyTorch version
+     - Resources
 
-* The PyTorch version number was incremented from 2.5.0 to 2.7.0
-  (2.7.0a0+git3a58512).
+   * - 6.2.1
+     - 0.6.4
+     - 2.5.0
+     - 
+       * `Documentation <https://rocm.docs.amd.com/en/docs-6.3.0/how-to/performance-validation/mi300x/vllm-benchmark.html>`_
+       * `Docker Hub <https://hub.docker.com/layers/rocm/vllm/rocm6.2_mi300_ubuntu20.04_py3.9_vllm_0.6.4/images/sha256-ccbb74cc9e7adecb8f7bdab9555f7ac6fc73adb580836c2a35ca96ff471890d8>`_
 
-* Improved ``fp8`` throughput performance.
-
-* The ``float16`` data type benchmark test was updated to include the following
-  models: Llama 3.2 11B Vision, DBRX Instruct, Gemma 2 27B, C4AI Command R+
-  08-2024, DeepSeek MoE 16B.
-
-* The ``float8`` data type benchmark test was added to include the following
-  models: Mistral 7B, DBRX Instruct, C4AI Command R+ 08-202.
+   * - 6.2.0
+     - 0.4.3
+     - 2.4.0
+     -
+       * `Documentation <https://rocm.docs.amd.com/en/docs-6.2.0/how-to/performance-validation/mi300x/vllm-benchmark.html>`_
+       * `Docker Hub <https://hub.docker.com/layers/rocm/vllm/rocm6.2_mi300_ubuntu22.04_py3.9_vllm_7c5fd50/images/sha256-9e4dd4788a794c3d346d7d0ba452ae5e92d39b8dfac438b2af8efdc7f15d22c0>`_
