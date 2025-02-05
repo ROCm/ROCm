@@ -62,7 +62,7 @@ additional licenses. Please review individual repositories for more information.
 | [rocJPEG](https://github.com/ROCm/rocJPEG/) | [MIT](https://github.com/ROCm/rocJPEG/blob/develop/LICENSE) |
 | [ROCK-Kernel-Driver](https://github.com/ROCm/ROCK-Kernel-Driver/) | [GPL 2.0 WITH Linux-syscall-note](https://github.com/ROCm/ROCK-Kernel-Driver/blob/master/COPYING) |
 | [rocminfo](https://github.com/ROCm/rocminfo/) | [The University of Illinois/NCSA](https://github.com/ROCm/rocminfo/blob/amd-staging/License.txt) |
-| [ROCm Bandwidth Test](https://github.com/ROCm/rocm_bandwidth_test/) | [The University of Illinois/NCSA](https://github.com/ROCm/rocm_bandwidth_test/blob/master/LICENSE.txt) |
+| [ROCm Bandwidth Test](https://github.com/ROCm/rocm_bandwidth_test/) | [MIT](https://github.com/ROCm/rocm_bandwidth_test/blob/master/LICENSE.txt) |
 | [ROCm CMake](https://github.com/ROCm/rocm-cmake/) | [MIT](https://github.com/ROCm/rocm-cmake/blob/develop/LICENSE) |
 | [ROCm Communication Collectives Library (RCCL)](https://github.com/ROCm/rccl/) | [Custom](https://github.com/ROCm/rccl/blob/develop/LICENSE.txt) |
 | [ROCm-Core](https://github.com/ROCm/rocm-core) | [MIT](https://github.com/ROCm/rocm-core/blob/master/copyright) |
