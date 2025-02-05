@@ -7,6 +7,8 @@
 LLM inference performance validation on AMD Instinct MI300X
 ***********************************************************
 
+.. raw:: html
+
 .. _vllm-benchmark-unified-docker:
 
 The `ROCm vLLM Docker <https://hub.docker.com/r/rocm/vllm/tags>`_ image offers
