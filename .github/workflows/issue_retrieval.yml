@@ -15,7 +15,7 @@ jobs:
           app_id: ${{ secrets.ACTION_APP_ID }}
           private_key: ${{ secrets.ACTION_PEM }}
       - name: 'Retrieve Issue'
-        uses: abhimeda/rocm_issue_management@main
+        uses: harkgill-amd/rocm_issue_management@main
         with:
           authentication-token: ${{ steps.generate_token.outputs.token }}
           github-organization: 'ROCm'
