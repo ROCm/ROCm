@@ -439,7 +439,7 @@ Further reading
   MI300X accelerators, see :doc:`../../system-optimization/mi300x`.
 
 - To learn how to run LLM models from Hugging Face or your own model, see
-  :doc:`Using ROCm for AI <hugging-face-models>`.
+  :doc:`Running models from Hugging Face <hugging-face-models>`.
 
 - To learn how to optimize inference on LLMs, see
   :doc:`Inference optimization <../inference-optimization/index>`.
@@ -447,15 +447,13 @@ Further reading
 - To learn how to fine-tune LLMs, see
   :doc:`Fine-tuning LLMs <../fine-tuning/index>`.
 
-- To compare with the previous version of the ROCm vLLM Docker image for
-  performance validation, refer to `LLM inference performance validation on AMD
-  Instinct MI300X (ROCm 6.3.0 documentation)
-  <https://rocm.docs.amd.com/en/docs-6.3.0/how-to/performance-validation/mi300x/vllm-benchmark.html>`_.
-
 Changelog
 =========
 
-The following summarizes notable changes since the previous release of the ROCm vLLM Docker.
+This section summarizes notable changes since the previous release of the ROCm
+vLLM Docker. See documentation for the previous release in `LLM inference
+performance validation on AMD Instinct MI300X (ROCm 6.3.0 documentation)
+<https://rocm.docs.amd.com/en/docs-6.3.0/how-to/performance-validation/mi300x/vllm-benchmark.html>`_.
 
 * The ROCm software version was incremented from 6.2.1 to 6.3.1.
 
