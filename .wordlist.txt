@@ -785,6 +785,7 @@ serializers
 shader
 sharding
 sigmoid
+single-node
 sm
 smi
 softmax
