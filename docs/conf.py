@@ -66,7 +66,7 @@ article_pages = [
     {"file": "how-to/rocm-for-ai/inference/llm-inference-frameworks", "os": ["linux"]},
     {"file": "how-to/rocm-for-ai/inference/vllm-benchmark", "os": ["linux"]},
     {"file": "how-to/rocm-for-ai/inference/deploy-your-model", "os": ["linux"]},
-    
+
     {"file": "how-to/rocm-for-ai/inference-optimization/index", "os": ["linux"]},
     {"file": "how-to/rocm-for-ai/inference-optimization/model-quantization", "os": ["linux"]},
     {"file": "how-to/rocm-for-ai/inference-optimization/model-acceleration-libraries", "os": ["linux"]},
@@ -89,7 +89,7 @@ article_pages = [
 
 external_toc_path = "./sphinx/_toc.yml"
 
-extensions = ["rocm_docs", "sphinx_reredirects", "sphinx_sitemap"]
+extensions = ["rocm_docs", "sphinx_reredirects", "sphinx_sitemap", "sphinxcontrib.datatemplates"]
 
 external_projects_current_project = "rocm"
 
@@ -104,8 +104,10 @@ if os.environ.get("READTHEDOCS", "") == "True":
 html_theme = "rocm_docs_theme"
 html_theme_options = {"flavor": "rocm-docs-home"}
 
-html_static_path = ["sphinx/static/css"]
-html_css_files = ["rocm_custom.css", "rocm_rn.css"]
+templates_path = ["templates"]
+html_static_path = ["sphinx/static/css", "how-to/rocm-for-ai/inference/js"]
+html_css_files = ["rocm_custom.css", "rocm_rn.css", "vllm-benchmark.css"]
+html_js_files = ["vllm-benchmark.js"]
 
 html_title = "ROCm Documentation"
 
