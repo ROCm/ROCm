@@ -213,7 +213,7 @@ Expand for full historical view of:
 
    .. rubric:: Footnotes
 
-   .. [#mic300x-past-60] Oracle Linux, Debian, and Azure Linux are supported only on AMD Instinct MI300X.
+   .. [#mic300x-past-60] Oracle Linux and Azure Linux are supported only on AMD Instinct MI300X.
    .. [#single-node-past-60] Debian 12 is supported only on AMD Instinct MI300X for single-node functionality. 
    .. [#mi300_624-past-60] **For ROCm 6.2.4** - MI300X (gfx942) is supported on listed operating systems *except* Ubuntu 22.04.5 [6.8 HWE] and Ubuntu 22.04.4 [6.5 HWE].
    .. [#mi300_622-past-60] **For ROCm 6.2.2** - MI300X (gfx942) is supported on listed operating systems *except* Ubuntu 22.04.5 [6.8 HWE] and Ubuntu 22.04.4 [6.5 HWE].
