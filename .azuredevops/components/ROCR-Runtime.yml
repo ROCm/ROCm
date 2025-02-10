@@ -133,6 +133,7 @@ jobs:
           -DROCM_DIR=$(Agent.BuildDirectory)/rocm \
           -DLLVM_DIR=$(Agent.BuildDirectory)/rocm/llvm/bin \
           -DOPENCL_DIR=$(Agent.BuildDirectory)/rocm/llvm/bin
+          -DOPENCL_INC_DIR=$(Agent.BuildDirectory)/rocm/llvm/lib/clang/21/include
         make
         make rocrtst_kernels
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
