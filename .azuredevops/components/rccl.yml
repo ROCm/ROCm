@@ -78,7 +78,6 @@ jobs:
       checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
-  - script: chmod +x $(Agent.BuildDirectory)/rocm/libexec/hipify/hipify-perl
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
       extraBuildFlags: >-
@@ -88,7 +87,7 @@ jobs:
         -DCMAKE_BUILD_TYPE=Release
         -DROCM_PATH=$(Agent.BuildDirectory)/rocm
         -DBUILD_TESTS=ON
-        -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm;$(Agent.BuildDirectory)/rocm/share/rocm/cmake/
+        -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm;$(Agent.BuildDirectory)/rocm/share/rocm/cmake;$(Agent.BuildDirectory)/rocm/libexec/hipify
         -DAMDGPU_TARGETS=$(JOB_GPU_TARGET)
         -GNinja
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
