@@ -78,7 +78,7 @@ jobs:
       checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
-  - script: chmod +x $(Agent.BuildDirectory)/rocm/bin/hipify-perl
+  - script: chmod +x $(Agent.BuildDirectory)/rocm/libexec/hipify/hipify-perl
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
       extraBuildFlags: >-
