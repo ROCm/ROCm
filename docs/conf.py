@@ -87,6 +87,7 @@ article_pages = [
 external_toc_path = "./sphinx/_toc.yml"
 
 extensions = ["rocm_docs", "sphinx_reredirects", "sphinx_sitemap"]
+# extensions = ["rocm_docs", "sphinx_rtd_theme", "sphinx_reredirects", "sphinx_sitemap"]
 
 external_projects_current_project = "rocm"
 
@@ -99,10 +100,14 @@ if os.environ.get("READTHEDOCS", "") == "True":
     html_context["READTHEDOCS"] = True
 
 html_theme = "rocm_docs_theme"
+# html_theme = "sphinx_rtd_theme"
 html_theme_options = {"flavor": "rocm-docs-home"}
 
-html_static_path = ["sphinx/static/css"]
-html_css_files = ["rocm_custom.css", "rocm_rn.css"]
+html_static_path = ["sphinx/static"]
+html_css_files = [
+    "css/rocm_custom.css",
+    "css/rocm_rn.css",
+]
 
 html_title = "ROCm Documentation"
 
