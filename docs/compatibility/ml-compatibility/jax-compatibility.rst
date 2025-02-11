@@ -55,7 +55,7 @@ Docker image compatibility
 
 AMD validates and publishes ready-made `ROCm JAX Docker images <https://hub.docker.com/r/rocm/jax>`_
 with ROCm backends on Docker Hub. The following Docker image tags and
-associated inventories are validated for
+associated inventories represent the latest JAX version from the official Docker Hub and are validated for
 `ROCm 6.3.1 <https://repo.radeon.com/rocm/apt/6.3.1/>`_. Click the |docker-icon|
 icon to view the image on Docker Hub.
 
@@ -83,7 +83,8 @@ icon to view the image on Docker Hub.
 
 AMD publishes `Community ROCm JAX Docker images <https://hub.docker.com/r/rocm/jax-community>`_
 with ROCm backends on Docker Hub. The following Docker image tags and
-associated inventories are tested for `ROCm 6.2.4 <https://repo.radeon.com/rocm/apt/6.2.4/>`_.
+associated inventories represent the latest JAX version from the official Docker Hub and are
+tested for `ROCm 6.3.1 <https://repo.radeon.com/rocm/apt/6.3.1/>`_.
 
 .. list-table:: JAX community Docker image components
     :header-rows: 1
@@ -94,25 +95,25 @@ associated inventories are tested for `ROCm 6.2.4 <https://repo.radeon.com/rocm/
       - Python
     * - .. raw:: html
 
-           <a href="https://hub.docker.com/layers/rocm/jax-community/rocm6.2.4-jax0.4.35-py3.12.7/images/sha256-a6032d89c07573b84c44e42c637bf9752b1b7cd2a222d39344e603d8f4c63beb?context=explore"><i class="fab fa-docker fa-lg"></i> rocm/jax-community</a>
+           <a href="https://hub.docker.com/layers/rocm/jax-community/rocm6.3.1-jax0.5.0-py3.12.8/images/sha256-897d7471a954d9df7f79cd28b87ec515fbb94189fc3cf13e3a1588aa6b2a5fee?context_explore"><i class="fab fa-docker fa-lg"></i> rocm/jax-community</a>
 
-      - `0.4.35 <https://github.com/ROCm/jax/releases/tag/rocm-jax-v0.4.35>`_
+      - `0.5.0 <https://github.com/ROCm/jax/releases/tag/rocm-jax-v0.5.0>`_
       - Ubuntu 22.04
-      - `3.12.7 <https://www.python.org/downloads/release/python-3127/>`_
+      - `3.12.8 <https://www.python.org/downloads/release/python-3128/>`_
     * - .. raw:: html
 
-           <a href="https://hub.docker.com/layers/rocm/jax-community/rocm6.2.4-jax0.4.35-py3.11.10/images/sha256-d462f7e445545fba2f3b92234a21beaa52fe6c5f550faabcfdcd1bf53486d991?context=explore"><i class="fab fa-docker fa-lg"></i> rocm/jax-community</a>
+           <a href="https://hub.docker.com/layers/rocm/jax-community/rocm6.3.1-jax0.5.0-py3.11.11/images/sha256-f59243f324ee8da8dd54cd81b3649a860b2b454eaac8e4ce41d5c5f40e42b0e8?context_explore"><i class="fab fa-docker fa-lg"></i> rocm/jax-community</a>
 
-      - `0.4.35 <https://github.com/ROCm/jax/releases/tag/rocm-jax-v0.4.35>`_
+      - `0.5.0 <https://github.com/ROCm/jax/releases/tag/rocm-jax-v0.5.0>`_
       - Ubuntu 22.04
       - `3.11.10 <https://www.python.org/downloads/release/python-31110/>`_
     * - .. raw:: html
 
-           <a href="https://hub.docker.com/layers/rocm/jax-community/rocm6.2.4-jax0.4.35-py3.10.15/images/sha256-6f2d4d0f529378d9572f0e8cfdcbc101d1e1d335bd626bb3336fff87814e9d60?context=explore"><i class="fab fa-docker fa-lg"></i> rocm/jax-community</a>
+           <a href="https://hub.docker.com/layers/rocm/jax-community/rocm6.3.1-jax0.5.0-py3.10.16/images/sha256-6f12e5f6a3b5d033d2b1a43938b6804978d999978e68e402228d02984a69fb9d?context_explore"><i class="fab fa-docker fa-lg"></i> rocm/jax-community</a>
 
-      - `0.4.35 <https://github.com/ROCm/jax/releases/tag/rocm-jax-v0.4.35>`_
+      - `0.5.0 <https://github.com/ROCm/jax/releases/tag/rocm-jax-v0.5.0>`_
       - Ubuntu 22.04
-      - `3.10.15 <https://www.python.org/downloads/release/python-31015/>`_
+      - `3.10.16 <https://www.python.org/downloads/release/python-31016/>`_
 
 Critical ROCm libraries for JAX
 ================================================================================
@@ -210,7 +211,7 @@ performance, and feature set available to developers.
 Supported and unsupported features
 ===============================================================================
 
-The following table maps GPU-accelerated JAX modules to their supported
+The following table maps the public JAX API modules to their supported
 ROCm and JAX versions.
 
 .. list-table::
@@ -247,20 +248,10 @@ ROCm and JAX versions.
         devices.
       - 0.3.20
       - 5.1.0
-    * - ``jax.dlpack``
-      - For exchanging tensor data between JAX and other libraries that support the
-        DLPack standard.
-      - 0.1.57
-      - 5.0.0
     * - ``jax.distributed``
       - Enables the scaling of computations across multiple devices on a single
         machine or across multiple machines.
       - 0.1.74
-      - 5.0.0
-    * - ``jax.dtypes``
-      - Provides utilities for working with and managing data types in JAX
-        arrays and computations.
-      - 0.1.66
       - 5.0.0
     * - ``jax.image``
       - Contains image manipulation functions like resize, scale and translation.
@@ -275,27 +266,10 @@ ROCm and JAX versions.
         array.
       - 0.1.57
       - 5.0.0
-    * - ``jax.profiler``
-      - Contains JAX’s tracing and time profiling features.
-      - 0.1.57
-      - 5.0.0
     * - ``jax.stages``
       - Contains interfaces to stages of the compiled execution process.
       - 0.3.4
       - 5.0.0
-    * - ``jax.tree``
-      - Provides utilities for working with tree-like container data structures.
-      - 0.4.26
-      - 5.6.0
-    * - ``jax.tree_util``
-      - Provides utilities for working with nested data structures, or
-        ``pytrees``.
-      - 0.1.65
-      - 5.0.0
-    * - ``jax.typing``
-      - Provides JAX-specific static type annotations.
-      - 0.3.18
-      - 5.1.0
     * - ``jax.extend``
       - Provides modules for access to JAX internal machinery module. The
         ``jax.extend`` module defines a library view of some of JAX’s internal
@@ -322,10 +296,10 @@ ROCm and JAX versions.
       - jax_triton 0.2.0
       - 6.2.4
 
-jax.scipy module
+jax.lax module
 -------------------------------------------------------------------------------
 
-A SciPy-like API for scientific computing.
+A module for primitives operations.
 
 .. list-table::
     :header-rows: 1
@@ -333,129 +307,14 @@ A SciPy-like API for scientific computing.
     * - Module
       - Since JAX
       - Since ROCm
-    * - ``jax.scipy.cluster``
-      - 0.3.11
-      - 5.1.0
-    * - ``jax.scipy.fft``
-      - 0.1.71
+    * - ``jax.lax.linalg``
+      - 0.3.2
       - 5.0.0
-    * - ``jax.scipy.integrate``
-      - 0.4.15
-      - 5.5.0
-    * - ``jax.scipy.interpolate``
-      - 0.1.76
-      - 5.0.0
-    * - ``jax.scipy.linalg``
-      - 0.1.56
-      - 5.0.0
-    * - ``jax.scipy.ndimage``
-      - 0.1.56
-      - 5.0.0
-    * - ``jax.scipy.optimize``
-      - 0.1.57
-      - 5.0.0
-    * - ``jax.scipy.signal``
-      - 0.1.56
-      - 5.0.0
-    * - ``jax.scipy.spatial.transform``
-      - 0.4.12
-      - 5.4.0
-    * - ``jax.scipy.sparse.linalg``
-      - 0.1.56
-      - 5.0.0
-    * - ``jax.scipy.special``
-      - 0.1.56
-      - 5.0.0
-    * - ``jax.scipy.stats``
-      - 0.1.56
-      - 5.0.0
-
-jax.scipy.stats module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. list-table::
-   :header-rows: 1
-
-   * - Module
-     - Since JAX
-     - Since ROCm
-   * - ``jax.scipy.stats.bernouli``
-     - 0.1.56
-     - 5.0.0
-   * - ``jax.scipy.stats.beta``
-     - 0.1.56
-     - 5.0.0
-   * - ``jax.scipy.stats.betabinom``
-     - 0.1.61
-     - 5.0.0
-   * - ``jax.scipy.stats.binom``
-     - 0.4.14
-     - 5.4.0
-   * - ``jax.scipy.stats.cauchy``
-     - 0.1.56
-     - 5.0.0
-   * - ``jax.scipy.stats.chi2``
-     - 0.1.61
-     - 5.0.0
-   * - ``jax.scipy.stats.dirichlet``
-     - 0.1.56
-     - 5.0.0
-   * - ``jax.scipy.stats.expon``
-     - 0.1.56
-     - 5.0.0
-   * - ``jax.scipy.stats.gamma``
-     - 0.1.56
-     - 5.0.0
-   * - ``jax.scipy.stats.gennorm``
-     - 0.3.15
-     - 5.2.0
-   * - ``jax.scipy.stats.geom``
-     - 0.1.56
-     - 5.0.0
-   * - ``jax.scipy.stats.laplace``
-     - 0.1.56
-     - 5.0.0
-   * - ``jax.scipy.stats.logistic``
-     - 0.1.56
-     - 5.0.0
-   * - ``jax.scipy.stats.multinomial``
-     - 0.3.18
-     - 5.1.0
-   * - ``jax.scipy.stats.multivariate_normal``
-     - 0.1.56
-     - 5.0.0
-   * - ``jax.scipy.stats.nbinom``
-     - 0.1.72
-     - 5.0.0
-   * - ``jax.scipy.stats.norm``
-     - 0.1.56
-     - 5.0.0
-   * - ``jax.scipy.stats.pareto``
-     - 0.1.56
-     - 5.0.0
-   * - ``jax.scipy.stats.poisson``
-     - 0.1.56
-     - 5.0.0
-   * - ``jax.scipy.stats.t``
-     - 0.1.56
-     - 5.0.0
-   * - ``jax.scipy.stats.truncnorm``
-     - 0.4.0
-     - 5.3.0
-   * - ``jax.scipy.stats.uniform``
-     - 0.1.56
-     - 5.0.0
-   * - ``jax.scipy.stats.vonmises``
-     - 0.4.2
-     - 5.3.0
-   * - ``jax.scipy.stats.wrapcauchy``
-     - 0.4.20
-     - 5.6.0
 
 jax.extend module
 -------------------------------------------------------------------------------
 
-Modules for JAX extensions.
+A module for primitives operations.
 
 .. list-table::
     :header-rows: 1
@@ -463,18 +322,30 @@ Modules for JAX extensions.
     * - Module
       - Since JAX
       - Since ROCm
-    * - ``jax.extend.ffi``
-      - 0.4.30
-      - 6.0.0
-    * - ``jax.extend.linear_util``
-      - 0.4.17
-      - 5.6.0
-    * - ``jax.extend.mlir``
-      - 0.4.26
-      - 5.6.0
-    * - ``jax.extend.random``
+    * - ``jax.extend.core``
       - 0.4.15
       - 5.5.0
+    * - ``jax.extend.core.primitives``
+      - 0.4.32
+      - 5.5.0
+
+jax.numpy module
+-------------------------------------------------------------------------------
+
+A module for primitives operations.
+
+.. list-table::
+    :header-rows: 1
+
+    * - Module
+      - Since JAX
+      - Since ROCm
+    * - ``jax.numpy.fft``
+      - 0.3.20
+      - 5.1.0
+    * - ``jax.numpy.linalg``
+      - 0.3.20
+      - 5.1.0
 
 jax.experimental module
 -------------------------------------------------------------------------------
@@ -489,9 +360,6 @@ Experimental modules and APIs.
       - Since ROCm
     * - ``jax.experimental.checkify``
       - 0.1.75
-      - 5.0.0
-    * - ``jax.experimental.compilation_cache.compilation_cache``
-      - 0.1.68
       - 5.0.0
     * - ``jax.experimental.custom_partitioning``
       - 0.4.0
@@ -514,8 +382,11 @@ Experimental modules and APIs.
     * - ``jax.experimental.pjit``
       - 0.1.61
       - 5.0.0
-    * - ``jax.experimental.serialize_executable``
-      - 0.4.0
+    * - ``jax.experimental.roofline``
+      - 0.4.36
+      - 5.3.0
+    * - ``jax.experimental.rnn``
+      - 0.4.3
       - 5.3.0
     * - ``jax.experimental.shard_map``
       - 0.4.3
@@ -572,9 +443,6 @@ Experimental support for sparse matrix operations.
     * - ``jax.experimental.sparse.linalg``
       - 0.3.15
       - 5.2.0
-    * - ``jax.experimental.sparse.sparsify``
-      - 0.3.25
-      - ❌
 
 .. list-table::
     :header-rows: 1
@@ -622,9 +490,6 @@ ROCm.
     * - XLA int4 support
       - 4-bit integer (int4) precision in the XLA compiler.
       - 0.4.0
-    * - ``jax.experimental.sparsify``
-      - Converts a dense matrix to a sparse matrix representation.
-      - Experimental
 
 Use cases and recommendations
 ================================================================================

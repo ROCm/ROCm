@@ -677,6 +677,7 @@ namespace
 namespaces
 nanoGPT
 num
+numpy
 numref
 ocl
 opencl
