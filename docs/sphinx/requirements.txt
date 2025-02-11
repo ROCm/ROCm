@@ -115,7 +115,7 @@ mdit-py-plugins==0.4.2
     # via myst-parser
 mdurl==0.1.2
     # via markdown-it-py
-myst-nb==1.1.2
+myst-nb==1.2.0
     # via rocm-docs-core
 myst-parser==4.0.0
     # via myst-nb
@@ -187,7 +187,7 @@ requests==2.32.3
     # via
     #   pygithub
     #   sphinx
-rocm-docs-core==1.15.0
+rocm-docs-core @ git+https://github.com/ROCm/rocm-docs-core.git@alexxu12/search
     # via -r requirements.in
 rpds-py==0.22.3
     # via

@@ -108,10 +108,6 @@ html_css_files = [
     "css/rocm_custom.css",
     "css/rocm_rn.css",
 ]
-html_js_files = [
-     ("js/search.js", {"defer": "defer"}),
- ]
-
 
 html_title = "ROCm Documentation"
 
