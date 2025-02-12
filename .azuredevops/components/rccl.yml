@@ -51,6 +51,7 @@ parameters:
 
 jobs:
 - job: rccl
+  timeoutInMinutes: 90
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
