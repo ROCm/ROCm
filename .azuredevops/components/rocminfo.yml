@@ -56,6 +56,7 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
+      registerROCmPackages: true
 
 - job: rocminfo_testing
   dependsOn: rocminfo
@@ -102,5 +103,6 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
+      registerROCmPackages: true
       environment: test
       gpuTarget: $(JOB_GPU_TARGET)
