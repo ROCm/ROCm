@@ -10,7 +10,7 @@
 <!-- markdownlint-disable reference-links-images            -->
 <!-- markdownlint-disable no-missing-space-atx              -->
 <!-- spellcheck-disable                                     -->
-# ROCm 6.3.2 release notes
+# ROCm 6.3.3 release notes
 
 The release notes provide a summary of notable changes since the previous ROCm release.
 
@@ -34,35 +34,38 @@ documentation to verify compatibility and system requirements.
 ```
 ## Release highlights
 
-The following are notable improvements in ROCm 6.3.2. For changes to individual components, see
+The following are notable new features and improvements in ROCm 6.3.3. For changes to individual components, see
 [Detailed component changes](#detailed-component-changes).
+
+### ROCm Offline Installer Creator updates
+
+The ROCm Offline Installer Creator 6.3.3 adds a new Post-Install Options menu, which includes a new ``udev`` option for adding GPU resources access for all users. It also moves the user-specific GPU access option (for the ``video,render`` group) from the Driver Options menu to the Post-Install Options menu. See the [ROCm Offline Installer Creator](https://rocm.docs.amd.com/projects/install-on-linux-internal/en/latest/install/rocm-offline-installer.html#post-install-options-menu) documentation for more information.
 
 ### ROCm documentation updates
 
 ROCm documentation continues to be updated to provide clearer and more comprehensive guidance for a wider variety of user needs and use cases.
 
-* Documentation about ROCm compatibility with deep learning frameworks has been added. These topics outline ROCm-enabled features for each deep learning framework, key ROCm libraries that can influence the capabilities, validated Docker image tags, and features supported across the available ROCm and framework versions. For more information, see:
+* [Tutorials for AI developers](https://rocm.docs.amd.com/projects/ai-developer-hub/en/latest/) have been added. These tutorials are Jupyter notebook-based, easy-to-follow documents. They are ideal for AI developers who want to learn about specific topics, including inference, fine-tuning, and training.
 
-    * [PyTorch compatibility](https://rocm.docs.amd.com/en/latest/compatibility/ml-compatibility/pytorch-compatibility.html)
+* The HIP documentation has been updated with new resources for developers. To learn more about concurrency, parallelism, and stream management on devices and multiple GPUs, see [Asynchronous concurrent execution](https://rocm.docs.amd.com/projects/HIP/en/latest/how-to/hip_runtime_api/asynchronous.html)
 
-    * [TensorFlow compatibility](https://rocm.docs.amd.com/en/latest/compatibility/ml-compatibility/tensorflow-compatibility.html)
-
-    * [JAX compatibility](https://rocm.docs.amd.com/en/latest/compatibility/ml-compatibility/jax-compatibility.html)
-
-* The [HIP C++ language extensions](https://rocm.docs.amd.com/projects/HIP/en/latest/how-to/hip_cpp_language_extensions.html) and [Kernel language C++ support](https://rocm.docs.amd.com/projects/HIP/en/latest/how-to/kernel_language_cpp_support.html) topics have been reorganized to make them easier to find and review. The topics have also been enhanced with new content.
+* The following HIP documentation topics have been updated:
+    - [Virtual memory management](https://rocm.docs.amd.com/projects/HIP/en/latest/how-to/hip_runtime_api/memory_management/virtual_memory.html)
+    - [Programming for HIP runtime compiler (RTC)](https://rocm.docs.amd.com/projects/HIP/en/latest/how-to/hip_rtc.html)
+    - [CUDA to HIP API function comparison](https://rocm.docs.amd.com/projects/HIP/en/latest/reference/api_syntax.html)
 
 ## Operating system and hardware support changes
 
-ROCm 6.3.2 adds support for Azure Linux 3.0 (kernel: 6.6). Azure Linux is supported only on AMD Instinct accelerators. For more information, see [Azure Linux installation](https://rocm.docs.amd.com/projects/install-on-linux/en/latest/install/quick-start.html).
+Operating system and hardware support remain unchanged in this release.
 
 See the [Compatibility
-matrix](https://rocm.docs.amd.com/en/latest/compatibility/compatibility-matrix.html)
+matrix](https://rocm-stg.amd.com/en/latest/compatibility/compatibility-matrix.html)
 for more information about operating system and hardware compatibility.
 
 ## ROCm components
 
-The following table lists the versions of ROCm components for ROCm 6.3.2, including any version
-changes from 6.3.1 to 6.3.2. Click the component's updated version to go to a list of its changes.
+The following table lists the versions of ROCm components for ROCm 6.3.3, including any version
+changes from 6.3.2 to 6.3.3. Click the component's updated version to go to a list of its changes.
 Click {fab}`github` to go to the component's source code on GitHub.
 
 <div class="pst-scrollable-table-container">
@@ -158,7 +161,7 @@ Click {fab}`github` to go to the component's source code on GitHub.
             </tr>
             <tr>
                 <td><a href="https://rocm.docs.amd.com/projects/hipfort/en/docs-6.3.2/index.html">hipfort</a></td>
-                <td>0.5.0&nbsp;&Rightarrow;&nbsp;<a href="#hipfort-0-5-1">0.5.1</a></td>
+                <td>0.5.1</td>
                 <td><a href="https://github.com/ROCm/hipfort"><i class="fab fa-github fa-lg"></i></a></td>
             </tr>
             <tr>
@@ -293,19 +296,19 @@ Click {fab}`github` to go to the component's source code on GitHub.
             </tr>
             <tr>
                 <td><a href="https://rocm.docs.amd.com/projects/rocprofiler-systems/en/docs-6.3.2/index.html">ROCm Systems Profiler</a></td>
-                <td>0.1.0&nbsp;&Rightarrow;&nbsp;<a href="#rocm-systems-profiler-0-1-1">0.1.1</td>
+                <td>0.1.1&nbsp;&Rightarrow;&nbsp;<a href="#rocm-systems-profiler-0-1-2">0.1.2</td>
                 <td><a href="https://github.com/ROCm/rocprofiler-systems"><i
                             class="fab fa-github fa-lg"></i></a></td>
             </tr>
             <tr>
                 <td><a href="https://rocm.docs.amd.com/projects/rocprofiler/en/docs-6.3.2/index.html">ROCProfiler</a></td>
-                <td>2.0.0&nbsp;&Rightarrow;&nbsp;<a href="#rocprofiler-2-0-0">2.0.0</a></td>
+                <td>2.0.0</td>
                 <td><a href="https://github.com/ROCm/ROCProfiler/"><i
                             class="fab fa-github fa-lg"></i></a></td>
             </tr>
             <tr>
                 <td><a href="https://rocm.docs.amd.com/projects/rocprofiler-sdk/en/docs-6.3.2/index.html">ROCprofiler-SDK</a></td>
-                <td>0.5.0&nbsp;&Rightarrow;&nbsp;<a href="#rocprofiler-sdk-0-5-0">0.5.0</a></td>
+                <td>0.5.0</td>
                 <td><a href="https://github.com/ROCm/rocprofiler-sdk/"><i
                             class="fab fa-github fa-lg"></i></a></td>
             </tr>
@@ -371,7 +374,7 @@ Click {fab}`github` to go to the component's source code on GitHub.
             <tr>
                 <th rowspan="2" colspan="2">Runtimes</th>
                 <td><a href="https://rocm.docs.amd.com/projects/HIP/en/docs-6.3.2/index.html">HIP</a></td>
-                <td>6.3.1&nbsp;&Rightarrow;&nbsp;<a href="#hip-6-3-2">6.3.2</a></td>
+                <td>6.3.2</td>
                 <td><a href="https://github.com/ROCm/HIP/"><i class="fab fa-github fa-lg"></i></a></td>
             </tr>
             <tr>
@@ -387,106 +390,24 @@ Click {fab}`github` to go to the component's source code on GitHub.
 
 The following sections describe key changes to ROCm components.
 
-### **HIP** (6.3.2)
-
-#### Added
-
-* Tracking of Heterogeneous System Architecture (HSA) handlers:
-    - Adds an atomic counter to track the outstanding HSA handlers.
-    - Waits on CPU for the callbacks if the number exceeds the defined value.
-* Codes to capture Architected Queueing Language (AQL) packets for HIP graph memory copy node between host and device. HIP enqueues AQL packets during graph launch.
-* Control to use system pool implementation in runtime commands handling. By default, it is disabled.
-* A new path to avoid `WaitAny` calls in `AsyncEventsLoop`. The new path is selected by default.
-* Runtime control on decrement counter only if the event is popped. There is a new way to restore dead signals cleanup for the old path.
-* A new logic in runtime to track the age of events from the kernel mode driver.
-
-#### Optimized
-
-* HSA callback performance. The HIP runtime creates and submits commands in the queue and interacts with HSA through a callback function. HIP waits for the CPU status from HSA to optimize the handling of events, profiling, commands, and HSA signals for higher performance.
-* Runtime optimization which combines all logic of `WaitAny` in a single processing loop and avoids extra memory allocations or reference counting. The runtime won't spin on the CPU if all events are busy.
-* Multi-threaded dispatches for performance improvement.
-* Command submissions and processing between CPU and GPU by introducing a way to limit the software batch size.
-* Switch to `std::shared_mutex` in book/keep logic in streams from multiple threads simultaneously, for performance improvement in specific customer applications.
-* `std::shared_mutex` is used in memory object mapping, for performance improvement.
+### **ROCm Systems Profiler** (0.1.2)
 
 #### Resolved issues
 
-* Race condition in multi-threaded producer/consumer scenario with `hipMallocFromPoolAsync`.
-* Segmentation fault with `hipStreamLegacy` while using the API `hipStreamWaitEvent`.
-* Usage of `hipStreamLegacy` in HIP event record.
-* A soft hang in graph execution process from HIP user object. The fix handles the release of graph execution object properly considering synchronization on the device/stream. The user application now behaves the same with `hipUserObject` on both the AMD ROCm and NVIDIA CUDA platforms.
-
-### **hipfort** (0.5.1)
-
-#### Added
-
-* Support for building with LLVM Flang.
-
-#### Resolved issues
-
-* Fixed the exported `hipfort::hipsparse` CMake target.
-
-### **ROCm Systems Profiler** (0.1.1)
-
-#### Resolved issues
-
-* Fixed an error when building from source on some SUSE and RHEL systems when using the `ROCPROFSYS_BUILD_DYNINST` option.
-
-### **ROCProfiler** (2.0.0)
-
-#### Changed
-
-* Replaced `CU_UTILIZATION` metric with `SIMD_UTILIZATION` for better accuracy.
-
-#### Resolved issues
-
-* Fixed the `VALUBusy` and `SALUBusy` activity metrics for accuracy on MI300.
-
-### **ROCprofiler-SDK** (0.5.0)
-
-#### Added
-
-* Support for system-wide collection of SQ counters across all HSA processes.
-
-#### Changed
-
-* `rocprofiler_sample_device_counting_service` API updated to return counter output immediately, when called in synchronous mode.
+* Fixed an error that prevented GPU hardware activity from being presented in certain workloads.  
 
 ## ROCm known issues
 
 ROCm known issues are noted on {fab}`github` [GitHub](https://github.com/ROCm/ROCm/labels/Verified%20Issue). For known
 issues related to individual components, review the [Detailed component changes](#detailed-component-changes).
 
-## ROCm resolved issues
-
-The following are previously known issues resolved in this release. For resolved issues related to
-individual components, review the [Detailed component changes](#detailed-component-changes).
-
-### TransferBench packages not functional
-
-Issue with TransferBench packages not being compiled properly has been fixed. For more information, See [GitHub issue #4081](https://github.com/ROCm/ROCm/issues/4081).
-
-### ROCm Compute Profiler CTest failure in CI
-
-When running the ROCm Compute Profiler (`rocprof-compute`) CTest in the Azure CI environment, the
-`rocprof-compute` execution test failed. This issue was due to an outdated test file that was not renamed
-(`omniperf` to `rocprof-compute`), and the `ROCM_PATH` environment variable not being set in
-the Azure CI environment, resulting in the tool being unable to extract chip information as expected.
-This issue has been fixed in the ROCm 6.3.2 release. See [GitHub issue #4085](https://github.com/ROCm/ROCm/issues/4085).
-
-### MIVisionX memory access fault in Canny edge detection
-
-An issue where Canny edge detection kernels accessed out-of-bounds memory locations while
-computing gradient intensities on edge pixels has been fixed. This issue was isolated to
-Canny-specific use cases on Instinct MI300 series accelerators. See [GitHub issue #4086](https://github.com/ROCm/ROCm/issues/4086).
-
-### AMD VCN instability with rocDecode
-
-A firmware crash on gfx942 devices when AMD Video Core Next (VCN) was used for rocDecode operations has been resolved.
-
 ## ROCm upcoming changes
 
 The following changes to the ROCm software stack are anticipated for future releases.
+
+### ROCTracer, ROCProfiler, rocprof, and rocprofv2 deprecation
+
+Development and support for ROCTracer, ROCProfiler, `rocprof`, and `rocprofv2` will phase out in favor of ROCprofiler-SDK and `rocprofv3` in upcoming ROCm releases. Going forward, only critical defect fixes will be addressed for older versions of profiling tools and libraries. Upgrade to the latest version of ROCprofiler-SDK library and `rocprofv3` tool to ensure continued support and access to new features.
 
 ### AMDGPU wavefront size compiler macro deprecation
 

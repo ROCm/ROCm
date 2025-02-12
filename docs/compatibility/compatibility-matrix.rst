@@ -23,7 +23,7 @@ compatibility and system requirements.
 .. container:: format-big-table
 
   .. csv-table::
-      :header: "ROCm Version", "6.3.2", "6.3.1", "6.2.0"
+      :header: "ROCm Version", "6.3.3", "6.3.2", "6.2.0"
       :stub-columns: 1
 
       :ref:`Operating systems & kernels <OS-kernel-versions>`,Ubuntu 24.04.2,Ubuntu 24.04.2,Ubuntu 24.04
@@ -33,7 +33,7 @@ compatibility and system requirements.
       ,"SLES 15 SP6, SP5","SLES 15 SP6, SP5","SLES 15 SP6, SP5"
       ,Oracle Linux 8.10 [#mi300x]_,Oracle Linux 8.10 [#mi300x]_,Oracle Linux 8.9 [#mi300x]_
       ,Debian 12 [#single-node]_,Debian 12 [#single-node]_,
-      ,Azure Linux 3.0 [#mi300x]_,,
+      ,Azure Linux 3.0 [#mi300x]_,Azure Linux 3.0 [#mi300x]_,
       ,.. _architecture-support-compatibility-matrix:,,
       :doc:`Architecture <rocm-install-on-linux:reference/system-requirements>`,CDNA3,CDNA3,CDNA3
       ,CDNA2,CDNA2,CDNA2
@@ -83,7 +83,7 @@ compatibility and system requirements.
       :doc:`hipBLAS <hipblas:index>`,2.3.0,2.3.0,2.2.0
       :doc:`hipBLASLt <hipblaslt:index>`,0.10.0,0.10.0,0.8.0
       :doc:`hipFFT <hipfft:index>`,1.0.17,1.0.17,1.0.14
-      :doc:`hipfort <hipfort:index>`,0.5.1,0.5.0,0.4.0
+      :doc:`hipfort <hipfort:index>`,0.5.1,0.5.1,0.4.0
       :doc:`hipRAND <hiprand:index>`,2.11.1,2.11.1,2.11.0
       :doc:`hipSOLVER <hipsolver:index>`,2.3.0,2.3.0,2.2.0
       :doc:`hipSPARSE <hipsparse:index>`,3.1.2,3.1.2,3.1.1
@@ -104,8 +104,8 @@ compatibility and system requirements.
       :doc:`rocThrust <rocthrust:index>`,3.3.0,3.3.0,3.0.1
       ,,,
       SUPPORT LIBS,,,
-      `hipother <https://github.com/ROCm/hipother>`_,6.3.42134,6.3.42133,6.2.41133
-      `rocm-core <https://github.com/ROCm/rocm-core>`_,6.3.2,6.3.1,6.2.0
+      `hipother <https://github.com/ROCm/hipother>`_,6.3.42134,6.3.42134,6.2.41133
+      `rocm-core <https://github.com/ROCm/rocm-core>`_,6.3.3,6.3.2,6.2.0
       `ROCT-Thunk-Interface <https://github.com/ROCm/ROCT-Thunk-Interface>`_,N/A [#ROCT-rocr]_,N/A [#ROCT-rocr]_,20240607.1.4246
       ,,,
       SYSTEM MGMT TOOLS,.. _tools-support-compatibility-matrix:,,
@@ -118,31 +118,32 @@ compatibility and system requirements.
       PERFORMANCE TOOLS,,,
       :doc:`ROCm Bandwidth Test <rocm_bandwidth_test:index>`,1.4.0,1.4.0,1.4.0
       :doc:`ROCm Compute Profiler <rocprofiler-compute:index>`,3.0.0,3.0.0,2.0.1
-      :doc:`ROCm Systems Profiler <rocprofiler-systems:index>`,0.1.1,0.1.0,1.11.2
-      :doc:`ROCProfiler <rocprofiler:index>`,2.0.60302,2.0.60301,2.0.60200
+      :doc:`ROCm Systems Profiler <rocprofiler-systems:index>`,0.1.2,0.1.1,1.11.2
+      :doc:`ROCProfiler <rocprofiler:index>`,2.0.60303,2.0.60302,2.0.60200
       :doc:`ROCprofiler-SDK <rocprofiler-sdk:index>`,0.5.0,0.5.0,0.4.0
-      :doc:`ROCTracer <roctracer:index>`,4.1.60302,4.1.60301,4.1.60200
+      :doc:`ROCTracer <roctracer:index>`,4.1.60303,4.1.60302,4.1.60200
       ,,,
       DEVELOPMENT TOOLS,,,
-      :doc:`HIPIFY <hipify:index>`,18.0.0.25012,18.0.0.24491,18.0.0.24232
+      :doc:`HIPIFY <hipify:index>`,18.0.0.25012,18.0.0.25012,18.0.0.24232
       :doc:`ROCm CMake <rocmcmakebuildtools:index>`,0.14.0,0.14.0,0.13.0
       :doc:`ROCdbgapi <rocdbgapi:index>`,0.77.0,0.77.0,0.76.0
       :doc:`ROCm Debugger (ROCgdb) <rocgdb:index>`,15.2.0,15.2.0,14.2.0
       `rocprofiler-register <https://github.com/ROCm/rocprofiler-register>`_,0.4.0,0.4.0,0.4.0
       :doc:`ROCr Debug Agent <rocr_debug_agent:index>`,2.0.3,2.0.3,2.0.3
       ,,,
-      COMPILERS,.. _compilers-support-compatibility-matrix:,..
+      COMPILERS,.. _compilers-support-compatibility-matrix:,,
       `clang-ocl <https://github.com/ROCm/clang-ocl>`_,N/A,N/A,N/A
       :doc:`hipCC <hipcc:index>`,1.1.1,1.1.1,1.1.1
-      `Flang <https://github.com/ROCm/flang>`_,18.0.0.25012,18.0.0.24491,18.0.0.24232
-      :doc:`llvm-project <llvm-project:index>`,18.0.0.25012,18.0.0.24491,18.0.0.24232
-      `OpenMP <https://github.com/ROCm/llvm-project/tree/amd-staging/openmp>`_,18.0.0.25012,18.0.0.24491,18.0.0.24232
+      `Flang <https://github.com/ROCm/flang>`_,18.0.0.25012,18.0.0.25012,18.0.0.24232
+      :doc:`llvm-project <llvm-project:index>`,18.0.0.25012,18.0.0.25012,18.0.0.24232
+      `OpenMP <https://github.com/ROCm/llvm-project/tree/amd-staging/openmp>`_,18.0.0.25012,18.0.0.25012,18.0.0.24232
       ,,,
-      RUNTIMES,.. _runtime-support-compatibility-matrix:,..
-      :doc:`AMD CLR <hip:understand/amd_clr>`,6.3.42134,6.3.42133,6.2.41133
-      :doc:`HIP <hip:index>`,6.3.42134,6.3.42133,6.2.41133
+      RUNTIMES,.. _runtime-support-compatibility-matrix:,,
+      :doc:`AMD CLR <hip:understand/amd_clr>`,6.3.42134,6.3.42134,6.2.41133
+      :doc:`HIP <hip:index>`,6.3.42134,6.3.42134,6.2.41133
       `OpenCL Runtime <https://github.com/ROCm/clr/tree/develop/opencl>`_,2.0.0,2.0.0,2.0.0
       :doc:`ROCr Runtime <rocr-runtime:index>`,1.14.0,1.14.0,1.13.0
+
 
 
 
