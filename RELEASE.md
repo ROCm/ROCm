@@ -490,20 +490,9 @@ The following changes to the ROCm software stack are anticipated for future rele
 
 ### AMDGPU wavefront size compiler macro deprecation
 
-Access to the wavefront size as a compile-time constant via the `__AMDGCN_WAVEFRONT_SIZE`
-and `__AMDGCN_WAVEFRONT_SIZE__` macros or the `constexpr warpSize` variable is deprecated
-and will be disabled in a future release. 
-
-* The `__AMDGCN_WAVEFRONT_SIZE__` macro and `__AMDGCN_WAVEFRONT_SIZE` alias will be removed in an upcoming release.
-    It is recommended to remove any use of this macro. For more information, see
-    [AMDGPU support](https://rocm.docs.amd.com/projects/llvm-project/en/docs-6.3.2/LLVM/clang/html/AMDGPUSupport.html).
-* `warpSize` will only be available as a non-`constexpr` variable. Where required,
-    the wavefront size should be queried via the `warpSize` variable in device code,
-    or via `hipGetDeviceProperties` in host code. Neither of these will result in a compile-time constant. 
-* For cases where compile-time evaluation of the wavefront size cannot be avoided,
-    uses of `__AMDGCN_WAVEFRONT_SIZE`, `__AMDGCN_WAVEFRONT_SIZE__`, or `warpSize`
-    can be replaced with a user-defined macro or `constexpr` variable with the wavefront
-    size(s) for the target hardware.
+The `__AMDGCN_WAVEFRONT_SIZE__` macro will be deprecated in an upcoming
+release. It is recommended to remove any use of this macro. For more information, see [AMDGPU
+support](https://rocm.docs.amd.com/projects/llvm-project/en/docs-6.3.2/LLVM/clang/html/AMDGPUSupport.html).
 
 ### HIPCC Perl scripts deprecation
 
