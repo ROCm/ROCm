@@ -47,6 +47,9 @@ ROCm documentation continues to be updated to provide clearer and more comprehen
 
 * [Tutorials for AI developers](https://rocm.docs.amd.com/projects/ai-developer-hub/en/latest/) have been added. These tutorials are Jupyter notebook-based, easy-to-follow documents. They are ideal for AI developers who want to learn about specific topics, including inference, fine-tuning, and training.
 
+* The [LLM inference performance validation guide for AMD Instinct MI300X](https://rocm.docs.amd.com/en/latest/how-to/rocm-for-ai/inference/vllm-benchmark.html)
+  now includes additional models for performance benchmarking. The accompanying ROCm vLLM Docker has been upgraded to ROCm 6.3.1. See the guide for more information.
+ 
 * The HIP documentation has been updated with new resources for developers. To learn more about concurrency, parallelism, and stream management on devices and multiple GPUs, see [Asynchronous concurrent execution](https://rocm.docs.amd.com/projects/HIP/en/latest/how-to/hip_runtime_api/asynchronous.html)
 
 * The following HIP documentation topics have been updated:
