@@ -11,6 +11,7 @@ _toc.yml
 docBin/
 _doxygen/
 _readthedocs/
+__pycache__/
 
 # avoid duplicating contributing.md due to conf.py
 docs/CHANGELOG.md
