@@ -80,6 +80,7 @@ jobs:
         -DHALF_INCLUDE_DIRS=$(Agent.BuildDirectory)/rocm/include
         -DCMAKE_BUILD_TYPE=Release
         -DGPU_TARGETS=$(JOB_GPU_TARGET)
+        -DROCM_PLATFORM_VERSION=$(NEXT_RELEASE_VERSION)
         -GNinja
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
     parameters:
