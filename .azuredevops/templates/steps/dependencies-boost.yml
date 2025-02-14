@@ -1,0 +1,35 @@
+steps:
+- task: DownloadPipelineArtifact@2
+  displayName: Download Boost
+  inputs:
+    buildType: specific
+    project: ROCm-CI
+    definition: $(BOOST_DEPENDENCY_PIPELINE_ID)
+    targetPath: $(Pipeline.Workspace)/d
+- task: ExtractFiles@1
+  displayName: Extract Boost
+  inputs:
+    archiveFilePatterns: '$(Pipeline.Workspace)/d/**/*.tar.gz'
+    destinationFolder: $(Agent.BuildDirectory)/boost
+    cleanDestinationFolder: true
+    overwriteExistingFiles: true
+- task: DeleteFiles@1
+  displayName: Cleanup Compressed Boost
+  inputs:
+    SourceFolder: $(Pipeline.Workspace)/d
+    Contents: '**/*.tar.gz'
+    RemoveDotFiles: true
+- task: Bash@3
+  displayName: 'List Boost files'
+  inputs:
+    targetType: inline
+    script: ls -1R $(Agent.BuildDirectory)/boost
+- task: Bash@3
+  displayName: 'Link Boost shared libraries'
+  inputs:
+    targetType: inline
+    script: |
+      echo $(Agent.BuildDirectory)/boost/lib | sudo tee /etc/ld.so.conf.d/boost.conf
+      sudo cat /etc/ld.so.conf.d/boost.conf
+      sudo ldconfig -v
+      ldconfig -p

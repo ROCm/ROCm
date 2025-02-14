@@ -243,6 +243,11 @@ ack_and_ignore_asan() {
     echo "-a parameter accepted but ignored"
 }
 
+ack_and_skip_static() {
+    echo "-s parameter accepted but static build is not enabled for this component..skipping"
+    exit 0
+}
+
 #debug function #dumping values in case of error to solve the same
 print_vars() {
 echo " Status of Vars in $1 build "
@@ -271,6 +276,8 @@ rocm_common_cmake_params(){
                  "-DCMAKE_EXE_LINKER_FLAGS_INIT=-Wl,--enable-new-dtags,--build-id=sha1,--rpath,$ROCM_EXE_RPATH" \
                  "-DCMAKE_SHARED_LINKER_FLAGS_INIT=-Wl,--enable-new-dtags,--build-id=sha1,--rpath,$ROCM_LIB_RPATH" \
                  "-DFILE_REORG_BACKWARD_COMPATIBILITY=OFF" \
+                 "-DCPACK_RPM_PACKAGE_RELOCATABLE=ON" \
+                 "-DCPACK_SET_DESTDIR=OFF" \
                  "-DINCLUDE_PATH_COMPATIBILITY=OFF" \
     # set lib directory to lib/asan for ASAN builds
     # Disable file reorg backward compatibilty for ASAN builds

@@ -1,9 +1,9 @@
-<head>
-  <meta charset="UTF-8">
-  <meta name="description" content="System debugging guide">
-  <meta name="keywords" content="debug, system-level debug, debug flags, PCIe debug, AMD,
-  ROCm">
-</head>
+---
+myst:
+  html_meta:
+    "description": "Learn more about common system-level debugging measures for ROCm."
+    "keywords": "env, var, sys, PCIe, troubleshooting, admin, error"
+---
 
 # System debugging
 

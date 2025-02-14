@@ -23,7 +23,7 @@ if [ "$DASH_JAY" == "" ]; then
 fi
 
 export JOB_NAME=release
-export JOB_DESIGNATOR=
+export JOB_DESIGNATOR="${JOB_DESIGNATOR-"local."}"
 echo "JOB_DESIGNATOR=${JOB_DESIGNATOR}"
 export SLES_BUILD_ID_PREFIX
 echo "SLES_BUILD_ID_PREFIX=${SLES_BUILD_ID_PREFIX}"
@@ -47,7 +47,6 @@ case "${DISTRO_NAME}" in
     ("centos") export CPACKGEN=RPM PACKAGEEXT=rpm PKGTYPE=rpm ;;
     ("sles") export CPACKGEN=RPM PACKAGEEXT=rpm PKGTYPE=rpm ;;
     ("rhel") export CPACKGEN=RPM PACKAGEEXT=rpm PKGTYPE=rpm ;;
-    ("mariner") export CPACKGEN=RPM PACKAGEEXT=rpm PKGTYPE=rpm ;;
 esac
 
 # set up package file name variables for CPACK_GENERATOR
@@ -82,7 +81,7 @@ if [ -f "${WORK_ROOT}/build/rocm_version.txt" ] && [ -z $ROCM_VERSION ]; then
     ROCM_VERSION="$(cat ${WORK_ROOT}/build/rocm_version.txt)"
 fi
 
-: ${ROCM_VERSION:="6.1.0"}
+: ${ROCM_VERSION:="6.3.0"}
 ROCM_LIBPATCH_VERSION=$(get_rocm_libpatch_version $ROCM_VERSION)
 echo "ROCM_VERSION=${ROCM_VERSION}"
 echo "ROCM_LIBPATCH_VERSION=${ROCM_LIBPATCH_VERSION}"
@@ -111,6 +110,7 @@ export DIST_NO_DEBUG=yes
 export OPENCL_MAINLINE=1
 export HSA_SOURCE_ROOT=$WORK_ROOT/ROCR-Runtime
 export HSA_OPENSOURCE_ROOT=$HSA_SOURCE_ROOT/src
+export ROCR_ROOT=$WORK_ROOT/ROCR-Runtime
 export ROCRTST_ROOT=$HSA_SOURCE_ROOT/rocrtst
 export HSA_CORE_ROOT=$HSA_OPENSOURCE_ROOT
 export HSA_IMAGE_ROOT=$HSA_OPENSOURCE_ROOT/hsa-ext-image
@@ -119,13 +119,14 @@ export HSA_TOOLS_ROOT=$HSA_OPENSOURCE_ROOT/hsa-runtime-tools
 export OCL_RT_SRC_TF_ROOT=$SRC_TF_ROOT/ocl_lc
 export SCRIPT_ROOT=$WORK_ROOT/build
 export THUNK_ROOT=$WORK_ROOT/ROCT-Thunk-Interface
-if [ -d "$HSA_OPENSOURCE_ROOT/ROCT-Thunk-Interface" ]; then
-	export THUNK_ROOT=$HSA_OPENSOURCE_ROOT/ROCT-Thunk-Interface
-fi
-export AQLPROFILE_ROOT=$WORK_ROOT/hsa/aqlprofile
+
+export AQLPROFILE_ROOT=$WORK_ROOT/aqlprofile
 export ROCPROFILER_ROOT=$WORK_ROOT/rocprofiler
 export ROCTRACER_ROOT=$WORK_ROOT/roctracer
 export ROCPROFILER_REGISTER_ROOT=$WORK_ROOT/rocprofiler-register
+export ROCPROFILER_SDK_ROOT=$WORK_ROOT/rocprofiler-sdk
+export ROCPROFILER_COMPUTE_ROOT=$WORK_ROOT/rocprofiler-compute
+export ROCPROFILER_SYSTEMS_ROOT=$WORK_ROOT/rocprofiler-systems
 export RDC_ROOT=$WORK_ROOT/rdc
 export RDCTST_ROOT=$RDC_ROOT/tests/rdc_tests
 export UTILS_ROOT=$WORK_ROOT/rocm-utils
@@ -147,7 +148,6 @@ export ROCM_CORE_ROOT=$WORK_ROOT/rocm-core
 export ROCM_CMAKE_ROOT=$WORK_ROOT/rocm-cmake
 export ROCM_BANDWIDTH_TEST_ROOT=$WORK_ROOT/rocm_bandwidth_test
 export ROCMINFO_ROOT=$WORK_ROOT/rocminfo
-export CLANG_OCL_ROOT=$WORK_ROOT/clang-ocl
 export ROCR_DEBUG_AGENT_ROOT=$WORK_ROOT/rocr_debug_agent
 export COMGR_ROOT=$LLVM_PROJECT_ROOT/amd/comgr
 export COMGR_LIB_PATH=$OUT_DIR/build/amd_comgr
@@ -179,7 +179,7 @@ export BUILD_ARTIFACTS=$OUT_DIR/$PACKAGEEXT
 export HIPCC_COMPILE_FLAGS_APPEND="-O3 -Wno-format-nonliteral -parallel-jobs=4"
 export HIPCC_LINK_FLAGS_APPEND="-O3 -parallel-jobs=4"
 
-export PATH="${ROCM_PATH}/lib/llvm/bin:${PATH}"
+export PATH="${ROCM_PATH}/bin:${ROCM_PATH}/lib/llvm/bin:${PATH}:${HOME}/.local/bin"
 
 export LC_ALL=C.UTF-8
 export LANG=C.UTF-8
@@ -187,5 +187,5 @@ export LANG=C.UTF-8
 export PROC=${PROC:-"$(nproc)"}
 export RELEASE_FLAG=${RELEASE_FLAG:-"-r"}
 export SUDO=sudo
-export PATH=/usr/local/bin:${PATH}:${HOME}/.local/bin
+export PATH=/usr/local/bin:${PATH}:/sbin:/bin
 export CCACHE_DIR=${HOME}/.ccache

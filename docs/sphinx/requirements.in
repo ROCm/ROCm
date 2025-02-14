@@ -1,2 +1,3 @@
-rocm-docs-core==1.8.2
+rocm-docs-core==1.15.0
 sphinx-reredirects
+sphinx-sitemap

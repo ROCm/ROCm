@@ -96,6 +96,7 @@ build_devicelibs() {
     if [ ! -e Makefile ]; then
         cmake $(rocm_cmake_params) \
               $(rocm_common_cmake_params) \
+              -DBUILD_SHARED_LIBS=$SHARED_LIBS \
               -DROCM_DEVICE_LIBS_BITCODE_INSTALL_LOC_NEW="$bitcodeInstallLoc/amdgcn" \
               -DROCM_DEVICE_LIBS_BITCODE_INSTALL_LOC_OLD="amdgcn" \
               "$DEVICELIBS_ROOT"

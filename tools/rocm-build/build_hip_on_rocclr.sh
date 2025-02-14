@@ -24,14 +24,15 @@ printUsage() {
 
 source "$(dirname "${BASH_SOURCE}")/compute_utils.sh"
 MAKEOPTS="$DASH_JAY"
+PROJ_NAME="hip-on-rocclr"
 
-BUILD_PATH="$(getBuildPath hip-on-rocclr)"
+BUILD_PATH="$(getBuildPath $PROJ_NAME)"
 
 TARGET="build"
 PACKAGE_ROOT="$(getPackageRoot)"
 PACKAGE_SRC="$(getSrcPath)"
-PACKAGE_DEB="$PACKAGE_ROOT/deb/hip-on-rocclr"
-PACKAGE_RPM="$PACKAGE_ROOT/rpm/hip-on-rocclr"
+PACKAGE_DEB="$PACKAGE_ROOT/deb/$PROJ_NAME"
+PACKAGE_RPM="$PACKAGE_ROOT/rpm/$PROJ_NAME"
 PREFIX_PATH="$PACKAGE_ROOT"
 CORE_BUILD_DIR="$(getBuildPath hsa-core)"
 ROCclr_BUILD_DIR="$(getBuildPath rocclr)"
@@ -52,7 +53,7 @@ MAKETARGET="deb"
 PKGTYPE="deb"
 OFFLOAD_ARCH=()
 
-DEFAULT_OFFLOAD_ARCH=(gfx900 gfx906 gfx908 gfx90a gfx940 gfx941 gfx942 gfx1030 gfx1031 gfx1033 gfx1034 gfx1035 gfx1100 gfx1101 gfx1102 gfx1103)
+DEFAULT_OFFLOAD_ARCH=(gfx900 gfx906 gfx908 gfx90a gfx940 gfx941 gfx942 gfx1030 gfx1031 gfx1033 gfx1034 gfx1035 gfx1100 gfx1101 gfx1102 gfx1200 gfx1201)
 
 VALID_STR=`getopt -o hcrast:o: --long help,clean,release,address_sanitizer,static,offload-arch=:,outdir: -- "$@"`
 eval set -- "$VALID_STR"
@@ -168,9 +169,11 @@ build_catch_tests() {
    export ROCM_PATH="$ROCM_INSTALL_PATH"
    cmake \
          -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
+         -DBUILD_SHARED_LIBS=$SHARED_LIBS \
          -DHIP_PLATFORM=amd \
          -DROCM_PATH="$ROCM_INSTALL_PATH" \
          -DOFFLOAD_ARCH_STR="$OFFLOAD_ARCH_STR" \
+         $(rocm_cmake_params) \
          $(rocm_common_cmake_params) \
          -DCPACK_RPM_DEBUGINFO_PACKAGE=FALSE \
          -DCPACK_DEBIAN_DEBUGINFO_PACKAGE=FALSE \
@@ -206,6 +209,8 @@ package_samples() {
    export ROCM_PATH="$ROCM_INSTALL_PATH"
    cmake \
          -DROCM_PATH="$ROCM_INSTALL_PATH" \
+         -DBUILD_SHARED_LIBS=$SHARED_LIBS \
+         $(rocm_cmake_params) \
          $(rocm_common_cmake_params) \
          -DCMAKE_MODULE_PATH="$CMAKE_PATH/hip" \
          -DCPACK_INSTALL_PREFIX="$ROCM_INSTALL_PATH" \

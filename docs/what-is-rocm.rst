@@ -6,24 +6,19 @@
 What is ROCm?
 ***********************************************************
 
-ROCm is an open-source stack, composed primarily of open-source software, designed for
-graphics processing unit (GPU) computation. ROCm consists of a collection of drivers, development
-tools, and APIs that enable GPU programming from low-level kernel to end-user applications.
+ROCm is a software stack, composed primarily of open-source software, that
+provides the tools for programming AMD Graphics Processing Units (GPUs), from
+low-level kernels to high-level end-user applications.
 
-.. image:: data/rocm-software-stack-6_2_0.jpg
+.. image:: data/rocm-software-stack-6_3_2.jpg
   :width: 800
-  :alt: AMD's ROCm software stack and neighboring technologies.
+  :alt: AMD's ROCm software stack and enabling technologies.
   :align: center
 
-ROCm is powered by
-:doc:`Heterogeneous-computing Interface for Portability (HIP) <hip:index>`;
-it supports programming models, such as OpenMP and OpenCL, and includes all necessary open
-source software compilers, debuggers, and libraries. It's fully integrated into machine learning (ML)
-frameworks, such as PyTorch and TensorFlow.
-
-.. tip::
-  If you're using Radeon GPUs, refer to the
-  :doc:`Radeon-specific ROCm documentation <radeon:index>`.
+Specifically, ROCm provides the tools for
+:doc:`HIP (Heterogeneous-computing Interface for Portability) <hip:index>`,
+OpenCL and OpenMP. These include compilers, libraries for high-level
+functions, debuggers, profilers and runtimes.
 
 ROCm components
 ===============================================
@@ -47,6 +42,7 @@ Machine Learning & Computer Vision
   ":doc:`ROCm Performance Primitives (RPP) <rpp:index>`", "Comprehensive high-performance computer vision library for AMD processors with HIP/OpenCL/CPU back-ends"
   ":doc:`rocAL <rocal:index>`", "An augmentation library designed to decode and process images and videos"
   ":doc:`rocDecode <rocdecode:index>`", "High-performance SDK for access to video decoding features on AMD GPUs"
+  ":doc:`rocJPEG <rocjpeg:index>`", "Library for decoding JPG images on AMD GPUs"
   ":doc:`rocPyDecode <rocpydecode:index>`", "Provides access to rocDecode APIs in both Python and C/C++ languages"
 
 Communication
@@ -79,7 +75,7 @@ Math
   ":doc:`rocSOLVER <rocsolver:index>`", "An implementation of LAPACK routines on ROCm software, implemented in the HIP programming language and optimized for AMD's latest discrete GPUs"
   ":doc:`rocSPARSE <rocsparse:index>`", "Exposes a common interface that provides BLAS for sparse computation implemented on ROCm runtime and toolchains (in the HIP programming language)"
   ":doc:`rocWMMA <rocwmma:index>`", "C++ library for accelerating mixed-precision matrix multiply-accumulate (MMA) operations"
-  "`Tensile <https://github.com/ROCm/Tensile>`_ ", "Creates benchmark-driven backend libraries for GEMMs, GEMM-like problems, and general N-dimensional tensor contractions"
+  ":doc:`Tensile <tensile:src/index>`", "Creates benchmark-driven backend libraries for GEMMs, GEMM-like problems, and general N-dimensional tensor contractions"
 
 Primitives
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -113,9 +109,9 @@ Performance
 .. csv-table::
   :header: "Component", "Description"
 
-  ":doc:`Omniperf <omniperf:index>`", "System performance profiling tool for machine learning and HPC workloads"
-  ":doc:`Omnitrace <omnitrace:index>`", "Comprehensive profiling and tracing tool for HIP applications"
   ":doc:`ROCm Bandwidth Test <rocm_bandwidth_test:index>`", "Captures the performance characteristics of buffer copying and kernel read/write operations"
+  ":doc:`ROCm Compute Profiler <rocprofiler-compute:index>`", "Kernel-level profiling for machine learning and high performance computing (HPC) workloads"
+  ":doc:`ROCm Systems Profiler <rocprofiler-systems:index>`", "Comprehensive profiling and tracing of applications running on the CPU or the CPU and GPU"
   ":doc:`ROCProfiler <rocprofiler:index>`", "Profiling tool for HIP applications"
   ":doc:`ROCprofiler-SDK <rocprofiler-sdk:index>`", "Toolkit for developing analysis tools for profiling and tracing GPU compute applications. This toolkit is in beta and subject to change"
   ":doc:`ROCTracer <roctracer:index>`", "Intercepts runtime API calls and traces asynchronous activity"
@@ -148,6 +144,6 @@ Runtimes
 .. csv-table::
   :header: "Component", "Description"
 
-  ":doc:`AMD Common Language Runtime (CLR) <hip:understand/amd_clr>`", "Contains source code for AMD's common language runtimes: HIP and OpenCL"
+  ":doc:`AMD Compute Language Runtime (CLR) <hip:understand/amd_clr>`", "Contains source code for AMD's compute language runtimes: HIP and OpenCL"
   ":doc:`HIP <hip:index>`", "AMD's GPU programming language extension and the GPU runtime"
   ":doc:`ROCR-Runtime <rocr-runtime:index>`", "User-mode API interfaces and libraries necessary for host applications to launch compute kernels on available HSA ROCm kernel agents"

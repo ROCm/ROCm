@@ -12,6 +12,11 @@ set -o pipefail
 ROCM_LLVMDIR="lib/llvm"
 # Set ADDRESS_SANITIZER to OFF by default
 export ADDRESS_SANITIZER="OFF"
+
+DISABLE_DEBUG_PACKAGE="false"
+export CFLAGS="$CFLAGS $SET_DWARF_VERSION_4  "
+export CXXFLAGS="$CXXFLAGS $SET_DWARF_VERSION_4 "
+
 # Print message to stderr
 #   param message string to print on exit
 # Example: printErr "file not found"
@@ -36,6 +41,11 @@ dieIfEmpty() {
         shift
         die "$@"
     fi
+}
+
+ack_and_skip_static() {
+    echo "static build is not enabled for this component..skipping"
+    exit 0
 }
 
 # Copy a file or directory to target location and show single line progress
@@ -127,9 +137,6 @@ getCmakePath() {
     echo "$rocmInstallPath/$cmakePath"
 }
 
-# Get the install directory name for libraries
-# lib - For normal builds
-# lib/asan -For ASAN builds
 getInstallLibDir() {
     local libDir="lib"
     if [ "${ENABLE_ADDRESS_SANITIZER}" == "true" ] ; then
@@ -138,8 +145,6 @@ getInstallLibDir() {
     echo "$libDir"
 }
 
-# TODO: Use the function to set the LDFLAGS and CXXFLAGS for ASAN
-# rather than setting in individual build scripts
 set_asan_env_vars() {
     # Flag to set cmake build params for ASAN builds
     ASAN_CMAKE_PARAMS="true"
@@ -151,14 +156,14 @@ set_asan_env_vars() {
     export PATH="$LLVM_BIN_DIR/:$PATH"
     # get exact path to ASAN lib containing clang version
     ASAN_LIB_PATH=$(clang --print-file-name=libclang_rt.asan-x86_64.so)
-    export LD_LIBRARY_PATH="${ASAN_LIB_PATH%/*}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    export LD_LIBRARY_PATH="${ASAN_LIB_PATH%/*}:${ROCM_PATH}/llvm/lib:${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
     export ASAN_OPTIONS="detect_leaks=0"
 }
 
 set_address_sanitizer_on() {
-    export CFLAGS="-fsanitize=address -shared-libasan -g -gz"
-    export CXXFLAGS="-fsanitize=address -shared-libasan -g -gz"
-    export LDFLAGS="-Wl,--enable-new-dtags -fuse-ld=lld  -fsanitize=address -shared-libasan -g -gz -Wl,--build-id=sha1 -L${ROCM_PATH}/lib/asan"
+    export CFLAGS="-fsanitize=address -shared-libasan $SET_DWARF_VERSION_4 -g -gz"
+    export CXXFLAGS="-fsanitize=address -shared-libasan $SET_DWARF_VERSION_4 -g -gz"
+    export LDFLAGS="-Wl,--enable-new-dtags -fuse-ld=lld  -fsanitize=address -shared-libasan -g -gz -Wl,--build-id=sha1 -L${ROCM_PATH}/llvm/lib -L${ROCM_PATH}/lib/asan"
 }
 
 rebuild_lapack() {
@@ -189,43 +194,77 @@ echo " PKGTYPE= $6 "
 echo " MAKETARGET = $7 "
 }
 
+rocm_math_common_cmake_params=()
+init_rocm_common_cmake_params(){
+  local retCmakeParams=${1:-rocm_math_common_cmake_params}
+  local SET_BUILD_TYPE=${BUILD_TYPE:-'RelWithDebInfo'}
+  local ASAN_LIBDIR="lib/asan"
+  local CMAKE_PATH=$(getCmakePath)
 # Common cmake parameters can be set
 # component build scripts can use this function
-rocm_common_cmake_params() {
-    local cmake_params
-    if [ "${ASAN_CMAKE_PARAMS}" == "true" ] ; then
-        local ASAN_LIBDIR="lib/asan"
-        local CMAKE_PATH=$(getCmakePath)
-        cmake_params=(
-            "-DCMAKE_PREFIX_PATH=$CMAKE_PATH;${ROCM_PATH}/$ASAN_LIBDIR;$ROCM_PATH/llvm;$ROCM_PATH"
-            "-DCMAKE_BUILD_TYPE=${BUILD_TYPE:-'RelWithDebInfo'}"
-            "-DCMAKE_SHARED_LINKER_FLAGS_INIT=-Wl,--enable-new-dtags,--rpath,$ROCM_ASAN_LIB_RPATH"
-            "-DCMAKE_EXE_LINKER_FLAGS_INIT=-Wl,--enable-new-dtags,--rpath,$ROCM_ASAN_EXE_RPATH"
-            "-DENABLE_ASAN_PACKAGING=true"
-        )
-    else
-        cmake_params=(
-            "-DCMAKE_PREFIX_PATH=${ROCM_PATH}/llvm;${ROCM_PATH}"
-            "-DCMAKE_BUILD_TYPE=${BUILD_TYPE:-'Release'}"
-            "-DCMAKE_SHARED_LINKER_FLAGS_INIT=-Wl,--enable-new-dtags,--rpath,$ROCM_LIB_RPATH"
-            "-DCMAKE_EXE_LINKER_FLAGS_INIT=-Wl,--enable-new-dtags,--rpath,$ROCM_EXE_RPATH"
-        )
-    fi
-    printf '%s ' "${cmake_params[@]}"
+  local cmake_params
+  if [ "${ASAN_CMAKE_PARAMS}" == "true" ] ; then
+    cmake_params=(
+        "-DCMAKE_PREFIX_PATH=$CMAKE_PATH;${ROCM_PATH}/$ASAN_LIBDIR;$ROCM_PATH/llvm;$ROCM_PATH"
+        "-DCMAKE_SHARED_LINKER_FLAGS_INIT=-Wl,--enable-new-dtags,--build-id=sha1,--rpath,$ROCM_ASAN_LIB_RPATH"
+        "-DCMAKE_EXE_LINKER_FLAGS_INIT=-Wl,--enable-new-dtags,--build-id=sha1,--rpath,$ROCM_ASAN_EXE_RPATH"
+        "-DENABLE_ASAN_PACKAGING=true"
+    )
+  else
+    cmake_params=(
+        "-DCMAKE_PREFIX_PATH=${ROCM_PATH}/llvm;${ROCM_PATH}"
+        "-DCMAKE_SHARED_LINKER_FLAGS_INIT=-Wl,--enable-new-dtags,--build-id=sha1,--rpath,$ROCM_LIB_RPATH"
+        "-DCMAKE_EXE_LINKER_FLAGS_INIT=-Wl,--enable-new-dtags,--build-id=sha1,--rpath,$ROCM_EXE_RPATH"
+    )
+  fi
 
-    local common_cmake_params
-        common_cmake_params=(
-            "-DCMAKE_VERBOSE_MAKEFILE=1"
-            "-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=FALSE"
-            "-DCMAKE_INSTALL_PREFIX=${ROCM_PATH}"
-            "-DCMAKE_PACKAGING_INSTALL_PREFIX=${ROCM_PATH}"
-            "-DBUILD_FILE_REORG_BACKWARD_COMPATIBILITY=OFF"
-            "-DROCM_SYMLINK_LIBS=OFF"
-            "-DCPACK_PACKAGING_INSTALL_PREFIX=${ROCM_PATH}"
-            "-DROCM_DISABLE_LDCONFIG=ON"
-            "-DROCM_PATH=${ROCM_PATH}"
-        )
-    printf '%s ' "${common_cmake_params[@]}"
+  cmake_params+=(
+      "-DCMAKE_VERBOSE_MAKEFILE=1"
+      "-DCMAKE_BUILD_TYPE=${SET_BUILD_TYPE}"
+      "-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=FALSE"
+      "-DCMAKE_INSTALL_PREFIX=${ROCM_PATH}"
+      "-DCMAKE_PACKAGING_INSTALL_PREFIX=${ROCM_PATH}"
+      "-DBUILD_FILE_REORG_BACKWARD_COMPATIBILITY=OFF"
+      "-DROCM_SYMLINK_LIBS=OFF"
+      "-DCPACK_PACKAGING_INSTALL_PREFIX=${ROCM_PATH}"
+      "-DROCM_DISABLE_LDCONFIG=ON"
+      "-DCPACK_SET_DESTDIR=OFF"
+      "-DCPACK_RPM_PACKAGE_RELOCATABLE=ON"
+      "-DROCM_PATH=${ROCM_PATH}"
+  )
+
+  #TODO :remove if clause once debug related issues are fixed
+  if [ "${DISABLE_DEBUG_PACKAGE}" == "true" ] ; then
+    SET_BUILD_TYPE=${BUILD_TYPE:-'Release'}
+    cmake_params+=(
+        "-DCPACK_DEBIAN_DEBUGINFO_PACKAGE=FALSE"
+        "-DCPACK_RPM_DEBUGINFO_PACKAGE=FALSE"
+        "-DCPACK_RPM_INSTALL_WITH_EXEC=FALSE"
+        "-DCMAKE_BUILD_TYPE=${SET_BUILD_TYPE}"
+    )
+  elif [ "$SET_BUILD_TYPE" == "RelWithDebInfo" ] || [ "$SET_BUILD_TYPE" == "Debug" ]; then
+    # RelWithDebinfo optimization level -O2 is having performance impact
+    # So overriding the same to -O3
+    cmake_params+=(
+        "-DCPACK_DEBIAN_DEBUGINFO_PACKAGE=TRUE"
+        "-DCPACK_RPM_DEBUGINFO_PACKAGE=TRUE"
+        "-DCPACK_RPM_INSTALL_WITH_EXEC=TRUE"
+        "-DCMAKE_CXX_FLAGS_RELWITHDEBINFO=-O3 -g -DNDEBUG"
+    )
+  fi
+    eval "${retCmakeParams}=( \"\${cmake_params[@]}\" ) "
+}
+
+disable_debug_package_generation(){
+    case "$DISTRO_ID" in
+       (sles*|rhel*)
+           export CFLAGS=${CFLAGS//"$SET_DWARF_VERSION_4"}
+           export CXXFLAGS=${CXXFLAGS//"$SET_DWARF_VERSION_4"}
+           ;;
+      (*)
+           ;;
+    esac
+    DISABLE_DEBUG_PACKAGE="true"
 }
 
 # Setup a number of variables to specify where to find the source

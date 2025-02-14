@@ -21,14 +21,15 @@ printUsage() {
 
     return 0
 }
+PROJ_NAME="opencl-on-rocclr"
 MAKEOPTS="$DASH_JAY"
 
-BUILD_PATH="$(getBuildPath opencl-on-rocclr)"
+BUILD_PATH="$(getBuildPath $PROJ_NAME)"
 
 TARGET="build"
 PACKAGE_ROOT="$(getPackageRoot)"
-PACKAGE_DEB="$PACKAGE_ROOT/deb/opencl-on-rocclr"
-PACKAGE_RPM="$PACKAGE_ROOT/rpm/opencl-on-rocclr"
+PACKAGE_DEB="$PACKAGE_ROOT/deb/$PROJ_NAME"
+PACKAGE_RPM="$PACKAGE_ROOT/rpm/$PROJ_NAME"
 CORE_BUILD_DIR="$(getBuildPath hsa-core)"
 ROCclr_BUILD_DIR="$(getBuildPath rocclr)"
 BUILD_TYPE="Debug"
@@ -54,7 +55,7 @@ do
                 set_asan_env_vars
                 set_address_sanitizer_on ; shift ;;
         (-s | --static)
-                SHARED_LIBS="OFF" ; shift ;;
+                ack_and_skip_static ;;
         (-o | --outdir)
                 TARGET="outdir"; PKGTYPE=$2 ; OUT_DIR_SPECIFIED=1 ; ((CLEAN_OR_OUT|=2)) ; shift 2 ;;
         --)     shift; break;;
@@ -148,7 +149,7 @@ print_output_directory() {
 case $TARGET in
     (clean) clean_opencl_on_rocclr ;;
     (build) build_opencl_on_rocclr ; package_opencl_on_rocclr ;;
-   (outdir) print_output_directory ;;
+    (outdir) print_output_directory ;;
         (*) die "Invalid target $TARGET" ;;
 esac
 

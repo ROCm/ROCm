@@ -16,6 +16,11 @@ build_rocsparse() {
        set_address_sanitizer_on
     fi
 
+    SHARED_LIBS="ON"
+    if [ "${ENABLE_STATIC_BUILDS}" == "true" ]; then
+        SHARED_LIBS="OFF"
+    fi
+
     MIRROR="http://compute-artifactory.amd.com/artifactory/list/rocm-generic-local/mathlib/sparse/"
 
     mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
@@ -23,20 +28,22 @@ build_rocsparse() {
     if [ -n "$GPU_ARCHS" ]; then
         GPU_TARGETS="$GPU_ARCHS"
     else
-        GPU_TARGETS="gfx908:xnack-;gfx90a:xnack-;gfx90a:xnack+;gfx940;gfx941;gfx942;gfx1030;gfx1100;gfx1101"
+        GPU_TARGETS="gfx900;gfx906:xnack-;gfx908:xnack-;gfx90a:xnack+;gfx90a:xnack-;gfx942;gfx1030;gfx1100;gfx1101;gfx1102;gfx1200;gfx1201"
     fi
 
     ROCSPARSE_TEST_MIRROR=$MIRROR \
-    CXX=$(set_build_variables CXX)\
-    CC=$(set_build_variables CC)\
+    export CXX=$(set_build_variables CXX)\
+    export CC=$(set_build_variables CC)\
+
+    init_rocm_common_cmake_params
     cmake \
         -DAMDGPU_TARGETS=${GPU_TARGETS} \
         ${LAUNCHER_FLAGS} \
-        $(rocm_common_cmake_params) \
+        "${rocm_math_common_cmake_params[@]}" \
+        -DBUILD_SHARED_LIBS=$SHARED_LIBS \
         -DBUILD_CLIENTS_SAMPLES=ON \
         -DBUILD_CLIENTS_TESTS=ON \
         -DBUILD_CLIENTS_BENCHMARKS=ON \
-        -DCPACK_SET_DESTDIR=OFF \
         -DCMAKE_INSTALL_PREFIX=${ROCM_PATH} \
         -DBUILD_ADDRESS_SANITIZER="${ADDRESS_SANITIZER}" \
         -DCMAKE_MODULE_PATH="${ROCM_PATH}/lib/cmake/hip;${ROCM_PATH}/hip/cmake" \

@@ -1,0 +1,65 @@
+parameters:
+- name: checkoutRepo
+  type: string
+  default: 'self'
+- name: checkoutRef
+  type: string
+  default: ''
+- name: boostVersion
+  type: string
+  default: ''
+- name: aptPackages
+  type: object
+  default:
+    - git
+- name: rocmDependencies
+  type: object
+  default:
+    - llvm-project
+
+jobs:
+- job: boost
+  variables:
+  - group: common
+  - template: /.azuredevops/variables-global.yml
+  pool:
+    vmImage: ${{ variables.BASE_BUILD_POOL }}
+  workspace:
+    clean: all
+  steps:
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
+  - task: Bash@3
+    displayName: 'git clone boost'
+    inputs:
+      targetType: inline
+      script: git clone -b ${{ parameters.boostVersion }} https://github.com/boostorg/boost --depth=1 --recurse-submodules
+      workingDirectory: $(Build.SourcesDirectory)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
+    parameters:
+      dependencyList: ${{ parameters.rocmDependencies }}
+      dependencySource: staging
+  - task: Bash@3
+    displayName: Add ROCm binaries to PATH
+    inputs:
+      targetType: inline
+      script: echo "##vso[task.prependpath]$(Agent.BuildDirectory)/rocm/bin"
+  - task: Bash@3
+    displayName: Add ROCm compilers to PATH
+    inputs:
+      targetType: inline
+      script: echo "##vso[task.prependpath]$(Agent.BuildDirectory)/rocm/llvm/bin"
+  - task: Bash@3
+    displayName: 'Build Boost with clang'
+    inputs:
+      targetType: inline
+      script: |
+        export CC=$(Agent.BuildDirectory)/rocm/llvm/bin/clang
+        export CXX=$(Agent.BuildDirectory)/rocm/llvm/bin/clang++
+        ./bootstrap.sh --with-toolset=clang --prefix=$(Build.BinariesDirectory)
+        ./b2 --toolset=clang threading=multi link=shared --prefix=$(Build.BinariesDirectory) cxxflags="-std=c++20"
+        ./b2 install
+      workingDirectory: $(Build.SourcesDirectory)/boost
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml

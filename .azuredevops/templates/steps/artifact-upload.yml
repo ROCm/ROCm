@@ -27,6 +27,12 @@ steps:
     SourceFolder: '$(Build.BinariesDirectory)'
     Contents: '/**/*'
     RemoveDotFiles: true
+- task: Bash@3
+  displayName: Save pipeline artifact file name
+  inputs:
+    workingDirectory: $(Pipeline.Workspace)
+    targetType: inline
+    script: echo "$(Build.DefinitionName)_$(Build.SourceBranchName)_$(Build.BuildId)_$(Build.BuildNumber)_ubuntu2204_${{ parameters.artifactName }}_${{ parameters.gpuTarget }}.tar.gz" >> pipelineArtifacts.txt
 # then publish it
 - ${{ if parameters.publish }}:
   - task: PublishPipelineArtifact@1

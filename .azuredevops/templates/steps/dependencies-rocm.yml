@@ -1,151 +1,21 @@
 # download and install rocm dependencies through pipeline builds in the project
-# REQUIRED
 parameters:
+- name: checkoutRef
+  type: string
+  default: ''
+- name: dependencySource # optional, overrides checkoutRef
+  type: string
+  default: null
+  values:
+    - null # empty strings aren't allowed as values, use null instead
+    - staging
+    - mainline
 - name: dependencyList
   type: object
   default: []
-- name: dependencySource
-  type: string
-  default: staging
-  values:
-    - staging
-    - tag-builds
-    - fixed
-- name: extractToMnt
-  type: boolean
-  default: false
-# required values for fixed selection
-- name: fixedPipelineIdentifier
-  type: string
-  default: 0
-- name: fixedComponentName
+- name: gpuTarget
   type: string
   default: ''
-- name: latestFromBranch
-  type: boolean
-  default: true
-# match case of the repo in this object for the left side of the maps
-# should not need to replace these parameters
-- name: stagingPipelineIdentifiers
-  type: object
-  default:
-    AMDMIGraphX: $(AMDMIGRAPHX_PIPELINE_ID)
-    amdsmi: $(AMDSMI_PIPELINE_ID)
-    aomp-extras: $(AOMP_EXTRAS_PIPELINE_ID)
-    aomp: $(AOMP_PIPELINE_ID)
-    clr: $(CLR_PIPELINE_ID)
-    composable_kernel: $(COMPOSABLE_KERNEL_PIPELINE_ID)
-    half: $(HALF_PIPELINE_ID)
-    HIP: $(HIP_PIPELINE_ID)
-    hip-tests: $(HIP_TESTS_PIPELINE_ID)
-    hipBLAS: $(HIPBLAS_PIPELINE_ID)
-    hipBLAS-common: $(HIPBLAS_COMMON_PIPELINE_ID)
-    hipBLASLt: $(HIPBLASLT_PIPELINE_ID)
-    hipCUB: $(HIPCUB_PIPELINE_ID)
-    hipFFT: $(HIPFFT_PIPELINE_ID)
-    hipfort: $(HIPFORT_PIPELINE_ID)
-    HIPIFY: $(HIPIFY_PIPELINE_ID)
-    hipRAND: $(HIPRAND_PIPELINE_ID)
-    hipSOLVER: $(HIPSOLVER_PIPELINE_ID)
-    hipSPARSE: $(HIPSPARSE_PIPELINE_ID)
-    hipSPARSELt: $(HIPSPARSELT_PIPELINE_ID)
-    hipTensor: $(HIPTENSOR_PIPELINE_ID)
-    llvm-project: $(LLVM_PROJECT_PIPELINE_ID)
-    MIOpen: $(MIOpen_PIPELINE_ID)
-    MIVisionX: $(MIVISIONX_PIPELINE_ID)
-    omniperf: $(OMNIPERF_PIPELINE_ID)
-    rccl: $(RCCL_PIPELINE_ID)
-    rdc: $(RDC_PIPELINE_ID)
-    rocAL: $(ROCAL_PIPELINE_ID)
-    rocALUTION: $(ROCALUTION_PIPELINE_ID)
-    rocBLAS: $(ROCBLAS_PIPELINE_ID)
-    ROCdbgapi: $(ROCDBGAPI_PIPELINE_ID)
-    rocDecode: $(ROCDECODE_PIPELINE_ID)
-    rocFFT: $(ROCFFT_PIPELINE_ID)
-    ROCgdb: $(ROCGDB_PIPELINE_ID)
-    rocm-cmake: $(ROCM_CMAKE_PIPELINE_ID)
-    rocm-core: $(ROCM_CORE_PIPELINE_ID)
-    rocm-examples: $(ROCM_EXAMPLES_PIPELINE_ID)
-    rocminfo: $(ROCMINFO_PIPELINE_ID)
-    rocMLIR: $(ROCMLIR_PIPELINE_ID)
-    ROCmValidationSuite: $(ROCMVALIDATIONSUITE_PIPELINE_ID)
-    rocm_bandwidth_test: $(ROCM_BANDWIDTH_TEST_PIPELINE_ID)
-    rocm_smi_lib: $(ROCM_SMI_LIB_PIPELINE_ID)
-    rocPRIM: $(ROCPRIM_PIPELINE_ID)
-    rocprofiler-register: $(ROCPROFILER_REGISTER_PIPELINE_ID)
-    rocprofiler-sdk: $(ROCPROFILER_SDK_PIPELINE_ID)
-    rocprofiler: $(ROCPROFILER_PIPELINE_ID)
-    rocPyDecode: $(ROCPYDECODE_PIPELINE_ID)
-    ROCR-Runtime: $(ROCR_RUNTIME_PIPELINE_ID)
-    rocRAND: $(ROCRAND_PIPELINE_ID)
-    rocr_debug_agent: $(ROCR_DEBUG_AGENT_PIPELINE_ID)
-    rocSOLVER: $(ROCSOLVER_PIPELINE_ID)
-    rocSPARSE: $(ROCSPARSE_PIPELINE_ID)
-    ROCT-Thunk-Interface: $(ROCT_THUNK_INTERFACE_PIPELINE_ID)
-    rocThrust: $(ROCTHRUST_PIPELINE_ID)
-    roctracer: $(ROCTRACER_PIPELINE_ID)
-    rocWMMA: $(ROCWMMA_PIPELINE_ID)
-    rpp: $(RPP_PIPELINE_ID)
-- name: taggedPipelineIdentifiers
-  type: object
-  default:
-    AMDMIGraphX: $(AMDMIGRAPHX_TAGGED_PIPELINE_ID)
-    amdsmi: $(AMDSMI_TAGGED_PIPELINE_ID)
-    aomp-extras: $(AOMP_EXTRAS_TAGGED_PIPELINE_ID)
-    aomp: $(AOMP_TAGGED_PIPELINE_ID)
-    clr: $(CLR_TAGGED_PIPELINE_ID)
-    composable_kernel: $(COMPOSABLE_KERNEL_TAGGED_PIPELINE_ID)
-    half: $(HALF_TAGGED_PIPELINE_ID)
-    HIP: $(HIP_TAGGED_PIPELINE_ID)
-    hip-tests: $(HIP_TESTS_TAGGED_PIPELINE_ID)
-    hipBLAS: $(HIPBLAS_TAGGED_PIPELINE_ID)
-    hipBLAS-common: $(HIPBLAS_COMMON_TAGGED_PIPELINE_ID)
-    hipBLASLt: $(HIPBLASLT_TAGGED_PIPELINE_ID)
-    hipCUB: $(HIPCUB_TAGGED_PIPELINE_ID)
-    hipFFT: $(HIPFFT_TAGGED_PIPELINE_ID)
-    hipfort: $(HIPFORT_TAGGED_PIPELINE_ID)
-    HIPIFY: $(HIPIFY_TAGGED_PIPELINE_ID)
-    hipRAND: $(HIPRAND_TAGGED_PIPELINE_ID)
-    hipSOLVER: $(HIPSOLVER_TAGGED_PIPELINE_ID)
-    hipSPARSE: $(HIPSPARSE_TAGGED_PIPELINE_ID)
-    hipSPARSELt: $(HIPSPARSELT_TAGGED_PIPELINE_ID)
-    hipTensor: $(HIPTENSOR_TAGGED_PIPELINE_ID)
-    llvm-project: $(LLVM_PROJECT_TAGGED_PIPELINE_ID)
-    MIOpen: $(MIOpen_TAGGED_PIPELINE_ID)
-    MIVisionX: $(MIVISIONX_TAGGED_PIPELINE_ID)
-    omniperf: $(OMNIPERF_TAGGED_PIPELINE_ID)
-    rccl: $(RCCL_TAGGED_PIPELINE_ID)
-    rdc: $(RDC_TAGGED_PIPELINE_ID)
-    rocAL: $(ROCAL_TAGGED_PIPELINE_ID)
-    rocALUTION: $(ROCALUTION_TAGGED_PIPELINE_ID)
-    rocBLAS: $(ROCBLAS_TAGGED_PIPELINE_ID)
-    ROCdbgapi: $(ROCDBGAPI_TAGGED_PIPELINE_ID)
-    rocDecode: $(ROCDECODE_TAGGED_PIPELINE_ID)
-    rocFFT: $(ROCFFT_TAGGED_PIPELINE_ID)
-    ROCgdb: $(ROCGDB_TAGGED_PIPELINE_ID)
-    rocm-cmake: $(ROCM_CMAKE_TAGGED_PIPELINE_ID)
-    rocm-core: $(ROCM_CORE_TAGGED_PIPELINE_ID)
-    rocm-examples: $(ROCM_EXAMPLES_TAGGED_PIPELINE_ID)
-    rocminfo: $(ROCMINFO_TAGGED_PIPELINE_ID)
-    rocMLIR: $(ROCMLIR_TAGGED_PIPELINE_ID)
-    ROCmValidationSuite: $(ROCMVALIDATIONSUITE_TAGGED_PIPELINE_ID)
-    rocm_bandwidth_test: $(ROCM_BANDWIDTH_TEST_TAGGED_PIPELINE_ID)
-    rocm_smi_lib: $(ROCM_SMI_LIB_TAGGED_PIPELINE_ID)
-    rocPRIM: $(ROCPRIM_TAGGED_PIPELINE_ID)
-    rocprofiler-register: $(ROCPROFILER_REGISTER_TAGGED_PIPELINE_ID)
-    rocprofiler-sdk: $(ROCPROFILER_SDK_TAGGED_PIPELINE_ID)
-    rocprofiler: $(ROCPROFILER_TAGGED_PIPELINE_ID)
-    rocPyDecode: $(ROCPYDECODE_TAGGED_PIPELINE_ID)
-    ROCR-Runtime: $(ROCR_RUNTIME_TAGGED_PIPELINE_ID)
-    rocRAND: $(ROCRAND_TAGGED_PIPELINE_ID)
-    rocr_debug_agent: $(ROCR_DEBUG_AGENT_TAGGED_PIPELINE_ID)
-    rocSOLVER: $(ROCSOLVER_TAGGED_PIPELINE_ID)
-    rocSPARSE: $(ROCSPARSE_TAGGED_PIPELINE_ID)
-    ROCT-Thunk-Interface: $(ROCT_THUNK_INTERFACE_TAGGED_PIPELINE_ID)
-    rocThrust: $(ROCTHRUST_TAGGED_PIPELINE_ID)
-    roctracer: $(ROCTRACER_TAGGED_PIPELINE_ID)
-    rocWMMA: $(ROCWMMA_TAGGED_PIPELINE_ID)
-    rpp: $(RPP_TAGGED_PIPELINE_ID)
 # set to true if you're calling this template file multiple files in same pipeline
 # only leave last call false to optimize sequence
 - name: skipLibraryLinking
@@ -156,49 +26,320 @@ parameters:
 - name: skipLlvmSymlink
   type: boolean
   default: false
-# some ROCm components can specify GPU target and this will affect downloads
-- name: gpuTarget
-  type: string
-  default: ''
-# array of ROCm components that can specify GPU target or have dependency of such a component
-# these components would have parallel build jobs per GPU target so they produce multiple artifacts
-# only download artifact tied to the GPU target
-- name: componentsWithGPUTarget
+# set to true if dlopen calls for HIP libraries are causing failures
+# because they do not follow shared library symlink convention
+- name: setupHIPLibrarySymlinks
+  type: boolean
+  default: false
+
+- name: componentVarList
   type: object
   default:
-    - AMDMIGraphX
-    - composable_kernel
-    - hipBLASLt
-    - hipCUB
-    - hipFFT
-    - hipRAND
-    - hipSPARSELt
-    - hipTensor
-    - rccl
-    - rocALUTION
-    - rocBLAS
-    - rocFFT
-    - rocm-examples
-    - rocPRIM
-    - rocprofiler-sdk
-    - rocprofiler
-    - rocPyDecode
-    - rocRAND
-    - rocSOLVER
-    - rocSPARSE
-    - rocThrust
-    - roctracer
-    - rocWMMA
-    - rpp
-# list below do not have flag for gpu target but have dependencies of components that do, so build separately per gpu target
-    - hipBLAS
-    - hipSOLVER
-    - hipSPARSE
-    - MIOpen
-    - MIVision
-    - omniperf
-    - rocAL
-    - ROCmValidationSuite
+    AMDMIGraphX:
+      pipelineId: $(AMDMIGRAPHX_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    amdsmi:
+      pipelineId: $(AMDSMI_PIPELINE_ID)
+      stagingBranch: amd-staging
+      mainlineBranch: amd-mainline
+      hasGpuTarget: false
+    aomp-extras:
+      pipelineId: $(AOMP_EXTRAS_PIPELINE_ID)
+      stagingBranch: aomp-dev
+      mainlineBranch: aomp-dev
+      hasGpuTarget: false
+    aomp:
+      pipelineId: $(AOMP_PIPELINE_ID)
+      stagingBranch: aomp-dev
+      mainlineBranch: amd-mainline-open
+      hasGpuTarget: false
+    clr:
+      pipelineId: $(CLR_PIPELINE_ID)
+      stagingBranch: amd-staging
+      mainlineBranch: amd-mainline
+      hasGpuTarget: false
+    composable_kernel:
+      pipelineId: $(COMPOSABLE_KERNEL_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    half:
+      pipelineId: $(HALF_PIPELINE_ID)
+      stagingBranch: rocm
+      mainlineBranch: rocm
+      hasGpuTarget: false
+    HIP:
+      pipelineId: $(HIP_PIPELINE_ID)
+      stagingBranch: amd-staging
+      mainlineBranch: amd-mainline
+      hasGpuTarget: false
+    hip-tests:
+      pipelineId: $(HIP_TESTS_PIPELINE_ID)
+      stagingBranch: amd-staging
+      mainlineBranch: amd-mainline
+      hasGpuTarget: false
+    hipBLAS:
+      pipelineId: $(HIPBLAS_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    hipBLASLt:
+      pipelineId: $(HIPBLASLT_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    hipBLAS-common:
+      pipelineId: $(HIPBLAS_COMMON_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: false
+    hipCUB:
+      pipelineId: $(HIPCUB_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    hipFFT:
+      pipelineId: $(HIPFFT_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    hipfort:
+      pipelineId: $(HIPFORT_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: false
+    HIPIFY:
+      pipelineId: $(HIPIFY_PIPELINE_ID)
+      stagingBranch: amd-staging
+      mainlineBranch: amd-mainline
+      hasGpuTarget: false
+    hipRAND:
+      pipelineId: $(HIPRAND_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    hipSOLVER:
+      pipelineId: $(HIPSOLVER_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    hipSPARSE:
+      pipelineId: $(HIPSPARSE_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    hipSPARSELt:
+      pipelineId: $(HIPSPARSELT_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    hipTensor:
+      pipelineId: $(HIPTENSOR_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    llvm-project:
+      pipelineId: $(LLVM_PROJECT_PIPELINE_ID)
+      stagingBranch: amd-staging
+      mainlineBranch: amd-mainline-open
+      hasGpuTarget: false
+    MIOpen:
+      pipelineId: $(MIOpen_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    MIVisionX:
+      pipelineId: $(MIVISIONX_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    omnitrace: # deprecated
+      pipelineId: $(OMNITRACE_PIPELINE_ID)
+      stagingBranch: amd-staging
+      mainlineBranch: amd-mainline
+      hasGpuTarget: true
+    rccl:
+      pipelineId: $(RCCL_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    rdc:
+      pipelineId: $(RDC_PIPELINE_ID)
+      stagingBranch: amd-staging
+      mainlineBranch: amd-mainline
+      hasGpuTarget: false
+    rocAL:
+      pipelineId: $(ROCAL_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: master
+      hasGpuTarget: true
+    rocALUTION:
+      pipelineId: $(ROCALUTION_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    rocBLAS:
+      pipelineId: $(ROCBLAS_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    ROCdbgapi:
+      pipelineId: $(ROCDBGAPI_PIPELINE_ID)
+      stagingBranch: amd-staging
+      mainlineBranch: amd-mainline
+      hasGpuTarget: false
+    rocDecode:
+      pipelineId: $(ROCDECODE_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: false
+    rocFFT:
+      pipelineId: $(ROCFFT_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    ROCgdb:
+      pipelineId: $(ROCGDB_PIPELINE_ID)
+      stagingBranch: amd-staging
+      mainlineBranch: amd-mainline-rocgdb-15
+      hasGpuTarget: false
+    rocJPEG:
+      pipelineId: $(ROCJPEG_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: false
+    rocm-cmake:
+      pipelineId: $(ROCM_CMAKE_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: false
+    rocm-core:
+      pipelineId: $(ROCM_CORE_PIPELINE_ID)
+      stagingBranch: master
+      mainlineBranch: amd-master
+      hasGpuTarget: false
+    rocm-examples:
+      pipelineId: $(ROCM_EXAMPLES_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: develop
+      hasGpuTarget: true
+    rocminfo:
+      pipelineId: $(ROCMINFO_PIPELINE_ID)
+      stagingBranch: amd-staging
+      mainlineBranch: amd-master
+      hasGpuTarget: false
+    rocMLIR:
+      pipelineId: $(ROCMLIR_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: false
+    ROCmValidationSuite:
+      pipelineId: $(ROCMVALIDATIONSUITE_PIPELINE_ID)
+      stagingBranch: master
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    rocm_bandwidth_test:
+      pipelineId: $(ROCM_BANDWIDTH_TEST_PIPELINE_ID)
+      stagingBranch: master
+      mainlineBranch: master
+      hasGpuTarget: false
+    rocm_smi_lib:
+      pipelineId: $(ROCM_SMI_LIB_PIPELINE_ID)
+      stagingBranch: amd-staging
+      mainlineBranch: amd-mainline
+      hasGpuTarget: false
+    rocPRIM:
+      pipelineId: $(ROCPRIM_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    rocprofiler:
+      pipelineId: $(ROCPROFILER_PIPELINE_ID)
+      stagingBranch: amd-staging
+      mainlineBranch: amd-master
+      hasGpuTarget: true
+    rocprofiler-compute:
+      pipelineId: $(ROCPROFILER_COMPUTE_PIPELINE_ID)
+      stagingBranch: amd-staging
+      mainlineBranch: amd-mainline
+      hasGpuTarget: true
+    rocprofiler-register:
+      pipelineId: $(ROCPROFILER_REGISTER_PIPELINE_ID)
+      stagingBranch: amd-staging
+      mainlineBranch: amd-mainline
+      hasGpuTarget: false
+    rocprofiler-sdk:
+      pipelineId: $(ROCPROFILER_SDK_PIPELINE_ID)
+      stagingBranch: amd-staging
+      mainlineBranch: amd-mainline
+      hasGpuTarget: true
+    rocprofiler-systems:
+      pipelineId: $(ROCPROFILER_SYSTEMS_PIPELINE_ID)
+      stagingBranch: amd-staging
+      mainlineBranch: amd-mainline
+      hasGpuTarget: true
+    rocPyDecode:
+      pipelineId: $(ROCPYDECODE_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    ROCR-Runtime:
+      pipelineId: $(ROCR_RUNTIME_PIPELINE_ID)
+      stagingBranch: amd-staging
+      mainlineBranch: amd-master
+      hasGpuTarget: false
+    rocRAND:
+      pipelineId: $(ROCRAND_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    rocr_debug_agent:
+      pipelineId: $(ROCR_DEBUG_AGENT_PIPELINE_ID)
+      stagingBranch: amd-staging
+      mainlineBranch: amd-mainline
+      hasGpuTarget: false
+    rocSOLVER:
+      pipelineId: $(ROCSOLVER_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    rocSPARSE:
+      pipelineId: $(ROCSPARSE_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    ROCT-Thunk-Interface: # deprecated
+      pipelineId: $(ROCT_THUNK_INTERFACE_PIPELINE_ID)
+      stagingBranch: master
+      mainlineBranch: master
+      hasGpuTarget: false
+    rocThrust:
+      pipelineId: $(ROCTHRUST_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    roctracer:
+      pipelineId: $(ROCTRACER_PIPELINE_ID)
+      stagingBranch: amd-staging
+      mainlineBranch: amd-master
+      hasGpuTarget: true
+    rocWMMA:
+      pipelineId: $(ROCWMMA_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    rpp:
+      pipelineId: $(RPP_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
+    TransferBench:
+      pipelineId: $(TRANSFERBENCH_PIPELINE_ID)
+      stagingBranch: develop
+      mainlineBranch: mainline
+      hasGpuTarget: true
 
 steps:
 # assuming artifact-download.yml template file in same directory
@@ -212,39 +353,59 @@ steps:
     - template: artifact-download.yml
       parameters:
         componentName: ${{ split(dependency, ':')[0] }}
-        extractToMnt: ${{ parameters.extractToMnt }}
-        ${{ if eq(parameters.dependencySource, 'staging') }}:
-          pipelineId: ${{ parameters.stagingPipelineIdentifiers[ split(dependency, ':')[0] ] }}
-          latestFromBranch: ${{ parameters.latestFromBranch }}
-        ${{ elseif eq(parameters.dependencySource, 'tag-builds') }}:
-          pipelineId: ${{ parameters.taggedPipelineIdentifiers[ split(dependency, ':')[0] ] }}
-          latestFromBranch: false
-        ${{ if containsValue( parameters.componentsWithGPUTarget, split(dependency, ':')[0] ) }}:
+        pipelineId: ${{ parameters.componentVarList[split(dependency, ':')[0]].pipelineId }}
+        ${{ if parameters.componentVarList[split(dependency, ':')[0]].hasGpuTarget }}:
           fileFilter: "${{ split(dependency, ':')[1] }}*${{ parameters.gpuTarget }}"
+        # dependencySource = staging
+        ${{ if eq(parameters.dependencySource, 'staging')}}:
+          branchName: ${{ parameters.componentVarList[split(dependency, ':')[0]].stagingBranch }}
+        # dependencySource = mainline
+        ${{ elseif eq(parameters.dependencySource, 'mainline')}}:
+          branchName: ${{ parameters.componentVarList[split(dependency, ':')[0]].mainlineBranch }}
+        # checkoutRef = staging
+        ${{ elseif eq(parameters.checkoutRef, parameters.componentVarList[variables['Build.DefinitionName']].stagingBranch) }}:
+          branchName: ${{ parameters.componentVarList[split(dependency, ':')[0]].stagingBranch }}
+        # checkoutRef = mainline
+        ${{ elseif eq(parameters.checkoutRef, parameters.componentVarList[variables['Build.DefinitionName']].mainlineBranch) }}:
+          branchName: ${{ parameters.componentVarList[split(dependency, ':')[0]].mainlineBranch }}
+        # SourceBranchName = staging
+        ${{ elseif eq(variables['Build.SourceBranchName'], parameters.componentVarlist[variables['Build.DefinitionName']].stagingBranch) }}:
+          branchName: ${{ parameters.componentVarList[split(dependency, ':')[0]].stagingBranch }}
+        # SourceBranchName = mainline
+        ${{ elseif eq(variables['Build.SourceBranchName'], parameters.componentVarlist[variables['Build.DefinitionName']].mainlineBranch) }}:
+          branchName: ${{ parameters.componentVarList[split(dependency, ':')[0]].mainlineBranch }}
+        # default = staging
         ${{ else }}:
-          fileFilter: ${{ split(dependency, ':')[1] }}
+          branchName: ${{ parameters.componentVarList[split(dependency, ':')[0]].stagingBranch }}
 # no colon (:) found in this item in the list
   - ${{ else }}:
     - template: artifact-download.yml
       parameters:
         componentName: ${{ dependency }}
-        extractToMnt: ${{ parameters.extractToMnt }}
-        ${{ if eq(parameters.dependencySource, 'staging') }}:
-          pipelineId: ${{ parameters.stagingPipelineIdentifiers[dependency] }}
-          latestFromBranch: ${{ parameters.latestFromBranch }}
-        ${{ elseif eq(parameters.dependencySource, 'tag-builds') }}:
-          pipelineId: ${{ parameters.taggedPipelineIdentifiers[dependency] }}
-          latestFromBranch: false
-        ${{ if containsValue( parameters.componentsWithGPUTarget, dependency ) }}:
+        pipelineId: ${{ parameters.componentVarList[dependency].pipelineId }}
+        ${{ if parameters.componentVarList[dependency].hasGpuTarget }}:
           fileFilter: ${{ parameters.gpuTarget }}
-# fixed case only accepts one component at a time, so no array input
-- ${{ if eq(parameters.dependencySource, 'fixed') }}:
-  - template: artifact-download.yml
-    parameters:
-      componentName: ${{ parameters.fixedComponentName }}
-      pipelineId: ${{ parameters.fixedPipelineIdentifier }}
-      latestFromBranch: false
-      extractToMnt: ${{ parameters.extractToMnt }}
+        # dependencySource = staging
+        ${{ if eq(parameters.dependencySource, 'staging')}}:
+          branchName: ${{ parameters.componentVarList[dependency].stagingBranch }}
+        # dependencySource = mainline
+        ${{ elseif eq(parameters.dependencySource, 'mainline')}}:
+          branchName: ${{ parameters.componentVarList[dependency].mainlineBranch }}
+        # checkoutRef = staging
+        ${{ elseif eq(parameters.checkoutRef, parameters.componentVarList[variables['Build.DefinitionName']].stagingBranch) }}:
+          branchName: ${{ parameters.componentVarList[dependency].stagingBranch }}
+        # checkoutRef = mainline
+        ${{ elseif eq(parameters.checkoutRef, parameters.componentVarList[variables['Build.DefinitionName']].mainlineBranch) }}:
+          branchName: ${{ parameters.componentVarList[dependency].mainlineBranch }}
+        # SourceBranchName = staging
+        ${{ elseif eq(variables['Build.SourceBranchName'], parameters.componentVarlist[variables['Build.DefinitionName']].stagingBranch) }}:
+          branchName: ${{ parameters.componentVarList[dependency].stagingBranch }}
+        # SourceBranchName = mainline
+        ${{ elseif eq(variables['Build.SourceBranchName'], parameters.componentVarlist[variables['Build.DefinitionName']].mainlineBranch) }}:
+          branchName: ${{ parameters.componentVarList[dependency].mainlineBranch }}
+        # default = staging
+        ${{ else }}:
+          branchName: ${{ parameters.componentVarList[dependency].stagingBranch }}
 # Set link to redirect llvm folder
 - ${{ if eq(parameters.skipLlvmSymlink, false) }}:
   - task: Bash@3
@@ -260,31 +421,51 @@ steps:
         for file in amdclang amdclang++ amdclang-cl amdclang-cpp amdflang amdlld aompcc mygpu mycpu offload-arch; do
           sudo ln -s $(Agent.BuildDirectory)/rocm/llvm/bin/$file $(Agent.BuildDirectory)/rocm/bin/$file
         done
+# dlopen calls within a ctest or pytest sequence runs into issues when shared library symlink convention is not followed
+# the convention is as follows:
+# unversioned .so is a symlink to major version .so
+# major version .so is a symlink to detailed version .so
+# HIP libraries do not follow this convention, and each .so is a copy of each other
+# changing the library structure to follow the symlink convention resolves some test failures
+- ${{ if eq(parameters.setupHIPLibrarySymlinks, true) }}:
+  - task: Bash@3
+    displayName: Setup symlinks for hip libraries
+    inputs:
+      targetType: inline
+      workingDirectory: $(Agent.BuildDirectory)/rocm/lib
+      script: |
+        LIBRARIES=("libamdhip64" "libhiprtc-builtins" "libhiprtc")
+        for LIB_NAME in "${LIBRARIES[@]}"; do
+            VERSIONED_SO=$(ls ${LIB_NAME}.so.* 2>/dev/null | grep -E "${LIB_NAME}\.so\.[0-9]+\.[0-9]+\.[0-9]+(-.*)?" | sort -V | tail -n 1)
+            if [[ -z "$VERSIONED_SO" ]]; then
+                continue
+            fi
+            MAJOR_VERSION=$(echo "$VERSIONED_SO" | grep -oP "${LIB_NAME}\.so\.\K[0-9]+")
+            if [[ -e "${LIB_NAME}.so.${MAJOR_VERSION}" && ! -L "${LIB_NAME}.so.${MAJOR_VERSION}" ]]; then
+                rm -f "${LIB_NAME}.so.${MAJOR_VERSION}"
+            fi
+            if [[ -e "${LIB_NAME}.so" && ! -L "${LIB_NAME}.so" ]]; then
+                rm -f "${LIB_NAME}.so"
+            fi
+            ln -sf "$VERSIONED_SO" "${LIB_NAME}.so.${MAJOR_VERSION}"
+            ln -sf "${LIB_NAME}.so.${MAJOR_VERSION}" "${LIB_NAME}.so"
+            echo "Symlinks created for $LIB_NAME:"
+            ls -l ${LIB_NAME}.so*
+        done
 - task: Bash@3
   displayName: 'List downloaded ROCm files'
   inputs:
     targetType: inline
-    ${{ if eq(parameters.extractToMnt, true) }}:
-      script: ls -1R /mnt/rocm
-    ${{ else }}:
-      script: ls -1R $(Agent.BuildDirectory)/rocm
+    script: ls -1R $(Agent.BuildDirectory)/rocm
 - ${{ if eq(parameters.skipLibraryLinking, false) }}:
   - task: Bash@3
     displayName: 'Link ROCm shared libraries'
     inputs:
       targetType: inline
 # OS ignores if the ROCm lib folder shows up more than once
-      ${{ if eq(parameters.extractToMnt, true) }}:
-        script: |
-          echo /mnt/rocm/lib | sudo tee /etc/ld.so.conf.d/rocm-ci.conf
-          echo /mnt/rocm/llvm/lib | sudo tee -a /etc/ld.so.conf.d/rocm-ci.conf
-          sudo cat /etc/ld.so.conf.d/rocm-ci.conf
-          sudo ldconfig -v
-          ldconfig -p
-      ${{ else }}:
-        script: |
-          echo $(Agent.BuildDirectory)/rocm/lib | sudo tee /etc/ld.so.conf.d/rocm-ci.conf
-          echo $(Agent.BuildDirectory)/rocm/llvm/lib | sudo tee -a /etc/ld.so.conf.d/rocm-ci.conf
-          sudo cat /etc/ld.so.conf.d/rocm-ci.conf
-          sudo ldconfig -v
-          ldconfig -p
+      script: |
+        echo $(Agent.BuildDirectory)/rocm/lib | sudo tee /etc/ld.so.conf.d/rocm-ci.conf
+        echo $(Agent.BuildDirectory)/rocm/llvm/lib | sudo tee -a /etc/ld.so.conf.d/rocm-ci.conf
+        sudo cat /etc/ld.so.conf.d/rocm-ci.conf
+        sudo ldconfig -v
+        ldconfig -p

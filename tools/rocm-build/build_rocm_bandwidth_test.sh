@@ -7,7 +7,7 @@ printUsage() {
     echo "Usage: $(basename "${BASH_SOURCE}") [options ...]"
     echo
     echo "Options:"
-    echo "  -s,  --static           Supports static CI by accepting this param & not bailing out. No effect of the param though"
+    echo "  -s,  --static             Component/Build does not support static builds just accepting this param & ignore. No effect of the param on this build"
     echo "  -c,  --clean              Clean output and delete all intermediate work"
     echo "  -p,  --package <type>     Specify packaging format"
     echo "  -r,  --release            Make a release build instead of a debug build"
@@ -65,7 +65,7 @@ do
                 set_asan_env_vars
                 set_address_sanitizer_on ; shift ;;
         (-s | --static)
-                SHARED_LIBS="OFF" ; shift ;;
+                ack_and_skip_static ;;
         (-o | --outdir)
                 TARGET="outdir"; PKGTYPE=$2 ; OUT_DIR_SPECIFIED=1 ; ((CLEAN_OR_OUT|=2)) ; shift 2 ;;
         (-p | --package)
@@ -126,6 +126,10 @@ build_rocm_bandwidth_test() {
 
     echo "Packaging $TEST_NAME"
     cmake --build "$TEST_BLD_DIR" -- $MAKEARG -C $TEST_BLD_DIR package
+
+    mkdir -p "$TEST_BIN_DIR"
+    echo "Copying $TEST_NAME to $TEST_BIN_DIR"
+    progressCopy "$TEST_BLD_DIR/$TEST_NAME" "$TEST_BIN_DIR"
 
     copy_if DEB "${CPACKGEN:-"DEB;RPM"}" "$TEST_PKG_DEB" $TEST_BLD_DIR/*.deb
     copy_if RPM "${CPACKGEN:-"DEB;RPM"}" "$TEST_PKG_RPM" $TEST_BLD_DIR/*.rpm

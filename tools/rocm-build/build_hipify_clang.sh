@@ -22,12 +22,12 @@ printUsage() {
 TARGET="build"
 MAKEOPTS="$DASH_JAY"
 HIPIFY_CLANG_BUILD_DIR="$(getBuildPath $HIPIFY_ROOT)"
-HIPIFY_CLANG_DIST_DIR="$HIPIFY_CLANG_BUILD_DIR/dist"
 BUILD_TYPE="Debug"
 PACKAGE_ROOT="$(getPackageRoot)"
 HIPIFY_CLANG_HASH=""
 LIGHTNING_PATH="$ROCM_INSTALL_PATH/llvm"
 ADDRESS_SANITIZER=false
+INSTALL_CLANG_HEADERS="OFF"
 DEB_PATH="$(getDebPath hipify)"
 RPM_PATH="$(getRpmPath hipify)"
 SHARED_LIBS="ON"
@@ -53,7 +53,7 @@ do
                 set_address_sanitizer_on
                 ADDRESS_SANITIZER=true ; shift ;;
         (-s | --static)
-                SHARED_LIBS="OFF" ; shift ;;
+                ack_and_skip_static ;;
         (-o | --outdir)
                 TARGET="outdir"; PKGTYPE=$2 ; OUT_DIR_SPECIFIED=1 ; ((CLEAN_OR_OUT|=2)) ; shift 2 ;;
         --)     shift; break;;
@@ -74,7 +74,6 @@ fi
 clean_hipify() {
     echo "Cleaning hipify-clang"
     rm -rf "$HIPIFY_CLANG_BUILD_DIR"
-    rm -rf "$HIPIFY_CLANG_DIST_DIR"
     rm -rf "$DEB_PATH"
     rm -rf "$RPM_PATH"
 }
@@ -101,16 +100,16 @@ package_hipify() {
 build_hipify() {
     echo "Building hipify-clang binaries"
     mkdir -p "$HIPIFY_CLANG_BUILD_DIR"
-    mkdir -p "$HIPIFY_CLANG_DIST_DIR"
 
     pushd "$HIPIFY_CLANG_BUILD_DIR"
     cmake \
         -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
         $(rocm_common_cmake_params) \
-        -DCMAKE_INSTALL_PREFIX="$HIPIFY_CLANG_DIST_DIR" \
+        -DCMAKE_INSTALL_PREFIX="$ROCM_INSTALL_PATH" \
         -DCPACK_PACKAGING_INSTALL_PREFIX=$ROCM_INSTALL_PATH \
         -DCMAKE_PREFIX_PATH="$LIGHTNING_PATH" \
         -DADDRESS_SANITIZER="$ADDRESS_SANITIZER" \
+        -DHIPIFY_INSTALL_CLANG_HEADERS="$INSTALL_CLANG_HEADERS" \
         $HIPIFY_ROOT
 
     cmake --build . -- $MAKEOPTS install

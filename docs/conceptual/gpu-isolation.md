@@ -42,7 +42,7 @@ export ROCR_VISIBLE_DEVICES="0,GPU-DEADBEEFDEADBEEF"
 Devices indices exposed to OpenCL and HIP applications.
 
 Runtime
-: ROCm Common Language Runtime (`ROCclr`). Applies to applications and runtimes
+: ROCm Compute Language Runtime (`ROCclr`). Applies to applications and runtimes
   using the `ROCclr` abstraction layer including HIP and OpenCL applications.
 
 ```{code-block} shell

@@ -1,0 +1,150 @@
+parameters:
+- name: artifactName
+  type: string
+  default: 'drop'
+- name: gpuTarget
+  type: string
+  default: ''
+
+steps:
+- task: Bash@3
+  displayName: Set up current_repo values
+  condition: always()
+  continueOnError: true
+  inputs:
+    targetType: inline
+    script: |
+      sudo apt-get install -y jq
+
+      # RESOURCES_REPOSITORIES is a runtime variable (not an env var!) that contains quotations and newlines
+      # So we need to save it to a file to properly preserve its formatting and contents
+      cat <<EOF > resources.repositories
+      $(RESOURCES_REPOSITORIES)
+      EOF
+      cat resources.repositories
+
+      IS_TAG_BUILD=$(jq 'has("release_repo")' resources.repositories)
+      if [ "$IS_TAG_BUILD" = "true" ]; then
+        REPO_TYPE="release_repo" # Triggered by a ROCm/ROCm tag-builds file
+      else
+        REPO_TYPE="self" # Triggered by component repo's rocm-ci.yml file
+      fi
+
+      echo "##vso[task.setvariable variable=current_repo.id;]$(jq .$REPO_TYPE.id resources.repositories | tr -d '"')"
+      echo "##vso[task.setvariable variable=current_repo.name;]$(jq .$REPO_TYPE.name resources.repositories | tr -d '"')"
+      echo "##vso[task.setvariable variable=current_repo.ref;]$(jq .$REPO_TYPE.ref resources.repositories | tr -d '"')"
+      echo "##vso[task.setvariable variable=current_repo.url;]$(jq .$REPO_TYPE.url resources.repositories | tr -d '"')"
+      echo "##vso[task.setvariable variable=current_repo.version;]$(jq .$REPO_TYPE.version resources.repositories | tr -d '"')"
+- task: Bash@3
+  displayName: Create manifest.json
+  condition: always()
+  continueOnError: true
+  inputs:
+    targetType: inline
+    script: |
+      manifest_json=$(Build.ArtifactStagingDirectory)/manifest_$(Build.DefinitionName)_$(Build.SourceBranchName)_$(Build.BuildId)_$(Build.BuildNumber)_ubuntu2204_${{ parameters.artifactName }}_${{ parameters.gpuTarget }}.json
+
+      dependencies=()
+      for manifest_file in $(Pipeline.Workspace)/d/**/manifest_*.json; do
+        echo "Processing $manifest_file"
+        cat $manifest_file
+        current=$(jq '.current' "$manifest_file")
+        dependencies+=("$current")
+      done
+      dependencies_json=$(printf '%s\n' "${dependencies[@]}" | jq -s '.')
+
+      jq -n \
+        --arg buildNumber "$(Build.BuildNumber)" \
+        --arg buildId "$(Build.BuildId)" \
+        --arg repoId "$(current_repo.id)" \
+        --arg repoName "$(current_repo.name)" \
+        --arg repoRef "$(current_repo.ref)" \
+        --arg repoUrl "$(current_repo.url)" \
+        --arg repoVersion "$(current_repo.version)" \
+        --argjson dependencies "$dependencies_json" \
+        '{
+          current: {
+            buildNumber: $buildNumber,
+            buildId: $buildId,
+            repoId: $repoId,
+            repoName: $repoName,
+            repoRef: $repoRef,
+            repoUrl: $repoUrl,
+            repoVersion: $repoVersion
+          },
+          dependencies: $dependencies
+        }' > $manifest_json
+
+      dependencies_rows=$(cat $manifest_json | \
+        jq -r '
+          .dependencies[] | 
+          "<tr><td>" + .buildNumber + "</td>" + 
+          "<td><a href=\"https://dev.azure.com/ROCm-CI/ROCm-CI/_build/results?buildId=" + .buildId + "\">" + .buildId + "</a></td>" + 
+          "<td><a href=\"" + .repoUrl + "\">" + .repoName + "</a></td>" + 
+          "<td><a href=\"" + .repoUrl + "/tree/" + .repoRef + "\">" + .repoRef + "</a></td>" + 
+          "<td><a href=\"" + .repoUrl + "/commit/" + .repoVersion + "\">" + .repoVersion + "</a></td></tr>"
+        ')
+      dependencies_rows=$(echo $dependencies_rows)
+      echo "##vso[task.setvariable variable=dependencies_rows;]$dependencies_rows"
+
+      cat $manifest_json
+- task: Bash@3
+  displayName: Create manifest.html
+  condition: always()
+  continueOnError: true
+  inputs:
+    targetType: inline
+    script: |
+      manifest_html=$(Build.ArtifactStagingDirectory)/manifest_$(Build.DefinitionName)_$(Build.SourceBranchName)_$(Build.BuildId)_$(Build.BuildNumber)_ubuntu2204_${{ parameters.artifactName }}_${{ parameters.gpuTarget }}.html
+      cat <<EOF > $manifest_html
+      <html>
+      <h1>Manifest</h1>
+      <h2>Current</h2>
+      <table border="1">
+      <tr>
+        <th>Build Number</th>
+        <th>Build ID</th>
+        <th>Repo Name</th>
+        <th>Repo Ref</th>
+        <th>Repo Version</th>
+      </tr>
+      <tr>
+        <td>$(Build.BuildNumber)</td>
+        <td><a href="https://dev.azure.com/ROCm-CI/ROCm-CI/_build/results?buildId=$(Build.BuildId)">$(Build.BuildId)</a></td>
+        <td><a href="$(current_repo.url)">$(current_repo.name)</a></td>
+        <td><a href="$(current_repo.url)/tree/$(current_repo.ref)">$(current_repo.ref)</a></td>
+        <td><a href="$(current_repo.url)/commit/$(current_repo.version)">$(current_repo.version)</a></td>
+      </tr>
+      </table>
+      <h2>Dependencies</h2>
+      <table border="1">
+      <tr>
+        <th>Build Number</th>
+        <th>Build ID</th>
+        <th>Repo Name</th>
+        <th>Repo Ref</th>
+        <th>Repo Version</th>
+      </tr>
+      $(dependencies_rows)
+      </table>
+      </html>
+      EOF
+
+      cat $manifest_html
+- task: PublishHtmlReport@1
+  displayName: Publish manifest.html
+  condition: always()
+  continueOnError: true
+  inputs:
+    tabName: Manifest
+    reportDir: $(Build.ArtifactStagingDirectory)/manifest_$(Build.DefinitionName)_$(Build.SourceBranchName)_$(Build.BuildId)_$(Build.BuildNumber)_ubuntu2204_${{ parameters.artifactName }}_${{ parameters.gpuTarget }}.html
+- task: Bash@3
+  displayName: Save manifest artifact file name
+  condition: always()
+  continueOnError: true
+  inputs:
+    workingDirectory: $(Pipeline.Workspace)
+    targetType: inline
+    script: |
+      echo "manifest_$(Build.DefinitionName)_$(Build.SourceBranchName)_$(Build.BuildId)_$(Build.BuildNumber)_ubuntu2204_${{ parameters.artifactName }}_${{ parameters.gpuTarget }}.html" >> pipelineArtifacts.txt
+      echo "manifest_$(Build.DefinitionName)_$(Build.SourceBranchName)_$(Build.BuildId)_$(Build.BuildNumber)_ubuntu2204_${{ parameters.artifactName }}_${{ parameters.gpuTarget }}.json" >> pipelineArtifacts.txt

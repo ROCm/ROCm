@@ -1,6 +1,8 @@
 # specify non-secret global variables reused across pipelines here
 
 variables:
+- name: RESOURCES_REPOSITORIES
+  value: $[ convertToJson(resources.repositories) ]
 - name: CI_ROOT_PATH
   value: /.azuredevops
 - name: CI_COMPONENT_PATH
@@ -25,14 +27,14 @@ variables:
   value: rocm-ci_larger_base_disk_pool
 - name: GFX942_TEST_POOL
   value: gfx942_test_pool
+- name: LATEST_RELEASE_VERSION
+  value: 6.3.2
+- name: REPO_RADEON_VERSION
+  value: 6.3.2
+- name: NEXT_RELEASE_VERSION
+  value: 6.4.0
 - name: LATEST_RELEASE_TAG
-  value: rocm-6.1.0
-- name: DOCKER_IMAGE_NAME
-  value: rocm/dev-ubuntu-22.04
-- name: LATEST_DOCKER_VERSION
-  value: 6.1
-- name: KEYRING_VERSION
-  value: 6.1
+  value: rocm-6.3.2
 - name: AMDMIGRAPHX_GFX942_TEST_PIPELINE_ID
   value: 197
 - name: AMDMIGRAPHX_PIPELINE_ID
@@ -72,9 +74,9 @@ variables:
 - name: HALF_TAGGED_PIPELINE_ID
   value: 11
 - name: HALF560_PIPELINE_ID
-  value: 66
-- name: HALF560_TAGGED_PIPELINE_ID
-  value: 66
+  value: 68
+- name: HALF560_BUILD_ID
+  value: 621
 - name: HIP_PIPELINE_ID
   value: 93
 - name: HIP_TAGGED_PIPELINE_ID
@@ -149,8 +151,6 @@ variables:
   value: 105
 - name: HIPTENSOR_TAGGED_PIPELINE_ID
   value: 56
-- name: LAST_RELEASE
-  value: 6.1.0
 - name: LLVM_PROJECT_PIPELINE_ID
   value: 2
 - name: LLVM_PROJECT_TAGGED_PIPELINE_ID
@@ -167,6 +167,10 @@ variables:
   value: 241
 - name: OMNIPERF_TAGGED_PIPELINE_ID
   value: 242
+- name: OMNITRACE_PIPELINE_ID
+  value: 253
+- name: OMNITRACE_TAGGED_PIPELINE_ID
+  value: 252
 - name: RCCL_GFX942_TEST_PIPELINE_ID
   value: 184
 - name: RCCL_PIPELINE_ID
@@ -177,10 +181,6 @@ variables:
   value: 100
 - name: RDC_TAGGED_PIPELINE_ID
   value: 59
-- name: REIMAGE_ORG
-  value: AGS-ROCm-CI
-- name: REIMAGE_REPO
-  value: cirrascale-reimage-automation
 - name: ROCAL_PIPELINE_ID
   value: 151
 - name: ROCALUTION_GFX942_TEST_PIPELINE_ID
@@ -213,6 +213,10 @@ variables:
   value: 134
 - name: ROCGDB_TAGGED_PIPELINE_ID
   value: 50
+- name: ROCJPEG_PIPELINE_ID
+  value: 262
+- name: ROCJPEG_TAGGED_PIPELINE_ID
+  value: 263
 - name: ROCM_BANDWIDTH_TEST_PIPELINE_ID
   value: 88
 - name: ROCM_BANDWIDTH_TEST_TAGGED_PIPELINE_ID
@@ -255,6 +259,10 @@ variables:
   value: 20
 - name: ROCPROFILER_GFX942_TEST_PIPELINE_ID
   value: 190
+- name: ROCPROFILER_COMPUTE_PIPELINE_ID
+  value: 257
+- name: ROCPROFILER_COMPUTE_TAGGED_PIPELINE_ID
+  value: 258
 - name: ROCPROFILER_REGISTER_PIPELINE_ID
   value: 1
 - name: ROCPROFILER_REGISTER_TAGGED_PIPELINE_ID
@@ -263,6 +271,10 @@ variables:
   value: 246
 - name: ROCPROFILER_SDK_TAGGED_PIPELINE_ID
   value: 234
+- name: ROCPROFILER_SYSTEMS_PIPELINE_ID
+  value: 255
+- name: ROCPROFILER_SYSTEMS_TAGGED_PIPELINE_ID
+  value: 254
 - name: ROCPROFILER_PIPELINE_ID
   value: 143
 - name: ROCPROFILER_TAGGED_PIPELINE_ID
@@ -325,3 +337,9 @@ variables:
   value: 78
 - name: RPP_TAGGED_PIPELINE_ID
   value: 39
+- name: TRANSFERBENCH_PIPELINE_ID
+  value: 265
+- name: TRANSFERBENCH_TAGGED_PIPELINE_ID
+  value: 266
+- name: BOOST_DEPENDENCY_PIPELINE_ID
+  value: 250

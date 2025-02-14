@@ -48,7 +48,7 @@ CLEAN_OR_OUT=0;
 MAKETARGET="deb"
 PKGTYPE="deb"
 LDFLAGS="$LDFLAGS -Wl,--enable-new-dtags"
-
+LIB_AMD_PYTHON="libamdpython.so"
 
 tokeep=(
     main${ROCM_INSTALL_PATH}/bin/rocgdb
@@ -123,11 +123,41 @@ package_deb(){
     local VERSION
     get_version unknown
     VERSION="${VERSION}.${ROCM_LIBPATCH_VERSION}"
-
-    grep -v '^# ' > "$BUILD_DIR/package/main/DEBIAN/control" <<EOF
+    #create postinstall and prerm
+    grep -v '^# ' > "$BUILD_DIR/package/main/DEBIAN/preinst" <<EOF
+#!/bin/sh
+# Pre-installation script commands
+echo "Running pre-installation script..."
+mkdir -p ${ROCM_INSTALL_PATH}/lib
+PYTHON_LIB_INSTALLED=\$(ldconfig -p | awk '/libpython3/ { print \$NF; exit}')
+ln -s \$PYTHON_LIB_INSTALLED ${ROCM_INSTALL_PATH}/lib/$LIB_AMD_PYTHON
+echo "pre-installation done."
+EOF
+    grep -v '^# ' > "$BUILD_DIR/package/main/DEBIAN/postrm" <<EOF
+#!/bin/sh
+# Post-uninstallation script commands
+echo "Running post-uninstallation script..."
+PYTHON_LINK_BY_OPENCL=\$(ldconfig -p | awk '/libpython3/ { print \$NF; exit}'  | awk -F'/' '{print \$NF}')
+rm -f ${ROCM_INSTALL_PATH}/lib/\$PYTHON_LINK_BY_OPENCL
+rm -f ${ROCM_INSTALL_PATH}/lib/$LIB_AMD_PYTHON
+if [ -L "${ROCM_INSTALL_PATH}/lib/$LIB_AMD_PYTHON" ]  || \
+   [ -L "${ROCM_INSTALL_PATH}/lib/\$PYTHON_LINK_BY_OPENCL" ] ; then
+        echo " some rocm-gdb requisite libs could not be removed"
+else
+        echo " all requisite libs removed successfully "
+fi
+echo "post-uninstallation done."
+EOF
+    chmod +x $BUILD_DIR/package/main/DEBIAN/postrm
+    chmod +x $BUILD_DIR/package/main/DEBIAN/preinst
+    # Create control file, with variable substitution.
+    # Lines with # at the start are removed, to allow for comments
+    mkdir "$BUILD_DIR/debian"
+    grep -v '^# ' > "$BUILD_DIR/debian/control" <<EOF
 # Required fields
 Version: ${VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE}
 Package: ${PROJ_NAME}
+Source: ${PROJ_NAME}-src
 Maintainer: ROCm Debugger Support <rocm-gdb.support@amd.com>
 Description: ROCgdb
  This is ROCgdb, the AMD ROCm source-level debugger for Linux,
@@ -137,15 +167,37 @@ Section: utils
 Architecture: amd64
 Essential: no
 Priority: optional
-Depends: libexpat1, libtinfo5, libncurses5, rocm-dbgapi, libpython3.10 | libpython3.8, libbabeltrace-ctf1 (>= 1.2.1), libbabeltrace1 (>= 1.2.1), rocm-core
+Depends: \${shlibs:Depends}, rocm-dbgapi, rocm-core
 EOF
-
+    # Use dpkg-shlibdeps to list shlib dependencies, the result is placed
+    # in $BUILD_DIR/debian/substvars.
+    (
+	cd "$BUILD_DIR"
+	if [[ $ASAN_BUILD == "yes" ]]
+	then
+		LD_LIBRARY_PATH=${ROCM_INSTALL_PATH}/lib/asan:$LD_LIBRARY_PATH
+	fi
+	dpkg-shlibdeps --ignore-missing-info  -e "$BUILD_DIR/package/main/${ROCM_INSTALL_PATH}/bin/rocgdb"
+    )
+    # Generate the final DEBIAN/control, and substitute the shlibs:Depends.
+    # This is a bit unorthodox as we are only using bits and pieces of the
+    # dpkg tools.
+    (
+    SHLIB_DEPS=$(grep "^shlibs:Depends" "$BUILD_DIR/debian/substvars" | \
+			sed -e "s/shlibs:Depends=//")
+    sed -E \
+	    -e "/^#/d" \
+	    -e "/^Source:/d" \
+	    -e "s/\\$\{shlibs:Depends\}/$SHLIB_DEPS/" \
+	    < debian/control > "$BUILD_DIR/package/main/DEBIAN/control"
+    )
     mkdir -p "$OUT_DIR/deb/$PROJ_NAME"
     fakeroot dpkg-deb -Zgzip --build "$BUILD_DIR/package/main" "$OUT_DIR/deb/$PROJ_NAME"
-
+    # Package the tests so they can be run on a test slave
     mkdir -p "$BUILD_DIR/package/tests/DEBIAN"
     mkdir -p "$BUILD_DIR/package/tests/${ROCM_INSTALL_PATH}/test/gdb"
-
+    # Create control file, with variable substitution.
+    # Lines with # at the start are removed, to allow for comments
     grep -v '^# ' > "$BUILD_DIR/package/tests/DEBIAN/control" <<EOF
 # Required fields
 Version: ${VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE}
@@ -161,7 +213,6 @@ Priority: optional
 # rocm-core as policy says everything to depend on rocm-core
 Depends: ${PROJ_NAME} (=${VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE}), dejagnu, rocm-core, make
 EOF
-
     copy_testsuite_files
     fakeroot dpkg-deb -Zgzip --build "$BUILD_DIR/package/tests" "$OUT_DIR/deb/$PROJ_NAME"
 }
@@ -204,7 +255,9 @@ Summary: ROCm source-level debugger for Linux
 Version: ${VERSION//-/_}
 Release: ${CPACK_RPM_PACKAGE_RELEASE}%{?dist}
 License: GPL
+Prefix: ${ROCM_INSTALL_PATH}
 Requires: rocm-core
+Provides: $LIB_AMD_PYTHON()(64bit)
 
 %description
 This is ROCgdb, the ROCm source-level debugger for Linux, based on
@@ -225,6 +278,27 @@ https://github.com/RadeonOpenCompute/ROCm
 ## into the local RPM_BUILD_ROOT and left the defaults take over. Need
 ## to quote the dollar signs as we want rpm to expand them when it is
 ## run, rather than the shell when we build the spec file.
+%pre
+# Post-install script commands
+echo "Running post-install script..."
+mkdir -p ${ROCM_INSTALL_PATH}/lib
+PYTHON_LIB_INSTALLED=\$(ldconfig -p | awk '/libpython3/ { print \$NF; exit}')
+ln -s \$PYTHON_LIB_INSTALLED ${ROCM_INSTALL_PATH}/lib/$LIB_AMD_PYTHON
+
+%postun
+# Post-uninstallation script commands
+echo "Running post-uninstallation script..."
+PYTHON_LINK_BY_OPENCL=\$(ldconfig -p | awk '/libpython3/ { print \$NF; exit}'  | awk -F'/' '{print \$NF}')
+rm -f ${ROCM_INSTALL_PATH}/lib/\$PYTHON_LINK_BY_OPENCL
+rm -f ${ROCM_INSTALL_PATH}/lib/$LIB_AMD_PYTHON
+if [ -L "${ROCM_INSTALL_PATH}/lib/$LIB_AMD_PYTHON" ]  || \
+   [ -L "${ROCM_INSTALL_PATH}/lib/\$PYTHON_LINK_BY_OPENCL" ] ; then
+        echo " some rocm-gdb requisite libs could not be removed"
+else
+        echo " all requisite libs removed successfully "
+fi
+echo "post-uninstallation done."
+
 %install
 rm -rf \$RPM_BUILD_ROOT
 mkdir -p \$RPM_BUILD_ROOT
@@ -279,6 +353,7 @@ Summary: Tests for gdb enhanced to debug AMD GPUs
 Version: ${VERSION//-/_}
 Release: ${RELEASE}
 License: GPL
+Prefix: ${ROCM_INSTALL_PATH}
 Requires: dejagnu, ${PROJ_NAME} = ${VERSION//-/_}-${RELEASE}, rocm-core, make
 
 %description
@@ -340,15 +415,36 @@ build() {
 	--infodir="\${prefix}/share/info/rocgdb" \
 	--with-separate-debug-dir="\${prefix}/lib/debug:/usr/lib/debug" \
 	--with-gdb-datadir="\${prefix}/share/rocgdb" --enable-64-bit-bfd \
-        --with-bugurl="$BUG_URL" --with-pkgversion="${ROCM_BUILD_ID:-ROCm}" \
-        --enable-targets="x86_64-linux-gnu,amdgcn-amd-amdhsa" \
-        --disable-ld --disable-gas --disable-gdbserver --disable-sim --enable-tui \
-        --disable-gdbtk --disable-shared --disable-gprofng \
-        --with-expat --with-system-zlib --without-guile --with-babeltrace --with-lzma \
-        --with-python=$pythonver --with-rocm-dbgapi=$ROCM_INSTALL_PATH \
-        --with-amd-dbgapi PKG_CONFIG_PATH="${ROCM_INSTALL_PATH}/share/pkgconfig" \
+	--with-bugurl="$BUG_URL" --with-pkgversion="${ROCM_BUILD_ID:-ROCm}" \
+	--enable-targets="x86_64-linux-gnu,amdgcn-amd-amdhsa" \
+	--disable-gas \
+	--disable-gdbserver \
+	--disable-gdbtk \
+	--disable-gprofng \
+	--disable-ld \
+	--disable-shared \
+	--disable-sim \
+	--enable-tui \
+	--with-amd-dbgapi \
+	--with-expat \
+	--with-lzma \
+	--with-python=$pythonver \
+	--with-rocm-dbgapi=$ROCM_INSTALL_PATH \
+	--with-system-zlib \
+	--with-zstd \
+	--without-babeltrace \
+	--without-guile \
+	--without-intel-pt \
+	--without-libunwind-ia64 \
+	--without-xxhash \
+	PKG_CONFIG_PATH="${ROCM_INSTALL_PATH}/share/pkgconfig" \
 	LDFLAGS="$LDFLAGS"
     LD_RUN_PATH='${ORIGIN}/../lib' make $MAKE_OPTS
+
+    REPLACE_LIB_NAME=$(ldd -d $BUILD_DIR/gdb/gdb |awk '/libpython/{print $1}')
+    echo "Replacing $REPLACE_LIB_NAME with $LIB_AMD_PYTHON"
+    patchelf --replace-needed $REPLACE_LIB_NAME $LIB_AMD_PYTHON $BUILD_DIR/gdb/gdb
+
     mkdir -p $BUILD_DIR/package/main${ROCM_INSTALL_PATH}/{share/rocgdb,bin}
 
     make $MAKE_OPTS -C gdb DESTDIR=$BUILD_DIR/package/main install install-pdf install-html
@@ -381,7 +477,7 @@ main(){
 
 VALID_STR=`getopt -o hcraso:p: --long help,clean,release,static,address_sanitizer,outdir:,package: -- "$@"`
 eval set -- "$VALID_STR"
-
+ASAN_BUILD="no"
 while true ;
 do
     case "$1" in
@@ -393,9 +489,10 @@ do
                 BUILD_TYPE="Release" ; shift ; MAKEARG="$MAKEARG REL=1" ;; # For compatability with other scripts
         (-a | --address_sanitizer)
                 set_asan_env_vars
-                set_address_sanitizer_on ; shift ;;
+                set_address_sanitizer_on
+                ASAN_BUILD="yes" ; shift ;;
         (-s | --static)
-                SHARED_LIBS="OFF" ; shift ;;
+                ack_and_skip_static ;;
         (-o | --outdir)
                 TARGET="outdir"; PKGTYPE=$2 ; OUT_DIR_SPECIFIED=1 ; ((CLEAN_OR_OUT|=2)) ; shift 2 ;;
         (-p | --package)                 #FIXME

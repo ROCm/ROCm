@@ -11,7 +11,6 @@ parameters:
     - ca-certificates
     - bc
     - bridge-utils
-    - cmake
     - devscripts
     - dkms
     - doxygen
@@ -67,8 +66,9 @@ parameters:
 - name: pipModules
   type: object
   default:
+    - cmake
     - astunparse
-    - expecttest!=0.2.0
+    - expecttest>=0.2.1
     - hypothesis
     - numpy
     - psutil
@@ -85,14 +85,15 @@ parameters:
     - lintrunner
     - ninja
     - packaging
-    - optree>=0.12.0
+    - optree>=0.13.0
+    - click>=8.0.3
   # list for vision
     - auditwheel
     - future
     - pytest
     - pytest-azurepipelines
     - pillow
-# list from https://github.com/pytorch/builder/blob/main/manywheel/build_rocm.sh
+# list from https://github.com/pytorch/pytorch/blob/main/.ci/manywheel/build_rocm.sh
 - name: rocmDependencies
   type: object
   default:
@@ -122,6 +123,7 @@ parameters:
     - hipCUB
     - rocThrust
     - hipBLAS-common
+    - composable_kernel
 - name: rocmTestDependencies
   type: object
   default:
@@ -140,6 +142,10 @@ parameters:
     - binary_ufuncs
     - autograd
 #    - inductor/torchinductor takes too long
+# set to false to disable torchvision build and test
+- name: includeVision
+  type: boolean
+  default: false
 
 trigger: none
 pr: none
@@ -159,13 +165,10 @@ jobs:
       amd-staging-gfx942:
         ROCM_BRANCH: amd-staging
         JOB_GPU_TARGET: gfx942
-      amd-staging-gfx90a:
-        ROCM_BRANCH: amd-staging
-        JOB_GPU_TARGET: gfx90a
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-# various flags/parameters expected by bash scripts in pytorch builder repo
+# various flags/parameters expected by bash scripts in pytorch repo's .ci directory
   - name: ROCM_VERSION
     value: 6.3.0
   - name: ROCM_PATH
@@ -174,8 +177,6 @@ jobs:
     value: 6.3.0
   - name: MKLROOT
     value: /opt/intel
-  - name: AOTRITON_INSTALLED_PREFIX
-    value: /opt/rocm/aotriton
   - name: DESIRED_PYTHON
     value: 3.10
   - name: PYTORCH_ROOT
@@ -186,7 +187,7 @@ jobs:
   workspace:
     clean: all
   steps:
-# copy environment setup from https://github.com/pytorch/builder/blob/main/manywheel/Dockerfile
+# copy environment setup from https://github.com/pytorch/pytorch/blob/main/.ci/docker/manywheel/Dockerfile
 # but instead of centos, use ubuntu environment
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-cmake-latest.yml
   - task: Bash@3
@@ -224,17 +225,26 @@ jobs:
       script: sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
   - checkout: self
   - task: Bash@3
-    displayName: git clone pytorch builder
-    inputs:
-      targetType: inline
-      script: git clone https://github.com/pytorch/builder.git --depth=1 --recurse-submodules
-      workingDirectory: $(Build.SourcesDirectory)
-  - task: Bash@3
     displayName: git clone upstream pytorch
     inputs:
       targetType: inline
       script: git clone https://github.com/pytorch/pytorch.git --depth=1 --recurse-submodules
       workingDirectory: $(Build.SourcesDirectory)
+# builder clone still needed due to run_tests.sh at end of build_common.sh call
+  - task: Bash@3
+    displayName: git clone pytorch builder
+    inputs:
+      targetType: inline
+      script: |
+        git clone https://github.com/pytorch/builder.git --depth=1 --recurse-submodules
+        sudo ln -s $(Build.SourcesDirectory)/builder /builder
+      workingDirectory: $(Build.SourcesDirectory)
+  - task: Bash@3
+    displayName: Temporarily Patch CK Submodule
+    inputs:
+      targetType: inline
+      script: git pull origin develop
+      workingDirectory: $(Build.SourcesDirectory)/pytorch/third_party/composable_kernel
   - task: Bash@3
     displayName: Install patchelf
     inputs:
@@ -264,12 +274,6 @@ jobs:
         sudo PYTORCH_ROCM_ARCH=$(JOB_GPU_TARGET) MKLROOT=$(MKLROOT) bash pytorch/.ci/docker/common/install_rocm_magma.sh
       workingDirectory: $(Build.SourcesDirectory)
   - task: Bash@3
-    displayName: Install AOTriton Shared Library
-    inputs:
-      targetType: inline
-      script: sudo bash ./common/install_aotriton.sh /opt/rocm
-      workingDirectory: $(Build.SourcesDirectory)/pytorch/.ci/docker
-  - task: Bash@3
     displayName: Run ROCm Build Script
     inputs:
       targetType: inline
@@ -281,74 +285,88 @@ jobs:
         DESIRED_PYTHON=$(DESIRED_PYTHON)
         PYTORCH_ROOT=$(PYTORCH_ROOT)
         CMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm
-        AOTRITON_INSTALLED_PREFIX=$(AOTRITON_INSTALLED_PREFIX)
         DESIRED_DEVTOOLSET=$(DESIRED_DEVTOOLSET)
         TORCH_PACKAGE_NAME=torch.$(ROCM_BRANCH).$(JOB_GPU_TARGET)
         PYTORCH_BUILD_VERSION=$(cat $(Build.SourcesDirectory)/pytorch/version.txt | cut -da -f1)
         PYTORCH_BUILD_NUMBER=$(date -u +%Y%m%d)
         SKIP_ALL_TESTS=1
-        bash ./manywheel/build_rocm.sh
-      workingDirectory: $(Build.SourcesDirectory)/builder
+        bash ./.ci/manywheel/build_rocm.sh
+      workingDirectory: $(Build.SourcesDirectory)/pytorch
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-prepare-package.yml
     parameters:
       sourceDir: /remote/wheelhouserocm$(ROCM_VERSION)
       contentsString: '*.whl'
 # common helper source for pytorch vision and audio
-  - task: Bash@3
-    displayName: git clone pytorch test-infra
-    inputs:
-      targetType: inline
-      script: git clone https://github.com/pytorch/test-infra.git --depth=1 --recurse-submodules
-      workingDirectory: $(Build.SourcesDirectory)
-  - task: Bash@3
-    displayName: install package helper
-    inputs:
-      targetType: inline
-      script: python3 -m pip install test-infra/tools/pkg-helpers
-      workingDirectory: $(Build.SourcesDirectory)
-  - task: Bash@3
-    displayName: pytorch pkg helpers
-    inputs:
-      targetType: inline
-      script: CU_VERSION=${CU_VERSION} CHANNEL=${CHANNEL} python -m pytorch_pkg_helpers
-# get torch vision source and build
-  - task: Bash@3
-    displayName: git clone pytorch vision
-    inputs:
-      targetType: inline
-      script: git clone https://github.com/pytorch/vision.git --depth=1 --recurse-submodules
-      workingDirectory: $(Build.SourcesDirectory)
-  - task: Bash@3
-    displayName: Build vision
-    inputs:
-      targetType: inline
-      script: >-
-        TORCH_PACKAGE_NAME=torch.$(ROCM_BRANCH).$(JOB_GPU_TARGET)
-        TORCHVISION_PACKAGE_NAME=torchvision.$(ROCM_BRANCH).$(JOB_GPU_TARGET)
-        PYTORCH_VERSION=$(cat $(Build.SourcesDirectory)/pytorch/version.txt | cut -da -f1)post$(date -u +%Y%m%d)
-        BUILD_VERSION=$(cat $(Build.SourcesDirectory)/vision/version.txt | cut -da -f1)post$(date -u +%Y%m%d)
-        python3 setup.py bdist_wheel
-      workingDirectory: $(Build.SourcesDirectory)/vision
-  - task: Bash@3
-    displayName: Relocate vision
-    inputs:
-      targetType: inline
-      script: python3 packaging/wheel/relocate.py
-      workingDirectory: $(Build.SourcesDirectory)/vision
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-prepare-package.yml
+  - ${{ if eq(parameters.includeVision, true) }}:
+    - task: Bash@3
+      displayName: git clone pytorch test-infra
+      inputs:
+        targetType: inline
+        script: git clone https://github.com/pytorch/test-infra.git --depth=1 --recurse-submodules
+        workingDirectory: $(Build.SourcesDirectory)
+    - task: Bash@3
+      displayName: install package helper
+      inputs:
+        targetType: inline
+        script: python3 -m pip install test-infra/tools/pkg-helpers
+        workingDirectory: $(Build.SourcesDirectory)
+    - task: Bash@3
+      displayName: pytorch pkg helpers
+      inputs:
+        targetType: inline
+        script: CU_VERSION=${CU_VERSION} CHANNEL=${CHANNEL} python -m pytorch_pkg_helpers
+  # get torch vision source and build
+    - task: Bash@3
+      displayName: git clone pytorch vision
+      inputs:
+        targetType: inline
+        script: git clone https://github.com/pytorch/vision.git --depth=1 --recurse-submodules
+        workingDirectory: $(Build.SourcesDirectory)
+    - task: Bash@3
+      displayName: Build vision
+      inputs:
+        targetType: inline
+        script: >-
+          TORCH_PACKAGE_NAME=torch.$(ROCM_BRANCH).$(JOB_GPU_TARGET)
+          TORCHVISION_PACKAGE_NAME=torchvision.$(ROCM_BRANCH).$(JOB_GPU_TARGET)
+          PYTORCH_VERSION=$(cat $(Build.SourcesDirectory)/pytorch/version.txt | cut -da -f1)post$(date -u +%Y%m%d)
+          BUILD_VERSION=$(cat $(Build.SourcesDirectory)/vision/version.txt | cut -da -f1)post$(date -u +%Y%m%d)
+          python3 setup.py bdist_wheel
+        workingDirectory: $(Build.SourcesDirectory)/vision
+    - task: Bash@3
+      displayName: Relocate vision
+      inputs:
+        targetType: inline
+        script: python3 packaging/wheel/relocate.py
+        workingDirectory: $(Build.SourcesDirectory)/vision
+    - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-prepare-package.yml
+      parameters:
+        sourceDir: $(Build.SourcesDirectory)/vision/dist
+        contentsString: '*.whl'
+        clean: false
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
     parameters:
-      sourceDir: $(Build.SourcesDirectory)/vision/dist
-      contentsString: '*.whl'
-      clean: false
+      gpuTarget: $(JOB_GPU_TARGET)
   - task: PublishPipelineArtifact@1
     displayName: 'wheel file Publish'
     retryCountOnTaskFailure: 3
     inputs:
       targetPath: $(Build.BinariesDirectory)
+  - task: Bash@3
+    displayName: Save pipeline artifact file name
+    inputs:
+      workingDirectory: $(Pipeline.Workspace)
+      targetType: inline
+      script: |
+        whlFile=$(find "$(Build.BinariesDirectory)" -type f -name "*.whl" | head -n 1)
+        if [ -n "$whlFile" ]; then
+          echo $(basename "$whlFile") >> pipelineArtifacts.txt
+        fi
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
 
-- job: torchvision_testing
+- job: pytorch_testing
   dependsOn: pytorch
-  condition: succeeded()
+  condition: and(succeeded(), eq(variables.ENABLE_GFX942_TESTS, 'true'), not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])))
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
@@ -377,7 +395,12 @@ jobs:
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
       pipModules: ${{ parameters.pipModules }}
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-cmake-latest.yml
+# pytorch tests require an updated version of click, even if requirements is not called outright
+  - task: Bash@3
+    displayName: 'pip update click'
+    inputs:
+      targetType: inline
+      script: pip install --upgrade click
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
   - task: DownloadPipelineArtifact@2
     displayName: 'Download Pipeline Wheel Files'
@@ -400,12 +423,13 @@ jobs:
       targetType: inline
       script: git clone https://github.com/pytorch/pytorch.git --depth=1 --recurse-submodules
       workingDirectory: $(Build.SourcesDirectory)
-  - task: Bash@3
-    displayName: git clone pytorch vision
-    inputs:
-      targetType: inline
-      script: git clone https://github.com/pytorch/vision.git --depth=1 --recurse-submodules
-      workingDirectory: $(Build.SourcesDirectory)
+  - ${{ if eq(parameters.includeVision, true) }}:
+    - task: Bash@3
+      displayName: git clone pytorch vision
+      inputs:
+        targetType: inline
+        script: git clone https://github.com/pytorch/vision.git --depth=1 --recurse-submodules
+        workingDirectory: $(Build.SourcesDirectory)
   - task: Bash@3
     displayName: Install Wheel Files
     inputs:
@@ -450,7 +474,7 @@ jobs:
         python3 -c 'import torch; x = torch.rand(5, 3); print(x)'
 # Test artifact build script has too many if statements for different environments
 # Based off the snippet of interest for this environment, with some adjustments
-# https://github.com/pytorch/pytorch/blob/main/.ci/pytorch/build.sh#L335-L375
+# https://github.com/pytorch/pytorch/blob/main/.ci/pytorch/build.sh#L330-L371
 # Removing in-line comments since it does not fit with the yaml markup
   - task: Bash@3
     displayName: Build Pytorch Test Artifacts
@@ -509,13 +533,14 @@ jobs:
           script: pytest test/test_${{ torchTest }}.py
 # Reference on what tests to run for torchvision found in private repo:
 # https://github.com/ROCm/rocAutomation/blob/jenkins-pipelines/pytorch/pytorch_ci/test_torchvision.sh#L51
-  - task: Bash@3
-    displayName: Test vision/transforms
-    continueOnError: true
-    inputs:
-      targetType: inline
-      script: pytest test/test_transforms.py
-      workingDirectory: $(Build.SourcesDirectory)/vision
+  - ${{ if eq(parameters.includeVision, true) }}:
+    - task: Bash@3
+      displayName: Test vision/transforms
+      continueOnError: true
+      inputs:
+        targetType: inline
+        script: pytest test/test_transforms.py
+        workingDirectory: $(Build.SourcesDirectory)/vision
   - task: Bash@3
     displayName: Uninstall Wheel Files
     inputs:

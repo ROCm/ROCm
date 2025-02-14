@@ -27,12 +27,12 @@ parameters:
   type: object
   default:
     - https://github.com/RadeonOpenCompute/rbuild/archive/master.tar.gz
-    - onnx==1.14.1
-    - numpy==1.21.6
-    - typing==3.7.4
-    - pytest==6.0.1
-    - packaging==23.0
-    - protobuf==3.20.2
+    - onnx>=1.14.1
+    - numpy>=1.21.6
+    - typing>=3.7.4
+    - pytest>=6.0.1
+    - packaging>=23.0
+    - protobuf>=3.20.2
 - name: rocmDependencies
   type: object
   default:
@@ -84,8 +84,6 @@ jobs:
     matrix:
       gfx942:
         JOB_GPU_TARGET: gfx942
-      gfx90a:
-        JOB_GPU_TARGET: gfx90a
   steps:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
@@ -96,23 +94,16 @@ jobs:
     parameters:
       checkoutRepo: ${{ parameters.checkoutRepo }}
 # half version should be fixed to 5.6.0
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/local-artifact-download.yml
+    parameters:
+      buildType: specific
+      definitionId: ${{ variables.HALF560_PIPELINE_ID }}
+      buildId: ${{ variables.HALF560_BUILD_ID }}
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
     parameters:
-      dependencySource: fixed
-      fixedComponentName: half
-      fixedPipelineIdentifier: ${{ variables.HALF560_PIPELINE_ID }}
-      skipLibraryLinking: true
-      skipLlvmSymlink: true
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
-    parameters:
+      checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
-      # CI case: download latest default branch build
-      ${{ if eq(parameters.checkoutRef, '') }}:
-        dependencySource: staging
-      # manual build case: triggered by ROCm/ROCm repo
-      ${{ elseif ne(parameters.checkoutRef, '') }}:
-        dependencySource: tag-builds
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
       extraBuildFlags: >-
@@ -124,11 +115,22 @@ jobs:
         -DHALF_INCLUDE_DIR=$(Agent.BuildDirectory)/rocm/include
         -DBUILD_TESTING=ON
         -GNinja
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
+    parameters:
+      gpuTarget: $(JOB_GPU_TARGET)
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      gpuTarget: $(JOB_GPU_TARGET)
 
 - job: AMDMIGraphX_testing
+  dependsOn: AMDMIGraphX
+  condition: and(succeeded(), eq(variables.ENABLE_GFX942_TESTS, 'true'), not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])))
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
@@ -152,29 +154,17 @@ jobs:
     parameters:
       checkoutRepo: ${{ parameters.checkoutRepo }}
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-aqlprofile.yml
-    parameters:
-      ${{ if eq(parameters.checkoutRef, '') }}:
-        dependencySource: staging
-      ${{ elseif ne(parameters.checkoutRef, '') }}:
-        dependencySource: tag-builds
 # half version should be fixed to 5.6.0
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/local-artifact-download.yml
+    parameters:
+      buildType: specific
+      definitionId: ${{ variables.HALF560_PIPELINE_ID }}
+      buildId: ${{ variables.HALF560_BUILD_ID }}
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
     parameters:
-      dependencySource: fixed
-      fixedComponentName: half
-      fixedPipelineIdentifier: ${{ variables.HALF560_PIPELINE_ID }}
-      skipLibraryLinking: true
-      skipLlvmSymlink: true
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
-    parameters:
+      checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmTestDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
-      # CI case: download latest default branch build
-      ${{ if eq(parameters.checkoutRef, '') }}:
-        dependencySource: staging
-      # manual build case: triggered by ROCm/ROCm repo
-      ${{ elseif ne(parameters.checkoutRef, '') }}:
-        dependencySource: tag-builds
   - task: CMake@1
     displayName: MIGraphXTest CMake Flags
     inputs:
@@ -188,9 +178,18 @@ jobs:
         -DBUILD_TESTING=ON
         -DMIGRAPHX_ENABLE_C_API_TEST=ON
         ..
-  - task: Bash@3
-    displayName: Build and run MIGraphX tests
-    inputs:
-      targetType: inline
-      workingDirectory: build
-      script: make -j$(nproc) check
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
+    parameters:
+      componentName: AMDMIGraphX
+      testExecutable: make
+      testParameters: -j$(nproc) check
+      testPublishResults: false
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)
+      extraEnvVars:
+        - MIGRAPHX_TRACE_BENCHMARKING:::1

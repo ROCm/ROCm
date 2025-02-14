@@ -11,8 +11,8 @@ printUsage() {
     echo "  -a,  --address_sanitizer  Enable address sanitizer"
     echo "  -o,  --outdir <pkg_type>  Print path of output directory containing packages of
     type referred to by pkg_type"
+    echo "  -s,  --static             Component/Build does not support static builds just accepting this param & ignore. No effect of the param on this build"
     echo "  -h,  --help               Prints this help"
-    echo "  -s,  --static             Build static lib (.a).  build instead of dynamic/shared(.so) "
     echo
 
     return 0
@@ -39,7 +39,7 @@ CLEAN_OR_OUT=0
 MAKETARGET="deb"
 PKGTYPE="deb"
 
-GPU_LIST="gfx900;gfx906;gfx908;gfx90a;gfx940;gfx941;gfx942;gfx1030;gfx1100;gfx1101;gfx1102"
+GPU_LIST="gfx900;gfx906;gfx908;gfx90a;gfx940;gfx941;gfx942;gfx1030;gfx1031;gfx1100;gfx1101;gfx1102;gfx1200;gfx1201"
 
 VALID_STR=$(getopt -o hcraso: --long help,clean,release,static,address_sanitizer,outdir: -- "$@")
 eval set -- "$VALID_STR"
@@ -65,7 +65,7 @@ while true; do
         shift
         ;;
     -s | --static)
-        SHARED_LIBS="OFF"
+        ack_and_skip_static
         shift
         ;;
     -o | --outdir)
@@ -119,10 +119,12 @@ build() {
         mkdir -p "$BUILD_DIR"
         pushd "$BUILD_DIR"
         print_lib_type $SHARED_LIBS
-        export HIPCC_COMPILE_FLAGS_APPEND="--rocm-path=$ROCM_PATH --offload-arch=gfx900 --offload-arch=gfx906  --offload-arch=gfx908 \
-                                                                  --offload-arch=gfx90a --offload-arch=gfx940  --offload-arch=gfx1030  \
-                                                                  --offload-arch=gfx1100 --offload-arch=gfx1101 --offload-arch=gfx1102"
 
+        export HIPCC_COMPILE_FLAGS_APPEND="--rocm-path=$ROCM_PATH --offload-arch=gfx900 --offload-arch=gfx906  --offload-arch=gfx908 \
+                                                            --offload-arch=gfx90a --offload-arch=gfx940 --offload-arch=gfx941 \
+                                                            --offload-arch=gfx942 --offload-arch=gfx1030 --offload-arch=gfx1031 \
+                                                            --offload-arch=gfx1100 --offload-arch=gfx1101 --offload-arch=gfx1102 \
+                                                            --offload-arch=gfx1200 --offload-arch=gfx1201"
         cmake $(rocm_cmake_params) \
             -DCPACK_PACKAGING_INSTALL_PREFIX="$PACKAGE_PREFIX/$PROJ_NAME" \
             -DCMAKE_MODULE_PATH="$PACKAGE_CMAKE/hip" \

@@ -615,7 +615,6 @@ The following table shows the hardware counters *by* all texture addressing unit
   "``TA_FLAT_READ_WAVEFRONTS_sum``", "Sum of flat opcode reads processed"
   "``TA_FLAT_WRITE_WAVEFRONTS_sum``", "Sum of flat opcode writes processed"
   "``TA_FLAT_WAVEFRONTS_sum``", "Total number of flat opcode wavefronts processed"
-  "``TA_FLAT_READ_WAVEFRONTS_sum``", "Total number of flat opcode read wavefronts processed"
   "``TA_FLAT_ATOMIC_WAVEFRONTS_sum``", "Total number of flat opcode atomic wavefronts processed"
   "``TA_TOTAL_WAVEFRONTS_sum``", "Total number of wavefronts processed"
 

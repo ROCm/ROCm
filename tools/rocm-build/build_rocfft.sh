@@ -16,24 +16,24 @@ build_rocfft() {
          set_address_sanitizer_on
     fi
     mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
+    init_rocm_common_cmake_params
 
     if [ -n "$GPU_ARCHS" ]; then
         GPU_TARGETS="$GPU_ARCHS"
     else
-        GPU_TARGETS="gfx908;gfx90a;gfx940;gfx941;gfx942;gfx1030;gfx1100;gfx1101"
+        GPU_TARGETS="gfx908;gfx90a;gfx940;gfx941;gfx942;gfx1030;gfx1100;gfx1101;gfx1102;gfx1200;gfx1201"
     fi
 
     CXX="${ROCM_PATH}/bin/hipcc" \
     cmake \
         ${LAUNCHER_FLAGS} \
-        $(rocm_common_cmake_params) \
+        "${rocm_math_common_cmake_params[@]}" \
         -DAMDGPU_TARGETS=${GPU_TARGETS} \
         -DUSE_HIP_CLANG=ON \
         -DHIP_COMPILER=clang  \
         -DBUILD_CLIENTS_SAMPLES=ON  \
         -DBUILD_CLIENTS_TESTS=ON \
         -DBUILD_CLIENTS_RIDER=ON  \
-        -DCPACK_SET_DESTDIR=OFF  \
         "$COMPONENT_SRC"
 
     cmake --build "$BUILD_DIR" -- -j${PROC}

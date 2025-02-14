@@ -1,0 +1,23 @@
+variables:
+- group: common
+- template: /.azuredevops/variables-global.yml
+
+parameters:
+- name: boostVersion
+  type: string
+  default: 'master'
+
+resources:
+  repositories:
+  - repository: pipelines_repo
+    type: github
+    endpoint: ROCm
+    name: ROCm/ROCm
+
+trigger: none
+pr: none
+
+jobs:
+  - template: ${{ variables.CI_DEPENDENCIES_PATH }}/boost.yml
+    parameters:
+      boostVersion: ${{ parameters.boostVersion }}

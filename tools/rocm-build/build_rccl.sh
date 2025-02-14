@@ -10,6 +10,10 @@ ENABLE_ADDRESS_SANITIZER=false
 build_rccl() {
     echo "Start build"
 
+    if [ "${ENABLE_STATIC_BUILDS}" == "true" ]; then
+        ack_and_skip_static
+    fi
+
     mkdir -p $ROCM_PATH/.info/
     echo $ROCM_VERSION | tee $ROCM_PATH/.info/version
 
@@ -23,17 +27,19 @@ build_rccl() {
     if [ -n "$GPU_ARCHS" ]; then
         GPU_TARGETS="$GPU_ARCHS"
     else
-        GPU_TARGETS="gfx908:xnack-;gfx90a:xnack-;gfx90a:xnack+;gfx940;gfx941;gfx942;gfx1030;gfx1100;gfx1101"
+        GPU_TARGETS="gfx908:xnack-;gfx90a:xnack-;gfx90a:xnack+;gfx940;gfx941;gfx942;gfx1030;gfx1100;gfx1101;gfx1102;gfx1200;gfx1201"
     fi
 
+    init_rocm_common_cmake_params
 
     CC=${ROCM_PATH}/bin/amdclang \
     CXX=$(set_build_variables CXX) \
     cmake \
-        $(rocm_common_cmake_params) \
+        "${rocm_math_common_cmake_params[@]}" \
         -DAMDGPU_TARGETS=${GPU_TARGETS} \
         -DHIP_COMPILER=clang \
         -DCMAKE_PREFIX_PATH="${ROCM_PATH};${ROCM_PATH}/share/rocm/cmake/" \
+        ${LAUNCHER_FLAGS} \
         -DCPACK_GENERATOR="${PKGTYPE^^}" \
         -DROCM_PATCH_VERSION=$ROCM_LIBPATCH_VERSION \
         -DBUILD_ADDRESS_SANITIZER="${ADDRESS_SANITIZER}" \

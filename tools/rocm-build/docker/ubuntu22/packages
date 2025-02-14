@@ -1,4 +1,3 @@
-# List of packages needed for stage1 build
 apt-utils
 aria2
 autoconf
@@ -8,6 +7,7 @@ bison
 bridge-utils
 build-essential
 bzip2
+ccache
 check
 chrpath
 cifs-utils
@@ -21,7 +21,6 @@ flex
 freeglut3-dev
 g++
 g++-multilib
-# gawk is needed for aomp
 gawk
 gcc
 gcc-multilib
@@ -32,10 +31,8 @@ googletest-tools
 graphviz
 grpc-proto
 kernel-wedge
-# kmod for kernel build
 kmod
 lbzip2
-# less is needed by repo
 less
 libass-dev
 libatlas-base-dev
@@ -80,6 +77,7 @@ libnuma-dev
 libomp-dev
 libopenblas-base
 libopenblas-dev
+libopencv-dev
 libpci-dev
 libpci3
 libpciaccess-dev
@@ -99,6 +97,7 @@ libva-dev
 libvirt-clients
 libvirt-daemon-system
 libyaml-cpp-dev
+libzstd-dev
 llvm
 llvm-dev
 llvm-runtime
@@ -106,6 +105,8 @@ mesa-common-dev
 mpich
 ocaml
 ocaml-findlib
+ocl-icd-libopencl1
+ocl-icd-opencl-dev
 patchelf
 pigz
 pkg-config
@@ -120,11 +121,9 @@ python3-yaml
 python3.8-dev
 re2c
 redis-tools
-# hipclang needs rpm
 rpm
 rsync
 ssh
-# This makes life more pleasent inside the container
 strace
 sudo
 systemtap-sdt-dev
@@ -137,3 +136,4 @@ unzip
 vim
 wget
 xsltproc
+zlib1g-dev

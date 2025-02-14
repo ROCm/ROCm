@@ -10,12 +10,20 @@ build_hipblas() {
     echo "Start build"
 
     CXX="g++"
+    CXX_FLAG=
+    if [ "${ENABLE_STATIC_BUILDS}" == "true" ]; then
+        CXX="amdclang++"
+        CXX_FLAG="-DCMAKE_CXX_COMPILER=${ROCM_PATH}/llvm/bin/clang++"
+    fi
+
     CLIENTS_SAMPLES="ON"
     if [ "${ENABLE_ADDRESS_SANITIZER}" == "true" ]; then
        set_asan_env_vars
        set_address_sanitizer_on
        CLIENTS_SAMPLES="OFF"
     fi
+
+    SHARED_LIBS="ON"
 
     echo "C compiler: $CC"
     echo "CXX compiler: $CXX"
@@ -28,15 +36,17 @@ build_hipblas() {
        rebuild_lapack
     fi
 
+    init_rocm_common_cmake_params
     cmake \
         ${LAUNCHER_FLAGS} \
-	$(rocm_common_cmake_params) \
+        "${rocm_math_common_cmake_params[@]}" \
         -DUSE_CUDA=OFF \
+        -DBUILD_SHARED_LIBS=$SHARED_LIBS \
         -DBUILD_CLIENTS_TESTS=ON \
         -DBUILD_CLIENTS_BENCHMARKS=ON \
         -DBUILD_CLIENTS_SAMPLES="${CLIENTS_SAMPLES}" \
-        -DCPACK_SET_DESTDIR=OFF \
         -DBUILD_ADDRESS_SANITIZER="${ADDRESS_SANITIZER}" \
+        ${CXX_FLAG} \
         "$COMPONENT_SRC"
 
     cmake --build "$BUILD_DIR" -- -j${PROC}

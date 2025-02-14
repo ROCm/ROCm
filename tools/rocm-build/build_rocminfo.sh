@@ -22,17 +22,16 @@ printUsage() {
     return 0
 }
 
-
+PROJ_NAME="rocminfo"
 TARGET="build"
 ROCMINFO_DEST="$(getBinPath)"
 ROCMINFO_SRC_ROOT="$ROCMINFO_ROOT"
-ROCMINFO_BUILD_DIR="$(getBuildPath rocminfo)"
+ROCMINFO_BUILD_DIR="$(getBuildPath $PROJ_NAME)"
 
 MAKEARG="$DASH_JAY"
 PACKAGE_ROOT="$(getPackageRoot)"
-PACKAGE_UTILS="$(getUtilsPath)"
-ROCMINFO_PACKAGE_DEB="$(getPackageRoot)/deb/rocminfo"
-ROCMINFO_PACKAGE_RPM="$(getPackageRoot)/rpm/rocminfo"
+ROCMINFO_PACKAGE_DEB="$PACKAGE_ROOT/deb/$PROJ_NAME"
+ROCMINFO_PACKAGE_RPM="$PACKAGE_ROOT/rpm/$PROJ_NAME"
 BUILD_TYPE="debug"
 SHARED_LIBS="ON"
 CLEAN_OR_OUT=0;
@@ -91,6 +90,7 @@ build_rocminfo() {
 
         cmake \
             $(rocm_cmake_params) \
+            -DBUILD_SHARED_LIBS=$SHARED_LIBS \
             -DROCRTST_BLD_TYPE="$BUILD_TYPE" \
 	    $(rocm_common_cmake_params) \
             -DCPACK_PACKAGE_VERSION_MAJOR="1" \

@@ -12,10 +12,10 @@
 :gutter: 3
 :class-container: rocm-doc-grid
 
-(artificial-intelligence-apis)=
-
 :::{grid-item-card} Machine Learning and Computer Vision
 :class-body: rocm-card-banner rocm-hue-3
+
+(artificial-intelligence-apis)=
 
 * {doc}`Composable Kernel <composable_kernel:index>`
 * {doc}`MIGraphX <amdmigraphx:index>`
@@ -24,13 +24,14 @@
 * {doc}`rocAL <rocal:index>`
 * {doc}`rocDecode <rocdecode:index>`
 * {doc}`rocPyDecode <rocpydecode:index>`
+* {doc}`rocJPEG <rocjpeg:index>`
 * {doc}`ROCm Performance Primitives (RPP) <rpp:index>`
 :::
 
-(cpp-primitives)=
-
 :::{grid-item-card} Primitives
 :class-body: rocm-card-banner rocm-hue-12
+
+(cpp-primitives)=
 
 * {doc}`hipCUB <hipcub:index>`
 * {doc}`hipTensor <hiptensor:index>`
@@ -38,18 +39,18 @@
 * {doc}`rocThrust <rocthrust:index>`
 :::
 
-(communication-libraries)=
-
 :::{grid-item-card} Communication
 :class-body: rocm-card-banner rocm-hue-7
+
+(communication-libraries)=
 
 * {doc}`RCCL <rccl:index>`
 :::
 
-(math-apis)=
-
 :::{grid-item-card} Math
 :class-body: rocm-card-banner rocm-hue-6
+
+(math-apis)=
 
 * [half](https://github.com/ROCm/half)
 * {doc}`hipBLAS <hipblas:index>` / {doc}`rocBLAS <rocblas:index>`
@@ -62,7 +63,7 @@
 * {doc}`hipSPARSELt <hipsparselt:index>`
 * {doc}`rocALUTION <rocalution:index>`
 * {doc}`rocWMMA <rocwmma:index>`
-* [Tensile](https://github.com/ROCm/Tensile)
+* {doc}`Tensile <tensile:src/index>`
 :::
 
 ::::

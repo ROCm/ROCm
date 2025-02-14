@@ -6,7 +6,7 @@ printUsage() {
     echo "Usage: $(basename "${BASH_SOURCE}") [options ...]"
     echo
     echo "Options:"
-    echo "  -s,  --static           Supports static CI by accepting this param & not bailing out. No effect of the param though"
+    echo "  -s,  --static             Component/Build does not support static builds just accepting this param & ignore. No effect of the param on this build"
     echo "  -c,  --clean              Clean output and delete all intermediate work"
     echo "  -p,  --package <type>     Specify packaging format"
     echo "  -r,  --release            Make a release build instead of a debug build"
@@ -70,7 +70,7 @@ do
                 set_asan_env_vars
                 set_address_sanitizer_on ; shift ;;
         (-s | --static)
-                SHARED_LIBS="OFF" ; shift ;;
+                ack_and_skip_static ;;
         (-o | --outdir)
                 TARGET="outdir"; PKGTYPE=$2 ; OUT_DIR_SPECIFIED=1 ; ((CLEAN_OR_OUT|=2)) ; shift 2 ;;
         (-p | --package)

@@ -1,27 +1,16 @@
-parameters:
-- name: dependencySource
-  type: string
-  default: staging
-  values:
-    - staging
-    - tag-builds
-- name: repositoryUrl
-  type: object
-  default: 
-    staging: https://repo.radeon.com/rocm/apt/6.2/pool/main/h/hsa-amd-aqlprofile
-    tag-builds: https://repo.radeon.com/rocm/apt/6.2/pool/main/h/hsa-amd-aqlprofile
-- name: packageName
-  type: object
-  default:
-    staging: hsa-amd-aqlprofile_1.0.0.60200.60200-66~22.04_amd64.deb
-    tag-builds: hsa-amd-aqlprofile_1.0.0.60200.60200-66~22.04_amd64.deb
-
 steps:
+- task: Bash@3
+  displayName: Get aqlprofile package name
+  inputs:
+    targetType: inline
+    script: |
+      export packageName=$(curl -s https://repo.radeon.com/rocm/apt/$(REPO_RADEON_VERSION)/pool/main/h/hsa-amd-aqlprofile/ | grep -oP "href=\"\K[^\"]*$(lsb_release -rs)[^\"]*\.deb")
+      echo "##vso[task.setvariable variable=packageName;isreadonly=true]$packageName"
 - task: Bash@3
   displayName: 'Download aqlprofile'
   inputs:
     targetType: inline
-    script: wget -nv ${{ parameters.repositoryUrl[parameters.dependencySource] }}/${{ parameters.packageName[parameters.dependencySource] }}
+    script: wget -nv https://repo.radeon.com/rocm/apt/$(REPO_RADEON_VERSION)/pool/main/h/hsa-amd-aqlprofile/$(packageName)
     workingDirectory: '$(Pipeline.Workspace)'
 - task: Bash@3
   displayName: 'Extract aqlprofile'
@@ -29,7 +18,7 @@ steps:
     targetType: inline
     script: |
       mkdir hsa-amd-aqlprofile
-      dpkg-deb -R ${{ parameters.packageName[parameters.dependencySource] }} hsa-amd-aqlprofile
+      dpkg-deb -R $(packageName) hsa-amd-aqlprofile
     workingDirectory: '$(Pipeline.Workspace)'
 - task: Bash@3
   displayName: 'Copy aqlprofile files'
@@ -43,5 +32,5 @@ steps:
   displayName: 'Clean up aqlprofile'
   inputs:
     targetType: inline
-    script: rm -rf hsa-amd-aqlprofile ${{ parameters.packageName[parameters.dependencySource] }}
+    script: rm -rf hsa-amd-aqlprofile $(packageName)
     workingDirectory: '$(Pipeline.Workspace)'

@@ -1,5 +1,5 @@
 .. meta::
-   :description: AMD Instinct MI300X system settings
+   :description: Learn about AMD Instinct MI300X system settings and performance tuning.
    :keywords: AMD, Instinct, MI300X, HPC, tuning, BIOS settings, NBIO, ROCm,
               environment variable, performance, accelerator, GPU, EPYC, GRUB,
               operating system
@@ -35,7 +35,7 @@ functioning correctly before trying to improve its overall performance. In this
 section, the settings discussed mostly ensure proper functionality of your
 Instinct-based system. Some settings discussed are known to improve performance
 for most applications running on a MI300X system. See
-:doc:`/how-to/tuning-guides/mi300x/workload` for how to improve performance for
+:doc:`../rocm-for-ai/inference-optimization/workload` for how to improve performance for
 specific applications or workloads.
 
 .. _mi300x-bios-settings:
@@ -299,7 +299,7 @@ For a system that has AMD host CPUs add this to ``GRUB_CMDLINE_LINUX``:
 
 .. code-block:: text
 
-   amd_iommu=on iommu=pt
+   iommu=pt
 
 Otherwise, if the system has Intel host CPUs add this instead to
 ``GRUB_CMDLINE_LINUX``:
@@ -479,7 +479,7 @@ Change affinity of ROCm helper threads
 This change prevents internal ROCm threads from having their CPU core affinity mask 
 set to all CPU cores available. With this setting, the threads inherit their parent's 
 CPU core affinity mask. If you have any questions regarding this setting, 
-contact your MI300A platform vendor. To enable this setting, enter the following command:
+contact your MI300X platform vendor. To enable this setting, enter the following command:
 
 .. code-block:: shell
 
@@ -500,7 +500,7 @@ If SMT is enabled by setting ``CCD/Core/Thread Enablement > SMT Control`` to
 
 #. In the server BIOS, set IOMMU to ``Enabled``.
 
-#. When configuring the GRUB boot loader, add the following arguments for the Linux kernel: ``amd_iommu=on iommu=pt``.
+#. When configuring the GRUB boot loader, add the following argument for the Linux kernel: ``iommu=pt``.
 
 #. Update GRUB.
 
@@ -515,7 +515,7 @@ If SMT is enabled by setting ``CCD/Core/Thread Enablement > SMT Control`` to
 .. code-block:: shell
 
    [...]
-   [   0.000000] Kernel command line: [...] amd_iommu=on iommu=pt
+   [   0.000000] Kernel command line: [...] iommu=pt
    [...]
 
 Once the system is properly configured, ROCm software can be
@@ -536,6 +536,8 @@ For a complete guide on how to install, manage, or uninstall ROCm on Linux, refe
 installation was successful, refer to the
 :doc:`rocm-install-on-linux:install/post-install`.
 Should verification fail, consult :doc:`/how-to/system-debugging`.
+
+.. _mi300x-hardware-verification-with-rocm:
 
 Hardware verification with ROCm
 -------------------------------

@@ -26,25 +26,24 @@ parameters:
 - name: testPublishResults
   type: boolean
   default: true
-- name: reloadAMDGPU
-  type: boolean
-  default: false
+- name: allowPartiallySucceededBuilds
+  type: object
+  default:
+    - amdsmi
+    - aomp
+    - HIPIFY
+    - MIVisionX
+    - rocm-cmake
+    - rocm_smi_lib
+    - rocprofiler-sdk
+    - roctracer
 
 steps:
-# Avoids occasional AMDGPU driver issues with opening /dev/kfd
-- ${{ if parameters.reloadAMDGPU }}:
-  - task: Bash@3
-    displayName: Unload and reload AMDGPU
-    inputs:
-      targetType: inline
-      script: |
-        sudo modprobe -r amdgpu
-        sudo modprobe amdgpu
 # run test, continue on failure to publish results
 # and to publish build artifacts
 - task: Bash@3
   displayName: '${{ parameters.componentName }} Test'
-  continueOnError: true
+  continueOnError: ${{ containsValue(parameters.allowPartiallySucceededBuilds, parameters.componentName) }}
   inputs:
     targetType: inline
     script: ${{ parameters.testExecutable }} ${{ parameters.testParameters }}
@@ -52,8 +51,8 @@ steps:
 - ${{ if parameters.testPublishResults }}:
   - task: PublishTestResults@2
     displayName: '${{ parameters.componentName }} Publish Results'
+    condition: succeededOrFailed()
     inputs:
       searchFolder: ${{ parameters.testDir }}
       testResultsFormat: ${{ parameters.testOutputFormat }}
       testResultsFiles: '**/${{ parameters.testOutputFile }}'
-    condition: succeededOrFailed()

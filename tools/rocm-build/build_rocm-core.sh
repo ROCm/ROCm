@@ -24,10 +24,11 @@ printUsage() {
     return 0
 }
 
+PROJ_NAME="rocm-core"
 PACKAGE_ROOT="$(getPackageRoot)"
 ROCM_CORE_BUILD_DIR="$(getBuildPath rocm_core)"
-ROCM_CORE_PACKAGE_DEB="$(getPackageRoot)/deb/rocm-core"
-ROCM_CORE_PACKAGE_RPM="$(getPackageRoot)/rpm/rocm-core"
+ROCM_CORE_PACKAGE_DEB="$(getPackageRoot)/deb/$PROJ_NAME"
+ROCM_CORE_PACKAGE_RPM="$(getPackageRoot)/rpm/$PROJ_NAME"
 ROCM_CORE_MAKE_OPTS="$DASH_JAY -C $ROCM_CORE_BUILD_DIR"
 BUILD_TYPE="Debug"
 TARGET="build"

@@ -6,30 +6,29 @@
      sync-c="true"
      sync-j="4" />
 <!--list of projects for ROCm-->
+    <project name="ROCm" revision="roc-6.2.x" />
+    <project name="ROCK-Kernel-Driver" />
+    <project name="ROCR-Runtime" />
+    <project name="ROCT-Thunk-Interface" />
     <project name="amdsmi" />
     <project name="omniperf" />
     <project name="omnitrace" />
     <project name="rdc" />
-    <project name="roc-core" />
     <project name="rocm_bandwidth_test" />
     <project name="rocm_smi_lib" />
+    <project name="rocm-core" />
     <project name="rocminfo" />
-    <project name="rocm-examples" />
-    <project name="rocm-prof" />
-    <project name="rocm-prof-register" />
-    <project name="rocm-prof-sdk" />
-    <project name="rocm-tracer" />
-    <project name="ROCK-Kernel-Driver" />
-    <project name="ROCR-Runtime" />
-    <project name="ROCT-Thunk-Interface" />
-    <project name="ROCm" revision="roc-6.2.x" />
+    <project name="rocprofiler" />
+    <project name="rocprofiler-register" />
+    <project name="rocprofiler-sdk" />
+    <project name="roctracer" />
 <!--HIP Projects-->
-    <project name="clr" />
-    <project name="HIPIFY" />
     <project name="HIP" />
-    <project name="hip-other" />
     <project name="hip-tests" />
     <project name="HIP-Examples" />
+    <project name="HIPIFY" />
+    <project name="clr" />
+    <project name="hipother" />
 <!-- The following projects are all associated with the AMDGPU LLVM compiler -->
     <project name="half" />
     <project name="llvm-project" />
@@ -73,4 +72,3 @@
     <project name="aomp-extras" path="openmp-extras/aomp-extras" />
     <project name="flang" path="openmp-extras/flang" />
 </manifest>
-

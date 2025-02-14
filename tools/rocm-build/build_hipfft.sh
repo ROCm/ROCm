@@ -16,17 +16,18 @@ build_hipfft() {
 
     cd $COMPONENT_SRC
     mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
+    init_rocm_common_cmake_params
 
     if [ -n "$GPU_ARCHS" ]; then
         GPU_TARGETS="$GPU_ARCHS"
     else
-        GPU_TARGETS="gfx908;gfx90a;gfx940;gfx941;gfx942;gfx1030;gfx1100;gfx1101"
+        GPU_TARGETS="gfx908;gfx90a;gfx940;gfx941;gfx942;gfx1030;gfx1100;gfx1101;gfx1102;gfx1200;gfx1201"
     fi
 
     cmake \
         -DCMAKE_CXX_COMPILER=$(set_build_variables CXX) \
         ${LAUNCHER_FLAGS} \
-        $(rocm_common_cmake_params) \
+        "${rocm_math_common_cmake_params[@]}" \
         -DAMDGPU_TARGETS=${GPU_TARGETS} \
         -DCMAKE_MODULE_PATH="${ROCM_PATH}/lib/cmake/hip" \
         -DCMAKE_SKIP_BUILD_RPATH=TRUE \

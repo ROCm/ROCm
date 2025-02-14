@@ -21,6 +21,10 @@ done
 build_hipsparselt() {
     echo "Start build"
 
+    if [ "${ENABLE_STATIC_BUILDS}" == "true" ]; then
+        ack_and_skip_static
+    fi
+
     if [ "${ENABLE_ADDRESS_SANITIZER}" == "true" ]; then
        set_asan_env_vars
        set_address_sanitizer_on
@@ -28,6 +32,7 @@ build_hipsparselt() {
 
     cd $COMPONENT_SRC
     mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
+    init_rocm_common_cmake_params
 
     if [ -n "$GPU_ARCHS" ]; then
         GPU_TARGETS="$GPU_ARCHS"
@@ -41,7 +46,7 @@ build_hipsparselt() {
     cmake \
         -DAMDGPU_TARGETS=${GPU_TARGETS} \
         ${LAUNCHER_FLAGS} \
-         $(rocm_common_cmake_params) \
+        "${rocm_math_common_cmake_params[@]}" \
         -DTensile_LOGIC= \
         -DTensile_CODE_OBJECT_VERSION=default \
         -DTensile_CPU_THREADS= \
@@ -49,7 +54,6 @@ build_hipsparselt() {
         -DBUILD_CLIENTS_SAMPLES=ON \
         -DBUILD_CLIENTS_TESTS=ON \
         -DBUILD_CLIENTS_BENCHMARKS=ON \
-        -DCPACK_SET_DESTDIR=OFF \
         -DCMAKE_INSTALL_PREFIX=${ROCM_PATH} \
         -DBUILD_ADDRESS_SANITIZER="${ADDRESS_SANITIZER}" \
         "$COMPONENT_SRC"

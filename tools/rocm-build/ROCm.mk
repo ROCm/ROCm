@@ -66,43 +66,44 @@ endef
 # It is a space seperated list with zero or more elements.
 
 $(call adddep,amd_smi_lib,${ASAN_DEP})
-$(call adddep,aqlprofile,${ASAN_DEP} hsa)
-$(call adddep,clang-ocl,lightning rocm-cmake)
+$(call adddep,aqlprofile,${ASAN_DEP} rocr)
 $(call adddep,comgr,lightning devicelibs)
-$(call adddep,dbgapi,hsa comgr)
+$(call adddep,dbgapi,rocr comgr)
 $(call adddep,devicelibs,lightning)
-$(call adddep,hip_on_rocclr,${ASAN_DEP} rocclr rocprofiler-register)
+$(call adddep,hip_on_rocclr,${ASAN_DEP} rocr comgr hipcc rocprofiler-register)
 $(call adddep,hipcc,)
 $(call adddep,hipify_clang,hip_on_rocclr lightning)
-$(call adddep,hsa,${ASAN_DEP} thunk lightning devicelibs rocprofiler-register)
 $(call adddep,lightning,)
-$(call adddep,opencl_on_rocclr,${ASAN_DEP} rocclr)
-$(call adddep,openmp_extras,thunk lightning devicelibs hsa)
-$(call adddep,rdc,${ASAN_DEP} rocm_smi_lib hsa rocprofiler)
-$(call adddep,rocclr,${ASAN_DEP} hsa comgr hipcc rocprofiler-register)
-$(call adddep,rocm_bandwidth_test,${ASAN_DEP} hsa)
+$(call adddep,opencl_on_rocclr,${ASAN_DEP} rocr comgr)
+$(call adddep,openmp_extras,lightning devicelibs rocr)
+$(call adddep,rocm_bandwidth_test,${ASAN_DEP} rocr)
 $(call adddep,rocm_smi_lib,${ASAN_DEP})
 $(call adddep,rocm-cmake,${ASAN_DEP})
 $(call adddep,rocm-core,${ASAN_DEP})
 $(call adddep,rocm-gdb,dbgapi)
-$(call adddep,rocminfo,${ASAN_DEP} hsa)
+$(call adddep,rocminfo,${ASAN_DEP} rocr)
 $(call adddep,rocprofiler-register,${ASAN_DEP})
-$(call adddep,rocprofiler,${ASAN_DEP} hsa roctracer aqlprofile opencl_on_rocclr hip_on_rocclr comgr dbgapi rocm_smi_lib)
-$(call adddep,rocr_debug_agent,${ASAN_DEP} hip_on_rocclr hsa dbgapi)
-$(call adddep,roctracer,${ASAN_DEP} hsa hip_on_rocclr)
-$(call adddep,thunk,${ASAN_DEP})
+$(call adddep,rocprofiler-sdk,${ASAN_DEP} rocr aqlprofile opencl_on_rocclr hip_on_rocclr comgr)
+$(call adddep,rocprofiler-systems,${ASAN_DEP} hipcc rocr hip_on_rocclr rocm_smi_lib rocprofiler roctracer rocprofiler-sdk)
+$(call adddep,rocprofiler,${ASAN_DEP} rocr roctracer aqlprofile opencl_on_rocclr hip_on_rocclr comgr)
+$(call adddep,rocprofiler-compute,${ASAN_DEP})
+$(call adddep,rocr,${ASAN_DEP} lightning rocm_smi_lib devicelibs rocprofiler-register)
+$(call adddep,rocr_debug_agent,${ASAN_DEP} hip_on_rocclr rocr dbgapi)
+$(call adddep,roctracer,${ASAN_DEP} rocr hip_on_rocclr)
 
 # rocm-dev points to all possible last finish components of Stage1 build.
-rocm-dev-components :=rdc hipify_clang openmp_extras \
-	rocm-core amd_smi_lib hipcc clang-ocl \
-	rocm_bandwidth_test rocr_debug_agent rocm-gdb
-$(call adddep,rocm-dev,$(filter-out ${NOBUILD},${rocm-dev-components}))
+rocm-dev-components :=amd_smi_lib aqlprofile comgr dbgapi devicelibs hip_on_rocclr hipcc hipify_clang \
+	lightning rocprofiler-compute opencl_on_rocclr openmp_extras rocm_bandwidth_test rocm_smi_lib \
+	rocm-cmake rocm-core rocm-gdb rocminfo rocprofiler-register rocprofiler-sdk rocprofiler-systems \
+	rocprofiler rocr rocr_debug_agent roctracer
+$(call adddep,rocm-dev,$(filter-out ${NOBUILD} kernel_ubuntu,${rocm-dev-components}))
 
-$(call adddep,amdmigraphx,hip_on_rocclr half rocblas miopen-hip lightning hipcc)
+$(call adddep,amdmigraphx,hip_on_rocclr half rocblas miopen-hip lightning hipcc hiptensor)
 $(call adddep,composable_kernel,lightning hipcc hip_on_rocclr rocm-cmake)
 $(call adddep,half,rocm-cmake)
+$(call adddep,hipblas-common,lightning)
 $(call adddep,hipblas,hip_on_rocclr rocblas rocsolver lightning hipcc)
-$(call adddep,hipblaslt,hip_on_rocclr openmp_extras hipblas lightning hipcc)
+$(call adddep,hipblaslt,hip_on_rocclr openmp_extras lightning hipcc hipblas-common rocm-dev)
 $(call adddep,hipcub,hip_on_rocclr rocprim lightning hipcc)
 $(call adddep,hipfft,hip_on_rocclr openmp_extras rocfft rocrand hiprand lightning hipcc)
 $(call adddep,hipfort,rocblas hipblas rocsparse hipsparse rocfft hipfft rocrand hiprand rocsolver hipsolver lightning hipcc)
@@ -112,21 +113,25 @@ $(call adddep,hipsparse,hip_on_rocclr rocsparse lightning hipcc)
 $(call adddep,hipsparselt,hip_on_rocclr hipsparse lightning hipcc openmp_extras)
 $(call adddep,hiptensor,hip_on_rocclr composable_kernel lightning hipcc)
 $(call adddep,miopen-deps,lightning hipcc)
-$(call adddep,miopen-hip,composable_kernel half hip_on_rocclr miopen-deps rocblas roctracer lightning hipcc)
+$(call adddep,miopen-hip,composable_kernel half hip_on_rocclr miopen-deps hipblas hipblaslt rocrand roctracer lightning hipcc)
 $(call adddep,mivisionx,amdmigraphx miopen-hip rpp lightning hipcc)
-$(call adddep,rccl,hip_on_rocclr hsa lightning hipcc rocm_smi_lib hipify_clang)
+$(call adddep,rccl,rocm-core hip_on_rocclr rocr lightning hipcc rocm_smi_lib hipify_clang)
+$(call adddep,rdc,rocm_smi_lib rocprofiler rocmvalidationsuite)
 $(call adddep,rocalution,rocblas rocsparse rocrand lightning hipcc)
-$(call adddep,rocblas,hip_on_rocclr openmp_extras lightning hipcc)
-$(call adddep,rocdecode,hip_on_rocclr lightning hipcc)
+$(call adddep,rocblas,hip_on_rocclr openmp_extras lightning hipcc hipblaslt)
+$(call adddep,rocal,mivisionx)
+$(call adddep,rocdecode,hip_on_rocclr lightning hipcc amdmigraphx)
 $(call adddep,rocfft,hip_on_rocclr rocrand hiprand lightning hipcc openmp_extras)
-$(call adddep,rocmvalidationsuite,hip_on_rocclr hsa rocblas rocm-core lightning hipcc rocm_smi_lib)
+$(call adddep,rocjpeg,hip_on_rocclr lightning hipcc rocm-dev)
+$(call adddep,rocmvalidationsuite,hip_on_rocclr rocr hipblas hiprand hipblaslt rocm-core lightning hipcc rocm_smi_lib)
 $(call adddep,rocprim,hip_on_rocclr lightning hipcc)
 $(call adddep,rocrand,hip_on_rocclr lightning hipcc)
-$(call adddep,rocsolver,hip_on_rocclr rocblas rocsparse lightning hipcc)
+$(call adddep,rocsolver,hip_on_rocclr rocblas rocsparse rocprim lightning hipcc)
 $(call adddep,rocsparse,hip_on_rocclr rocprim lightning hipcc)
 $(call adddep,rocthrust,hip_on_rocclr rocprim lightning hipcc)
 $(call adddep,rocwmma,hip_on_rocclr rocblas lightning hipcc rocm-cmake rocm_smi_lib)
 $(call adddep,rpp,half lightning hipcc openmp_extras)
+$(call adddep,transferbench,hip_on_rocclr lightning hipcc)
 
 
 # -------------------------------------------------------------------------
@@ -185,7 +190,7 @@ else # } {
 # Pass in jobserver info using the RMAKE variable
 	${RMAKE}@( if set -x && source $${INFRA_REPO}/envsetup.sh && \
 	rm -f $$@.errors $$@ $$@.repackaged && \
-	$${INFRA_REPO}/build_$1.sh -c && source $${INFRA_REPO}/ccache-env-mathlib.sh && \
+	$${INFRA_REPO}/build_$1.sh -c && \
 	time bash -x $${INFRA_REPO}/build_$1.sh $${RELEASE_FLAG} $${SANITIZER_FLAG} && $${INFRA_REPO}/post_inst_pkg.sh "$1" ; \
 	then mv $$@.inprogress $$@ ; \
 	else mv $$@.inprogress $$@.errors ; echo Error in $1 >&2 ; exit 1 ;\
@@ -212,16 +217,19 @@ $(call peval,$(foreach dep,$(strip ${components}),$(call toplevel,${dep})))
 all: $(addprefix T_,$(filter-out ${NOBUILD},${components}))
 	@echo All ROCm components built
 # Do not document this target
-upload: $(addprefix U_,${components})
+upload: $(addprefix U_,$(filter-out ${NOBUILD},${components}))
 	@echo All ROCm components built and uploaded
 
+upload-rocm-dev: $(addprefix U_,$(filter-out ${NOBUILD},${components}))
+	@echo All rocm-dev components built and uploaded
+
 ##help rocm-dev: Build a subset of ROCm
-rocm-dev: T_rocm-dev
+rocm-dev: $(addprefix T_,$(filter-out ${NOBUILD},${components}))
 	@echo rocm-dev built
 
 ${OUT_DIR}/logs:
 	sudo mkdir -p -m 775 "${ROCM_INSTALL_PATH}" && \
-	sudo chown -R "$(shell id -u):$(shell id -g)" "${ROCM_INSTALL_PATH}"
+	sudo chown -R "$(shell id -u):$(shell id -g)" "/opt"
 	sudo chown -R "$(shell id -u):$(shell id -g)" "/home/$(shell id -un)"
 	mkdir -p "${@}"
 	mkdir -p ${HOME}/.ccache

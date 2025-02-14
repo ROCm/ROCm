@@ -34,7 +34,9 @@ The sub-folders within the `docs` folders across ROCm are typically structured a
 
 ## Editing and adding to the documentation
 
-The ROCm documentation is written in [reStructuredText (rst)](https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html) and [Github-flavoured Markdown](https://github.github.com/gfm/), and follows the [Google developer documentation style guide](https://developers.google.com/style/highlights). reStructuredText is preferred when adding content to the documentation.
+ROCm documentation follows the [Google developer documentation style guide](https://developers.google.com/style/highlights).
+
+Most topics in the ROCm documentation are written in [reStructuredText (rst)](https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html), with some topics written in Markdown. Only use reStructuredText when adding new topics. Only use Markdown if the topic you are editing is already in Markdown.
 
 To edit or add to the documentation:
 
@@ -57,9 +59,13 @@ To edit or add to the documentation:
 
     The documentation is built as part of the checks on pull request, along with spell checking and linting. Scroll to the bottom of your pull request to view all the checks.
 
-    Verify that the linking and spell checking have passed, and that the documentation was built successfully. New words or acronyms can be added to the [wordlist file](https://github.com/ROCm/rocm-docs-core/blob/develop/.wordlist.txt) as needed.
+    Verify that the linting and spell checking have passed, and that the documentation was built successfully. New words or acronyms can be added to the [wordlist file](https://github.com/ROCm/rocm-docs-core/blob/develop/.wordlist.txt). The wordlist is subject to approval by the ROCm documentation team.
 
     The Read The Docs build of your pull request can be accessed by clicking on the Details link next to the Read The Docs build check. Verify that your changes are in the build and look as expected.
+
+    ![The GitHub checks are collapsed by default and can be accessed by clicking on "Show All Checks".](../data/contribute/GitHubCheck-Highlight.png)
+  
+    ![The Read The Docs Build is accessed from the Details link in the Read The Docs check.](../data/contribute/GitHub-ReadThe-Docs-Highlight.png)
 
     Your pull request will be reviewed by a member of the ROCm documentation team.
 

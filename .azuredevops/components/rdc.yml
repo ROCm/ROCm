@@ -19,20 +19,25 @@ parameters:
     - libtool
     - pkg-config
     - libdrm-dev
+    - libnuma-dev
     - libyaml-cpp-dev
 - name: rocmDependencies
   type: object
   default:
     - amdsmi
     - clr
+    - hipBLAS-common
+    - hipBLASLt
     - llvm-project
     - rocBLAS
     - rocm-cmake
+    - rocm-core
     - rocminfo
     - rocm_smi_lib
     - ROCmValidationSuite
     - rocprofiler
     - rocprofiler-register
+    - rocprofiler-sdk
     - ROCR-Runtime
 - name: rocmTestDependencies
   type: object
@@ -60,8 +65,6 @@ jobs:
     matrix:
       gfx942:
         JOB_GPU_TARGET: gfx942
-      gfx90a:
-        JOB_GPU_TARGET: gfx90a
   steps:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
@@ -72,14 +75,9 @@ jobs:
       checkoutRepo: ${{ parameters.checkoutRepo }}
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
     parameters:
+      checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
-      # CI case: download latest default branch build
-      ${{ if eq(parameters.checkoutRef, '') }}:
-        dependencySource: staging
-      # manual build case: triggered by ROCm/ROCm repo
-      ${{ elseif ne(parameters.checkoutRef, '') }}:
-        dependencySource: tag-builds
 # Build grpc
   - task: Bash@3
     displayName: 'git clone grpc'
@@ -107,13 +105,22 @@ jobs:
         -DBUILD_RVS=ON
         -DBUILD_PROFILER=ON
         -DBUILD_TESTS=ON
+        -DAMDGPU_TARGETS=$(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
+    parameters:
+      gpuTarget: $(JOB_GPU_TARGET)
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
+      gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
       gpuTarget: $(JOB_GPU_TARGET)
 
 - job: rdc_testing
   dependsOn: rdc
-  condition: succeeded()
+  condition: and(succeeded(), eq(variables.ENABLE_GFX942_TESTS, 'true'), not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])))
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
@@ -131,20 +138,14 @@ jobs:
       aptPackages: ${{ parameters.aptPackages }}
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/local-artifact-download.yml
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-aqlprofile.yml
     parameters:
-      ${{ if eq(parameters.checkoutRef, '') }}:
-        dependencySource: staging
-      ${{ elseif ne(parameters.checkoutRef, '') }}:
-        dependencySource: tag-builds
+      gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-aqlprofile.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
     parameters:
+      checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmTestDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
-      ${{ if eq(parameters.checkoutRef, '') }}:
-        dependencySource: staging
-      ${{ elseif ne(parameters.checkoutRef, '') }}:
-        dependencySource: tag-builds
   - task: Bash@3
     displayName: Setup test environment
     inputs:
@@ -156,6 +157,7 @@ jobs:
         sudo ln -s $(Agent.BuildDirectory)/rocm/bin/rdcd /usr/sbin/rdcd
         echo $(Agent.BuildDirectory)/rocm/lib/rdc/grpc/lib | sudo tee /etc/ld.so.conf.d/grpc.conf
         sudo ldconfig -v
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
   - task: Bash@3
     displayName: Test rdc
     inputs:
@@ -165,3 +167,9 @@ jobs:
         --batch_mode
         --start_rdcd
         --unauth_comm
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)
+      extraPaths: /home/user/workspace/rocm/bin

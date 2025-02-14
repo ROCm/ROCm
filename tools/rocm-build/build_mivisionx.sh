@@ -9,6 +9,10 @@ BUILD_DEV=ON
 build_mivisionx() {
     echo "Start build"
 
+    if [ "${ENABLE_STATIC_BUILDS}" == "true" ]; then
+        ack_and_skip_static
+    fi
+
     mkdir -p $BUILD_DIR && cd $BUILD_DIR
     if [ "${ENABLE_ADDRESS_SANITIZER}" == "true" ]; then
        set_asan_env_vars
@@ -16,14 +20,16 @@ build_mivisionx() {
        BUILD_DEV=OFF
     fi
 
+    init_rocm_common_cmake_params
+
     if [ -n "$GPU_ARCHS" ]; then
         GPU_TARGETS="$GPU_ARCHS"
     else
-        GPU_TARGETS="gfx908;gfx90a;gfx940;gfx941;gfx942;gfx1030;gfx1100"
+        GPU_TARGETS="gfx908;gfx90a;gfx940;gfx941;gfx942;gfx1030;gfx1100;gfx1101;gfx1102;gfx1200;gfx1201"
     fi
 
     cmake \
-        $(rocm_common_cmake_params) \
+        "${rocm_math_common_cmake_params[@]}" \
         -DROCM_PATH="$ROCM_PATH" \
         -DBUILD_DEV=$BUILD_DEV \
         -DCMAKE_INSTALL_LIBDIR=$(getInstallLibDir) \
@@ -34,11 +40,11 @@ build_mivisionx() {
         "$COMPONENT_SRC"
 
     cmake --build "$BUILD_DIR" -- -j${PROC}
+    cmake --build "$BUILD_DIR" -- install
     cpack -G ${PKGTYPE^^}
 
     rm -rf _CPack_Packages/ && find -name '*.o' -delete
-    mkdir -p $PACKAGE_DIR
-    cp ${BUILD_DIR}/*.${PKGTYPE} $PACKAGE_DIR
+    mkdir -p $PACKAGE_DIR && cp ${BUILD_DIR}/*.${PKGTYPE} $PACKAGE_DIR
 
     show_build_cache_stats
 }

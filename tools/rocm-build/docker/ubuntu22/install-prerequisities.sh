@@ -1,6 +1,6 @@
 #! /usr/bin/bash
 
-set -ex
+set -x
 
 apt-get -y update 
 DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true apt-get install --no-install-recommends -y $(sed 's/#.*//' /tmp/packages)
@@ -60,7 +60,6 @@ apt install -y sharp
 apt clean
 rm -rf /var/cache/apt/ /var/lib/apt/lists/* mlnx /etc/apt/sources.list.d/sharp.list
 
-
 apt update
 apt -y install libunwind-dev
 apt -y install libgoogle-glog-dev
@@ -118,12 +117,12 @@ git clone --recurse-submodules -b v1.61.0 https://github.com/grpc/grpc
 cd grpc
 mkdir -p build 
 cd build
-cmake  -DgRPC_INSTALL=ON -DBUILD_SHARED_LIBS=ON -DgRPC_BUILD_TESTS=OFF -DCMAKE_INSTALL_PREFIX=/usr/grpc -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=14 .. 
+cmake  -DgRPC_INSTALL=ON -DBUILD_SHARED_LIBS=ON -DgRPC_BUILD_TESTS=OFF -DCMAKE_INSTALL_PREFIX=/usr/grpc -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=14 -DCMAKE_SHARED_LINKER_FLAGS_INIT=-Wl,--enable-new-dtags,--build-id=sha1,--rpath,'$ORIGIN' .. 
 make -j $(nproc) install 
 rm -rf /tmp/grpc
 
 ## rocBLAS Pre-requisites
-## Download prebuilt AMD multithreaded   (2.0)
+## Download prebuilt AMD multithreaded blis (2.0)
 ## Reference : https://github.com/ROCmSoftwarePlatform/rocBLAS/blob/develop/install.sh#L403
 mkdir -p /tmp/blis 
 cd /tmp/blis
@@ -131,12 +130,13 @@ wget -O - https://github.com/amd/blis/releases/download/2.0/aocl-blis-mt-ubuntu-
 mv amd-blis-mt /usr/blis 
 cd / 
 rm -rf /tmp/blis
+
 ## rocBLAS Pre-requisites(SWDEV-404612)
-## Download aocl-linux-aocc-4.0_1_amd64
+## Download aocl-linux-gcc-4.2.0_1_amd64.deb
 mkdir -p /tmp/aocl 
 cd /tmp/aocl 
-wget -nv https://download.amd.com/developer/eula/aocl/aocl-4-0/aocl-linux-aocc-4.0_1_amd64.deb 
-apt install ./aocl-linux-aocc-4.0_1_amd64.deb 
+wget -nv https://download.amd.com/developer/eula/aocl/aocl-4-2/aocl-linux-gcc-4.2.0_1_amd64.deb 
+apt install ./aocl-linux-gcc-4.2.0_1_amd64.deb 
 rm -rf /tmp/aocl
 
 ## hipBLAS Pre-requisites
@@ -194,9 +194,62 @@ cd ninja-1.11.1.g95dee.kitware.jobserver-1
 cp ninja /usr/local/bin/ 
 rm -rf /tmp/ninja
 
-# Install pre-built FFmpeg and dependencies
-# See docker/build-deps for instructions on how to build these packages
-wget -qO- https://www.ffmpeg.org/releases/ffmpeg-4.4.2.tar.gz  | tar -xzv -C /usr/local
+# Install  FFmpeg and dependencies
+# Build NASM
+mkdir -p /tmp/nasm-2.15.05 
+cd /tmp
+wget -qO- "https://distfiles.macports.org/nasm/nasm-2.15.05.tar.bz2" | tar -xvj 
+cd nasm-2.15.05
+./autogen.sh
+./configure --prefix="/usr/local"
+make -j$(nproc) install
+rm -rf /tmp/nasm-2.15.05
+
+# Build YASM
+mkdir -p /tmp/yasm-1.3.0 
+cd /tmp
+wget -qO- "http://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz" | tar -xvz 
+cd yasm-1.3.0
+./configure --prefix="/usr/local"
+make -j$(nproc) install
+rm -rf /tmp/yasm-1.3.0
+
+# Build x264
+mkdir -p /tmp/x264-snapshot-20191217-2245-stable
+cd /tmp
+wget -qO-  "https://download.videolan.org/pub/videolan/x264/snapshots/x264-snapshot-20191217-2245-stable.tar.bz2" | tar -xvj
+cd /tmp/x264-snapshot-20191217-2245-stable
+PKG_CONFIG_PATH="/usr/local/lib/pkgconfig" ./configure --prefix="/usr/local" --enable-shared
+make -j$(nproc) install
+rm -rf /tmp/x264-snapshot-20191217-2245-stable
+
+# Build x265
+mkdir -p /tmp/x265_2.7
+cd /tmp
+wget -qO- "https://get.videolan.org/x265/x265_2.7.tar.gz" | tar -xvz
+cd  /tmp/x265_2.7/build/linux
+cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="/usr/local" -DENABLE_SHARED:bool=on ../../source
+make -j$(nproc) install
+rm -rf /tmp/x265_2.7
+
+# Build fdk-aac
+mkdir -p /tmp/fdk-aac-2.0.2
+cd /tmp
+wget -qO- "https://sourceforge.net/projects/opencore-amr/files/fdk-aac/fdk-aac-2.0.2.tar.gz" | tar -xvz
+cd /tmp/fdk-aac-2.0.2
+autoreconf -fiv
+./configure --prefix="/usr/local" --enable-shared --disable-static
+make -j$(nproc) install
+rm -rf /tmp/fdk-aac-2.0.2
+
+# Build FFmpeg
+cd /tmp
+git clone -b release/4.4 https://git.ffmpeg.org/ffmpeg.git ffmpeg
+cd ffmpeg
+PKG_CONFIG_PATH="/usr/local/lib/pkgconfig"
+./configure  --prefix="/usr/local" --extra-cflags="-I/usr/local/include"   --extra-ldflags="-L/usr/local/lib"  --extra-libs=-lpthread  --extra-libs=-lm  --enable-shared   --disable-static   --enable-libx264  --enable-libx265  --enable-libfdk-aac  --enable-gpl --enable-nonfree
+make -j$(nproc) install
+rm -rf /tmp/ffmpeg
 
 cp /tmp/local-pin-600 /etc/apt/preferences.d
 
@@ -212,21 +265,21 @@ make -j -C build
 cd /tmp/Gbenchmark/build
 make install
 
-# Build boost-1.82.0 from source for RPP
+# Build boost-1.85.0 from source for RPP
 # Installing in a non-standard location since the test packages of hipFFT and rocFFT pick up the version of
 # the installed Boost library and declare a package dependency on that specific version of Boost.
-# For example, if this was installed in the standard location it would declare a dependency on libboost-dev(el)1.82.0
+# For example, if this was installed in the standard location it would declare a dependency on libboost-dev(el)1.85.0
 # which is not available as a package in any distro.
 # Once this is fixed, we can remove the Boost package from the requirements list and install this
 # in the standard location
-mkdir -p /tmp/boost-1.82.0 
-cd /tmp/boost-1.82.0 
-wget -nv https://sourceforge.net/projects/boost/files/boost/1.82.0/boost_1_82_0.tar.bz2 -O ./boost_1_82_0.tar.bz2 
-tar -xf boost_1_82_0.tar.bz2 --use-compress-program="/usr/local/bin/compressor" 
-cd boost_1_82_0 
+mkdir -p /tmp/boost-1.85.0 
+cd /tmp/boost-1.85.0 
+wget -nv https://sourceforge.net/projects/boost/files/boost/1.85.0/boost_1_85_0.tar.bz2 -O ./boost_1_85_0.tar.bz2 
+tar -xf boost_1_85_0.tar.bz2 --use-compress-program="/usr/local/bin/compressor" 
+cd boost_1_85_0 
 ./bootstrap.sh --prefix=${RPP_DEPS_LOCATION} --with-python=python3 
 ./b2 stage -j$(nproc) threading=multi link=shared cxxflags="-std=c++11" 
 ./b2 install threading=multi link=shared --with-system --with-filesystem 
 ./b2 stage -j$(nproc) threading=multi link=static cxxflags="-std=c++11 -fpic" cflags="-fpic"
 ./b2 install threading=multi link=static --with-system --with-filesystem 
-rm -rf /tmp/boost-1.82.0
+rm -rf /tmp/boost-1.85.0

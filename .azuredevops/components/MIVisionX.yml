@@ -10,39 +10,31 @@ parameters:
   default:
     - cmake
     - ninja-build
-    - git
     - wget
     - unzip
+    - libstdc++-12-dev
     - pkg-config
-    - protobuf-compiler
-    - libprotoc-dev
     - ffmpeg
     - libavcodec-dev
     - libavformat-dev
     - libavutil-dev
     - libswscale-dev
-    - build-essential
-    - libgtk2.0-dev
-    - libavcodec-dev
-    - libavformat-dev
-    - libswscale-dev
-    - libtbb2
-    - libtbb-dev
-    - libjpeg-dev
-    - libpng-dev
-    - libtiff-dev
-    - libdc1394-dev
     - libgmp-dev
+    - libomp-dev
     - libopencv-dev
+    - protobuf-compiler
+    - libprotoc-dev
+    - python3-pip
 - name: pipModules
   type: object
   default:
-    - future==0.18.2
+    - future==1.0.0
     - pytz==2022.1
-    - numpy==1.21
+    - numpy==1.23
     - google==3.0.0
     - protobuf==3.12.4
     - onnx==1.12.0
+    - nnef==1.0.7
 - name: rocmDependencies
   type: object
   default:
@@ -78,16 +70,13 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  pool:
-    vmImage: ${{ variables.BASE_BUILD_POOL }}
+  pool: ${{ variables.LOW_BUILD_POOL }}
   workspace:
     clean: all
   strategy:
     matrix:
       gfx942:
         JOB_GPU_TARGET: gfx942
-      gfx90a:
-        JOB_GPU_TARGET: gfx90a
   steps:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
@@ -99,14 +88,9 @@ jobs:
       checkoutRepo: ${{ parameters.checkoutRepo }}
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
     parameters:
+      checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
-      # CI case: download latest default branch build
-      ${{ if eq(parameters.checkoutRef, '') }}:
-        dependencySource: staging
-      # manual build case: triggered by ROCm/ROCm repo
-      ${{ elseif ne(parameters.checkoutRef, '') }}:
-        dependencySource: tag-builds
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
       extraBuildFlags: >-
@@ -114,13 +98,22 @@ jobs:
         -DROCM_PATH=$(Agent.BuildDirectory)/rocm
         -DROCM_DEP_ROCMCORE=ON
         -GNinja
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
+    parameters:
+      gpuTarget: $(JOB_GPU_TARGET)
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
+      gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
       gpuTarget: $(JOB_GPU_TARGET)
 
 - job: MIVisionX_testing
   dependsOn: MIVisionX
-  condition: succeeded()
+  condition: and(succeeded(), eq(variables.ENABLE_GFX942_TESTS, 'true'), not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])))
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
@@ -141,19 +134,11 @@ jobs:
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-aqlprofile.yml
-    parameters:
-      ${{ if eq(parameters.checkoutRef, '') }}:
-        dependencySource: staging
-      ${{ elseif ne(parameters.checkoutRef, '') }}:
-        dependencySource: tag-builds
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
     parameters:
+      checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmTestDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
-      ${{ if eq(parameters.checkoutRef, '') }}:
-        dependencySource: staging
-      ${{ elseif ne(parameters.checkoutRef, '') }}:
-        dependencySource: tag-builds
   # anything in /opt may be persistent across runs
   # so we need to remove the symlink if it already exists
   - script: |
@@ -162,7 +147,15 @@ jobs:
       mkdir mivisionx-tests
       cd mivisionx-tests
       cmake /opt/rocm/share/mivisionx/test
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
     parameters:
       componentName: MIVisionX
       testDir: 'mivisionx-tests'
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)
+      optSymLink: true

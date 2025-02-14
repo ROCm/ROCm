@@ -1,0 +1,190 @@
+parameters:
+- name: checkoutRepo
+  type: string
+  default: 'self'
+- name: checkoutRef
+  type: string
+  default: ''
+- name: aptPackages
+  type: object
+  default:
+    - python3-pip
+    - cmake
+    - libmsgpack-dev
+    - libboost-program-options-dev
+- name: pipModules
+  type: object
+  default:
+    - tox
+    - pytest
+- name: rocmDependencies
+  type: object
+  default:
+    - aomp
+    - clr
+    - llvm-project
+    - rocm-cmake
+    - rocm-core
+    - rocminfo
+    - rocm_smi_lib
+    - rocprofiler-register
+    - ROCR-Runtime
+
+jobs:
+- job: Tensile
+  variables:
+  - group: common
+  - template: /.azuredevops/variables-global.yml
+  pool: ${{ variables.LOW_BUILD_POOL }}
+  workspace:
+    clean: all
+  steps:
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/checkout.yml
+    parameters:
+      checkoutRepo: ${{ parameters.checkoutRepo }}
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
+    parameters:
+      checkoutRef: ${{ parameters.checkoutRef }}
+      dependencyList: ${{ parameters.rocmDependencies }}
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
+  - task: Bash@3
+    displayName: Create wheel file
+    inputs:
+      targetType: inline
+      script: python3 setup.py bdist_wheel
+      workingDirectory: $(Build.SourcesDirectory)
+    env:
+      ROCM_PATH: $(Agent.BuildDirectory)/rocm
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-prepare-package.yml
+    parameters:
+      sourceDir: $(Build.SourcesDirectory)/dist
+      contentsString: '*.whl'
+      targetDir: $(Build.ArtifactStagingDirectory)
+      clean: false
+  - task: PublishPipelineArtifact@1
+    displayName: 'wheel file Publish'
+    retryCountOnTaskFailure: 3
+    inputs:
+      targetPath: $(Build.ArtifactStagingDirectory)
+  - task: Bash@3
+    displayName: Save pipeline artifact file names
+    inputs:
+      workingDirectory: $(Pipeline.Workspace)
+      targetType: inline
+      script: |
+        echo "$(Build.DefinitionName)_$(Build.SourceBranchName)_$(Build.BuildId)_$(Build.BuildNumber)_ubuntu2204_drop_$(JOB_GPU_TARGET).tar.gz" >> pipelineArtifacts.txt
+        whlFile=$(find "$(Build.ArtifactStagingDirectory)" -type f -name "*.whl" | head -n 1)
+        if [ -n "$whlFile" ]; then
+          echo $(basename "$whlFile") >> pipelineArtifacts.txt
+        fi
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      gpuTarget: $(JOB_GPU_TARGET)
+
+- job: Tensile_testing
+  timeoutInMinutes: 90
+  dependsOn: Tensile
+  condition: and(succeeded(), eq(variables.ENABLE_GFX942_TESTS, 'true'), not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])))
+  variables:
+  - group: common
+  - template: /.azuredevops/variables-global.yml
+  pool: $(JOB_TEST_POOL)
+  workspace:
+    clean: all
+  strategy:
+    matrix:
+      gfx942:
+        JOB_GPU_TARGET: gfx942
+        JOB_TEST_POOL: ${{ variables.GFX942_TEST_POOL }}
+  steps:
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
+  - task: DownloadPipelineArtifact@2
+    displayName: 'Download Pipeline Wheel Files'
+    inputs:
+      itemPattern: '**/*.whl'
+      targetPath: $(Agent.BuildDirectory)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/checkout.yml
+    parameters:
+      checkoutRepo: ${{ parameters.checkoutRepo }}
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-aqlprofile.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
+    parameters:
+      checkoutRef: ${{ parameters.checkoutRef }}
+      dependencyList: ${{ parameters.rocmDependencies }}
+      gpuTarget: $(JOB_GPU_TARGET)
+  - task: Bash@3
+    displayName: pip install
+    inputs:
+      targetType: inline
+      script: find -name *.whl -exec pip install {} \;
+      workingDirectory: $(Agent.BuildDirectory)
+  - task: Bash@3
+    displayName: Setup test environment
+    inputs:
+      targetType: inline
+      script: |
+        sudo rm -rf /opt/rocm
+        sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
+  - task: Bash@3
+    displayName: Add Python site-packages binaries to path
+    inputs:
+      targetType: inline
+      script: |
+        USER_BASE=$(python3 -m site --user-base)
+        echo "##vso[task.prependpath]$USER_BASE/bin"
+  - task: Bash@3
+    displayName: Add ROCm binaries to PATH
+    inputs:
+      targetType: inline
+      script: echo "##vso[task.prependpath]$(Agent.BuildDirectory)/rocm/bin"
+  - task: Bash@3
+    displayName: Add ROCm compilers to PATH
+    inputs:
+      targetType: inline
+      script: echo "##vso[task.prependpath]$(Agent.BuildDirectory)/rocm/llvm/bin"
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
+  - task: Bash@3
+    displayName: tox test
+    inputs:
+      targetType: inline
+      script: tox run -v -e ci -- -m pre_checkin
+      workingDirectory: $(Build.SourcesDirectory)
+  - task: Bash@3
+    displayName: Remove Python site-packages binaries from path
+    inputs:
+      targetType: inline
+      script: |
+        USER_BASE=$(python3 -m site --user-base)
+        echo "##vso[task.setvariable variable=PATH]$(echo $PATH | sed -e 's;:$USER_BASE/bin;;' -e 's;^/;;' -e 's;/$;;')"
+  - task: Bash@3
+    displayName: Remove ROCm binaries from PATH
+    inputs:
+      targetType: inline
+      script: echo "##vso[task.setvariable variable=PATH]$(echo $PATH | sed -e 's;:$(Agent.BuildDirectory)/rocm/bin;;' -e 's;^/;;' -e 's;/$;;')"
+  - task: Bash@3
+    displayName: Remove ROCm compilers from PATH
+    inputs:
+      targetType: inline
+      script: echo "##vso[task.setvariable variable=PATH]$(echo $PATH | sed -e 's;:$(Agent.BuildDirectory)/rocm/llvm/bin;;' -e 's;^/;;' -e 's;/$;;')"
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)
+      optSymLink: true
+      pythonEnvVars: true
+      extraPaths: /home/user/workspace/rocm/llvm/bin:/home/user/workspace/rocm/bin
+# docker image will not have python site-packages in path, but the env vars will make it easier

@@ -1,5 +1,10 @@
 parameters:
-# currently excludes clr
+- name: dependencySource
+  type: string
+  default: staging
+  values: 
+    - staging
+    - mainline
 - name: rocmDependencies
   type: object
   default:
@@ -26,7 +31,6 @@ parameters:
     - llvm-project
     - MIOpen
     - MIVisionX
-    - omniperf
     - rccl
     - rdc
     - rocAL
@@ -36,6 +40,7 @@ parameters:
     - rocDecode
     - rocFFT
     - ROCgdb
+    - rocJPEG
     - rocm-cmake
     - rocm-core
     - rocm-examples
@@ -45,8 +50,10 @@ parameters:
     - rocm_bandwidth_test
     - rocm_smi_lib
     - rocPRIM
+    - rocprofiler-compute
     - rocprofiler-register
     - rocprofiler-sdk
+    - rocprofiler-systems
     - rocprofiler
     - rocPyDecode
     - ROCR-Runtime
@@ -58,6 +65,7 @@ parameters:
     - roctracer
     - rocWMMA
     - rpp
+    - TransferBench
 
 trigger: none
 pr: none
@@ -81,8 +89,6 @@ jobs:
     matrix:
       gfx942:
         JOB_GPU_TARGET: gfx942
-      gfx90a:
-        JOB_GPU_TARGET: gfx90a
   steps:
   - task: DeleteFiles@1
     displayName: 'Cleanup checkout space'
@@ -99,15 +105,16 @@ jobs:
     displayName: System disk space before ROCm
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
     parameters:
+      dependencySource: ${{ parameters.dependencySource }}
       dependencyList: ${{ parameters.rocmDependencies }}
-      dependencySource: staging
+      gpuTarget: $(JOB_GPU_TARGET)
       skipLibraryLinking: true
       skipLlvmSymlink: true
-      gpuTarget: $(JOB_GPU_TARGET)
   - script: df -h
     displayName: System disk space after ROCm
   - script: du -sh $(Agent.BuildDirectory)/rocm
     displayName: Uncompressed ROCm size
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - task: ArchiveFiles@2
     displayName: Compress rocm-nightly
     inputs:
@@ -119,7 +126,14 @@ jobs:
   - script: du -sh $(Build.ArtifactStagingDirectory)
     displayName: Compressed ROCm size
   - task: PublishPipelineArtifact@1
-    displayName: 'Public ROCm Nightly Artifact'
+    displayName: 'Publish ROCm Nightly Artifact'
     retryCountOnTaskFailure: 3
     inputs:
       targetPath: '$(Build.ArtifactStagingDirectory)'
+  - task: Bash@3
+    displayName: Save pipeline artifact file name
+    inputs:
+      workingDirectory: $(Pipeline.Workspace)
+      targetType: inline
+      script: echo "$(Build.DefinitionName)_$(Build.BuildNumber)_ubuntu2204_$(JOB_GPU_TARGET).tar.gz" >> pipelineArtifacts.txt
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml

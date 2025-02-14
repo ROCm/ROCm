@@ -11,20 +11,24 @@ ROCm provides a comprehensive ecosystem for deep learning development, including
 deep learning frameworks and libraries such as PyTorch, TensorFlow, and JAX. ROCm works closely with these
 frameworks to ensure that framework-specific optimizations take advantage of AMD accelerator and GPU architectures.
 
-The following guides cover installation processes for ROCm-aware deep learning frameworks.
+The following guides provide information on compatibility and supported
+features for these ROCm-enabled deep learning frameworks.
 
-* :doc:`PyTorch for ROCm <rocm-install-on-linux:install/3rd-party/pytorch-install>`
-* :doc:`TensorFlow for ROCm <rocm-install-on-linux:install/3rd-party/tensorflow-install>`
-* :doc:`JAX for ROCm <rocm-install-on-linux:install/3rd-party/jax-install>`
+* :doc:`PyTorch compatibility <../compatibility/ml-compatibility/pytorch-compatibility>`
+* :doc:`TensorFlow compatibility <../compatibility/ml-compatibility/tensorflow-compatibility>`
+* :doc:`JAX compatibility <../compatibility/ml-compatibility/jax-compatibility>`
 
-The following chart steps through typical installation workflows for installing deep learning frameworks for ROCm.
+This chart steps through typical installation workflows for installing deep learning frameworks for ROCm.
 
 .. image:: ../data/how-to/framework_install_2024_07_04.png
    :alt: Flowchart for installing ROCm-aware machine learning frameworks
    :align: center
 
-Find information on version compatibility and framework release notes in :doc:`Third-party support matrix
-<rocm-install-on-linux:reference/3rd-party-support-matrix>`.
+See the installation instructions to get started.
+
+* :doc:`PyTorch for ROCm <rocm-install-on-linux:install/3rd-party/pytorch-install>`
+* :doc:`TensorFlow for ROCm <rocm-install-on-linux:install/3rd-party/tensorflow-install>`
+* :doc:`JAX for ROCm <rocm-install-on-linux:install/3rd-party/jax-install>`
 
 .. note::
 
@@ -35,4 +39,11 @@ through the following guides.
 
 * :doc:`rocm-for-ai/index`
 
-* :doc:`llm-fine-tuning-optimization/index`
+* :doc:`Training <rocm-for-ai/training/index>`
+
+* :doc:`Fine-tuning LLMs <rocm-for-ai/fine-tuning/index>`
+
+* :doc:`Inference <rocm-for-ai/inference/index>`
+
+* :doc:`Inference optimization <rocm-for-ai/inference-optimization/index>`
+

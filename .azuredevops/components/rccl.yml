@@ -8,29 +8,31 @@ parameters:
 - name: aptPackages
   type: object
   default:
-    - python3-pip
     - cmake
-    - libboost-program-options-dev
-    - googletest
-    - libfftw3-dev
     - git
-    - ninja-build
-    - libstdc++-12-dev
+    - googletest
+    - libboost-program-options-dev
+    - libdrm-dev
+    - libfftw3-dev
     - libnuma-dev
+    - libstdc++-12-dev
+    - ninja-build
+    - python3-pip
 - name: rocmDependencies
   type: object
   default:
-    - rocm-cmake
-    - llvm-project
-    - ROCR-Runtime
-    - clr
-    - rocminfo
-    - rocm_smi_lib
-    - rocprofiler-register
-    - rocm-core
-    - HIPIFY
     - aomp
     - aomp-extras
+    - clr
+    - HIPIFY
+    - llvm-project
+    - rocm-cmake
+    - rocm-core
+    - rocm_smi_lib
+    - rocminfo
+    - rocprofiler-register
+    - ROCR-Runtime
+    - roctracer
 - name: rocmTestDependencies
   type: object
   default:
@@ -45,9 +47,11 @@ parameters:
     - rocminfo
     - rocprofiler-register
     - ROCR-Runtime
+    - roctracer
 
 jobs:
 - job: rccl
+  timeoutInMinutes: 90
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
@@ -60,8 +64,6 @@ jobs:
     matrix:
       gfx942:
         JOB_GPU_TARGET: gfx942
-      gfx90a:
-        JOB_GPU_TARGET: gfx90a
   steps:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
@@ -74,15 +76,9 @@ jobs:
       submoduleBehaviour: recursive
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
     parameters:
+      checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
-      # CI case: download latest default branch build
-      ${{ if eq(parameters.checkoutRef, '') }}:
-        dependencySource: staging
-      # manual build case: triggered by ROCm/ROCm repo
-      ${{ elseif ne(parameters.checkoutRef, '') }}:
-        dependencySource: tag-builds
-  - script: chmod +x $(Agent.BuildDirectory)/rocm/bin/hipify-perl
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
       extraBuildFlags: >-
@@ -92,17 +88,28 @@ jobs:
         -DCMAKE_BUILD_TYPE=Release
         -DROCM_PATH=$(Agent.BuildDirectory)/rocm
         -DBUILD_TESTS=ON
-        -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm;$(Agent.BuildDirectory)/rocm/share/rocm/cmake/
+        -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm;$(Agent.BuildDirectory)/rocm/share/rocm/cmake;$(Agent.BuildDirectory)/rocm/libexec/hipify
         -DAMDGPU_TARGETS=$(JOB_GPU_TARGET)
         -GNinja
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
+    parameters:
+      gpuTarget: $(JOB_GPU_TARGET)
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      gpuTarget: $(JOB_GPU_TARGET)
+      extraEnvVars:
+        - HIP_ROCCLR_HOME:::/home/user/workspace/rocm
+      installLatestCMake: true
 
 - job: rccl_testing
   timeoutInMinutes: 120
   dependsOn: rccl
-  condition: succeeded()
+  condition: and(succeeded(), eq(variables.ENABLE_GFX942_TESTS, 'true'), not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])))
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
@@ -123,22 +130,20 @@ jobs:
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-aqlprofile.yml
-    parameters:
-      ${{ if eq(parameters.checkoutRef, '') }}:
-        dependencySource: staging
-      ${{ elseif ne(parameters.checkoutRef, '') }}:
-        dependencySource: tag-builds
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
     parameters:
+      checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmTestDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
-      ${{ if eq(parameters.checkoutRef, '') }}:
-        dependencySource: staging
-      ${{ elseif ne(parameters.checkoutRef, '') }}:
-        dependencySource: tag-builds
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
     parameters:
       componentName: rccl
       testDir: '$(Agent.BuildDirectory)/rocm/bin'
       testExecutable: './rccl-UnitTests'
       testParameters: '--gtest_output=xml:./test_output.xml --gtest_color=yes'
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)

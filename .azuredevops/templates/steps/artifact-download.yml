@@ -6,97 +6,24 @@ parameters:
 - name: pipelineId
   type: string
   default: ''
-- name: useDefaultBranch
-  type: boolean
-  default: true
-- name: latestFromBranch
-  type: boolean
-  default: true
-- name: extractToMnt
-  type: boolean
-  default: false
-- name: fileFilter
-  type: string
-  default: ''
-- name: defaultBranchList
-  type: object
-  default:
-    AMDMIGraphX: develop
-    amdsmi: develop
-    aomp-extras: aomp-dev
-    aomp: aomp-dev
-    clr: amd-staging
-    composable_kernel: develop
-    half: rocm
-    HIP: amd-staging
-    hip-tests: amd-staging
-    hipBLAS: develop
-    hipBLASLt: develop
-    hipBLAS-common: develop
-    hipCUB: develop
-    hipFFT: develop
-    hipfort: develop
-    HIPIFY: amd-staging
-    hipRAND: develop
-    hipSOLVER: develop
-    hipSPARSE: develop
-    hipSPARSELt: develop
-    hipTensor: develop
-    llvm-project: amd-staging
-    MIOpen: develop
-    MIVisionX: develop
-    omniperf: amd-staging
-    rccl: develop
-    rdc: develop
-    rocAL: develop
-    rocALUTION: develop
-    rocBLAS: develop
-    ROCdbgapi : amd-staging
-    rocDecode: develop
-    rocFFT: develop
-    ROCgdb: amd-staging
-    rocm-cmake: develop
-    rocm-core: master
-    rocm-examples: develop
-    rocminfo: amd-staging
-    rocMLIR: develop
-    ROCmValidationSuite: master
-    rocm_bandwidth_test: master
-    rocm_smi_lib: develop
-    rocPRIM: develop
-    rocprofiler-register: amd-staging
-    rocprofiler-sdk: amd-staging
-    rocprofiler: amd-staging
-    rocPyDecode: develop
-    ROCR-Runtime: amd-staging
-    rocRAND: develop
-    rocr_debug_agent: amd-staging
-    rocSOLVER: develop
-    rocSPARSE: develop
-    rocThrust: develop
-    roctracer: amd-staging
-    rocWMMA: develop
-    rpp: develop
-- name: allowPartiallySucceededBuilds
-  type: object
-  default:
-    - amdsmi
-    - aomp
-    - HIPIFY
-    - MIVisionX
-    - omniperf
-    - rccl
-    - rdc
-    - rocm-cmake
-    - rocm_smi_lib
-    - rocFFT
-    - rpp
-# BELOW REQUIRED IF useDefaultBranch false
 - name: branchName
   type: string
   default: '$(Build.SourceBranchName)' # for tagged builds
+- name: fileFilter
+  type: string
+  default: ''
 
 steps:
+- task: Bash@3
+  displayName: Set allowPartiallySucceededBuilds
+  inputs:
+    targetType: inline
+    script: |
+      if [[ ",$ALLOWED_PARTIAL_SUCCEED_BUILDS," == *",${{ parameters.componentName }},"* ]]; then
+        echo "##vso[task.setvariable variable=allowPartiallySucceededBuilds;]true"
+      else
+        echo "##vso[task.setvariable variable=allowPartiallySucceededBuilds;]false"
+      fi
 - task: DownloadPipelineArtifact@2
   displayName: Download ${{ parameters.componentName }}
   inputs:
@@ -105,24 +32,16 @@ steps:
     definition: ${{ parameters.pipelineId }}
     specificBuildWithTriggering: true
     itemPattern: '**/*${{ parameters.fileFilter }}*'
-    ${{ if eq(parameters.latestFromBranch, true) }}:
-      ${{ if notIn(parameters.componentName, 'aomp') }}: # remove this once these pipelines are functional + up-to-date
-        buildVersionToDownload: latestFromBranch # default is 'latest'
-    ${{ if eq(parameters.useDefaultBranch, true) }}:
-      branchName: refs/heads/${{ parameters.defaultBranchList[parameters.componentName] }}
-    ${{ else }}:
-      branchName: ${{ parameters.branchName }}
-    ${{ if containsValue(parameters.allowPartiallySucceededBuilds, parameters.componentName) }}:
-      allowPartiallySucceededBuilds: true
+    ${{ if notIn(parameters.componentName, 'aomp') }}: # remove this once these pipelines are functional + up-to-date
+      buildVersionToDownload: latestFromBranch # default is 'latest'
+    branchName: refs/heads/${{ parameters.branchName }}
+    allowPartiallySucceededBuilds: $(allowPartiallySucceededBuilds)
     targetPath: '$(Pipeline.Workspace)/d'
 - task: ExtractFiles@1
   displayName: Extract ${{ parameters.componentName }}
   inputs:
     archiveFilePatterns: '$(Pipeline.Workspace)/d/**/*.tar.gz'
-    ${{ if parameters.extractToMnt }}:
-      destinationFolder: '/mnt/rocm'
-    ${{ else }}:
-      destinationFolder: '$(Agent.BuildDirectory)/rocm'
+    destinationFolder: '$(Agent.BuildDirectory)/rocm'
     cleanDestinationFolder: false
     overwriteExistingFiles: true
 - task: DeleteFiles@1

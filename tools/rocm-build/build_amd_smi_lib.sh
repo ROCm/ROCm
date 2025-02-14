@@ -22,15 +22,15 @@ printUsage() {
     return 0
 }
 
+PROJ_NAME="amdsmi"
 PACKAGE_ROOT="$(getPackageRoot)"
 TARGET="build"
 
 PACKAGE_LIB=$(getLibPath)
 PACKAGE_INCLUDE="$(getIncludePath)"
-
-AMDSMI_BUILD_DIR=$(getBuildPath amdsmi)
-AMDSMI_PACKAGE_DEB_DIR="$(getPackageRoot)/deb/amdsmi"
-AMDSMI_PACKAGE_RPM_DIR="$(getPackageRoot)/rpm/amdsmi"
+AMDSMI_BUILD_DIR=$(getBuildPath $PROJ_NAME)
+AMDSMI_PACKAGE_DEB_DIR="$PACKAGE_ROOT/deb/$PROJ_NAME"
+AMDSMI_PACKAGE_RPM_DIR="$PACKAGE_ROOT/rpm/$PROJ_NAME"
 AMDSMI_BUILD_TYPE="debug"
 BUILD_TYPE="Debug"
 
@@ -57,10 +57,9 @@ do
         (-a | --address_sanitizer)
                 set_asan_env_vars
                 set_address_sanitizer_on
-                # TODO - support standard option of passing cmake environment vars - CFLAGS,CXXFLAGS etc., to enable address sanitizer
                 ADDRESS_SANITIZER=true ; shift ;;
         (-s | --static)
-                SHARED_LIBS="OFF" ; shift ;;
+                ack_and_skip_static ;;
         (-o | --outdir)
                 TARGET="outdir"; PKGTYPE=$2 ; OUT_DIR_SPECIFIED=1 ; ((CLEAN_OR_OUT|=2)) ; shift 2 ;;
         (-p | --package)

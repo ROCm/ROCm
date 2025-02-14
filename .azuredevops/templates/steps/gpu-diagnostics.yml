@@ -1,0 +1,54 @@
+# Diagnostics for GPU-enabled systems
+parameters:
+- name: runRocminfo
+  type: boolean
+  default: true
+
+steps:
+- ${{ if eq(parameters.runRocminfo, true) }}:
+  - task: Bash@3
+    displayName: 'rocminfo'
+    continueOnError: true
+    inputs:
+      targetType: inline
+      script: $(Agent.BuildDirectory)/rocm/bin/rocminfo || true
+  - task: Bash@3
+    displayName: 'rocm_agent_enumerator'
+    continueOnError: true
+    inputs:
+      targetType: inline
+      script: $(Agent.BuildDirectory)/rocm/bin/rocm_agent_enumerator || true
+- task: Bash@3
+  displayName: 'List DRI devices'
+  continueOnError: true
+  inputs:
+    targetType: inline
+    script: ls -la /dev/dri/ || true
+- task: Bash@3
+  displayName: 'List amdgpu/rocm/mesa packages'
+  continueOnError: true
+  inputs:
+    targetType: inline
+    script: apt list --installed | grep -E 'amdgpu|rocm|mesa' || true
+- task: Bash@3
+  displayName: 'List GPU processes'
+  continueOnError: true
+  inputs:
+    targetType: inline
+    script: |
+      ls /sys/class/kfd/kfd/proc/ || true
+      sudo lsof | grep amdgpu || true
+- task: Bash@3
+  displayName: 'System snapshot'
+  continueOnError: true
+  inputs:
+    targetType: inline
+    script: top -bn1 || true
+- task: Bash@3
+  displayName: 'List dmesg'
+  continueOnError: true
+  inputs:
+    targetType: inline
+    script: |
+      echo 'rocm-ci: $(Build.DefinitionName) $(System.DefinitionId)' | sudo tee /dev/kmsg || true
+      sudo dmesg || true
