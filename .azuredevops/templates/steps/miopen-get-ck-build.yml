@@ -35,6 +35,8 @@ steps:
         CK_BUILD_ID=$(curl -s $LATEST_BUILD_URL | jq '.value[0].id')
         echo "Found latest CK build ID: $CK_BUILD_ID"
         EXIT_CODE=1
+      else
+        echo "Found specific CK build ID: $CK_BUILD_ID"
       fi
 
       AZURE_URL="$AZ_API/build/builds/$CK_BUILD_ID/artifacts?artifactName=$ARTIFACT_NAME&api-version=7.1"
@@ -42,17 +44,13 @@ steps:
 
       # If using the specific CK commit and it doesn't have any valid artifacts, use latest successful CK build instead
       if { [[ -z "$ARTIFACT_URL" ]] || [[ "$ARTIFACT_URL" == "null" ]]; } && [[ $EXIT_CODE -eq 0 ]]; then
-        echo "Did not find specific CK build artifact"
+        echo "Did not find valid specific CK build artifact"
         LATEST_BUILD_URL="$AZ_API/build/builds?definitions=$(COMPOSABLE_KERNEL_PIPELINE_ID)&statusFilter=completed&resultFilter=succeeded&\$top=1&api-version=7.1"
         CK_BUILD_ID=$(curl -s $LATEST_BUILD_URL | jq '.value[0].id')
         echo "Found latest CK build ID: $CK_BUILD_ID"
         AZURE_URL="$AZ_API/build/builds/$CK_BUILD_ID/artifacts?artifactName=$ARTIFACT_NAME&api-version=7.1"
         ARTIFACT_URL=$(curl -s $AZURE_URL | jq '.resource.downloadUrl' | tr -d '"')
         EXIT_CODE=2
-      fi
-
-      if [[ $EXIT_CODE -eq 0 ]]; then
-        echo "Found specific CK build ID: $CK_BUILD_ID"
       fi
 
       echo "Downloading CK artifact from $ARTIFACT_URL"
@@ -62,9 +60,13 @@ steps:
       tar -zxvf $(System.ArtifactsDirectory)/$ARTIFACT_NAME/*.tar.gz -C $(Agent.BuildDirectory)/rocm
       rm -r $(System.ArtifactsDirectory)/ck.zip $(System.ArtifactsDirectory)/$ARTIFACT_NAME
 
-      if [ $EXIT_CODE -ne 0 ]; then
+      if [[ $EXIT_CODE -ne 0 ]]; then
         BUILD_COMMIT=$(curl -s $AZ_API/build/builds/$CK_BUILD_ID | jq '.sourceVersion' | tr -d '"')
-        echo "WARNING: couldn't find a CK build for commit $CK_COMMIT"
+        if [[ $EXIT_CODE -eq 1 ]]; then
+          echo "WARNING: couldn't find a CK build for commit $CK_COMMIT"
+        elif [[ $EXIT_CODE -eq 2 ]]; then
+          echo "WARNING: couldn't find a valid CK artifact for commit $CK_COMMIT"
+        fi
         echo "Instead used latest CK build $CK_BUILD_ID for commit $BUILD_COMMIT"
       fi
       exit $EXIT_CODE
