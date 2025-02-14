@@ -55,6 +55,8 @@ ROCm documentation continues to be updated to provide clearer and more comprehen
 * The following HIP documentation topics have been updated:
     - [Virtual memory management](https://rocm.docs.amd.com/projects/HIP/en/latest/how-to/hip_runtime_api/memory_management/virtual_memory.html)
     - [Programming for HIP runtime compiler (RTC)](https://rocm.docs.amd.com/projects/HIP/en/latest/how-to/hip_rtc.html)
+    - [HIP porting guide](https://rocm.docs.amd.com/projects/HIP/en/latest/how-to/hip_porting_guide.html)
+    - [Porting CUDA driver API](https://rocm.docs.amd.com/projects/HIP/en/latest/how-to/hip_porting_driver_api.html)
     - [CUDA to HIP API function comparison](https://rocm.docs.amd.com/projects/HIP/en/latest/reference/api_syntax.html)
 
 ## Operating system and hardware support changes
