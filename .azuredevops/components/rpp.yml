@@ -29,6 +29,7 @@ parameters:
     - clr
     - half
     - llvm-project
+    - rocm-cmake
     - rocminfo
     - ROCR-Runtime
 - name: rocmTestDependencies
