@@ -6,6 +6,8 @@
 
 import os
 import shutil
+import sys
+from pathlib import Path
 
 shutil.copy2("../RELEASE.md", "./about/release-notes.md")
 
@@ -89,11 +91,16 @@ article_pages = [
 
 external_toc_path = "./sphinx/_toc.yml"
 
-extensions = ["rocm_docs", "sphinx_reredirects", "sphinx_sitemap", "sphinxcontrib.datatemplates"]
+# Add the _extensions directory to Python's search path
+sys.path.append(str(Path(__file__).parent / 'extension'))
+
+extensions = ["rocm_docs", "sphinx_reredirects", "sphinx_sitemap", "sphinxcontrib.datatemplates", "version-ref"]
+
+compatibility_matrix_file = str(Path(__file__).parent / 'compatibility/compatibility-matrix-historical-6.0.csv')
 
 external_projects_current_project = "rocm"
 
-# Uncomment if facing rate limit exceed issue with local build 
+# Uncomment if facing rate limit exceed issue with local build
 # external_projects_remote_repository = ""
 
 html_baseurl = os.environ.get("READTHEDOCS_CANONICAL_URL", "https://rocm-stg.amd.com/")
