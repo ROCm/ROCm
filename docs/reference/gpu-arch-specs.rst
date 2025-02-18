@@ -21,6 +21,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Model
           - Architecture
           - LLVM target name
+          - Device Major version
+          - Device Minor version
           - VRAM (GiB)
           - Compute Units
           - Wavefront Size
@@ -36,6 +38,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - MI325X
           - CDNA3
           - gfx942
+          - 9
+          - 4
           - 256
           - 304 (38 per XCD)
           - 64
@@ -51,6 +55,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - MI300X
           - CDNA3
           - gfx942
+          - 9
+          - 4
           - 192
           - 304 (38 per XCD)
           - 64
@@ -66,6 +72,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - MI300A
           - CDNA3
           - gfx942
+          - 9
+          - 4
           - 128
           - 228 (38 per XCD)
           - 64
@@ -81,6 +89,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - MI250X
           - CDNA2
           - gfx90a
+          - 9
+          - 0
           - 128
           - 220 (110 per GCD)
           - 64
@@ -96,6 +106,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - MI250
           - CDNA2
           - gfx90a
+          - 9
+          - 0
           - 128
           - 208 (104 per GCD)
           - 64
@@ -111,6 +123,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - MI210
           - CDNA2
           - gfx90a
+          - 9
+          - 0
           - 64
           - 104
           - 64
@@ -126,6 +140,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - MI100
           - CDNA
           - gfx908
+          - 9
+          - 0
           - 32
           - 120
           - 64
@@ -141,6 +157,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - MI60
           - GCN5.1
           - gfx906
+          - 9
+          - 0
           - 32
           - 64
           - 64
@@ -156,6 +174,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - MI50 (32GB)
           - GCN5.1
           - gfx906
+          - 9
+          - 0
           - 32
           - 60
           - 64
@@ -171,6 +191,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - MI50 (16GB)
           - GCN5.1
           - gfx906
+          - 9
+          - 0
           - 16
           - 60
           - 64
@@ -186,6 +208,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - MI25
           - GCN5.0
           - gfx900
+          - 9
+          - 0
           - 16 
           - 64
           - 64
@@ -201,6 +225,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - MI8
           - GCN3.0
           - gfx803
+          - 8
+          - 0
           - 4
           - 64
           - 64
@@ -216,6 +242,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - MI6
           - GCN4.0
           - gfx803
+          - 8
+          - 0
           - 16
           - 36
           - 64
@@ -238,6 +266,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Model
           - Architecture
           - LLVM target name
+          - Device Major version
+          - Device Minor version
           - VRAM (GiB)
           - Compute Units
           - Wavefront Size
@@ -254,6 +284,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon PRO V710
           - RDNA3
           - gfx1101
+          - 11
+          - 0
           - 28
           - 54
           - 32
@@ -270,6 +302,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon PRO W7900 Dual Slot
           - RDNA3
           - gfx1100
+          - 11
+          - 0
           - 48
           - 96
           - 32
@@ -286,6 +320,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon PRO W7900
           - RDNA3
           - gfx1100
+          - 11
+          - 0
           - 48
           - 96
           - 32
@@ -302,6 +338,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon PRO W7800
           - RDNA3
           - gfx1100
+          - 11
+          - 0
           - 32
           - 70
           - 32
@@ -318,6 +356,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon PRO W7700
           - RDNA3
           - gfx1101
+          - 11
+          - 0
           - 16
           - 48
           - 32
@@ -334,6 +374,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon PRO W6800
           - RDNA2
           - gfx1030
+          - 10
+          - 3
           - 32
           - 60
           - 32
@@ -350,6 +392,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon PRO W6600
           - RDNA2
           - gfx1032
+          - 10
+          - 3
           - 8
           - 28
           - 32
@@ -366,6 +410,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon PRO V620
           - RDNA2
           - gfx1030
+          - 10
+          - 3
           - 32
           - 72
           - 32
@@ -382,6 +428,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon Pro W5500
           - RDNA
           - gfx1012
+          - 10
+          - 1
           - 8
           - 22
           - 32
@@ -398,6 +446,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon Pro VII
           - GCN5.1
           - gfx906
+          - 9
+          - 0
           - 16
           - 60
           - 64
@@ -421,6 +471,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Model
           - Architecture
           - LLVM target name
+          - Device Major version
+          - Device Minor version
           - VRAM (GiB)
           - Compute Units
           - Wavefront Size
@@ -437,6 +489,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon RX 7900 XTX
           - RDNA3
           - gfx1100
+          - 11
+          - 0
           - 24
           - 96
           - 32
@@ -453,6 +507,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon RX 7900 XT
           - RDNA3
           - gfx1100
+          - 11
+          - 0
           - 20
           - 84
           - 32
@@ -469,6 +525,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon RX 7900 GRE
           - RDNA3
           - gfx1100
+          - 11
+          - 0
           - 16
           - 80
           - 32
@@ -485,6 +543,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon RX 7800 XT
           - RDNA3
           - gfx1101
+          - 11
+          - 0
           - 16
           - 60
           - 32
@@ -501,6 +561,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon RX 7700 XT
           - RDNA3
           - gfx1101
+          - 11
+          - 0
           - 12
           - 54
           - 32
@@ -517,6 +579,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon RX 7600
           - RDNA3
           - gfx1102
+          - 11
+          - 0
           - 8
           - 32
           - 32
@@ -533,6 +597,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon RX 6950 XT
           - RDNA2
           - gfx1030
+          - 10
+          - 3
           - 16
           - 80
           - 32
@@ -549,6 +615,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon RX 6900 XT
           - RDNA2
           - gfx1030
+          - 10
+          - 3
           - 16
           - 80
           - 32
@@ -565,6 +633,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon RX 6800 XT
           - RDNA2
           - gfx1030
+          - 10
+          - 3
           - 16
           - 72
           - 32
@@ -581,6 +651,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon RX 6800
           - RDNA2
           - gfx1030
+          - 10
+          - 3
           - 16
           - 60
           - 32
@@ -597,6 +669,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon RX 6750 XT
           - RDNA2
           - gfx1031
+          - 10
+          - 3
           - 12
           - 40
           - 32
@@ -613,6 +687,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon RX 6700 XT
           - RDNA2
           - gfx1031
+          - 10
+          - 3
           - 12
           - 40
           - 32
@@ -630,6 +706,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - RDNA2
           - gfx1031
           - 10
+          - 3
+          - 10
           - 36
           - 32
           - 128
@@ -645,6 +723,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon RX 6650 XT
           - RDNA2
           - gfx1032
+          - 10
+          - 3
           - 8
           - 32
           - 32
@@ -661,6 +741,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon RX 6600 XT
           - RDNA2
           - gfx1032
+          - 10
+          - 3
           - 8
           - 32
           - 32
@@ -677,6 +759,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon RX 6600
           - RDNA2
           - gfx1032
+          - 10
+          - 3
           - 8
           - 28
           - 32
@@ -693,6 +777,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Radeon VII
           - GCN5.1
           - gfx906
+          - 9
+          - 0
           - 16
           - 60
           - 64
@@ -710,13 +796,25 @@ Glossary
 ========
 
 For more information about the terms used, see the
-:ref:`specific documents and guides <gpu-arch-documentation>`, or 
+:ref:`specific documents and guides <gpu-arch-documentation>`, or
 :doc:`Understanding the HIP programming model<hip:understand/programming_model>`.
 
 **LLVM target name**
 
 Argument to pass to clang in ``--offload-arch`` to compile code for the given
 architecture.
+
+**Device major version**
+
+Indicates the core instruction set of the GPU architecture. For example, a value
+of 11 would correspond to Navi III (RDNA3).
+
+**Device minor version**
+
+Indicates a particular configuration, feature set, or variation within the group
+represented by the device compute version. For example, different models within
+the same major version might have varying levels of support for certain features
+or optimizations.
 
 **VRAM**
 
