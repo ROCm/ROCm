@@ -84,6 +84,7 @@ jobs:
         echo "##vso[task.setvariable variable=PYBIND11_PATH;]$(python3 -c 'import pybind11; print(pybind11.get_cmake_dir())')"
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
+      installEnabled: false
       extraBuildFlags: >-
         -DROCM_PATH=$(Agent.BuildDirectory)/rocm
         -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm;$(PYTHON_USER_SITE)/pybind11;$(PYTHON_DIST_PACKAGES)/pybind11;$(PYBIND11_PATH)
@@ -91,6 +92,14 @@ jobs:
         -DGPU_TARGETS=$(JOB_GPU_TARGET)
         -DCMAKE_INSTALL_PREFIX_PYTHON=$(Build.BinariesDirectory)
         -GNinja
+  - task: Bash@3
+    displayName: 'rocPyDecode install'
+    inputs:
+      targetType: inline
+      script: |
+        sudo cmake --build . --target install
+        sudo chown -R $(whoami):$(id -gn) $(Build.BinariesDirectory)
+      workingDirectory: $(Build.SourcesDirectory)/build
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
@@ -105,7 +114,8 @@ jobs:
       script: |
         export ROCM_PATH=$(Agent.BuildDirectory)/rocm
         export HIP_INCLUDE_DIRS=$(Agent.BuildDirectory)/rocm/include/hip
-        python3 setup.py bdist_wheel
+        sudo python3 setup.py bdist_wheel
+        sudo chown -R $(whoami):$(id -gn) $(find . -name "*.whl")
       workingDirectory: $(Build.SourcesDirectory)
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-prepare-package.yml
     parameters:
