@@ -337,6 +337,7 @@ RNNs
 ROC
 ROCProfiler
 ROCT
+ROCTx
 ROCTracer
 ROCclr
 ROCdbgapi
@@ -766,6 +767,7 @@ rocm
 rocminfo
 rocprim
 rocprof
+rocprofv
 rocprofiler
 rocr
 rocrand
