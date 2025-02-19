@@ -38,7 +38,7 @@ all_article_info_author = ""
 
 # pages with specific settings
 article_pages = [
-    {"file": "about/release-notes", "os": ["linux"], "date": "2025-02-18"},
+    {"file": "about/release-notes", "os": ["linux"], "date": "2025-02-19"},
     {"file": "compatibility/compatibility-matrix", "os": ["linux"]},
     {"file": "compatibility/ml-compatibility/pytorch-compatibility", "os": ["linux"]},
     {"file": "compatibility/ml-compatibility/tensorflow-compatibility", "os": ["linux"]},
