@@ -101,7 +101,7 @@ jobs:
         -DMIOPEN_BACKEND=HIP
         -DCMAKE_CXX_COMPILER=$(Agent.BuildDirectory)/rocm/llvm/bin/amdclang++
         -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm;$(Agent.BuildDirectory)/miopen-deps
-        -DAMDGPU_TARGETS=$(JOB_GPU_TARGET)
+        -DGPU_TARGETS=$(JOB_GPU_TARGET)
         -DMIOPEN_ENABLE_AI_KERNEL_TUNING=OFF
         -DMIOPEN_ENABLE_AI_IMMED_MODE_FALLBACK=OFF
         -DCMAKE_BUILD_TYPE=Release
@@ -129,6 +129,8 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
+  - name: ROCM_PATH
+    value: $(Agent.BuildDirectory)/rocm
   pool: $(JOB_TEST_POOL)
   workspace:
     clean: all

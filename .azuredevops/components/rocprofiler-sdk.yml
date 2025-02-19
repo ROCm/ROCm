@@ -37,6 +37,8 @@ parameters:
     - clr
     - llvm-project
     - rccl
+    - rocDecode
+    - rocJPEG
     - rocm-cmake
     - rocm-core
     - rocminfo
@@ -60,7 +62,7 @@ jobs:
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
       pipModules: ${{ parameters.pipModules }}
-      registerRadeon: true
+      registerROCmPackages: true
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/checkout.yml
     parameters:
@@ -99,6 +101,7 @@ jobs:
       aptPackages: ${{ parameters.aptPackages }}
       pipModules: ${{ parameters.pipModules }}
       gpuTarget: $(JOB_GPU_TARGET)
+      registerROCmPackages: true
 
 - job: rocprofiler_sdk_testing
   dependsOn: rocprofiler_sdk
@@ -119,7 +122,7 @@ jobs:
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
       pipModules: ${{ parameters.pipModules }}
-      registerRadeon: true
+      registerROCmPackages: true
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/checkout.yml
     parameters:
@@ -155,3 +158,4 @@ jobs:
       pipModules: ${{ parameters.pipModules }}
       environment: test
       gpuTarget: $(JOB_GPU_TARGET)
+      registerROCmPackages: true

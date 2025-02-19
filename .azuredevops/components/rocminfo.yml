@@ -35,7 +35,7 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
-      registerRadeon: true
+      registerROCmPackages: true
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/checkout.yml
     parameters:
@@ -56,6 +56,7 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
+      registerROCmPackages: true
 
 - job: rocminfo_testing
   dependsOn: rocminfo
@@ -102,5 +103,6 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
+      registerROCmPackages: true
       environment: test
       gpuTarget: $(JOB_GPU_TARGET)
