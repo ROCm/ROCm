@@ -123,16 +123,13 @@ jobs:
       targetType: 'inline'
       workingDirectory: $(Build.SourcesDirectory)/rocrtst/suites/test_common
       script: |
-        sudo rm -rf $(Agent.BuildDirectory)/external/llvm-project
-        mkdir -p $(Agent.BuildDirectory)/external/llvm-project/clang/lib
-        sudo ln -s $(Agent.BuildDirectory)/rocm/llvm/lib/clang/20/include $(Agent.BuildDirectory)/external/llvm-project/clang/lib/Headers
         mkdir build && cd build
         cmake .. \
           -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm \
           -DTARGET_DEVICES=$(JOB_GPU_TARGET) \
           -DROCM_DIR=$(Agent.BuildDirectory)/rocm \
           -DLLVM_DIR=$(Agent.BuildDirectory)/rocm/llvm/bin \
-          -DOPENCL_DIR=$(Agent.BuildDirectory)/rocm/llvm/bin
+          -DOPENCL_INC_DIR=$(Agent.BuildDirectory)/rocm/llvm/lib/clang/21/include
         make
         make rocrtst_kernels
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
