@@ -26,7 +26,7 @@ If you’re using a Radeon GPU for graphics-accelerated applications, refer to t
 
 ROCm supports multiple :doc:`installation methods <rocm-install-on-linux:install/install-overview>`:
 
-* :doc:`Using your Linux distribution's package manager <rocm-install-on-linux:install/native-install/index>`
+* :doc:`Using your Linux distribution's package manager <rocm-install-on-linux:install/install-methods/package-manager-index>`
 
 * :doc:`Using the AMDGPU installer <rocm-install-on-linux:install/amdgpu-install>`
 

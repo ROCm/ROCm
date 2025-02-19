@@ -64,10 +64,10 @@ jobs:
     value: $(Build.BinariesDirectory)/rocm
   - name: TENSILE_ROCM_ASSEMBLER_PATH
     value: $(Agent.BuildDirectory)/rocm/llvm/bin/clang
-  - name: CMAKE_CXX_COMPILER
-    value: $(Agent.BuildDirectory)/rocm/bin/hipcc
   - name: TENSILE_ROCM_OFFLOAD_BUNDLER_PATH
     value: $(Agent.BuildDirectory)/rocm/llvm/bin/clang-offload-bundler
+  - name: ROCM_PATH
+    value: $(Agent.BuildDirectory)/rocm
   pool: ${{ variables.MEDIUM_BUILD_POOL }}
   workspace:
     clean: all
@@ -96,8 +96,8 @@ jobs:
         -DCMAKE_TOOLCHAIN_FILE=toolchain-linux.cmake
         -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm/llvm;$(Agent.BuildDirectory)/rocm
         -DCMAKE_BUILD_TYPE=Release
-        -DCMAKE_CXX_COMPILER=$(Agent.BuildDirectory)/rocm/bin/hipcc
-        -DCMAKE_C_COMPILER=$(Agent.BuildDirectory)/rocm/bin/hipcc
+        -DCMAKE_CXX_COMPILER=$(Agent.BuildDirectory)/rocm/bin/amdclang++
+        -DCMAKE_C_COMPILER=$(Agent.BuildDirectory)/rocm/bin/amdclang
         -DGPU_TARGETS=$(JOB_GPU_TARGET)
         -DTensile_CODE_OBJECT_VERSION=default
         -DTensile_LOGIC=asm_full
@@ -125,8 +125,8 @@ jobs:
       extraEnvVars:
         - HIP_ROCCLR_HOME:::/home/user/workspace/rocm
         - TENSILE_ROCM_ASSEMBLER_PATH:::/home/user/workspace/rocm/llvm/bin/clang
-        - CMAKE_CXX_COMPILER:::/home/user/workspace/rocm/bin/hipcc
         - TENSILE_ROCM_OFFLOAD_BUNDLER_PATH:::/home/user/workspace/rocm/llvm/bin/clang-offload-bundler
+        - ROCM_PATH:::/home/user/workspace/rocm
 
 - job: rocBLAS_testing
   dependsOn: rocBLAS

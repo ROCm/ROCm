@@ -46,17 +46,19 @@ parameters:
 - name: rocmDependencies
   type: object
   default:
+    - amdsmi
     - aomp
     - clr
     - llvm-project
     - rccl
     - rocDecode
+    - rocJPEG
     - rocm-core
-    - rocm_smi_lib
     - rocminfo
-    - ROCR-Runtime
+    - rocm_smi_lib
     - rocprofiler-register
     - rocprofiler-sdk
+    - ROCR-Runtime
 
 jobs:
 - job: rocprofiler_systems
@@ -75,7 +77,7 @@ jobs:
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
       pipModules: ${{ parameters.pipModules }}
-      registerRadeon: true
+      registerROCmPackages: true
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/checkout.yml
     parameters:
@@ -159,7 +161,7 @@ jobs:
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
       pipModules: ${{ parameters.pipModules }}
-      registerRadeon: true
+      registerROCmPackages: true
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/checkout.yml
     parameters:

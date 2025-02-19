@@ -74,6 +74,7 @@ Conda
 ConnectX
 CuPy
 Dashboarding
+DBRX
 DDR
 DF
 DGEMM
@@ -92,6 +93,7 @@ DataFrame
 DataLoader
 DataParallel
 Debian
+DeepSeek
 DeepSpeed
 Dependabot
 Deprecations
@@ -129,6 +131,7 @@ GDS
 GEMM
 GEMMs
 GFortran
+Gemma
 GiB
 GIM
 GL
@@ -335,6 +338,7 @@ RNNs
 ROC
 ROCProfiler
 ROCT
+ROCTx
 ROCTracer
 ROCclr
 ROCdbgapi
@@ -764,6 +768,7 @@ rocm
 rocminfo
 rocprim
 rocprof
+rocprofv
 rocprofiler
 rocr
 rocrand

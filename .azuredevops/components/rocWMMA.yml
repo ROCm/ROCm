@@ -80,6 +80,7 @@ jobs:
         -DROCWMMA_BUILD_SAMPLES=OFF
         -DGPU_TARGETS=$(JOB_GPU_TARGET)
         -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON
+        -DROCM_PLATFORM_VERSION=$(NEXT_RELEASE_VERSION)
         -GNinja
 # gfx1030 not supported in documentation
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
