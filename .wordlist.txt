@@ -841,6 +841,7 @@ UTCL
 UTIL
 utils
 vL
+vllm
 variational
 vdi
 vectorizable
