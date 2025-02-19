@@ -444,6 +444,8 @@ Further reading
 - To learn how to optimize inference on LLMs, see
   :doc:`Inference optimization <../inference-optimization/index>`.
 
+<<<<<<< HEAD:docs/how-to/performance-validation/mi300x/vllm-benchmark.rst
+=======
 - To learn how to fine-tune LLMs, see
   :doc:`Fine-tuning LLMs <../fine-tuning/index>`.
 

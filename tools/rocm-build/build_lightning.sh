@@ -42,7 +42,6 @@ DEB_PATH="$(getDebPath $PROJ_NAME)"
 RPM_PATH="$(getRpmPath $PROJ_NAME)"
 INSTALL_PATH="${ROCM_INSTALL_PATH}/lib/llvm"
 LLVM_ROOT_LCL="${LLVM_ROOT}"
-ROCM_WHEEL_DIR="${BUILD_PATH}/_wheel"
 
 TARGET="all"
 MAKEOPTS="$DASH_JAY"
@@ -150,7 +149,6 @@ ENABLE_RUNTIMES="$ENABLE_RUNTIMES;libcxx;libcxxabi"
 BOOTSTRAPPING_BUILD_LIBCXX=1
 
 clean_lightning() {
-    rm -rf "$ROCM_WHEEL_DIR"
     rm -rf "$BUILD_PATH"
     rm -rf "$DEB_PATH"
     rm -rf "$RPM_PATH"
@@ -331,15 +329,6 @@ build_lightning() {
     echo "Workaround for race condition"
     echo "End Workaround for race condition"
     cmake --build . -- $MAKEOPTS
-
-    case "$DISTRO_ID" in
-    (rhel*|centos*)
-       RHEL_BUILD=1
-       ;;
-    (*)
-       RHEL_BUILD=0
-       ;;
-     esac
 
     if [ $SKIP_LIT_TESTS -eq 0 ]; then
         if [ $RHEL_BUILD -eq 1 ]; then
@@ -1157,10 +1146,5 @@ case $TARGET in
     (outdir) print_output_directory ;;
     (*) die "Invalid target $TARGET" ;;
 esac
-
-if [[ $WHEEL_PACKAGE == true ]]; then
-    echo "Wheel Package build started !!!!"
-    create_wheel_package
-fi
 
 echo "Operation complete"

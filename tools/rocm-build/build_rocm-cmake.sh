@@ -32,7 +32,6 @@ ROCM_CMAKE_BUILD_DIR="$(getBuildPath rocm-cmake)"
 ROCM_CMAKE_BUILD_DIR="$(getBuildPath rocm-cmake)"
 ROCM_CMAKE_PACKAGE_DEB="$(getPackageRoot)/deb/rocm-cmake"
 ROCM_CMAKE_PACKAGE_RPM="$(getPackageRoot)/rpm/rocm-cmake"
-ROCM_WHEEL_DIR="${ROCM_CMAKE_BUILD_DIR}/_wheel"
 ROCM_CMAKE_BUILD_TYPE="debug"
 BUILD_TYPE="Debug"
 SHARED_LIBS="ON"
@@ -56,8 +55,6 @@ do
                 ack_and_ignore_asan ; shift ;;
         (-s | --static)
                 SHARED_LIBS="OFF" ; shift ;;
-        (-w | --wheel)
-            WHEEL_PACKAGE=true ; shift ;;
         (-o | --outdir)
                 TARGET="outdir"; PKGTYPE=$2 ; OUT_DIR_SPECIFIED=1 ; ((CLEAN_OR_OUT|=2)) ; shift 2 ;;
         (-p | --package)
@@ -78,7 +75,6 @@ fi
 
 
 clean_rocm_cmake() {
-    rm -rf "$ROCM_WHEEL_DIR"
     rm -rf $ROCM_CMAKE_BUILD_DIR
     rm -rf $ROCM_CMAKE_PACKAGE_DEB
     rm -rf $ROCM_CMAKE_PACKAGE_RPM
@@ -106,19 +102,6 @@ build_rocm_cmake() {
     copy_if RPM "${CPACKGEN:-"DEB;RPM"}" "$ROCM_CMAKE_PACKAGE_RPM" $ROCM_CMAKE_BUILD_DIR/rocm-cmake*.rpm
 }
 
-create_wheel_package() {
-    echo "Creating rocm-cmake wheel package"
-    # Copy the setup.py generator to build folder
-    mkdir -p $ROCM_WHEEL_DIR
-    cp -f $SCRIPT_ROOT/generate_setup_py.py $ROCM_WHEEL_DIR
-    cp -f $SCRIPT_ROOT/repackage_wheel.sh $ROCM_WHEEL_DIR
-    cd $ROCM_WHEEL_DIR
-    # Currently only supports python3.6
-    ./repackage_wheel.sh $ROCM_CMAKE_BUILD_DIR/rocm-cmake*.rpm python3.6
-    # Copy the wheel created to RPM folder which will be uploaded to artifactory
-    copy_if WHL "WHL" "$ROCM_CMAKE_PACKAGE_RPM" "$ROCM_WHEEL_DIR"/dist/*.whl
-}
-
 print_output_directory() {
     case ${PKGTYPE} in
         ("deb")
@@ -137,10 +120,5 @@ case $TARGET in
     (outdir) print_output_directory ;;
     (*) die "Invalid target $TARGET" ;;
 esac
-
-if [[ $WHEEL_PACKAGE == true ]]; then
-    echo "Wheel Package build started !!!!"
-    create_wheel_package
-fi
 
 echo "Operation complete"

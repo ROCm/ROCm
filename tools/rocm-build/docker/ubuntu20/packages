@@ -7,7 +7,6 @@ bison
 bridge-utils
 build-essential
 bzip2
-ccache
 check
 chrpath
 cifs-utils
@@ -121,11 +120,9 @@ python3-yaml
 python3.8-dev
 re2c
 redis-tools
-# Eventually we should be able to remove rpm for debian builds.
 rpm
 rsync
 ssh
-# This makes life more pleasent inside the container
 strace
 sudo
 systemtap-sdt-dev
