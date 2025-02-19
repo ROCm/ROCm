@@ -55,9 +55,10 @@ parameters:
     - rocJPEG
     - rocm-core
     - rocminfo
-    - ROCR-Runtime
+    - rocm_smi_lib
     - rocprofiler-register
     - rocprofiler-sdk
+    - ROCR-Runtime
 
 jobs:
 - job: rocprofiler_systems

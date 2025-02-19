@@ -37,7 +37,7 @@ click==8.1.7
     #   sphinx-external-toc
 comm==0.2.2
     # via ipykernel
-cryptography==43.0.3
+cryptography==44.0.1
     # via pyjwt
 debugpy==1.8.12
     # via ipykernel
