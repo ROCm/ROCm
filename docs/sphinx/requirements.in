@@ -1,3 +1,1 @@
-rocm-docs-core==1.15.0
-sphinx-reredirects
-sphinx-sitemap
+rocm-docs-core[api_reference]==1.17.0
