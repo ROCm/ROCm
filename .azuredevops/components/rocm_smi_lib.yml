@@ -10,6 +10,7 @@ parameters:
   default:
     - cmake
     - libdrm-dev
+    - pkg-config
     - python3-pip
 
 jobs:
