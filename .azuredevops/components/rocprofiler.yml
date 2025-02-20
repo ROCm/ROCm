@@ -16,6 +16,7 @@ parameters:
     - libelf-dev
     - libnuma-dev
     - libpciaccess-dev
+    - ninja-build
     - python3-pip
 - name: pipModules
   type: object
@@ -81,6 +82,7 @@ jobs:
         -DUSE_PROF_API=1
         -DGPU_TARGETS=$(JOB_GPU_TARGET)
         -DAMDGPU_TARGETS=$(JOB_GPU_TARGET)
+        -GNinja
       multithreadFlag: -- -j32
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
     parameters:

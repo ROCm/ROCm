@@ -9,6 +9,7 @@ parameters:
   type: object
   default:
     - cmake
+    - ninja-build
     - python3-pip
 
 jobs:
@@ -35,6 +36,7 @@ jobs:
       componentName: rocprofiler-register-tests
       extraBuildFlags: >-
         -DCMAKE_PREFIX_PATH=$(Build.BinariesDirectory)
+        -GNinja
       cmakeBuildDir: 'tests/build'
       installEnabled: false
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
