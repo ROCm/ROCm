@@ -11,6 +11,7 @@ parameters:
     - cmake
     - libdrm-dev
     - ninja-build
+    - pkg-config
     - python3-pip
 
 jobs:

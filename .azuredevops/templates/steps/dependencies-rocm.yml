@@ -262,7 +262,7 @@ parameters:
       hasGpuTarget: true
     rocprofiler-compute:
       pipelineId: $(ROCPROFILER_COMPUTE_PIPELINE_ID)
-      stagingBranch: amd-staging
+      stagingBranch: develop
       mainlineBranch: amd-mainline
       hasGpuTarget: true
     rocprofiler-register:
