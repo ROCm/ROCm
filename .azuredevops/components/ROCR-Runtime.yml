@@ -13,6 +13,7 @@ parameters:
     - libdrm-dev
     - libelf-dev
     - libnuma-dev
+    - ninja-build
     - pkg-config
     - python3-pip
 - name: rocmDependencies
@@ -53,6 +54,7 @@ jobs:
         -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm
         -DBUILD_SHARED_LIBS=ON
         -DCMAKE_BUILD_TYPE=Release
+        -GNinja
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml

@@ -9,6 +9,7 @@ parameters:
   type: object
   default:
     - cmake
+    - ninja-build
     - python3-pip
 
 jobs:
@@ -37,6 +38,7 @@ jobs:
         -DCPACK_DEBIAN_PACKAGE_RELEASE="local.9999~99.99"
         -DCPACK_RPM_PACKAGE_RELEASE="local.9999"
         -DROCM_VERSION="$(NEXT_RELEASE_VERSION)"
+        -GNinja
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
