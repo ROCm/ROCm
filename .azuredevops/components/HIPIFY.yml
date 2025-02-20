@@ -96,6 +96,7 @@ jobs:
         -DCUDA_DNN_ROOT_DIR=/usr/local/cuda/targets/x86_64-linux
         -DCMAKE_PREFIX_PATH=$(Pipeline.Workspace)/llvm;/usr/local/cuda/targets/x86_64-linux/lib
         -DLLVM_EXTERNAL_LIT=$(Pipeline.Workspace)/llvm-project/llvm/build/bin/llvm-lit
+        -GNinja
       multithreadFlag: -- -j32
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml

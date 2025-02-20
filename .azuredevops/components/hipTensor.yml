@@ -64,6 +64,7 @@ jobs:
         -DCMAKE_BUILD_TYPE=Release
         -DHIPTENSOR_BUILD_TESTS=ON
         -DAMDGPU_TARGETS=$(JOB_GPU_TARGET)
+        -GNinja
       multithreadFlag: -- -j32
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
     parameters:
