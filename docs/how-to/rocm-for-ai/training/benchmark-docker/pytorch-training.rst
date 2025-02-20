@@ -1,17 +1,17 @@
 :orphan:
 
 .. meta::
-   :description: How to train a model using ROCm PyTorch
-   :keywords: ROCm, AI, LLM, train, Megatron-LM, megatron, Llama, tutorial, docker, torch
+   :description: How to train a model using PyTorch for ROCm.
+   :keywords: ROCm, AI, LLM, train, PyTorch, torch, Llama, flux, tutorial, docker
 
-**********************************
-Training a model with ROCm PyTorch
-**********************************
+**************************************
+Training a model with PyTorch for ROCm
+**************************************
 
 PyTorch is an open-source machine learning framework that is widely used for
 model training with GPU-optimized components for transformer-based models.
 
-The ROCm PyTorch Training Docker (``rocm/pytorch-training:v25.3``) image
+The PyTorch for ROCm training Docker (``rocm/pytorch-training:v25.3``) image
 provides a prebuilt optimized environment for fine-tuning and pretraining a
 model on AMD Instinct MI325X and MI300X accelerators. It includes the following
 software components to accelerate training workloads:
@@ -40,7 +40,6 @@ Supported models
 ================
 
 The following models are pre-optimized for performance on the AMD Instinct MI300X accelerator.
-Only the models listed here are supported in the following workflows.
 
 * Llama 3.1 8B
 
@@ -50,8 +49,10 @@ Only the models listed here are supported in the following workflows.
 
 .. note::
 
+   Only these models are supported in the following steps.
+
    Some models, such as Llama 3, require an external license agreement through
-   a third party (for instance, Meta).
+   a third party (for example, Meta).
 
 System validation
 =================
@@ -60,12 +61,28 @@ If you have already validated your system settings, skip this step. Otherwise,
 complete the :ref:`system validation and optimization steps <train-a-model-system-validation>`
 to set up your system before starting training.
 
+Disable NUMA auto-balancing
+---------------------------
+
+Generally, application performance can benefit from disabling NUMA auto-balancing. However,
+it might be detrimental to performance with certain types of workloads.
+
+Run the command ``cat /proc/sys/kernel/numa_balancing`` to check your current NUMA (Non-Uniform
+Memory Access) settings. Output ``0`` indicates this setting is disabled. If there is no output or
+the output is ``1``, run the following command to disable NUMA auto-balancing.
+
+.. code-block:: shell
+
+   sudo sh -c 'echo 0 > /proc/sys/kernel/numa_balancing'
+
+See :ref:`mi300x-disable-numa` for more information.
+
 Environment setup
 =================
 
 This Docker image is optimized for specific model configurations outlined
-below. Performance may vary for other training workloads, as configurations and
-run conditions outside of those described are not validated by AMD.
+below. Performance can vary for other training workloads, as AMD 
+doesn’t validate configurations and run conditions outside those described.
 
 Download the Docker image
 -------------------------
@@ -109,7 +126,7 @@ Run the setup script to install libraries and datasets needed for benchmarking.
 
    ./pytorch_benchmark_setup.sh
 
-``pytorch_benchmark_setup.sh`` will be install the following libraries:
+``pytorch_benchmark_setup.sh`` installs the following libraries:
 
 .. list-table::
    :header-rows: 1
@@ -202,7 +219,7 @@ Run the setup script to install libraries and datasets needed for benchmarking.
      - FLUX
      - `Transformers <https://huggingface.co/docs/transformers/en/index>`_ 4.47.0
 
-``pytorch_benchmark_setup.sh`` will download the following models from Hugging Face:
+``pytorch_benchmark_setup.sh`` downloads the following models from Hugging Face:
 
 * `meta-llama/Llama-3.1-70B-Instruct <https://huggingface.co/meta-llama/Llama-3.1-70B-Instruct>`_
 
@@ -214,11 +231,21 @@ Along with the following datasets:
 
 * `bghira/pseudo-camera-10k <https://huggingface.co/datasets/bghira/pseudo-camera-10k>`_
 
-Start training
-==============
+Start training on AMD Instinct accelerators
+===========================================
 
-Once your environment is set up, use the following commands and examples to start benchmarking pretraining and
-fine-tuning performance.
+The prebuilt PyTorch with ROCm training environment allows users to quickly validate
+system performance, conduct training benchmarks, and achieve superior
+performance for models like Llama 3.1 and Llama 2. This container should not be
+expected to provide generalized performance across all training workloads. You
+can expect the container to perform in the model configurations described in
+the following section, but other configurations are not validated by AMD.
+
+Use the following instructions to set up the environment, configure the script
+to train models, and reproduce the benchmark results on MI300X series
+accelerators with the AMD PyTorch training Docker image.
+
+Once your environment is set up, use the following commands and examples to start benchmarking.
 
 Pretraining
 -----------

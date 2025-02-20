@@ -1,20 +1,20 @@
 :orphan:
 
 .. meta::
-   :description: How to train a model using ROCm Megatron-LM
+   :description: How to train a model using Megatron-LM for ROCm.
    :keywords: ROCm, AI, LLM, train, Megatron-LM, megatron, Llama, tutorial, docker, torch
 
-**************************************
-Training a model with ROCm Megatron-LM
-**************************************
+******************************************
+Training a model with Megatron-LM for ROCm
+******************************************
 
-The ROCm Megatron-LM framework is a specialized fork of the robust Megatron-LM,
+The Megatron-LM framework for ROCm is a specialized fork of the robust Megatron-LM,
 designed to enable efficient training of large-scale language models on AMD
-GPUs. By leveraging AMD Instinct™ MI300X accelerators, AMD Megatron-LM delivers
+GPUs. By leveraging AMD Instinct™ MI300X series accelerators, Megatron-LM delivers
 enhanced scalability, performance, and resource utilization for AI workloads.
 It is purpose-built to support models like Llama 2, Llama 3, Llama 3.1, and
-DeepSeek, enabling developers to train next-generation AI models with greater
-efficiency. See the GitHub repository at `<https://github.com/ROCm/Megatron-LM>`__.
+DeepSeek, enabling developers to train next-generation AI models more
+efficiently. See the GitHub repository at `<https://github.com/ROCm/Megatron-LM>`__.
 
 AMD provides a ready-to-use Docker image for MI300X accelerators containing
 essential components, including PyTorch, ROCm libraries, and Megatron-LM
@@ -83,7 +83,7 @@ The following models are pre-optimized for performance on the AMD Instinct MI300
 .. note::
 
    Some models, such as Llama 3, require an external license agreement through
-   a third party (for instance, Meta).
+   a third party (for example, Meta).
 
 System validation
 =================
@@ -91,6 +91,22 @@ System validation
 If you have already validated your system settings, skip this step. Otherwise,
 complete the :ref:`system validation and optimization steps <train-a-model-system-validation>`
 to set up your system before starting training.
+
+Disable NUMA auto-balancing
+---------------------------
+
+Generally, application performance can benefit from disabling NUMA auto-balancing. However,
+it might be detrimental to performance with certain types of workloads.
+
+Run the command ``cat /proc/sys/kernel/numa_balancing`` to check your current NUMA (Non-Uniform
+Memory Access) settings. Output ``0`` indicates this setting is disabled. If there is no output or
+the output is ``1``, run the following command to disable NUMA auto-balancing.
+
+.. code-block:: shell
+
+   sudo sh -c 'echo 0 > /proc/sys/kernel/numa_balancing'
+
+See :ref:`mi300x-disable-numa` for more information.
 
 .. _mi300x-amd-megatron-lm-training:
 
@@ -312,8 +328,19 @@ Multi-node training
         inside a Docker, either install the drivers inside the Docker container or pass the network
         drivers from the host while creating the Docker container.
 
-Start training
-==============
+Start training on AMD Instinct accelerators
+===========================================
+
+The prebuilt Megatron-LM with ROCm training environment allows users to quickly validate
+system performance, conduct training benchmarks, and achieve superior
+performance for models like Llama 3.1 and Llama 2. This container should not be
+expected to provide generalized performance across all training workloads. You
+can expect the container to perform in the model configurations described in
+the following section, but other configurations are not validated by AMD.
+
+Use the following instructions to set up the environment, configure the script
+to train models, and reproduce the benchmark results on MI300X series
+accelerators with the AMD Megatron-LM Docker image.
 
 .. tab-set::
 
@@ -330,7 +357,7 @@ Start training
 
             .. code-block:: shell
 
-               TEE_OUTPUT=1 MBS=2 BS=128 TP=1 TE_FP8=1 SEQ_LENGTH=8192 MODEL_SIZE=8  bash examples/llama/train_llama3.sh
+               TEE_OUTPUT=1 MBS=2 BS=128 TP=1 TE_FP8=1 SEQ_LENGTH=8192 MODEL_SIZE=8 bash examples/llama/train_llama3.sh
 
          .. tab-item:: Multi-node training
             :sync: multi-node
@@ -341,13 +368,13 @@ Start training
 
               .. code-block:: shell
 
-                 TEE_OUTPUT=1 MBS=2 BS=256 TP=1 TE_FP8=1 SEQ_LENGTH=8192 MODEL_SIZE=8  MASTER_ADDR=IP_NODE0 NNODES=2 NODE_RANK=0 bash examples/llama/train_llama3.sh
+                 TEE_OUTPUT=1 MBS=2 BS=256 TP=1 TE_FP8=1 SEQ_LENGTH=8192 MODEL_SIZE=8 MASTER_ADDR=IP_NODE0 NNODES=2 NODE_RANK=0 bash examples/llama/train_llama3.sh
 
             * On the worker node ``NODE1``:
 
               .. code-block:: shell
 
-                 TEE_OUTPUT=1 MBS=2 BS=256 TP=1 TE_FP8=1 SEQ_LENGTH=8192 MODEL_SIZE=8  MASTER_ADDR=IP_NODE0 NNODES=2 NODE_RANK=1 bash examples/llama/train_llama3.sh
+                 TEE_OUTPUT=1 MBS=2 BS=256 TP=1 TE_FP8=1 SEQ_LENGTH=8192 MODEL_SIZE=8 MASTER_ADDR=IP_NODE0 NNODES=2 NODE_RANK=1 bash examples/llama/train_llama3.sh
 
 
    .. tab-item:: DeepSeek V2
