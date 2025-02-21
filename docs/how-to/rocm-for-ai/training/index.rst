@@ -19,6 +19,10 @@ training, fine-tuning, and inference. It leverages popular machine learning fram
 
 In this guide, you'll learn about:
 
-- :doc:`Training a model <train-a-model>`
+- Training a model
 
-- :doc:`Scale model training <scale-model-training>`
+  - :doc:`Train a model with Megatron-LM <benchmark-docker/megatron-lm>`
+
+  - :doc:`Train a model with PyTorch <benchmark-docker/pytorch-training>`
+
+- :doc:`Scaling model training <scale-model-training>`

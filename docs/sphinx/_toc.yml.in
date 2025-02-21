@@ -40,11 +40,13 @@ subtrees:
         title: Training
         subtrees:
         - entries:
-          - file: how-to/rocm-for-ai/training/train-a-model.rst
-            title: Train a model
+          - file: how-to/rocm-for-ai/training/benchmark-docker/megatron-lm
+            title: Train a model with Megatron-LM
+          - file: how-to/rocm-for-ai/training/benchmark-docker/pytorch-training
+            title: Train a model with PyTorch
           - file: how-to/rocm-for-ai/training/scale-model-training.rst
             title: Scale model training
-      
+
       - file: how-to/rocm-for-ai/fine-tuning/index.rst
         title: Fine-tuning LLMs
         subtrees:
