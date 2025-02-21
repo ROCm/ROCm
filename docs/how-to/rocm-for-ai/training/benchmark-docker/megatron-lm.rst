@@ -349,7 +349,7 @@ accelerators with the AMD Megatron-LM Docker image.
 
       .. tab-set::
 
-         .. tab-item:: Single-node training
+         .. tab-item:: Single node training
             :sync: single-node
 
             To run training on a single node, navigate to the Megatron-LM folder and use the
@@ -439,6 +439,7 @@ The benchmark tests support the following sets of variables:
         Input sequence length.
 
    .. tab-item:: DeepSeek V2
+      :sync: deepseek
 
       ``PR``
         Precision for training. ``bf16`` for BF16 (default) or ``fp8`` for FP8 GEMMs.
@@ -463,59 +464,64 @@ Benchmarking examples
 
 .. tab-set::
 
-   .. tab-item:: Single node training
-      :sync: single-node
+   .. tab-item:: Llama
+      :sync: llama
 
-      Use this command to run training with Llama 2 7B model on a single node. You can specify MBS, BS, FP,
-      datatype, and so on.
+      .. tab-set::
 
-      .. code-block:: bash
+         .. tab-item:: Single node training
+            :sync: single-node
 
-         TEE_OUTPUT=1 MBS=5 BS=120 TP=8 TE_FP8=0 NO_TORCH_COMPILE=1
-         SEQ_LENGTH=4096 bash examples/llama/train_llama2.sh
+            Use this command to run training with Llama 2 7B model on a single node. You can specify MBS, BS, FP,
+            datatype, and so on.
 
-      You can find the training logs at the location defined in ``$TRAIN_LOG`` in the :ref:`configuration script <amd-megatron-lm-environment-setup>`.
+            .. code-block:: bash
 
-      See the sample output:
+               TEE_OUTPUT=1 MBS=5 BS=120 TP=8 TE_FP8=0 NO_TORCH_COMPILE=1
+               SEQ_LENGTH=4096 bash examples/llama/train_llama2.sh
 
-      .. image:: ../../../../data/how-to/rocm-for-ai/llama2-7b-training-log-sample.png
-         :width: 800
+            You can find the training logs at the location defined in ``$TRAIN_LOG`` in the :ref:`configuration script <amd-megatron-lm-environment-setup>`.
 
-   .. tab-item:: Multi-node training
-      :sync: multi-node
+            See the sample output:
 
-      Launch the Docker container on each node.
+            .. image:: ../../../../data/how-to/rocm-for-ai/llama2-7b-training-log-sample.png
+               :width: 800
 
-      In this example, run training with Llama 2 7B model on 2 nodes with specific MBS, BS, FP, datatype, and
-      so on.
+         .. tab-item:: Multi-node training
+            :sync: multi-node
 
-      On the master node:
+            Launch the Docker container on each node.
 
-      .. code-block:: bash
+            In this example, run training with Llama 2 7B model on 2 nodes with specific MBS, BS, FP, datatype, and
+            so on.
 
-         TEE_OUTPUT=1 MBS=4 BS=64 TP=8 TE_FP8=0 NO_TORCH_COMPILE=1
-         SEQ_LENGTH=4096 bash examples/llama/train_llama2.sh
+            On the master node:
 
-      On the worker node:
+            .. code-block:: bash
 
-      .. code-block:: bash
+               TEE_OUTPUT=1 MBS=4 BS=64 TP=8 TE_FP8=0 NO_TORCH_COMPILE=1
+               SEQ_LENGTH=4096 bash examples/llama/train_llama2.sh
 
-         TEE_OUTPUT=1 MBS=4 BS=64 TP=8 TE_FP8=0 NO_TORCH_COMPILE=1
-         SEQ_LENGTH=4096 bash examples/llama/train_llama2.sh
+            On the worker node:
 
-      You can find the training logs at the location defined in ``$TRAIN_LOG`` in the :ref:`configuration script <amd-megatron-lm-environment-setup>`.
+            .. code-block:: bash
 
-      Sample output for 2-node training:
+               TEE_OUTPUT=1 MBS=4 BS=64 TP=8 TE_FP8=0 NO_TORCH_COMPILE=1
+               SEQ_LENGTH=4096 bash examples/llama/train_llama2.sh
 
-      Master node:
+            You can find the training logs at the location defined in ``$TRAIN_LOG`` in the :ref:`configuration script <amd-megatron-lm-environment-setup>`.
 
-      .. image:: ../../../../data/how-to/rocm-for-ai/2-node-training-master.png
-         :width: 800
+            Sample output for 2-node training:
 
-      Worker node:
+            Master node:
 
-      .. image:: ../../../../data/how-to/rocm-for-ai/2-node-training-worker.png
-         :width: 800
+            .. image:: ../../../../data/how-to/rocm-for-ai/2-node-training-master.png
+               :width: 800
+
+            Worker node:
+
+            .. image:: ../../../../data/how-to/rocm-for-ai/2-node-training-worker.png
+               :width: 800
 
 Previous versions
 =================
