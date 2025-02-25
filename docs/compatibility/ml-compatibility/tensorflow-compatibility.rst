@@ -54,7 +54,7 @@ Docker image compatibility
 AMD validates and publishes ready-made `TensorFlow images
 <https://hub.docker.com/r/rocm/tensorflow>`_ with ROCm backends on
 Docker Hub. The following Docker image tags and associated inventories are
-validated for `ROCm 6.3.1 <https://repo.radeon.com/rocm/apt/6.3.1/>`_. Click
+validated for `ROCm 6.3.3 <https://repo.radeon.com/rocm/apt/6.3.3/>`_. Click
 the |docker-icon| icon to view the image on Docker Hub.
 
 .. list-table:: TensorFlow Docker image components
