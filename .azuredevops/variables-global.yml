@@ -27,6 +27,8 @@ variables:
   value: rocm-ci_larger_base_disk_pool
 - name: GFX942_TEST_POOL
   value: gfx942_test_pool
+- name: GFX90A_TEST_POOL
+  value: gfx90a_test_pool
 - name: LATEST_RELEASE_VERSION
   value: 6.3.3
 - name: REPO_RADEON_VERSION
