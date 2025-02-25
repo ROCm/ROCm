@@ -69,7 +69,6 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
-      gpuTarget: $(JOB_GPU_TARGET)
 
 - job: rocr_debug_agent_testing
   dependsOn: rocr_debug_agent

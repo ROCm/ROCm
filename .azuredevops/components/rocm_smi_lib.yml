@@ -40,7 +40,6 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
-      gpuTarget: $(JOB_GPU_TARGET)
 
 - job: rocm_smi_lib_testing
   dependsOn: rocm_smi_lib
