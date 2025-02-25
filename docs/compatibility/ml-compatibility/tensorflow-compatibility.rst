@@ -70,7 +70,7 @@ the |docker-icon| icon to view the image on Docker Hub.
 
            <a href="https://hub.docker.com/layers/rocm/tensorflow/rocm6.3.3-py3.12-tf2.17-dev/images/sha256-fd2653f436880366cc874aa24264ca9dabd892d76ccb63fb807debba459bcaaf"><i class="fab fa-docker fa-lg"></i> rocm/tensorflow</a>
 
-      - `tensorflow-rocm 2.17.0 <https://repo.radeon.com/rocm/manylinux/rocm-rel-6.3/tensorflow_rocm-2.17.0-cp312-cp312-manylinux_2_28_x86_64.whl>`__
+      - `tensorflow-rocm 2.17.0 <https://repo.radeon.com/rocm/manylinux/rocm-rel-6.3.3/tensorflow_rocm-2.17.0-cp312-cp312-manylinux_2_28_x86_64.whl>`__
       - dev
       - `Python 3.12.4 <https://www.python.org/downloads/release/python-3124/>`_
       - `TensorBoard 2.17.1 <https://github.com/tensorflow/tensorboard/tree/2.17.1>`_
@@ -79,7 +79,7 @@ the |docker-icon| icon to view the image on Docker Hub.
 
            <a href="https://hub.docker.com/layers/rocm/tensorflow/rocm6.3.3-py3.10-tf2.17-dev/images/sha256-8a5eb7443798935dd269575e2abae847b702e1dfb06766ab84f081a6314d8b95"><i class="fab fa-docker fa-lg"></i> rocm/tensorflow</a>
 
-      - `tensorflow-rocm 2.17.0 <https://repo.radeon.com/rocm/manylinux/rocm-rel-6.3/tensorflow_rocm-2.17.0-cp310-cp310-manylinux_2_28_x86_64.whl>`__
+      - `tensorflow-rocm 2.17.0 <https://repo.radeon.com/rocm/manylinux/rocm-rel-6.3.3/tensorflow_rocm-2.17.0-cp310-cp310-manylinux_2_28_x86_64.whl>`__
       - dev
       - `Python 3.10.16 <https://www.python.org/downloads/release/python-31016/>`_
       - `TensorBoard 2.17.1 <https://github.com/tensorflow/tensorboard/tree/2.17.1>`_
@@ -88,7 +88,7 @@ the |docker-icon| icon to view the image on Docker Hub.
 
            <a href="https://hub.docker.com/layers/rocm/tensorflow/rocm6.3.3-py3.12-tf2.16-dev/images/sha256-8fc939b10cdd6d2b11407474880d4c8ab2b52ab6e2d1743c921fc2adbfd0422f"><i class="fab fa-docker fa-lg"></i> rocm/tensorflow</a>
 
-      - `tensorflow-rocm 2.16.2 <https://repo.radeon.com/rocm/manylinux/rocm-rel-6.3/tensorflow_rocm-2.16.2-cp312-cp312-manylinux_2_28_x86_64.whl>`__
+      - `tensorflow-rocm 2.16.2 <https://repo.radeon.com/rocm/manylinux/rocm-rel-6.3.3/tensorflow_rocm-2.16.2-cp312-cp312-manylinux_2_28_x86_64.whl>`__
       - dev
       - `Python 3.12.4 <https://www.python.org/downloads/release/python-3124/>`_
       - `TensorBoard 2.16.2 <https://github.com/tensorflow/tensorboard/tree/2.16.2>`_
@@ -97,7 +97,7 @@ the |docker-icon| icon to view the image on Docker Hub.
 
            <a href="https://hub.docker.com/layers/rocm/tensorflow/rocm6.3.3-py3.10-tf2.16-dev/images/sha256-a4cc6ab23d59fdf5459ceac1f0a603e6c16ae7f885d30e42c0c2b3ac60c2ad10"><i class="fab fa-docker fa-lg"></i> rocm/tensorflow</a>
 
-      - `tensorflow-rocm 2.16.2 <https://repo.radeon.com/rocm/manylinux/rocm-rel-6.3/tensorflow_rocm-2.16.2-cp310-cp310-manylinux_2_28_x86_64.whl>`__
+      - `tensorflow-rocm 2.16.2 <https://repo.radeon.com/rocm/manylinux/rocm-rel-6.3.3/tensorflow_rocm-2.16.2-cp310-cp310-manylinux_2_28_x86_64.whl>`__
       - dev
       - `Python 3.10.16 <https://www.python.org/downloads/release/python-31016/>`_
       - `TensorBoard 2.16.2 <https://github.com/tensorflow/tensorboard/tree/2.16.2>`_
@@ -106,7 +106,7 @@ the |docker-icon| icon to view the image on Docker Hub.
 
            <a href="https://hub.docker.com/layers/rocm/tensorflow/rocm6.3.3-py3.10-tf2.15-dev/images/sha256-60887c488421184adcb60b9ed4f72a8bd7bdb64d238e50943ca7cbde38e4aa48"><i class="fab fa-docker fa-lg"></i> rocm/tensorflow</a>
 
-      - `tensorflow-rocm 2.15.1 <https://repo.radeon.com/rocm/manylinux/rocm-rel-6.3/tensorflow_rocm-2.15.1-cp310-cp310-manylinux_2_28_x86_64.whl>`_
+      - `tensorflow-rocm 2.15.1 <https://repo.radeon.com/rocm/manylinux/rocm-rel-6.3.3/tensorflow_rocm-2.15.1-cp310-cp310-manylinux_2_28_x86_64.whl>`_
       - dev
       - `Python 3.10.16 <https://www.python.org/downloads/release/python-31016/>`_
       - `TensorBoard 2.15.2 <https://github.com/tensorflow/tensorboard/tree/2.15.2>`_
