@@ -132,6 +132,7 @@ GDS
 GEMM
 GEMMs
 GFortran
+GFXIP
 Gemma
 GiB
 GIM
