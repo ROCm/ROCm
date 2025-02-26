@@ -11,6 +11,7 @@ parameters:
     - cmake
     - doxygen
     - graphviz
+    - libdrm-amdgpu-dev
     - ninja-build
     - python3-pip
 - name: pipModules
@@ -56,6 +57,7 @@ jobs:
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
       pipModules: ${{ parameters.pipModules }}
+      registerROCmPackages: true
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/checkout.yml
     parameters:
@@ -87,6 +89,7 @@ jobs:
       aptPackages: ${{ parameters.aptPackages }}
       pipModules: ${{ parameters.pipModules }}
       gpuTarget: $(JOB_GPU_TARGET)
+      registerROCmPackages: true
 
 - job: roctracer_testing
   dependsOn: roctracer
@@ -106,6 +109,8 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      registerROCmPackages: true
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/local-artifact-download.yml
     parameters:
@@ -130,3 +135,4 @@ jobs:
       pipModules: ${{ parameters.pipModules }}
       environment: test
       gpuTarget: $(JOB_GPU_TARGET)
+      registerROCmPackages: true
