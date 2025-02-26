@@ -4,6 +4,8 @@
    :description: JAX compatibility
    :keywords: GPU, JAX compatibility
 
+.. version-set:: rocm_version latest
+
 *******************************************************************************
 JAX compatibility
 *******************************************************************************
@@ -119,7 +121,8 @@ Critical ROCm libraries for JAX
 
 The functionality of JAX with ROCm is determined by its underlying library
 dependencies. These critical ROCm components affect the capabilities,
-performance, and feature set available to developers.
+performance, and feature set available to developers. The versions described
+are available in ROCm :version:`rocm_version`.
 
 .. list-table::
     :header-rows: 1
@@ -129,7 +132,7 @@ performance, and feature set available to developers.
       - Purpose
       - Used in
     * - `hipBLAS <https://github.com/ROCm/hipBLAS>`_
-      - 2.3.0
+      - :version-ref:`hipBLAS rocm_version`
       - Provides GPU-accelerated Basic Linear Algebra Subprograms (BLAS) for
         matrix and vector operations.
       - Matrix multiplication in ``jax.numpy.matmul``, ``jax.lax.dot`` and
@@ -138,7 +141,7 @@ performance, and feature set available to developers.
         ``jax.numpy.einsum`` with matrix-multiplication patterns algebra
         operations.
     * - `hipBLASLt <https://github.com/ROCm/hipBLASLt>`_
-      - 0.10.0
+      - :version-ref:`hipBLASLt rocm_version`
       - hipBLASLt is an extension of hipBLAS, providing additional
         features like epilogues fused into the matrix multiplication kernel or
         use of integer tensor cores.
@@ -147,7 +150,7 @@ performance, and feature set available to developers.
         operations, mixed-precision support, and hardware-specific
         optimizations.
     * - `hipCUB <https://github.com/ROCm/hipCUB>`_
-      - 3.3.0
+      - :version-ref:`hipCUB rocm_version`
       - Provides a C++ template library for parallel algorithms for reduction,
         scan, sort and select.
       - Reduction functions (``jax.numpy.sum``, ``jax.numpy.mean``,
@@ -155,23 +158,23 @@ performance, and feature set available to developers.
         (``jax.numpy.cumsum``, ``jax.numpy.cumprod``) and sorting
         (``jax.numpy.sort``, ``jax.numpy.argsort``).
     * - `hipFFT <https://github.com/ROCm/hipFFT>`_
-      - 1.0.17
+      - :version-ref:`hipFFT rocm_version`
       - Provides GPU-accelerated Fast Fourier Transform (FFT) operations.
       - Used in functions like ``jax.numpy.fft``.
     * - `hipRAND <https://github.com/ROCm/hipRAND>`_
-      - 2.11.0
+      - :version-ref:`hipRAND rocm_version`
       - Provides fast random number generation for GPUs.
       - The ``jax.random.uniform``, ``jax.random.normal``,
         ``jax.random.randint`` and ``jax.random.split``.
     * - `hipSOLVER <https://github.com/ROCm/hipSOLVER>`_
-      - 2.3.0
+      - :version-ref:`hipSOLVER rocm_version`
       - Provides GPU-accelerated solvers for linear systems, eigenvalues, and
         singular value decompositions (SVD).
       - Solving linear systems (``jax.numpy.linalg.solve``), matrix
         factorizations, SVD (``jax.numpy.linalg.svd``) and eigenvalue problems
         (``jax.numpy.linalg.eig``).
     * - `hipSPARSE <https://github.com/ROCm/hipSPARSE>`_
-      - 3.1.2
+      - :version-ref:`hipSPARSE rocm_version`
       - Accelerates operations on sparse matrices, such as sparse matrix-vector
         or matrix-matrix products.
       - Sparse matrix multiplication (``jax.numpy.matmul``), sparse
@@ -179,28 +182,28 @@ performance, and feature set available to developers.
         (``jax.experimental.sparse.dot``), sparse linear system solvers and
         sparse data handling.
     * - `hipSPARSELt <https://github.com/ROCm/hipSPARSELt>`_
-      - 0.2.2
+      - :version-ref:`hipSPARSELt rocm_version`
       - Accelerates operations on sparse matrices, such as sparse matrix-vector
         or matrix-matrix products.
       - Sparse matrix multiplication (``jax.numpy.matmul``), sparse
         matrix-vector and matrix-matrix products
         (``jax.experimental.sparse.dot``) and sparse linear system solvers.
     * - `MIOpen <https://github.com/ROCm/MIOpen>`_
-      - 3.3.0
+      - :version-ref:`MIOpen rocm_version`
       - Optimized for deep learning primitives such as convolutions, pooling,
         normalization, and activation functions.
       - Speeds up convolutional neural networks (CNNs), recurrent neural
         networks (RNNs), and other layers. Used in operations like
         ``jax.nn.conv``, ``jax.nn.relu``, and ``jax.nn.batch_norm``.
     * - `RCCL <https://github.com/ROCm/rccl>`_
-      - 2.21.5
+      - :version-ref:`RCCL rocm_version`
       - Optimized for multi-GPU communication for operations like  all-reduce,
         broadcast, and scatter.
       - Distribute computations across multiple GPU with ``pmap`` and
         ``jax.distributed``. XLA automatically uses rccl when executing
         operations across multiple GPUs on AMD hardware.
     * - `rocThrust <https://github.com/ROCm/rocThrust>`_
-      - 3.3.0
+      - :version-ref:`rocThrust rocm_version`
       - Provides a C++ template library for parallel algorithms like sorting,
         reduction, and scanning.
       - Reduction operations like ``jax.numpy.sum``, ``jax.pmap`` for
