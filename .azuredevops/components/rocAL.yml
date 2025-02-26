@@ -73,6 +73,8 @@ jobs:
     matrix:
       gfx942:
         JOB_GPU_TARGET: gfx942
+      gfx90a:
+        JOB_GPU_TARGET: gfx90a
   steps:
   - task: Bash@3
     displayName: 'Register libjpeg-turbo packages'

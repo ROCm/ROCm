@@ -56,4 +56,3 @@ jobs:
       aptPackages: ${{ parameters.aptPackages }}
       pipModules: ${{ parameters.pipModules }}
       environment: combined
-      gpuTarget: $(JOB_GPU_TARGET)

@@ -87,7 +87,6 @@ jobs:
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
       pipModules: ${{ parameters.pipModules }}
-      gpuTarget: $(JOB_GPU_TARGET)
 
 - job: Tensile_testing
   timeoutInMinutes: 90
