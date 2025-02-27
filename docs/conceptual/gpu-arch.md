@@ -32,7 +32,7 @@ architecture.
 
 * [AMD Instinct™ MI250 microarchitecture](./gpu-arch/mi250.md)
 * [AMD Instinct MI200/CDNA2 ISA](https://www.amd.com/system/files/TechDocs/instinct-mi200-cdna2-instruction-set-architecture.pdf)
-* [White paper](https://www.amd.com/system/files/documents/amd-cdna2-white-paper.pdf)
+* [White paper](https://www.amd.com/content/dam/amd/en/documents/instinct-business-docs/white-papers/amd-cdna2-white-paper.pdf)
 * [Performance counters](./gpu-arch/mi300-mi200-performance-counters.rst)
 
 :::
@@ -45,7 +45,7 @@ architecture.
 
 * [AMD Instinct™ MI100 microarchitecture](./gpu-arch/mi100.md)
 * [AMD Instinct MI100/CDNA1 ISA](https://www.amd.com/system/files/TechDocs/instinct-mi100-cdna1-shader-instruction-set-architecture%C2%A0.pdf)
-* [White paper](https://www.amd.com/system/files/documents/amd-cdna-whitepaper.pdf)
+* [White paper](https://www.amd.com/content/dam/amd/en/documents/instinct-business-docs/white-papers/amd-cdna-white-paper.pdf)
 
 :::
 
@@ -55,7 +55,6 @@ architecture.
 * [AMD RDNA3 ISA](https://www.amd.com/system/files/TechDocs/rdna3-shader-instruction-set-architecture-feb-2023_0.pdf)
 * [AMD RDNA2 ISA](https://www.amd.com/system/files/TechDocs/rdna2-shader-instruction-set-architecture.pdf)
 * [AMD RDNA ISA](https://www.amd.com/system/files/TechDocs/rdna-shader-instruction-set-architecture.pdf)
-* [AMD RDNA Architecture White Paper](https://www.amd.com/system/files/documents/rdna-whitepaper.pdf)
 
 :::
 
