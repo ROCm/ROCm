@@ -154,7 +154,7 @@ subtrees:
         - entries:
           - url: https://www.amd.com/system/files/TechDocs/instinct-mi200-cdna2-instruction-set-architecture.pdf
             title: AMD Instinct MI200/CDNA2 ISA
-          - url: https://www.amd.com/system/files/documents/amd-cdna2-white-paper.pdf
+          - url: https://www.amd.com/content/dam/amd/en/documents/instinct-business-docs/white-papers/amd-cdna2-white-paper.pdf
             title: White paper
       - file: conceptual/gpu-arch/mi100.md
         title: MI100 microarchitecture
@@ -162,7 +162,7 @@ subtrees:
         - entries:
           - url: https://www.amd.com/system/files/TechDocs/instinct-mi100-cdna1-shader-instruction-set-architecture%C2%A0.pdf
             title: AMD Instinct MI100/CDNA1 ISA
-          - url: https://www.amd.com/system/files/documents/amd-cdna-whitepaper.pdf
+          - url: https://www.amd.com/content/dam/amd/en/documents/instinct-business-docs/white-papers/amd-cdna-white-paper.pdf
             title: White paper
   - file: conceptual/iommu.rst
     title: Input-Output Memory Management Unit (IOMMU)
