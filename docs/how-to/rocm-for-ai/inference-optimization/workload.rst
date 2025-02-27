@@ -945,9 +945,9 @@ for details.
 
   .. code-block:: shell
 
-     export HIP_FORCE_DEV_KERNARG=1  hipblaslt-bench --alpha 1 --beta 0 -r \
-     f16_r --a_type f16_r --b_type f8_r --compute_type f32_f16_r \
-     --initialization trig_float  --cold_iters 100 -i 1000 --rotating 256
+     HIP_FORCE_DEV_KERNARG=1  hipblaslt-bench --alpha 1 --beta 0 -r f16_r \
+     --a_type f16_r --b_type f8_r --compute_type f32_f16_r \
+     --initialization trig_float  --cold_iters 100 --iters 1000 --rotating 256
 
 * Example 2: Benchmark forward epilogues and backward epilogues
 
