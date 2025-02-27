@@ -18,8 +18,7 @@
    docker build -t rocm-ubuntu22
     ```
 
->[!TIP]
->You can replace rocm-ubuntu22 with any name you prefer for your Docker image.
+   You can replace `rocm-ubuntu22` with any name you prefer for your Docker image.
 
 4. Verify the image was created successfully.
 
@@ -27,5 +26,4 @@
     docker images
     ```
 
->[!TIP]
->Look for your image name in the list of available Docker images. You should see your newly created image with the name specified in step 3.
+   Look for your image name in the list of available Docker images. You should see your newly created image with the name specified in step 3.
