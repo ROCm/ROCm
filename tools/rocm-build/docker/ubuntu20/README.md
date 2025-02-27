@@ -9,7 +9,7 @@
 2. Go into the OS specific docker directory in build-infra
 
     ```bash
-    cd ROCm/rocm-build/docker/ubuntu20
+    cd ROCm/tools/rocm-build/docker/ubuntu20
     ```
 
 3. Build the Docker image

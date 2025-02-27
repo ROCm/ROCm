@@ -9,7 +9,7 @@
 2. Go into the OS specific docker directory in build-infra
 
     ```bash
-    cd ROCm/rocm-build/docker/ubuntu22
+    cd ROCm/tools/rocm-build/docker/ubuntu22
     ```
 
 3. Build the docker image
