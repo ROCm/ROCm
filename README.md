@@ -116,7 +116,7 @@ bash install-prerequisites.sh
 # For ubuntu22.04 system
 cd ROCm/tools/rocm-build/docker/ubuntu22
 cp * /tmp && cd /tmp
-bash install-prerequisities.sh
+bash install-prerequisites.sh
 # For ubuntu24.04 system
 cd ROCm/tools/rocm-build/docker/ubuntu24
 cp * /tmp && cd /tmp
