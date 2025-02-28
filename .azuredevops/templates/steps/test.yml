@@ -33,7 +33,6 @@ parameters:
     - aomp
     - HIPIFY
     - MIVisionX
-    - rocm-cmake
     - rocm_smi_lib
     - rocprofiler-sdk
     - roctracer
