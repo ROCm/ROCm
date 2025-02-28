@@ -1,0 +1,153 @@
+vllm_benchmark:
+  unified_docker:
+    latest:
+      pull_tag: rocm/vllm:rocm6.3.1_mi300_ubuntu22.04_py3.12_vllm_0.6.6
+      docker_hub_url: https://hub.docker.com/layers/rocm/vllm/rocm6.3.1_mi300_ubuntu22.04_py3.12_vllm_0.6.6/images/sha256-9a12ef62bbbeb5a4c30a01f702c8e025061f575aa129f291a49fbd02d6b4d6c9
+      rocm_version: 6.3.1
+      vllm_version: 0.6.6
+      pytorch_version: 2.7.0 (2.7.0a0+git3a58512)
+  model_groups:
+    - group: Llama
+      tag: llama
+      models:
+      - model: Llama 3.1 8B
+        mad_tag: pyt_vllm_llama-3.1-8b
+        model_repo: meta-llama/Llama-3.1-8B-Instruct
+        url: https://huggingface.co/meta-llama/Llama-3.1-8B
+        precision: float16
+      - model: Llama 3.1 70B
+        mad_tag: pyt_vllm_llama-3.1-70b
+        model_repo: meta-llama/Llama-3.1-70B-Instruct
+        url: https://huggingface.co/meta-llama/Llama-3.1-70B-Instruct
+        precision: float16
+      - model: Llama 3.1 405B
+        mad_tag: pyt_vllm_llama-3.1-405b
+        model_repo: meta-llama/Llama-3.1-405B-Instruct
+        url: https://huggingface.co/meta-llama/Llama-3.1-405B-Instruct
+        precision: float16
+      - model: Llama 3.2 11B Vision
+        mad_tag: pyt_vllm_llama-3.2-11b-vision-instruct
+        model_repo: meta-llama/Llama-3.2-11B-Vision-Instruct
+        url: https://huggingface.co/meta-llama/Llama-3.2-11B-Vision-Instruct
+        precision: float16
+      - model: Llama 2 7B
+        mad_tag: pyt_vllm_llama-2-7b
+        model_repo: meta-llama/Llama-2-7b-chat-hf
+        url: https://huggingface.co/meta-llama/Llama-2-7b-chat-hf
+        precision: float16
+      - model: Llama 2 70B
+        mad_tag: pyt_vllm_llama-2-70b
+        model_repo: meta-llama/Llama-2-70b-chat-hf
+        url: https://huggingface.co/meta-llama/Llama-2-70b-chat-hf
+        precision: float16
+      - model: Llama 3.1 70B FP8
+        mad_tag: pyt_vllm_llama-3.1-70b_fp8
+        model_repo: amd/Llama-3.1-70B-Instruct-FP8-KV
+        url: https://huggingface.co/amd/Llama-3.1-70B-Instruct-FP8-KV
+        precision: float8
+      - model: Llama 3.1 405B FP8
+        mad_tag: pyt_vllm_llama-3.1-405b_fp8
+        model_repo: amd/Llama-3.1-405B-Instruct-FP8-KV
+        url: https://huggingface.co/amd/Llama-3.1-405B-Instruct-FP8-KV
+        precision: float8
+    - group: Mistral
+      tag: mistral
+      models:
+      - model: Mixtral MoE 8x7B
+        mad_tag: pyt_vllm_mixtral-8x7b
+        model_repo: mistralai/Mixtral-8x7B-Instruct-v0.1
+        url: https://huggingface.co/mistralai/Mixtral-8x7B-Instruct-v0.1
+        precision: float16
+      - model: Mixtral MoE 8x22B
+        mad_tag: pyt_vllm_mixtral-8x22b
+        model_repo: mistralai/Mixtral-8x22B-Instruct-v0.1
+        url: https://huggingface.co/mistralai/Mixtral-8x22B-Instruct-v0.1
+        precision: float16
+      - model: Mistral 7B
+        mad_tag: pyt_vllm_mistral-7b
+        model_repo: mistralai/Mistral-7B-Instruct-v0.3
+        url: https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3
+        precision: float16
+      - model: Mixtral MoE 8x7B FP8
+        mad_tag: pyt_vllm_mixtral-8x7b_fp8
+        model_repo: amd/Mixtral-8x7B-Instruct-v0.1-FP8-KV
+        url: https://huggingface.co/amd/Mixtral-8x7B-Instruct-v0.1-FP8-KV
+        precision: float8
+      - model: Mixtral MoE 8x22B FP8
+        mad_tag: pyt_vllm_mixtral-8x22b_fp8
+        model_repo: amd/Mixtral-8x22B-Instruct-v0.1-FP8-KV
+        url: https://huggingface.co/amd/Mixtral-8x22B-Instruct-v0.1-FP8-KV
+        precision: float8
+      - model: Mistral 7B FP8
+        mad_tag: pyt_vllm_mistral-7b_fp8
+        model_repo: amd/Mistral-7B-v0.1-FP8-KV
+        url: https://huggingface.co/amd/Mistral-7B-v0.1-FP8-KV
+        precision: float8
+    - group: Qwen
+      tag: qwen
+      models:
+      - model: Qwen2 7B
+        mad_tag: pyt_vllm_qwen2-7b
+        model_repo: Qwen/Qwen2-7B-Instruct
+        url: https://huggingface.co/Qwen/Qwen2-7B-Instruct
+        precision: float16
+      - model: Qwen2 72B
+        mad_tag: pyt_vllm_qwen2-72b
+        model_repo: Qwen/Qwen2-72B-Instruct
+        url: https://huggingface.co/Qwen/Qwen2-72B-Instruct
+        precision: float16
+    - group: JAIS
+      tag: jais
+      models:
+      - model: JAIS 13B
+        mad_tag: pyt_vllm_jais-13b
+        model_repo: core42/jais-13b-chat
+        url: https://huggingface.co/core42/jais-13b-chat
+        precision: float16
+      - model: JAIS 30B
+        mad_tag: pyt_vllm_jais-30b
+        model_repo: core42/jais-30b-chat-v3
+        url: https://huggingface.co/core42/jais-30b-chat-v3
+        precision: float16
+    - group: DBRX
+      tag: dbrx
+      models:
+      - model: DBRX Instruct
+        mad_tag: pyt_vllm_dbrx-instruct
+        model_repo: databricks/dbrx-instruct
+        url: https://huggingface.co/databricks/dbrx-instruct
+        precision: float16
+      - model: DBRX Instruct FP8
+        mad_tag: pyt_vllm_dbrx_fp8
+        model_repo: amd/dbrx-instruct-FP8-KV
+        url: https://huggingface.co/amd/dbrx-instruct-FP8-KV
+        precision: float8
+    - group: Gemma
+      tag: gemma
+      models:
+      - model: Gemma 2 27B
+        mad_tag: pyt_vllm_gemma-2-27b
+        model_repo: google/gemma-2-27b
+        url: https://huggingface.co/google/gemma-2-27b
+        precision: float16
+    - group: Cohere
+      tag: cohere
+      models:
+      - model: C4AI Command R+ 08-2024
+        mad_tag: pyt_vllm_c4ai-command-r-plus-08-2024
+        model_repo: CohereForAI/c4ai-command-r-plus-08-2024
+        url: https://huggingface.co/CohereForAI/c4ai-command-r-plus-08-2024
+        precision: float16
+      - model: C4AI Command R+ 08-2024 FP8
+        mad_tag: pyt_vllm_command-r-plus_fp8
+        model_repo: amd/c4ai-command-r-plus-FP8-KV
+        url: https://huggingface.co/amd/c4ai-command-r-plus-FP8-KV
+        precision: float8
+    - group: DeepSeek
+      tag: deepseek
+      models:
+      - model: DeepSeek MoE 16B
+        mad_tag: pyt_vllm_deepseek-moe-16b-chat
+        model_repo: deepseek-ai/deepseek-moe-16b-chat
+        url: https://huggingface.co/deepseek-ai/deepseek-moe-16b-chat
+        precision: float16
