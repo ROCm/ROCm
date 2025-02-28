@@ -19,6 +19,7 @@ parameters:
   default:
     - cget
     - ninja
+    - rocm-docs-core
 
 jobs:
 - job: rocm_cmake
