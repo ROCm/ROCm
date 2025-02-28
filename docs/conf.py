@@ -104,7 +104,7 @@ if os.environ.get("READTHEDOCS", "") == "True":
 html_theme = "rocm_docs_theme"
 html_theme_options = {"flavor": "rocm-docs-home"}
 
-html_static_path = ["sphinx/static/css", "how-to/rocm-for-ai/inference/js"]
+html_static_path = ["sphinx/static/css", "data/how-to/rocm-for-ai/inference"]
 html_css_files = ["rocm_custom.css", "rocm_rn.css", "vllm-benchmark.css"]
 html_js_files = ["vllm-benchmark.js"]
 
