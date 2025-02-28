@@ -8,7 +8,6 @@ parameters:
 - name: aptPackages
   type: object
   default:
-    - cmake
     - doxygen
     - doxygen-doc
     - ninja-build
@@ -18,6 +17,7 @@ parameters:
   type: object
   default:
     - cget
+    - cmake==3.20.6
     - ninja
     - rocm-docs-core
 
@@ -49,6 +49,7 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
     parameters:
       componentName: rocm-cmake
+      testParameters: '-E "pass-version-parent" -VV --output-on-failure --force-new-ctest-process --output-junit test_output.xml'
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
