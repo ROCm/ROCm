@@ -1,3 +1,4 @@
 rocm-docs-core==1.17.0
 sphinx-reredirects
 sphinx-sitemap
+sphinxcontrib.datatemplates==0.11.0
