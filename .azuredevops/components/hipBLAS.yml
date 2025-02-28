@@ -63,6 +63,8 @@ jobs:
     matrix:
       gfx942:
         JOB_GPU_TARGET: gfx942
+      gfx90a:
+        JOB_GPU_TARGET: gfx90a
   steps:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
@@ -95,6 +97,13 @@ jobs:
       gpuTarget: $(JOB_GPU_TARGET)
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
+      gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      installAOCL: true
       gpuTarget: $(JOB_GPU_TARGET)
 
 - job: hipBLAS_testing
@@ -133,3 +142,9 @@ jobs:
       testExecutable: $(Agent.BuildDirectory)/rocm/bin/hipblas-test
       testParameters: '--yaml hipblas_smoke.yaml --gtest_output=xml:./test_output.xml --gtest_color=yes'
       testDir: '$(Agent.BuildDirectory)/rocm/bin'
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)

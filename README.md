@@ -50,7 +50,7 @@ The following example shows how to use the repo tool to download the ROCm source
 ```bash
 mkdir -p ~/ROCm/
 cd ~/ROCm/
-export ROCM_VERSION=6.3.1
+export ROCM_VERSION=6.3.3
 ~/bin/repo init -u http://github.com/ROCm/ROCm.git -b roc-6.3.x -m tools/rocm-build/rocm-${ROCM_VERSION}.xml
 ~/bin/repo sync
 ```
@@ -77,8 +77,8 @@ The Build time will reduce significantly if we limit the GPU Architecture/s agai
 
 mkdir -p ~/WORKSPACE/      # Or any folder name other than WORKSPACE
 cd ~/WORKSPACE/
-export ROCM_VERSION=6.3.1
-~/bin/repo init -u http://github.com/ROCm/ROCm.git -b develop -m tools/rocm-build/rocm-${ROCM_VERSION}.xml
+export ROCM_VERSION=6.3.3
+~/bin/repo init -u http://github.com/ROCm/ROCm.git -b roc-6.3.x -m tools/rocm-build/rocm-${ROCM_VERSION}.xml
 ~/bin/repo sync
 
 # --------------------------------------
@@ -116,7 +116,7 @@ bash install-prerequisites.sh
 # For ubuntu22.04 system
 cd ROCm/tools/rocm-build/docker/ubuntu22
 cp * /tmp && cd /tmp
-bash install-prerequisities.sh
+bash install-prerequisites.sh
 # For ubuntu24.04 system
 cd ROCm/tools/rocm-build/docker/ubuntu24
 cp * /tmp && cd /tmp

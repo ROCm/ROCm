@@ -56,6 +56,8 @@ jobs:
     matrix:
       gfx942:
         JOB_GPU_TARGET: gfx942
+      gfx90a:
+        JOB_GPU_TARGET: gfx90a
   steps:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
@@ -100,6 +102,13 @@ jobs:
     parameters:
       artifactName: testMatrices
       gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      gpuTarget: $(JOB_GPU_TARGET)
+      extraEnvVars:
+        - HIP_ROCCLR_HOME:::/home/user/workspace/rocm
 
 - job: rocSPARSE_testing
   timeoutInMinutes: 90
@@ -137,4 +146,8 @@ jobs:
       testDir: '$(Agent.BuildDirectory)/rocm/bin'
       testExecutable: './rocsparse-test'
       testParameters: '--gtest_filter="*quick*" --gtest_output=xml:./test_output.xml --gtest_color=yes'
-
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)

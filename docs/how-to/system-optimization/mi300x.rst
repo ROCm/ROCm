@@ -1,5 +1,5 @@
 .. meta::
-   :description: AMD Instinct MI300X system settings
+   :description: Learn about AMD Instinct MI300X system settings and performance tuning.
    :keywords: AMD, Instinct, MI300X, HPC, tuning, BIOS settings, NBIO, ROCm,
               environment variable, performance, accelerator, GPU, EPYC, GRUB,
               operating system
@@ -35,7 +35,7 @@ functioning correctly before trying to improve its overall performance. In this
 section, the settings discussed mostly ensure proper functionality of your
 Instinct-based system. Some settings discussed are known to improve performance
 for most applications running on a MI300X system. See
-:doc:`/how-to/tuning-guides/mi300x/workload` for how to improve performance for
+:doc:`../rocm-for-ai/inference-optimization/workload` for how to improve performance for
 specific applications or workloads.
 
 .. _mi300x-bios-settings:

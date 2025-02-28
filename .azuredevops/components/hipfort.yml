@@ -51,6 +51,8 @@ jobs:
     matrix:
       gfx942:
         JOB_GPU_TARGET: gfx942
+      gfx90a:
+        JOB_GPU_TARGET: gfx90a
   steps:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
@@ -87,6 +89,12 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      gpuTarget: $(JOB_GPU_TARGET)
+      installLatestCMake: true
 
 - job: hipfort_testing
   dependsOn: hipfort
@@ -134,3 +142,9 @@ jobs:
       targetType: inline
       script: PATH=$(Agent.BuildDirectory)/rocm/bin:$PATH make run_all
       workingDirectory: $(Build.SourcesDirectory)/test
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)
+      optSymLink: true

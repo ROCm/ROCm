@@ -35,8 +35,7 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  pool:
-    vmImage: ${{ variables.BASE_BUILD_POOL }}
+  pool: ${{ variables.LOW_BUILD_POOL }}
   workspace:
     clean: all
   steps:
@@ -72,6 +71,22 @@ jobs:
     retryCountOnTaskFailure: 3
     inputs:
       targetPath: $(Build.ArtifactStagingDirectory)
+  - task: Bash@3
+    displayName: Save pipeline artifact file names
+    inputs:
+      workingDirectory: $(Pipeline.Workspace)
+      targetType: inline
+      script: |
+        echo "$(Build.DefinitionName)_$(Build.SourceBranchName)_$(Build.BuildId)_$(Build.BuildNumber)_ubuntu2204_drop_$(JOB_GPU_TARGET).tar.gz" >> pipelineArtifacts.txt
+        whlFile=$(find "$(Build.ArtifactStagingDirectory)" -type f -name "*.whl" | head -n 1)
+        if [ -n "$whlFile" ]; then
+          echo $(basename "$whlFile") >> pipelineArtifacts.txt
+        fi
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
 
 - job: Tensile_testing
   timeoutInMinutes: 90
@@ -162,3 +177,13 @@ jobs:
     inputs:
       targetType: inline
       script: echo "##vso[task.setvariable variable=PATH]$(echo $PATH | sed -e 's;:$(Agent.BuildDirectory)/rocm/llvm/bin;;' -e 's;^/;;' -e 's;/$;;')"
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)
+      optSymLink: true
+      pythonEnvVars: true
+      extraPaths: /home/user/workspace/rocm/llvm/bin:/home/user/workspace/rocm/bin
+# docker image will not have python site-packages in path, but the env vars will make it easier

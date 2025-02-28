@@ -24,6 +24,7 @@ parameters:
     - libopencv-dev
     - protobuf-compiler
     - libprotoc-dev
+    - python3-pip
 - name: pipModules
   type: object
   default:
@@ -69,14 +70,15 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  pool:
-    vmImage: ${{ variables.BASE_BUILD_POOL }}
+  pool: ${{ variables.LOW_BUILD_POOL }}
   workspace:
     clean: all
   strategy:
     matrix:
       gfx942:
         JOB_GPU_TARGET: gfx942
+      gfx90a:
+        JOB_GPU_TARGET: gfx90a
   steps:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
@@ -103,6 +105,12 @@ jobs:
       gpuTarget: $(JOB_GPU_TARGET)
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
+      gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
       gpuTarget: $(JOB_GPU_TARGET)
 
 - job: MIVisionX_testing
@@ -146,3 +154,10 @@ jobs:
     parameters:
       componentName: MIVisionX
       testDir: 'mivisionx-tests'
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)
+      optSymLink: true

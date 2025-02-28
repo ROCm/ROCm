@@ -60,6 +60,11 @@ jobs:
         -GNinja
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
 
 # compiling and running test on the test system together
 - job: rocMLIR_testing
@@ -116,3 +121,9 @@ jobs:
       testDir: $(Build.SourcesDirectory)/build
       testExecutable: ninja
       testParameters: check-rocmlir
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)

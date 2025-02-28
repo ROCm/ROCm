@@ -15,6 +15,7 @@ parameters:
     - libsndfile1-dev
     - libstdc++-12-dev
     - ninja-build
+    - python3-pip
 - name: pipModules
   type: object
   default:
@@ -28,6 +29,7 @@ parameters:
     - clr
     - half
     - llvm-project
+    - rocm-cmake
     - rocminfo
     - ROCR-Runtime
 - name: rocmTestDependencies
@@ -48,14 +50,15 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  pool:
-    vmImage: ${{ variables.BASE_BUILD_POOL }}
+  pool: ${{ variables.LOW_BUILD_POOL }}
   workspace:
     clean: all
   strategy:
     matrix:
       gfx942:
         JOB_GPU_TARGET: gfx942
+      gfx90a:
+        JOB_GPU_TARGET: gfx90a
   steps:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
@@ -79,12 +82,19 @@ jobs:
         -DHALF_INCLUDE_DIRS=$(Agent.BuildDirectory)/rocm/include
         -DCMAKE_BUILD_TYPE=Release
         -DGPU_TARGETS=$(JOB_GPU_TARGET)
+        -DROCM_PLATFORM_VERSION=$(NEXT_RELEASE_VERSION)
         -GNinja
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
+      gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
       gpuTarget: $(JOB_GPU_TARGET)
 
 - job: rpp_testing
@@ -126,7 +136,7 @@ jobs:
       script: |
         sudo apt-get install nasm
         sudo apt-get install wget
-        git clone -b 3.0.2 https://github.com/libjpeg-turbo/libjpeg-turbo.git 
+        git clone -b 3.0.2 https://github.com/libjpeg-turbo/libjpeg-turbo.git
         cd libjpeg-turbo
         mkdir build
         cd build
@@ -169,3 +179,9 @@ jobs:
       testDir: 'rpp-tests'
   - script: sudo rm /opt/rocm
     condition: always()
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)

@@ -67,6 +67,8 @@ jobs:
     matrix:
       gfx942:
         JOB_GPU_TARGET: gfx942
+      gfx90a:
+        JOB_GPU_TARGET: gfx90a
   steps:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
@@ -101,7 +103,7 @@ jobs:
         -DMIOPEN_BACKEND=HIP
         -DCMAKE_CXX_COMPILER=$(Agent.BuildDirectory)/rocm/llvm/bin/amdclang++
         -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm;$(Agent.BuildDirectory)/miopen-deps
-        -DAMDGPU_TARGETS=$(JOB_GPU_TARGET)
+        -DGPU_TARGETS=$(JOB_GPU_TARGET)
         -DMIOPEN_ENABLE_AI_KERNEL_TUNING=OFF
         -DMIOPEN_ENABLE_AI_IMMED_MODE_FALLBACK=OFF
         -DCMAKE_BUILD_TYPE=Release
@@ -113,6 +115,14 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      gpuTarget: $(JOB_GPU_TARGET)
+      extraCopyDirectories:
+        - miopen-deps
 
 - job: MIOpen_testing
   timeoutInMinutes: 180
@@ -121,6 +131,8 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
+  - name: ROCM_PATH
+    value: $(Agent.BuildDirectory)/rocm
   pool: $(JOB_TEST_POOL)
   workspace:
     clean: all
@@ -185,3 +197,11 @@ jobs:
     parameters:
       componentName: MIOpen
       testParameters: '-VV --output-on-failure --force-new-ctest-process --output-junit test_output.xml --exclude-regex test_rnn_seq_api'
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)
+      extraCopyDirectories:
+        - miopen-deps

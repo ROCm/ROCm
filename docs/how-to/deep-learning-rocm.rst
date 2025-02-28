@@ -39,5 +39,11 @@ through the following guides.
 
 * :doc:`rocm-for-ai/index`
 
-* :doc:`llm-fine-tuning-optimization/index`
+* :doc:`Training <rocm-for-ai/training/index>`
+
+* :doc:`Fine-tuning LLMs <rocm-for-ai/fine-tuning/index>`
+
+* :doc:`Inference <rocm-for-ai/inference/index>`
+
+* :doc:`Inference optimization <rocm-for-ai/inference-optimization/index>`
 

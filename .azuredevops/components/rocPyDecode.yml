@@ -41,14 +41,15 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  pool:
-    vmImage: ${{ variables.BASE_BUILD_POOL }}
+  pool: ${{ variables.LOW_BUILD_POOL }}
   workspace:
     clean: all
   strategy:
     matrix:
       gfx942:
         JOB_GPU_TARGET: gfx942
+      gfx90a:
+        JOB_GPU_TARGET: gfx90a
   steps:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
@@ -85,13 +86,22 @@ jobs:
         echo "##vso[task.setvariable variable=PYBIND11_PATH;]$(python3 -c 'import pybind11; print(pybind11.get_cmake_dir())')"
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
+      installEnabled: false
       extraBuildFlags: >-
         -DROCM_PATH=$(Agent.BuildDirectory)/rocm
         -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm;$(PYTHON_USER_SITE)/pybind11;$(PYTHON_DIST_PACKAGES)/pybind11;$(PYBIND11_PATH)
         -DCMAKE_BUILD_TYPE=Release
-        -DAMDGPU_TARGETS=$(JOB_GPU_TARGET)
+        -DGPU_TARGETS=$(JOB_GPU_TARGET)
         -DCMAKE_INSTALL_PREFIX_PYTHON=$(Build.BinariesDirectory)
         -GNinja
+  - task: Bash@3
+    displayName: 'rocPyDecode install'
+    inputs:
+      targetType: inline
+      script: |
+        sudo cmake --build . --target install
+        sudo chown -R $(whoami):$(id -gn) $(Build.BinariesDirectory)
+      workingDirectory: $(Build.SourcesDirectory)/build
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
@@ -106,7 +116,8 @@ jobs:
       script: |
         export ROCM_PATH=$(Agent.BuildDirectory)/rocm
         export HIP_INCLUDE_DIRS=$(Agent.BuildDirectory)/rocm/include/hip
-        python3 setup.py bdist_wheel
+        sudo python3 setup.py bdist_wheel
+        sudo chown -R $(whoami):$(id -gn) $(find . -name "*.whl")
       workingDirectory: $(Build.SourcesDirectory)
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-prepare-package.yml
     parameters:
@@ -119,6 +130,23 @@ jobs:
     retryCountOnTaskFailure: 3
     inputs:
       targetPath: $(Build.ArtifactStagingDirectory)
+  - task: Bash@3
+    displayName: Save pipeline artifact file names
+    inputs:
+      workingDirectory: $(Pipeline.Workspace)
+      targetType: inline
+      script: |
+        whlFile=$(find "$(Build.ArtifactStagingDirectory)" -type f -name "*.whl" | head -n 1)
+        if [ -n "$whlFile" ]; then
+          echo $(basename "$whlFile") >> pipelineArtifacts.txt
+        fi
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      gpuTarget: $(JOB_GPU_TARGET)
+      optSymLink: true
 
 - job: rocPyDecode_testing
   dependsOn: rocPyDecode
@@ -198,7 +226,7 @@ jobs:
         -DROCM_PATH=$(Agent.BuildDirectory)/rocm
         -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm;$(PYTHON_USER_SITE)/pybind11;$(PYTHON_DIST_PACKAGES)/pybind11;$(PYBIND11_PATH)
         -DCMAKE_BUILD_TYPE=Release
-        -DAMDGPU_TARGETS=$(JOB_GPU_TARGET)
+        -DGPU_TARGETS=$(JOB_GPU_TARGET)
         ..
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
@@ -214,3 +242,11 @@ jobs:
       script: |
         pip uninstall -y rocPyDecode
         pip uninstall -y hip-python
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)
+      pythonEnvVars: true
+  # note that this docker won't have hip-python installed via pip

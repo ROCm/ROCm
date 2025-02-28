@@ -37,9 +37,9 @@ jobs:
     inputs:
       targetType: inline
       script: |
-        sudo mkdir --parents --mode=0755 /etc/apt/keyrings
-        wget -q -O- https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-archive-keyring.gpg | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/cuda-archive-keyring.gpg > /dev/null
-        echo "deb [signed-by=/etc/apt/trusted.gpg.d/cuda-archive-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /" | sudo tee /etc/apt/sources.list.d/cuda-ubuntu2204-x86_64.list
+        wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb
+        sudo dpkg -i cuda-keyring_1.1-1_all.deb
+        sudo rm -f cuda-keyring_1.1-1_all.deb
         sudo apt update
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
@@ -106,3 +106,14 @@ jobs:
       testExecutable: make
       testParameters: test-hipify
       testPublishResults: false
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      environment: combined
+      registerCUDAPackages: true
+      extraCopyDirectories:
+        - llvm-project
+      extraEnvVars:
+        - UPSTREAM_LLVM_GIT_URL:::https://github.com/llvm/llvm-project.git
+        - UPSTREAM_LLVM_TAG:::llvmorg-18.1.2

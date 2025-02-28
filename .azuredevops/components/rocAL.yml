@@ -38,15 +38,15 @@ parameters:
 - name: rocmDependencies
   type: object
   default:
-    - rocm-cmake
-    - llvm-project
-    - ROCR-Runtime
-    - clr
-    - rocDecode
-    - half
-    - rpp
-    - MIVisionX
     - aomp
+    - clr
+    - half
+    - llvm-project
+    - MIVisionX
+    - rocDecode
+    - rocm-cmake
+    - ROCR-Runtime
+    - rpp
 - name: rocmTestDependencies
   type: object
   default:
@@ -55,6 +55,7 @@ parameters:
     - half
     - llvm-project
     - MIVisionX
+    - rocDecode
     - rocminfo
     - rocprofiler-register
     - ROCR-Runtime
@@ -65,14 +66,15 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  pool:
-    vmImage: ${{ variables.BASE_BUILD_POOL }}
+  pool: ${{ variables.LOW_BUILD_POOL }}
   workspace:
     clean: all
   strategy:
     matrix:
       gfx942:
         JOB_GPU_TARGET: gfx942
+      gfx90a:
+        JOB_GPU_TARGET: gfx90a
   steps:
   - task: Bash@3
     displayName: 'Register libjpeg-turbo packages'
@@ -154,6 +156,15 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      registerJPEGPackages: true
+      gpuTarget: $(JOB_GPU_TARGET)
+      extraCopyDirectories:
+        - /opt/libjpeg-turbo
 
 - job: rocAL_testing
   dependsOn: rocAL
@@ -165,7 +176,9 @@ jobs:
     value: $(Agent.BuildDirectory)/rocm
   - name: CMAKE_INCLUDE_PATH
     value: $(Agent.BuildDirectory)/rocm/include/rocal
-  pool: $(JOB_TEST_POOL)
+  pool:
+    name: $(JOB_TEST_POOL)
+    demands: firstRenderDeviceAccess
   workspace:
     clean: all
   strategy:
@@ -225,3 +238,13 @@ jobs:
       script: |
         sudo rm /etc/ld.so.conf.d/libjpeg-turbo.conf
         sudo ldconfig -v
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      registerJPEGPackages: true
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)
+      extraCopyDirectories:
+        - /opt/libjpeg-turbo
+# docker image will be missing the ldconfig to libjpeg-turbo

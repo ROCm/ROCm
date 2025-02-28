@@ -17,6 +17,7 @@ parameters:
     - libgst-dev
     - libgtest-dev
     - git
+    - python3-pip
 - name: rocmDependencies
   type: object
   default:
@@ -59,14 +60,15 @@ jobs:
     value: $(Agent.BuildDirectory)/rocm
   - name: HIP_INC_DIR
     value: $(Agent.BuildDirectory)/rocm
-  pool:
-    vmImage: ${{ variables.BASE_BUILD_POOL }}
+  pool: ${{ variables.LOW_BUILD_POOL }}
   workspace:
     clean: all
   strategy:
     matrix:
       gfx942:
         JOB_GPU_TARGET: gfx942
+      gfx90a:
+        JOB_GPU_TARGET: gfx90a
   steps:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
@@ -94,6 +96,15 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      gpuTarget: $(JOB_GPU_TARGET)
+      extraEnvVars:
+        - HIP_ROCCLR_HOME:::/home/user/workspace/rocm
+        - ROCM_PATH:::/home/user/workspace/rocm
+        - HIP_INC_DIR:::/home/user/workspace/rocm
 
 - job: ROCmValidationSuite_testing
   dependsOn: ROCmValidationSuite
@@ -131,3 +142,8 @@ jobs:
       testParameters: ''
       testDir: $(Agent.BuildDirectory)
       testPublishResults: false
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)

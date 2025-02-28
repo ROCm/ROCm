@@ -5,6 +5,13 @@ parameters:
 - name: checkoutRef
   type: string
   default: ''
+- name: aptPackages
+  type: object
+  default:
+    - cmake
+    - libdrm-amdgpu-dev
+    - libdrm-dev
+    - python3-pip
 - name: rocmDependencies
   type: object
   default:
@@ -21,11 +28,14 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  pool:
-    vmImage: ${{ variables.BASE_BUILD_POOL }}
+  pool: ${{ variables.LOW_BUILD_POOL }}
   workspace:
     clean: all
   steps:
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      registerROCmPackages: true
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/checkout.yml
     parameters:
@@ -42,6 +52,11 @@ jobs:
         -DROCRTST_BLD_TYPE=release
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      registerROCmPackages: true
 
 - job: rocminfo_testing
   dependsOn: rocminfo
@@ -58,6 +73,9 @@ jobs:
         JOB_GPU_TARGET: gfx942
         JOB_TEST_POOL: ${{ variables.GFX942_TEST_POOL }}
   steps:
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/local-artifact-download.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
@@ -82,3 +100,9 @@ jobs:
       testExecutable: './rocm/bin/rocm_agent_enumerator'
       testParameters: ''
       testPublishResults: false
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      registerROCmPackages: true
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)

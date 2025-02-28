@@ -16,7 +16,6 @@ parameters:
 - name: gpuTarget
   type: string
   default: ''
-
 # set to true if you're calling this template file multiple files in same pipeline
 # only leave last call false to optimize sequence
 - name: skipLibraryLinking
@@ -263,7 +262,7 @@ parameters:
       hasGpuTarget: true
     rocprofiler-compute:
       pipelineId: $(ROCPROFILER_COMPUTE_PIPELINE_ID)
-      stagingBranch: amd-staging
+      stagingBranch: develop
       mainlineBranch: amd-mainline
       hasGpuTarget: true
     rocprofiler-register:
@@ -369,6 +368,12 @@ steps:
         # checkoutRef = mainline
         ${{ elseif eq(parameters.checkoutRef, parameters.componentVarList[variables['Build.DefinitionName']].mainlineBranch) }}:
           branchName: ${{ parameters.componentVarList[split(dependency, ':')[0]].mainlineBranch }}
+        # SourceBranchName = staging
+        ${{ elseif eq(variables['Build.SourceBranchName'], parameters.componentVarlist[variables['Build.DefinitionName']].stagingBranch) }}:
+          branchName: ${{ parameters.componentVarList[split(dependency, ':')[0]].stagingBranch }}
+        # SourceBranchName = mainline
+        ${{ elseif eq(variables['Build.SourceBranchName'], parameters.componentVarlist[variables['Build.DefinitionName']].mainlineBranch) }}:
+          branchName: ${{ parameters.componentVarList[split(dependency, ':')[0]].mainlineBranch }}
         # default = staging
         ${{ else }}:
           branchName: ${{ parameters.componentVarList[split(dependency, ':')[0]].stagingBranch }}
@@ -391,6 +396,12 @@ steps:
           branchName: ${{ parameters.componentVarList[dependency].stagingBranch }}
         # checkoutRef = mainline
         ${{ elseif eq(parameters.checkoutRef, parameters.componentVarList[variables['Build.DefinitionName']].mainlineBranch) }}:
+          branchName: ${{ parameters.componentVarList[dependency].mainlineBranch }}
+        # SourceBranchName = staging
+        ${{ elseif eq(variables['Build.SourceBranchName'], parameters.componentVarlist[variables['Build.DefinitionName']].stagingBranch) }}:
+          branchName: ${{ parameters.componentVarList[dependency].stagingBranch }}
+        # SourceBranchName = mainline
+        ${{ elseif eq(variables['Build.SourceBranchName'], parameters.componentVarlist[variables['Build.DefinitionName']].mainlineBranch) }}:
           branchName: ${{ parameters.componentVarList[dependency].mainlineBranch }}
         # default = staging
         ${{ else }}:

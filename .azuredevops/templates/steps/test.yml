@@ -35,6 +35,7 @@ parameters:
     - MIVisionX
     - rocm-cmake
     - rocm_smi_lib
+    - rocprofiler-sdk
     - roctracer
 
 steps:

@@ -23,7 +23,7 @@ compatibility and system requirements.
 .. container:: format-big-table
 
   .. csv-table::
-      :header: "ROCm Version", "6.3.1", "6.3.0", "6.2.0"
+      :header: "ROCm Version", "6.3.3", "6.3.2", "6.2.0"
       :stub-columns: 1
 
       :ref:`Operating systems & kernels <OS-kernel-versions>`,Ubuntu 24.04.2,Ubuntu 24.04.2,Ubuntu 24.04
@@ -32,7 +32,8 @@ compatibility and system requirements.
       ,RHEL 8.10,RHEL 8.10,"RHEL 8.10, 8.9"
       ,"SLES 15 SP6, SP5","SLES 15 SP6, SP5","SLES 15 SP6, SP5"
       ,Oracle Linux 8.10 [#mi300x]_,Oracle Linux 8.10 [#mi300x]_,Oracle Linux 8.9 [#mi300x]_
-      ,Debian 12 [#mi300x]_,,
+      ,Debian 12 [#single-node]_,Debian 12 [#single-node]_,
+      ,Azure Linux 3.0 [#mi300x]_,Azure Linux 3.0 [#mi300x]_,
       ,.. _architecture-support-compatibility-matrix:,,
       :doc:`Architecture <rocm-install-on-linux:reference/system-requirements>`,CDNA3,CDNA3,CDNA3
       ,CDNA2,CDNA2,CDNA2
@@ -47,7 +48,7 @@ compatibility and system requirements.
       ,gfx908,gfx908,gfx908
       ,,,
       FRAMEWORK SUPPORT,.. _framework-support-compatibility-matrix:,,
-      :doc:`PyTorch <../compatibility/ml-compatibility/pytorch-compatibility>`,"2.4, 2.3, 2.2, 1.13","2.4, 2.3, 2.2, 2.1, 2.0, 1.13","2.3, 2.2, 2.1, 2.0, 1.13"
+      :doc:`PyTorch <../compatibility/ml-compatibility/pytorch-compatibility>`,"2.4, 2.3, 2.2, 1.13","2.4, 2.3, 2.2, 1.13","2.3, 2.2, 2.1, 2.0, 1.13"
       :doc:`TensorFlow <../compatibility/ml-compatibility/tensorflow-compatibility>`,"2.17.0, 2.16.2, 2.15.1","2.17.0, 2.16.2, 2.15.1","2.16.1, 2.15.1, 2.14.1"
       :doc:`JAX <../compatibility/ml-compatibility/jax-compatibility>`,0.4.31,0.4.31,0.4.26
       `ONNX Runtime <https://onnxruntime.ai/docs/build/eps.html#amd-migraphx>`_,1.17.3,1.17.3,1.17.3
@@ -82,8 +83,8 @@ compatibility and system requirements.
       :doc:`hipBLAS <hipblas:index>`,2.3.0,2.3.0,2.2.0
       :doc:`hipBLASLt <hipblaslt:index>`,0.10.0,0.10.0,0.8.0
       :doc:`hipFFT <hipfft:index>`,1.0.17,1.0.17,1.0.14
-      :doc:`hipfort <hipfort:index>`,0.5.0,0.5.0,0.4.0
-      :doc:`hipRAND <hiprand:index>`,2.11.1,2.11.0,2.11.0
+      :doc:`hipfort <hipfort:index>`,0.5.1,0.5.1,0.4.0
+      :doc:`hipRAND <hiprand:index>`,2.11.1,2.11.1,2.11.0
       :doc:`hipSOLVER <hipsolver:index>`,2.3.0,2.3.0,2.2.0
       :doc:`hipSPARSE <hipsparse:index>`,3.1.2,3.1.2,3.1.1
       :doc:`hipSPARSELt <hipsparselt:index>`,0.2.2,0.2.2,0.2.1
@@ -103,8 +104,8 @@ compatibility and system requirements.
       :doc:`rocThrust <rocthrust:index>`,3.3.0,3.3.0,3.0.1
       ,,,
       SUPPORT LIBS,,,
-      `hipother <https://github.com/ROCm/hipother>`_,6.3.42133,6.3.42131,6.2.41133
-      `rocm-core <https://github.com/ROCm/rocm-core>`_,6.3.1,6.3.0,6.2.0
+      `hipother <https://github.com/ROCm/hipother>`_,6.3.42134,6.3.42134,6.2.41133
+      `rocm-core <https://github.com/ROCm/rocm-core>`_,6.3.3,6.3.2,6.2.0
       `ROCT-Thunk-Interface <https://github.com/ROCm/ROCT-Thunk-Interface>`_,N/A [#ROCT-rocr]_,N/A [#ROCT-rocr]_,20240607.1.4246
       ,,,
       SYSTEM MGMT TOOLS,.. _tools-support-compatibility-matrix:,,
@@ -117,13 +118,13 @@ compatibility and system requirements.
       PERFORMANCE TOOLS,,,
       :doc:`ROCm Bandwidth Test <rocm_bandwidth_test:index>`,1.4.0,1.4.0,1.4.0
       :doc:`ROCm Compute Profiler <rocprofiler-compute:index>`,3.0.0,3.0.0,2.0.1
-      :doc:`ROCm Systems Profiler <rocprofiler-systems:index>`,0.1.0,0.1.0,1.11.2
-      :doc:`ROCProfiler <rocprofiler:index>`,2.0.60301,2.0.60300,2.0.60200
+      :doc:`ROCm Systems Profiler <rocprofiler-systems:index>`,0.1.2,0.1.1,1.11.2
+      :doc:`ROCProfiler <rocprofiler:index>`,2.0.60303,2.0.60302,2.0.60200
       :doc:`ROCprofiler-SDK <rocprofiler-sdk:index>`,0.5.0,0.5.0,0.4.0
-      :doc:`ROCTracer <roctracer:index>`,4.1.60301,4.1.60300,4.1.60200
+      :doc:`ROCTracer <roctracer:index>`,4.1.60303,4.1.60302,4.1.60200
       ,,,
       DEVELOPMENT TOOLS,,,
-      :doc:`HIPIFY <hipify:index>`,18.0.0.24491,18.0.0.24455,18.0.0.24232
+      :doc:`HIPIFY <hipify:index>`,18.0.0.25012,18.0.0.25012,18.0.0.24232
       :doc:`ROCm CMake <rocmcmakebuildtools:index>`,0.14.0,0.14.0,0.13.0
       :doc:`ROCdbgapi <rocdbgapi:index>`,0.77.0,0.77.0,0.76.0
       :doc:`ROCm Debugger (ROCgdb) <rocgdb:index>`,15.2.0,15.2.0,14.2.0
@@ -133,20 +134,23 @@ compatibility and system requirements.
       COMPILERS,.. _compilers-support-compatibility-matrix:,,
       `clang-ocl <https://github.com/ROCm/clang-ocl>`_,N/A,N/A,N/A
       :doc:`hipCC <hipcc:index>`,1.1.1,1.1.1,1.1.1
-      `Flang <https://github.com/ROCm/flang>`_,18.0.0.24491,18.0.0.24455,18.0.0.24232
-      :doc:`llvm-project <llvm-project:index>`,18.0.0.24491,18.0.0.24455,18.0.0.24232
-      `OpenMP <https://github.com/ROCm/llvm-project/tree/amd-staging/openmp>`_,18.0.0.24491,18.0.0.24455,18.0.0.24232
+      `Flang <https://github.com/ROCm/flang>`_,18.0.0.25012,18.0.0.25012,18.0.0.24232
+      :doc:`llvm-project <llvm-project:index>`,18.0.0.25012,18.0.0.25012,18.0.0.24232
+      `OpenMP <https://github.com/ROCm/llvm-project/tree/amd-staging/openmp>`_,18.0.0.25012,18.0.0.25012,18.0.0.24232
       ,,,
       RUNTIMES,.. _runtime-support-compatibility-matrix:,,
-      :doc:`AMD CLR <hip:understand/amd_clr>`,6.3.42133,6.3.42131,6.2.41133
-      :doc:`HIP <hip:index>`,6.3.42133,6.3.42131,6.2.41133
+      :doc:`AMD CLR <hip:understand/amd_clr>`,6.3.42134,6.3.42134,6.2.41133
+      :doc:`HIP <hip:index>`,6.3.42134,6.3.42134,6.2.41133
       `OpenCL Runtime <https://github.com/ROCm/clr/tree/develop/opencl>`_,2.0.0,2.0.0,2.0.0
       :doc:`ROCr Runtime <rocr-runtime:index>`,1.14.0,1.14.0,1.13.0
 
 
+
+
 .. rubric:: Footnotes
 
-.. [#mi300x] Oracle Linux and Debian are supported only on AMD Instinct MI300X.
+.. [#mi300x] Oracle Linux and Azure Linux are supported only on AMD Instinct MI300X.
+.. [#single-node] Debian 12 is supported only on AMD Instinct MI300X for single-node functionality. 
 .. [#mi300_620] **For ROCm 6.2.0** - MI300X (gfx942) is supported on listed operating systems *except* Ubuntu 22.04.5 [6.8 HWE] and Ubuntu 22.04.4 [6.5 HWE].
 .. [#kfd_support] ROCm provides forward and backward compatibility between the AMD Kernel-mode GPU Driver (KMD) and its user space software for +/- 2 releases. These are the compatibility combinations that are currently supported.
 .. [#ROCT-rocr] Starting from ROCm 6.3.0, the ROCT Thunk Interface is included as part of the ROCr runtime package.
@@ -183,6 +187,9 @@ Use this lookup table to confirm which operating system and kernel versions are 
    ,8.9, 5.15.0
    ,,
    `Debian <https://www.debian.org/download>`_,12, 6.1
+   ,,
+   `Azure Linux <https://techcommunity.microsoft.com/blog/linuxandopensourceblog/azure-linux-3-0-now-in-preview-on-azure-kubernetes-service-v1-31/4287229>`_,3.0, 6.6
+   ,,
 
 ..
    Footnotes and ref anchors in below historical tables should be appended with "-past-60", to differentiate from the
@@ -210,7 +217,8 @@ Expand for full historical view of:
 
    .. rubric:: Footnotes
 
-   .. [#mic300x-past-60] Oracle Linux and Debian are supported only on AMD Instinct MI300X.
+   .. [#mi300x-past-60] Oracle Linux and Azure Linux are supported only on AMD Instinct MI300X.
+   .. [#single-node-past-60] Debian 12 is supported only on AMD Instinct MI300X for single-node functionality. 
    .. [#mi300_624-past-60] **For ROCm 6.2.4** - MI300X (gfx942) is supported on listed operating systems *except* Ubuntu 22.04.5 [6.8 HWE] and Ubuntu 22.04.4 [6.5 HWE].
    .. [#mi300_622-past-60] **For ROCm 6.2.2** - MI300X (gfx942) is supported on listed operating systems *except* Ubuntu 22.04.5 [6.8 HWE] and Ubuntu 22.04.4 [6.5 HWE].
    .. [#mi300_621-past-60] **For ROCm 6.2.1** - MI300X (gfx942) is supported on listed operating systems *except* Ubuntu 22.04.5 [6.8 HWE] and Ubuntu 22.04.4 [6.5 HWE].

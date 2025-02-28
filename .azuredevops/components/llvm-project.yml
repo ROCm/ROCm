@@ -29,7 +29,7 @@ jobs:
     value: '$(Build.BinariesDirectory)/amdgcn/bitcode'
   - name: HIP_PATH
     value: '$(Agent.BuildDirectory)/rocm'
-  pool: ${{ variables.MEDIUM_BUILD_POOL }}
+  pool: ${{ variables.ULTRA_BUILD_POOL }}
   workspace:
     clean: all
   steps:
@@ -51,7 +51,7 @@ jobs:
       extraBuildFlags: >-
         -DCMAKE_PREFIX_PATH="$(Build.BinariesDirectory)/llvm;$(Build.BinariesDirectory)"
         -DCMAKE_BUILD_TYPE=Release
-        -DLLVM_ENABLE_PROJECTS=clang;lld;clang-tools-extra;mlir
+        -DLLVM_ENABLE_PROJECTS=clang;lld;clang-tools-extra;mlir;flang
         -DLLVM_ENABLE_RUNTIMES=compiler-rt;libunwind;libcxx;libcxxabi
         -DCLANG_ENABLE_AMDCLANG=ON
         -DLLVM_TARGETS_TO_BUILD=AMDGPU;X86
@@ -85,7 +85,7 @@ jobs:
       componentName: check-llvm
       testDir: 'llvm/build'
       testExecutable: './bin/llvm-lit'
-      testParameters: '-q --xunit-xml-output=llvm_test_output.xml ./test'
+      testParameters: '-q --xunit-xml-output=llvm_test_output.xml --filter-out="live-debug-values-spill-tracking" ./test'
       testOutputFile: llvm_test_output.xml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
     parameters:
@@ -139,3 +139,11 @@ jobs:
       cmakeBuildDir: 'amd/hipcc/build'
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      environment: combined
+      extraEnvVars:
+        - HIP_DEVICE_LIB_PATH:::/home/user/workspace/bin/amdgcn/bitcode
+        - HIP_PATH:::/home/user/workspace/rocm

@@ -52,6 +52,8 @@ jobs:
     matrix:
       gfx942:
         JOB_GPU_TARGET: gfx942
+      gfx90a:
+        JOB_GPU_TARGET: gfx90a
   steps:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
@@ -83,6 +85,13 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      gpuTarget: $(JOB_GPU_TARGET)
+      extraEnvVars:
+        - HIP_ROCCLR_HOME:::/home/user/workspace/rocm
 
 - job: hip_tests_testing
   timeoutInMinutes: 240
@@ -132,3 +141,9 @@ jobs:
     inputs:
       targetType: inline
       script: sudo rm -rf /opt/rocm
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)
+      optSymLink: true

@@ -64,10 +64,10 @@ jobs:
     value: $(Build.BinariesDirectory)/rocm
   - name: TENSILE_ROCM_ASSEMBLER_PATH
     value: $(Agent.BuildDirectory)/rocm/llvm/bin/clang
-  - name: CMAKE_CXX_COMPILER
-    value: $(Agent.BuildDirectory)/rocm/bin/hipcc
   - name: TENSILE_ROCM_OFFLOAD_BUNDLER_PATH
     value: $(Agent.BuildDirectory)/rocm/llvm/bin/clang-offload-bundler
+  - name: ROCM_PATH
+    value: $(Agent.BuildDirectory)/rocm
   pool: ${{ variables.MEDIUM_BUILD_POOL }}
   workspace:
     clean: all
@@ -75,6 +75,8 @@ jobs:
     matrix:
       gfx942:
         JOB_GPU_TARGET: gfx942
+      gfx90a:
+        JOB_GPU_TARGET: gfx90a
   steps:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
@@ -94,11 +96,11 @@ jobs:
     parameters:
       extraBuildFlags: >-
         -DCMAKE_TOOLCHAIN_FILE=toolchain-linux.cmake
-        -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm/llvm;$(Agent.BuildDirectory)/rocm;$(Pipeline.Workspace)/deps-install
+        -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm/llvm;$(Agent.BuildDirectory)/rocm
         -DCMAKE_BUILD_TYPE=Release
-        -DCMAKE_CXX_COMPILER=$(Agent.BuildDirectory)/rocm/bin/hipcc
-        -DCMAKE_C_COMPILER=$(Agent.BuildDirectory)/rocm/bin/hipcc
-        -DAMDGPU_TARGETS=$(JOB_GPU_TARGET)
+        -DCMAKE_CXX_COMPILER=$(Agent.BuildDirectory)/rocm/bin/amdclang++
+        -DCMAKE_C_COMPILER=$(Agent.BuildDirectory)/rocm/bin/amdclang
+        -DGPU_TARGETS=$(JOB_GPU_TARGET)
         -DTensile_CODE_OBJECT_VERSION=default
         -DTensile_LOGIC=asm_full
         -DTensile_SEPARATE_ARCHITECTURES=ON
@@ -115,6 +117,18 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      installAOCL: true
+      gpuTarget: $(JOB_GPU_TARGET)
+      extraEnvVars:
+        - HIP_ROCCLR_HOME:::/home/user/workspace/rocm
+        - TENSILE_ROCM_ASSEMBLER_PATH:::/home/user/workspace/rocm/llvm/bin/clang
+        - TENSILE_ROCM_OFFLOAD_BUNDLER_PATH:::/home/user/workspace/rocm/llvm/bin/clang-offload-bundler
+        - ROCM_PATH:::/home/user/workspace/rocm
 
 - job: rocBLAS_testing
   dependsOn: rocBLAS
@@ -152,3 +166,9 @@ jobs:
       testDir: '$(Agent.BuildDirectory)/rocm/bin'
       testExecutable: './rocblas-test'
       testParameters: '--yaml rocblas_smoke.yaml --gtest_output=xml:./test_output.xml --gtest_color=yes'
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)

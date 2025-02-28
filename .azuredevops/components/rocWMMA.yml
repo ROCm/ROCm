@@ -57,6 +57,8 @@ jobs:
     matrix:
       gfx942:
         JOB_GPU_TARGET: gfx942
+      gfx90a:
+        JOB_GPU_TARGET: gfx90a
   steps:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
@@ -80,6 +82,7 @@ jobs:
         -DROCWMMA_BUILD_SAMPLES=OFF
         -DGPU_TARGETS=$(JOB_GPU_TARGET)
         -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON
+        -DROCM_PLATFORM_VERSION=$(NEXT_RELEASE_VERSION)
         -GNinja
 # gfx1030 not supported in documentation
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
@@ -87,6 +90,11 @@ jobs:
       gpuTarget: $(JOB_GPU_TARGET)
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
+      gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
       gpuTarget: $(JOB_GPU_TARGET)
 
 - job: rocWMMA_testing
@@ -123,3 +131,8 @@ jobs:
     parameters:
       componentName: rocWMMA
       testDir: '$(Agent.BuildDirectory)/rocm/bin/rocwmma'
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)

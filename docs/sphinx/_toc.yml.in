@@ -36,40 +36,67 @@ subtrees:
     title: Use ROCm for AI
     subtrees:
     - entries:
-      - file: how-to/rocm-for-ai/install.rst
-        title: Installation
-      - file: how-to/rocm-for-ai/train-a-model.rst
-        title: Train a model
-      - file: how-to/rocm-for-ai/scale-model-training.rst
-        title: Scale model training
-      - file: how-to/rocm-for-ai/hugging-face-models.rst
-        title: Run models from Hugging Face
-      - file: how-to/rocm-for-ai/deploy-your-model.rst
-        title: Deploy your model
-  - file: how-to/rocm-for-hpc/index.rst
-    title: Use ROCm for HPC
-  - file: how-to/llm-fine-tuning-optimization/index.rst
-    title: Fine-tune LLMs and inference optimization
-    subtrees:
-    - entries:
-      - file: how-to/llm-fine-tuning-optimization/overview.rst
-        title: Conceptual overview
-      - file: how-to/llm-fine-tuning-optimization/fine-tuning-and-inference.rst
+      - file: how-to/rocm-for-ai/training/index.rst
+        title: Training
         subtrees:
         - entries:
-          - file: how-to/llm-fine-tuning-optimization/single-gpu-fine-tuning-and-inference.rst
-            title: Use a single accelerator
-          - file: how-to/llm-fine-tuning-optimization/multi-gpu-fine-tuning-and-inference.rst
-            title: Use multiple accelerators
-      - file: how-to/llm-fine-tuning-optimization/model-quantization.rst
-      - file: how-to/llm-fine-tuning-optimization/model-acceleration-libraries.rst
-      - file: how-to/llm-fine-tuning-optimization/llm-inference-frameworks.rst
-      - file: how-to/llm-fine-tuning-optimization/optimizing-with-composable-kernel.md
-        title: Optimize with Composable Kernel
-      - file: how-to/llm-fine-tuning-optimization/optimizing-triton-kernel.rst
-        title: Optimize Triton kernels
-      - file: how-to/llm-fine-tuning-optimization/profiling-and-debugging.rst
-        title: Profile and debug
+          - file: how-to/rocm-for-ai/training/benchmark-docker/megatron-lm
+            title: Train a model with Megatron-LM
+          - file: how-to/rocm-for-ai/training/benchmark-docker/pytorch-training
+            title: Train a model with PyTorch
+          - file: how-to/rocm-for-ai/training/scale-model-training.rst
+            title: Scale model training
+
+      - file: how-to/rocm-for-ai/fine-tuning/index.rst
+        title: Fine-tuning LLMs
+        subtrees:
+        - entries:
+          - file: how-to/rocm-for-ai/fine-tuning/overview.rst
+            title: Conceptual overview
+          - file: how-to/rocm-for-ai/fine-tuning/fine-tuning-and-inference.rst
+            title: Fine-tuning
+            subtrees:
+            - entries:
+              - file: how-to/rocm-for-ai/fine-tuning/single-gpu-fine-tuning-and-inference.rst
+                title: Use a single accelerator
+              - file: how-to/rocm-for-ai/fine-tuning/multi-gpu-fine-tuning-and-inference.rst
+                title: Use multiple accelerators
+
+      - file: how-to/rocm-for-ai/inference/index.rst
+        title: Inference
+        subtrees:
+        - entries:
+          - file: how-to/rocm-for-ai/inference/install.rst
+            title: Installation
+          - file: how-to/rocm-for-ai/inference/hugging-face-models.rst
+            title: Run models from Hugging Face
+          - file: how-to/rocm-for-ai/inference/llm-inference-frameworks.rst
+            title: LLM inference frameworks
+          - file: how-to/rocm-for-ai/inference/vllm-benchmark.rst
+            title: Performance validation
+          - file: how-to/rocm-for-ai/inference/deploy-your-model.rst
+            title: Deploy your model
+
+      - file: how-to/rocm-for-ai/inference-optimization/index.rst
+        title: Inference optimization
+        subtrees:
+        - entries:
+          - file: how-to/rocm-for-ai/inference-optimization/model-quantization.rst
+          - file: how-to/rocm-for-ai/inference-optimization/model-acceleration-libraries.rst
+          - file: how-to/rocm-for-ai/inference-optimization/optimizing-with-composable-kernel.md
+            title: Optimize with Composable Kernel
+          - file: how-to/rocm-for-ai/inference-optimization/optimizing-triton-kernel.rst
+            title: Optimize Triton kernels
+          - file: how-to/rocm-for-ai/inference-optimization/profiling-and-debugging.rst
+            title: Profile and debug
+          - file: how-to/rocm-for-ai/inference-optimization/workload.rst
+            title: Workload tuning
+
+      - url: https://rocm.docs.amd.com/projects/ai-developer-hub/en/latest/
+        title: AI tutorials
+
+  - file: how-to/rocm-for-hpc/index.rst
+    title: Use ROCm for HPC
   - file: how-to/system-optimization/index.rst
     title: System optimization
     subtrees:
@@ -86,14 +113,6 @@ subtrees:
         title: AMD RDNA 2
   - file: how-to/tuning-guides/mi300x/index.rst
     title: AMD MI300X performance validation and tuning
-    subtrees:
-    - entries:
-      - file: how-to/performance-validation/mi300x/vllm-benchmark.rst
-        title: Performance validation
-      - file: how-to/tuning-guides/mi300x/system.rst
-        title: System tuning
-      - file: how-to/tuning-guides/mi300x/workload.rst
-        title: Workload tuning
   - file: how-to/system-debugging.md
   - file: conceptual/compiler-topics.md
     title: Use advanced compiler features
@@ -111,6 +130,7 @@ subtrees:
     title: Troubleshoot BAR access limitation  
   - url: https://github.com/amd/rocm-examples
     title: ROCm examples
+
 
 - caption: Conceptual
   entries:
@@ -134,7 +154,7 @@ subtrees:
         - entries:
           - url: https://www.amd.com/system/files/TechDocs/instinct-mi200-cdna2-instruction-set-architecture.pdf
             title: AMD Instinct MI200/CDNA2 ISA
-          - url: https://www.amd.com/system/files/documents/amd-cdna2-white-paper.pdf
+          - url: https://www.amd.com/content/dam/amd/en/documents/instinct-business-docs/white-papers/amd-cdna2-white-paper.pdf
             title: White paper
       - file: conceptual/gpu-arch/mi100.md
         title: MI100 microarchitecture
@@ -142,7 +162,7 @@ subtrees:
         - entries:
           - url: https://www.amd.com/system/files/TechDocs/instinct-mi100-cdna1-shader-instruction-set-architecture%C2%A0.pdf
             title: AMD Instinct MI100/CDNA1 ISA
-          - url: https://www.amd.com/system/files/documents/amd-cdna-whitepaper.pdf
+          - url: https://www.amd.com/content/dam/amd/en/documents/instinct-business-docs/white-papers/amd-cdna-white-paper.pdf
             title: White paper
   - file: conceptual/iommu.rst
     title: Input-Output Memory Management Unit (IOMMU)

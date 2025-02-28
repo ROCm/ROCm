@@ -8,10 +8,13 @@ parameters:
 - name: aptPackages
   type: object
   default:
+    - cmake
     - g++
     - libdrm-dev
     - libelf-dev
     - libnuma-dev
+    - pkg-config
+    - python3-pip
 - name: rocmDependencies
   type: object
   default:
@@ -29,8 +32,7 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  pool:
-    vmImage: ${{ variables.BASE_BUILD_POOL }}
+  pool: ${{ variables.LOW_BUILD_POOL }}
   workspace:
     clean: all
   steps:
@@ -53,6 +55,10 @@ jobs:
         -DCMAKE_BUILD_TYPE=Release
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
 
 - job: ROCR_Runtime_testing
   dependsOn: ROCR_Runtime
@@ -117,16 +123,13 @@ jobs:
       targetType: 'inline'
       workingDirectory: $(Build.SourcesDirectory)/rocrtst/suites/test_common
       script: |
-        sudo rm -rf $(Agent.BuildDirectory)/external/llvm-project
-        mkdir -p $(Agent.BuildDirectory)/external/llvm-project/clang/lib
-        sudo ln -s $(Agent.BuildDirectory)/rocm/llvm/lib/clang/20/include $(Agent.BuildDirectory)/external/llvm-project/clang/lib/Headers
         mkdir build && cd build
         cmake .. \
           -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm \
           -DTARGET_DEVICES=$(JOB_GPU_TARGET) \
           -DROCM_DIR=$(Agent.BuildDirectory)/rocm \
           -DLLVM_DIR=$(Agent.BuildDirectory)/rocm/llvm/bin \
-          -DOPENCL_DIR=$(Agent.BuildDirectory)/rocm/llvm/bin
+          -DOPENCL_INC_DIR=$(Agent.BuildDirectory)/rocm/llvm/lib/clang/21/include
         make
         make rocrtst_kernels
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
@@ -135,3 +138,9 @@ jobs:
       testExecutable: ./rocrtst64
       testParameters: '--gtest_filter="-rocrtstNeg.Memory_Negative_Tests:rocrtstFunc.Memory_Max_Mem" --gtest_output=xml:./test_output.xml --gtest_color=yes'
       testDir: $(Build.SourcesDirectory)/rocrtst/suites/test_common/build/$(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)
+# docker image will be missing libhwloc5

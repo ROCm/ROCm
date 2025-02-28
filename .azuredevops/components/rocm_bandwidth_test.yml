@@ -40,8 +40,7 @@ jobs:
     value: $(Agent.BuildDirectory)/rocm
   - name: ROCR_LIB_DIR
     value: $(Agent.BuildDirectory)/rocm
-  pool:
-    vmImage: ${{ variables.BASE_BUILD_POOL }}
+  pool: ${{ variables.LOW_BUILD_POOL }}
   workspace:
     clean: all
   steps:
@@ -66,6 +65,14 @@ jobs:
         -GNinja
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      extraEnvVars:
+        - ROCR_INC_DIR:::/home/user/workspace/rocm
+        - ROCR_LIB_DIR:::/home/user/workspace/rocm
 
 - job: rocm_bandwidth_test_testing
   dependsOn: rocm_bandwidth_test
@@ -101,3 +108,9 @@ jobs:
       testExecutable: './rocm/bin/rocm-bandwidth-test'
       testParameters: ''
       testPublishResults: false
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)

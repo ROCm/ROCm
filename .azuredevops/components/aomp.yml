@@ -436,6 +436,11 @@ jobs:
       RemoveDotFiles: true
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      optSymLink: true
 
 - job: aomp_testing
   dependsOn: aomp
@@ -510,3 +515,9 @@ jobs:
       SKIP_TEST_PACKAGE: 1
       MAINLINE_BUILD: 1
       SUITE_LIST: smoke
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)
+      optSymLink: true

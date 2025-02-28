@@ -92,6 +92,7 @@ jobs:
         sudo rm -rf /opt/rocm
         sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
         echo "##vso[task.prependpath]/opt/rocm/bin"
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
   - task: Bash@3
     displayName: check-gdb
@@ -106,3 +107,10 @@ jobs:
       targetType: inline
       script: find -name gdb.log -exec cat {} \;
       workingDirectory: $(Build.SourcesDirectory)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      environment: combined
+      gpuTarget: $(JOB_GPU_TARGET)
+      extraEnvVars:
+        - PKG_CONFIG_PATH:::/home/user/workspace/rocm/share/pkgconfig

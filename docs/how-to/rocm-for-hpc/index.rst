@@ -1,6 +1,6 @@
 .. meta::
-   :description: How to use ROCm for HPC
-   :keywords: ROCm, AI, high performance computing, HPC
+   :description: How to use ROCm for high-performance computing (HPC).
+   :keywords: ROCm, AI, high performance computing, HPC, science, scientific
 
 ******************
 Using ROCm for HPC

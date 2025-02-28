@@ -1,6 +1,6 @@
 .. meta::
-   :description: Learn about AMD Instinct MI300X system settings, performance tuning, and workload optimization for HPC and AI.
-   :keywords: AMD, Instinct, MI300X, HPC, tuning, accelerator, GPU, resource utilization
+   :description: How to configure MI300X accelerators to fully leverage their capabilities and achieve optimal performance.
+   :keywords: ROCm, AI, machine learning, MI300X, LLM, usage, tutorial, optimization, tuning
 
 ************************
 AMD MI300X tuning guides
@@ -12,8 +12,8 @@ accelerators. They include detailed instructions on system settings and
 application tuning suggestions to help you fully leverage the capabilities of
 these accelerators, thereby achieving optimal performance.
 
-* :doc:`/how-to/performance-validation/mi300x/vllm-benchmark`
+* :doc:`../../rocm-for-ai/inference/vllm-benchmark`
 
-* :doc:`/how-to/tuning-guides/mi300x/system`
+* :doc:`../../system-optimization/mi300x`
 
-* :doc:`/how-to/tuning-guides/mi300x/workload`
+* :doc:`../../rocm-for-ai/inference-optimization/workload`

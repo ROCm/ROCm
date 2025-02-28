@@ -32,6 +32,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - L1 Instruction Cache (KiB)
           - VGPR File (KiB)
           - SGPR File (KiB)
+          - GFXIP Major version
+          - GFXIP Minor version
         *
           - MI325X
           - CDNA3
@@ -47,6 +49,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 64 per 2 CUs
           - 512
           - 12.5
+          - 9
+          - 4
         *
           - MI300X
           - CDNA3
@@ -62,6 +66,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 64 per 2 CUs
           - 512
           - 12.5
+          - 9
+          - 4
         *
           - MI300A
           - CDNA3
@@ -77,6 +83,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 64 per 2 CUs
           - 512
           - 12.5
+          - 9
+          - 4
         *
           - MI250X
           - CDNA2
@@ -92,6 +100,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32 per 2 CUs
           - 512
           - 12.5
+          - 9
+          - 0
         *
           - MI250
           - CDNA2
@@ -107,6 +117,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32 per 2 CUs
           - 512
           - 12.5
+          - 9
+          - 0
         *
           - MI210
           - CDNA2
@@ -122,6 +134,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32 per 2 CUs
           - 512
           - 12.5
+          - 9
+          - 0
         *
           - MI100
           - CDNA
@@ -137,6 +151,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32 per 3 CUs
           - 256 VGPR and 256 AccVGPR
           - 12.5
+          - 9
+          - 0
         *
           - MI60
           - GCN5.1
@@ -152,6 +168,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32 per 3 CUs
           - 256
           - 12.5
+          - 9
+          - 0
         *
           - MI50 (32GB)
           - GCN5.1
@@ -167,6 +185,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32 per 3 CUs
           - 256
           - 12.5
+          - 9
+          - 0
         *
           - MI50 (16GB)
           - GCN5.1
@@ -182,6 +202,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32 per 3 CUs
           - 256
           - 12.5
+          - 9
+          - 0
         *
           - MI25
           - GCN5.0
@@ -197,6 +219,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32 per 3 CUs
           - 256
           - 12.5
+          - 9
+          - 0
         *
           - MI8
           - GCN3.0
@@ -212,6 +236,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32 per 4 CUs
           - 256
           - 12.5
+          - 8
+          - 0
         *
           - MI6
           - GCN4.0
@@ -227,6 +253,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32 per 4 CUs
           - 256
           - 12.5
+          - 8
+          - 0
 
   .. tab-item:: AMD Radeon PRO GPUs
 
@@ -238,6 +266,7 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - Model
           - Architecture
           - LLVM target name
+
           - VRAM (GiB)
           - Compute Units
           - Wavefront Size
@@ -250,6 +279,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - L0 Instruction Cache (KiB)
           - VGPR File (KiB)
           - SGPR File (KiB)
+          - GFXIP Major version
+          - GFXIP Minor version
         *
           - Radeon PRO V710
           - RDNA3
@@ -266,6 +297,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32
           - 768
           - 16
+          - 11
+          - 0
         *
           - Radeon PRO W7900 Dual Slot
           - RDNA3
@@ -282,6 +315,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32
           - 768
           - 16
+          - 11
+          - 0
         *
           - Radeon PRO W7900
           - RDNA3
@@ -298,6 +333,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32
           - 768
           - 16
+          - 11
+          - 0
         *
           - Radeon PRO W7800
           - RDNA3
@@ -314,6 +351,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32
           - 768
           - 16
+          - 11
+          - 0
         *
           - Radeon PRO W7700
           - RDNA3
@@ -330,6 +369,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32
           - 768
           - 16
+          - 11
+          - 0
         *
           - Radeon PRO W6800
           - RDNA2
@@ -346,6 +387,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32
           - 512
           - 16
+          - 10
+          - 3
         *
           - Radeon PRO W6600
           - RDNA2
@@ -362,6 +405,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32
           - 512
           - 16
+          - 10
+          - 3
         *
           - Radeon PRO V620
           - RDNA2
@@ -378,6 +423,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32
           - 512
           - 16
+          - 10
+          - 3
         *
           - Radeon Pro W5500
           - RDNA
@@ -394,6 +441,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32
           - 512
           - 20
+          - 10
+          - 1
         *
           - Radeon Pro VII
           - GCN5.1
@@ -410,6 +459,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32 per 3 CUs
           - 256
           - 12.5
+          - 9
+          - 0
 
   .. tab-item:: AMD Radeon GPUs
 
@@ -433,6 +484,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - L0 Instruction Cache (KiB)
           - VGPR File (KiB)
           - SGPR File (KiB)
+          - GFXIP Major version
+          - GFXIP Minor version
         *
           - Radeon RX 7900 XTX
           - RDNA3
@@ -449,6 +502,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32
           - 768
           - 16
+          - 11
+          - 0
         *
           - Radeon RX 7900 XT
           - RDNA3
@@ -465,6 +520,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32
           - 768
           - 16
+          - 11
+          - 0
         *
           - Radeon RX 7900 GRE
           - RDNA3
@@ -481,6 +538,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32
           - 768
           - 16
+          - 11
+          - 0
         *
           - Radeon RX 7800 XT
           - RDNA3
@@ -497,6 +556,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32
           - 768
           - 16
+          - 11
+          - 0
         *
           - Radeon RX 7700 XT
           - RDNA3
@@ -513,6 +574,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32
           - 768
           - 16
+          - 11
+          - 0
         *
           - Radeon RX 7600
           - RDNA3
@@ -529,6 +592,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32
           - 512
           - 16
+          - 11
+          - 0
         *
           - Radeon RX 6950 XT
           - RDNA2
@@ -545,6 +610,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32
           - 512
           - 16
+          - 10
+          - 3
         *
           - Radeon RX 6900 XT
           - RDNA2
@@ -561,6 +628,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32
           - 512
           - 16
+          - 10
+          - 3
         *
           - Radeon RX 6800 XT
           - RDNA2
@@ -577,6 +646,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32
           - 512
           - 16
+          - 10
+          - 3
         *
           - Radeon RX 6800
           - RDNA2
@@ -593,6 +664,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32
           - 512
           - 16
+          - 10
+          - 3
         *
           - Radeon RX 6750 XT
           - RDNA2
@@ -609,6 +682,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32
           - 512
           - 16
+          - 10
+          - 3
         *
           - Radeon RX 6700 XT
           - RDNA2
@@ -625,6 +700,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32
           - 512
           - 16
+          - 10
+          - 3
         *
           - Radeon RX 6700
           - RDNA2
@@ -641,6 +718,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32
           - 512
           - 16
+          - 10
+          - 3
         *
           - Radeon RX 6650 XT
           - RDNA2
@@ -657,6 +736,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32
           - 512
           - 16
+          - 10
+          - 3
         *
           - Radeon RX 6600 XT
           - RDNA2
@@ -673,6 +754,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32
           - 512
           - 16
+          - 10
+          - 3
         *
           - Radeon RX 6600
           - RDNA2
@@ -689,6 +772,8 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32
           - 512
           - 16
+          - 10
+          - 3
         *
           - Radeon VII
           - GCN5.1
@@ -705,12 +790,14 @@ For more information about ROCm hardware compatibility, see the ROCm `Compatibil
           - 32 per 3 CUs
           - 256
           - 12.5
+          - 9
+          - 0
 
 Glossary
 ========
 
 For more information about the terms used, see the
-:ref:`specific documents and guides <gpu-arch-documentation>`, or 
+:ref:`specific documents and guides <gpu-arch-documentation>`, or
 :doc:`Understanding the HIP programming model<hip:understand/programming_model>`.
 
 **LLVM target name**
@@ -799,6 +886,26 @@ Purpose Vector Registers, used specifically in matrix instructions.
 
 Size of the Scalar General Purpose Register (SGPR) file. Holds data used in
 scalar instructions.
+
+**GFXIP**
+
+GFXIP (Graphics IP) is a versioning system used by AMD to identify the GPU
+architecture and its instruction set. It helps categorize different generations
+of GPUs and their feature sets.
+
+**GFXIP major version**
+
+Defines the GPU's core instruction set and architecture, which determines
+compatibility with software stacks such as HIP and OpenCL. For example, a GFXIP
+11 major version corresponds to the RDNA 3 (Navi 3x) architecture, influencing
+driver support and available compute features.
+
+**GFXIP minor version**
+
+Represents specific variations within a GFXIP major version and affects feature sets,
+optimizations, and driver behavior in software stacks such as HIP and OpenCL. Different
+GPU models within the same major version can have unique capabilities, impacting
+performance and supported instructions.
 
 **GCD**
 

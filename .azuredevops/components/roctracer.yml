@@ -9,9 +9,11 @@ parameters:
   type: object
   default:
     - cmake
-    - ninja-build
     - doxygen
     - graphviz
+    - libdrm-amdgpu-dev
+    - ninja-build
+    - python3-pip
 - name: pipModules
   type: object
   default:
@@ -41,19 +43,21 @@ jobs:
   - template: /.azuredevops/variables-global.yml
   - name: HIP_ROCCLR_HOME
     value: $(Build.BinariesDirectory)/rocm
-  pool:
-    vmImage: ${{ variables.BASE_BUILD_POOL }}
+  pool: ${{ variables.LOW_BUILD_POOL }}
   workspace:
     clean: all
   strategy:
     matrix:
       gfx942:
         JOB_GPU_TARGET: gfx942
+      gfx90a:
+        JOB_GPU_TARGET: gfx90a
   steps:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
       pipModules: ${{ parameters.pipModules }}
+      registerROCmPackages: true
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/checkout.yml
     parameters:
@@ -79,6 +83,13 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      gpuTarget: $(JOB_GPU_TARGET)
+      registerROCmPackages: true
 
 - job: roctracer_testing
   dependsOn: roctracer
@@ -98,6 +109,8 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      registerROCmPackages: true
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/local-artifact-download.yml
     parameters:
@@ -116,3 +129,10 @@ jobs:
       testParameters: ''
       testDir: $(Agent.BuildDirectory)
       testPublishResults: false
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)
+      registerROCmPackages: true

@@ -59,14 +59,10 @@ jobs:
     value: $(Build.BinariesDirectory)/rocm
   - name: TENSILE_ROCM_ASSEMBLER_PATH
     value: $(Agent.BuildDirectory)/rocm/llvm/bin/amdclang
-  - name: CMAKE_CXX_COMPILER
-    value: $(Agent.BuildDirectory)/rocm/bin/hipcc
   - name: TENSILE_ROCM_OFFLOAD_BUNDLER_PATH
     value: $(Agent.BuildDirectory)/rocm/llvm/bin/clang-offload-bundler
-  - name: TENSILE_ROCM_PATH
-    value: $(Agent.BuildDirectory)/rocm/bin/hipcc
-  - name: PATH
-    value: $(Agent.BuildDirectory)/rocm/llvm/bin:$(Agent.BuildDirectory)/rocm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+  - name: ROCM_PATH
+    value: $(Agent.BuildDirectory)/rocm
   - name: DAY_STRING
     value: $[format('{0:ddMMyyyy}', pipeline.startTime)]
   pool: ${{ variables.ULTRA_BUILD_POOL }}
@@ -76,6 +72,8 @@ jobs:
     matrix:
       gfx942:
         JOB_GPU_TARGET: gfx942
+      gfx90a:
+        JOB_GPU_TARGET: gfx90a
   steps:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
@@ -143,7 +141,21 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
-
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      gpuTarget: $(JOB_GPU_TARGET)
+      extraPaths: /home/user/workspace/rocm/llvm/bin:/home/user/workspace/rocm/bin
+      installLatestCMake: true
+      extraEnvVars:
+        - HIP_ROCCLR_HOME:::/home/user/workspace/rocm
+        - TENSILE_ROCM_ASSEMBLER_PATH:::/home/user/workspace/rocm/llvm/bin/amdclang
+        - TENSILE_ROCM_OFFLOAD_BUNDLER_PATH:::/home/user/workspace/rocm/llvm/bin/clang-offload-bundler
+        - ROCM_PATH:::/home/user/workspace/rocm
+      extraCopyDirectories:
+        - deps
 
 - job: hipBLASLt_testing
   dependsOn: hipBLASLt
@@ -181,3 +193,9 @@ jobs:
       testDir: '$(Agent.BuildDirectory)/rocm/bin'
       testExecutable: './hipblaslt-test'
       testParameters: '--gtest_output=xml:./test_output.xml --gtest_color=yes --gtest_filter=*pre_checkin*'
+  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+    parameters:
+      aptPackages: ${{ parameters.aptPackages }}
+      pipModules: ${{ parameters.pipModules }}
+      environment: test
+      gpuTarget: $(JOB_GPU_TARGET)
