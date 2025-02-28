@@ -481,6 +481,7 @@ ZenDNN
 accuracies
 activations
 addr
+ai
 alloc
 allocatable
 allocator
@@ -546,6 +547,7 @@ cTDP
 dataset
 datasets
 dataspace
+datatemplate
 datatype
 datatypes
 dbgapi
@@ -574,6 +576,7 @@ el
 embeddings
 enablement
 encodings
+endfor
 endpgm
 enqueue
 env
@@ -694,6 +697,7 @@ pageable
 pallas
 parallelization
 parallelizing
+param
 parameterization
 passthrough
 perfcounter
@@ -811,6 +815,7 @@ supercomputing
 symlink
 symlinks
 sys
+tabindex
 td
 tensorfloat
 th
@@ -856,6 +861,7 @@ vectorizes
 virtualize
 virtualized
 vjxb
+vllm
 voxel
 walkthrough
 walkthroughs
