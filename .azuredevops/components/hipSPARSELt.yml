@@ -105,6 +105,7 @@ jobs:
         -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_CXX_COMPILER=$(Agent.BuildDirectory)/rocm/llvm/bin/amdclang++
         -DCMAKE_C_COMPILER=$(Agent.BuildDirectory)/rocm/llvm/bin/amdclang
+        -DCMAKE_Fortran_COMPILER=f95
         -DAMDGPU_TARGETS=$(JOB_GPU_TARGET)
         -DTensile_LOGIC=
         -DTensile_CPU_THREADS=
