@@ -66,11 +66,9 @@ project-specific steps. Refer to each repository's PR process for any additional
   during our release cycle, as coordinated by the maintainer
 * We'll inform you once your change is committed
 
-:::{important}
 By creating a PR, you agree to allow your contribution to be licensed under the
 terms of the LICENSE.txt file in the corresponding repository. Different repositories may use different
-licenses.
-:::
+licenses. [!IMPORTANT]
 
 You can look up each license on the [ROCm licensing](https://rocm.docs.amd.com/en/latest/about/license.html) page.
 
