@@ -50,8 +50,8 @@ article_pages = [
     {"file": "how-to/rocm-for-ai/training/index", "os": ["linux"]},
     {"file": "how-to/rocm-for-ai/training/train-a-model", "os": ["linux"]},
     {"file": "how-to/rocm-for-ai/training/prerequisite-system-validation", "os": ["linux"]},
-    {"file": "how-to/rocm-for-ai/training/train-a-model/benchmark-docker/megatron-lm", "os": ["linux"]},
-    {"file": "how-to/rocm-for-ai/training/train-a-model/benchmark-docker/pytorch-training", "os": ["linux"]},
+    {"file": "how-to/rocm-for-ai/training/benchmark-docker/megatron-lm", "os": ["linux"]},
+    {"file": "how-to/rocm-for-ai/training/benchmark-docker/pytorch-training", "os": ["linux"]},
     {"file": "how-to/rocm-for-ai/training/scale-model-training", "os": ["linux"]},
 
     {"file": "how-to/rocm-for-ai/fine-tuning/index", "os": ["linux"]},
