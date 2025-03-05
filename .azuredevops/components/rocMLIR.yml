@@ -21,9 +21,9 @@ parameters:
 - name: rocmDependencies
   type: object
   default:
+    - clr
     - llvm-project
     - rocm-cmake
-    - clr
     - rocminfo
     - rocprofiler-register
     - ROCR-Runtime
@@ -56,6 +56,7 @@ jobs:
         -DCMAKE_CXX_COMPILER=$(Agent.BuildDirectory)/rocm/llvm/bin/clang++
         -DCMAKE_C_COMPILER=$(Agent.BuildDirectory)/rocm/llvm/bin/clang
         -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm
+        -DROCM_PATH=$(Agent.BuildDirectory)/rocm
         -DBUILD_FAT_LIBROCKCOMPILER=1
         -GNinja
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
@@ -81,6 +82,9 @@ jobs:
       gfx942:
         JOB_GPU_TARGET: gfx942
         JOB_TEST_POOL: ${{ variables.GFX942_TEST_POOL }}
+      gfx90a:
+        JOB_GPU_TARGET: gfx90a
+        JOB_TEST_POOL: ${{ variables.GFX90A_TEST_POOL }}
   steps:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
@@ -111,6 +115,7 @@ jobs:
         -DCMAKE_CXX_COMPILER=$(Agent.BuildDirectory)/rocm/llvm/bin/clang++
         -DCMAKE_C_COMPILER=$(Agent.BuildDirectory)/rocm/llvm/bin/clang
         -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm
+        -DROCM_PATH=$(Agent.BuildDirectory)/rocm
         -DAMDGPU_TARGETS=$(JOB_GPU_TARGET)
         -DROCM_TEST_CHIPSET=$(JOB_GPU_TARGET)
         -GNinja
