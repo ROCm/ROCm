@@ -4,6 +4,8 @@
     :description: PyTorch compatibility
     :keywords: GPU, PyTorch compatibility
 
+.. version-set:: rocm_version latest
+
 ********************************************************************************
 PyTorch compatibility
 ********************************************************************************
@@ -200,7 +202,8 @@ Critical ROCm libraries for PyTorch
 
 The functionality of PyTorch with ROCm is determined by its underlying library
 dependencies. These critical ROCm components affect the capabilities,
-performance, and feature set available to developers.
+performance, and feature set available to developers. The versions described
+are available in ROCm :version:`rocm_version`.
 
 .. list-table::
     :header-rows: 1
@@ -210,28 +213,28 @@ performance, and feature set available to developers.
       - Purpose
       - Used in
     * - `Composable Kernel <https://github.com/ROCm/composable_kernel>`_
-      - 1.1.0
+      - :version-ref:`"Composable Kernel" rocm_version`
       - Enables faster execution of core operations like matrix multiplication
         (GEMM), convolutions and transformations.
       - Speeds up ``torch.permute``, ``torch.view``, ``torch.matmul``,
         ``torch.mm``, ``torch.bmm``, ``torch.nn.Conv2d``, ``torch.nn.Conv3d``
         and ``torch.nn.MultiheadAttention``.
     * - `hipBLAS <https://github.com/ROCm/hipBLAS>`_
-      - 2.3.0
+      - :version-ref:`hipBLAS rocm_version`
       - Provides GPU-accelerated Basic Linear Algebra Subprograms (BLAS) for
         matrix and vector operations.
       - Supports operations like matrix multiplication, matrix-vector products,
         and tensor contractions. Utilized in both dense and batched linear
         algebra operations.
     * - `hipBLASLt <https://github.com/ROCm/hipBLASLt>`_
-      - 0.10.0
+      - :version-ref:`hipBLASLt rocm_version`
       - hipBLASLt is an extension of the hipBLAS library, providing additional
         features like epilogues fused into the matrix multiplication kernel or
         use of integer tensor cores.
       - It accelerates operations like ``torch.matmul``, ``torch.mm``, and the
         matrix multiplications used in convolutional and linear layers.
     * - `hipCUB <https://github.com/ROCm/hipCUB>`_
-      - 3.3.0
+      - :version-ref:`hipCUB rocm_version`
       - Provides a C++ template library for parallel algorithms for reduction,
         scan, sort and select.
       - Supports operations like ``torch.sum``, ``torch.cumsum``, ``torch.sort``
@@ -239,93 +242,93 @@ performance, and feature set available to developers.
         irregular shapes often involve scanning, sorting, and filtering, which
         hipCUB handles efficiently.
     * - `hipFFT <https://github.com/ROCm/hipFFT>`_
-      - 1.0.17
+      - :version-ref:`hipFFT rocm_version`
       - Provides GPU-accelerated Fast Fourier Transform (FFT) operations.
       - Used in functions like the ``torch.fft`` module.
     * - `hipRAND <https://github.com/ROCm/hipRAND>`_
-      - 2.11.0
+      - :version-ref:`hipRAND rocm_version`
       - Provides fast random number generation for GPUs.
       - The ``torch.rand``, ``torch.randn`` and stochastic layers like
         ``torch.nn.Dropout``.
     * - `hipSOLVER <https://github.com/ROCm/hipSOLVER>`_
-      - 2.3.0
+      - :version-ref:`hipSOLVER rocm_version`
       - Provides GPU-accelerated solvers for linear systems, eigenvalues, and
         singular value decompositions (SVD).
       - Supports functions like ``torch.linalg.solve``,
         ``torch.linalg.eig``, and ``torch.linalg.svd``.
     * - `hipSPARSE <https://github.com/ROCm/hipSPARSE>`_
-      - 3.1.2
+      - :version-ref:`hipSPARSE rocm_version`
       - Accelerates operations on sparse matrices, such as sparse matrix-vector
         or matrix-matrix products.
       - Sparse tensor operations ``torch.sparse``.
     * - `hipSPARSELt <https://github.com/ROCm/hipSPARSELt>`_
-      - 0.2.2
+      - :version-ref:`hipSPARSELt rocm_version`
       - Accelerates operations on sparse matrices, such as sparse matrix-vector
         or matrix-matrix products.
       - Sparse tensor operations ``torch.sparse``.
     * - `hipTensor <https://github.com/ROCm/hipTensor>`_
-      - 1.4.0
+      - :version-ref:`hipTensor rocm_version`
       - Optimizes for high-performance tensor operations, such as contractions.
       - Accelerates tensor algebra, especially in deep learning and scientific
         computing.
     * - `MIOpen <https://github.com/ROCm/MIOpen>`_
-      - 3.3.0
+      - :version-ref:`MIOpen rocm_version`
       - Optimizes deep learning primitives such as convolutions, pooling,
         normalization, and activation functions.
       - Speeds up convolutional neural networks (CNNs), recurrent neural
         networks (RNNs), and other layers. Used in operations like
         ``torch.nn.Conv2d``, ``torch.nn.ReLU``, and ``torch.nn.LSTM``.
     * - `MIGraphX <https://github.com/ROCm/AMDMIGraphX>`_
-      - 2.11.0
+      - :version-ref:`MIGraphX rocm_version`
       - Adds graph-level optimizations, ONNX models and mixed precision support
         and enable Ahead-of-Time (AOT) Compilation.
       - Speeds up inference models and executes ONNX models for
         compatibility with other frameworks.
         ``torch.nn.Conv2d``, ``torch.nn.ReLU``, and ``torch.nn.LSTM``.
     * - `MIVisionX <https://github.com/ROCm/MIVisionX>`_
-      - 3.1.0
+      - :version-ref:`MIVisionX rocm_version`
       - Optimizes acceleration for computer vision and AI workloads like
         preprocessing, augmentation, and inferencing.
       - Faster data preprocessing and augmentation pipelines for datasets like
         ImageNet or COCO and easy to integrate into PyTorch's ``torch.utils.data``
         and ``torchvision`` workflows.
     * - `rocAL <https://github.com/ROCm/rocAL>`_
-      - 2.1.0
+      - :version-ref:`rocAL rocm_version`
       - Accelerates the data pipeline by offloading intensive preprocessing and
         augmentation tasks. rocAL is part of MIVisionX.
       - Easy to integrate into PyTorch's ``torch.utils.data`` and
         ``torchvision`` data load workloads.
     * - `RCCL <https://github.com/ROCm/rccl>`_
-      - 2.21.5
+      - :version-ref:`RCCL rocm_version`
       - Optimizes for multi-GPU communication for operations like AllReduce and
         Broadcast.
       - Distributed data parallel training (``torch.nn.parallel.DistributedDataParallel``).
         Handles communication in multi-GPU setups.
     * - `rocDecode <https://github.com/ROCm/rocDecode>`_
-      - 0.8.0
+      - :version-ref:`rocDecode rocm_version`
       - Provides hardware-accelerated data decoding capabilities, particularly
         for image, video, and other dataset formats.
       - Can be integrated in ``torch.utils.data``, ``torchvision.transforms``
         and ``torch.distributed``.
     * - `rocJPEG <https://github.com/ROCm/rocJPEG>`_
-      - 0.6.0
+      - :version-ref:`rocJPEG rocm_version`
       - Provides hardware-accelerated JPEG image decoding and encoding.
       - GPU accelerated ``torchvision.io.decode_jpeg`` and
         ``torchvision.io.encode_jpeg`` and can be integrated in
         ``torch.utils.data`` and ``torchvision``.
     * - `RPP <https://github.com/ROCm/RPP>`_
-      - 1.9.1
+      - :version-ref:`RPP rocm_version`
       - Speeds up data augmentation, transformation, and other preprocessing steps.
       - Easy to integrate into PyTorch's ``torch.utils.data`` and
         ``torchvision`` data load workloads.
     * - `rocThrust <https://github.com/ROCm/rocThrust>`_
-      - 3.3.0
+      - :version-ref:`rocThrust rocm_version`
       - Provides a C++ template library for parallel algorithms like sorting,
         reduction, and scanning.
       - Utilized in backend operations for tensor computations requiring
         parallel processing.
     * - `rocWMMA <https://github.com/ROCm/rocWMMA>`_
-      - 1.6.0
+      - :version-ref:`rocWMMA rocm_version`
       - Accelerates warp-level matrix-multiply and matrix-accumulate to speed up matrix
         multiplication (GEMM) and accumulation operations with mixed precision
         support.
