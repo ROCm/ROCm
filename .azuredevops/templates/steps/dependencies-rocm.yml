@@ -288,7 +288,7 @@ parameters:
     ROCR-Runtime:
       pipelineId: $(ROCR_RUNTIME_PIPELINE_ID)
       stagingBranch: amd-staging
-      mainlineBranch: amd-master
+      mainlineBranch: amd-mainline
       hasGpuTarget: false
     rocRAND:
       pipelineId: $(ROCRAND_PIPELINE_ID)
