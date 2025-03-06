@@ -116,7 +116,7 @@ jobs:
     parameters:
       componentName: hipTensor
       testDir: '$(Agent.BuildDirectory)/rocm/bin/hiptensor'
-      testParameters: '-E ".*-extended" -VV --output-on-failure --force-new-ctest-process --output-junit test_output.xml'
+      testParameters: '-E ".*-extended" --output-on-failure --force-new-ctest-process --output-junit test_output.xml'
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
