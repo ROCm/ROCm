@@ -18,6 +18,10 @@ parameters:
   type: object
   default:
     - tomli
+    - numpy
+    - ml_dtypes
+    - scipy
+    - hip-python --index-url https://test.pypi/org/simple
 - name: rocmDependencies
   type: object
   default:
