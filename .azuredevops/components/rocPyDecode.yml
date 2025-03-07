@@ -22,19 +22,20 @@ parameters:
 - name: pipModules
   type: object
   default:
+    - hip-python --extra-index-url https://test.pypi.org/simple
     - numpy
     - pybind11
 - name: rocmDependencies
   type: object
   default:
-    - rocm-cmake
-    - llvm-project
-    - ROCR-Runtime
     - clr
-    - rocminfo
-    - rocm-core
-    - rocprofiler-register
+    - llvm-project
     - rocDecode
+    - rocm-cmake
+    - rocm-core
+    - rocminfo
+    - ROCR-Runtime
+    - rocprofiler-register
 
 jobs:
 - job: rocPyDecode
@@ -55,11 +56,6 @@ jobs:
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
       pipModules: ${{ parameters.pipModules }}
-  - task: Bash@3
-    displayName: 'pip install hip-python'
-    inputs:
-      targetType: inline
-      script: pip install -i https://test.pypi.org/simple hip-python
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/checkout.yml
     parameters:
@@ -183,11 +179,6 @@ jobs:
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
       pipModules: ${{ parameters.pipModules }}
-  - task: Bash@3
-    displayName: 'pip install hip-python'
-    inputs:
-      targetType: inline
-      script: pip install -i https://test.pypi.org/simple hip-python
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
   - task: DownloadPipelineArtifact@2
     displayName: 'Download Pipeline Wheel Files'

@@ -9,15 +9,19 @@ parameters:
   type: object
   default:
     - cmake
-    - ninja-build
     - git
-    - python3-pip
     - libdrm-dev
     - libstdc++-12-dev
+    - ninja-build
+    - python3-pip
 - name: pipModules
   type: object
   default:
+    - hip-python --extra-index-url https://test.pypi.org/simple
+    - ml_dtypes
+    - numpy
     - tomli
+    - scipy
 - name: rocmDependencies
   type: object
   default:
