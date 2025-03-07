@@ -21,7 +21,7 @@ parameters:
     - numpy
     - ml_dtypes
     - scipy
-    - hip-python --index-url https://test.pypi/org/simple
+    - hip-python --extra-index-url https://test.pypi/org/simple
 - name: rocmDependencies
   type: object
   default:
