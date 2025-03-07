@@ -8,7 +8,6 @@ parameters:
 - name: aptPackages
   type: object
   default:
-    - cmake
     - doxygen
     - doxygen-doc
     - ninja-build
@@ -18,7 +17,9 @@ parameters:
   type: object
   default:
     - cget
+    - cmake==3.20.5
     - ninja
+    - rocm-docs-core
 
 jobs:
 - job: rocm_cmake
@@ -33,21 +34,29 @@ jobs:
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
       pipModules: ${{ parameters.pipModules }}
+  - task: Bash@3
+    displayName: Add CMake to PATH
+    inputs:
+      targetType: inline
+      script: echo "##vso[task.prependpath]$(python3 -m site --user-base)/bin"
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/checkout.yml
     parameters:
       checkoutRepo: ${{ parameters.checkoutRepo }}
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
-# extra steps for ctest suite
-  - script: |
-      python -m pip install -r $(Build.SourcesDirectory)/docs/requirements.txt
-      python -m pip install -r $(Build.SourcesDirectory)/test/docsphinx/docs/.sphinx/requirements.txt
-      git config --global user.email "you@example.com"
-      git config --global user.name "Your Name"
-    displayName: "ctest setup"
+  - task: Bash@3
+    displayName: CTest setup
+    inputs:
+      targetType: inline
+      script: |
+        python -m pip install -r $(Build.SourcesDirectory)/docs/requirements.txt
+        python -m pip install -r $(Build.SourcesDirectory)/test/docsphinx/docs/.sphinx/requirements.txt
+        git config --global user.email "you@example.com"
+        git config --global user.name "Your Name"
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
     parameters:
       componentName: rocm-cmake
+      testParameters: '-E "pass-version-parent" --output-on-failure --force-new-ctest-process --output-junit test_output.xml'
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml

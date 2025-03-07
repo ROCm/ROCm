@@ -32,6 +32,9 @@ parameters:
 - name: installEnabled
   type: boolean
   default: true
+- name: printDiskSpace
+  type: boolean
+  default: true
 
 steps:
 # create workingDirectory if it does not exist and change into it
@@ -44,8 +47,9 @@ steps:
       cmakeArgs: -DCMAKE_INSTALL_PREFIX=${{ parameters.installDir }} ${{ parameters.extraBuildFlags }} ${{ parameters.cmakeSourceDir }}
     ${{ else }}:
       cmakeArgs: ${{ parameters.extraBuildFlags }} ..
-- script: df -h
-  displayName: Disk space before build
+- ${{ if parameters.printDiskSpace }}:
+  - script: df -h
+    displayName: Disk space before build
 # equivalent to running make $cmakeTargetDir from $cmakeBuildDir
 # i.e., cd $cmakeBuildDir; make $cmakeTargetDir
 - task: CMake@1
@@ -57,8 +61,9 @@ steps:
     ${{ else }}:
       cmakeArgs: '--build ${{ parameters.cmakeTargetDir }} --target ${{ parameters.customBuildTarget }} ${{ parameters.multithreadFlag }}'
     retryCountOnTaskFailure: 10
-- script: df -h
-  displayName: Disk space after build
+- ${{ if parameters.printDiskSpace }}:
+  - script: df -h
+    displayName: Disk space after build
 # equivalent to running make $cmakeTarget from $cmakeBuildDir
 # e.g., make install
 - ${{ if eq(parameters.installEnabled, true) }}:

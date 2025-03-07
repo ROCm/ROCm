@@ -98,7 +98,7 @@ jobs:
       gpuTarget: $(JOB_GPU_TARGET)
 
 - job: rocWMMA_testing
-  timeoutInMinutes: 90
+  timeoutInMinutes: 120
   dependsOn: rocWMMA
   condition: and(succeeded(), eq(variables.ENABLE_GFX942_TESTS, 'true'), not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])))
   variables:
@@ -112,6 +112,9 @@ jobs:
       gfx942:
         JOB_GPU_TARGET: gfx942
         JOB_TEST_POOL: ${{ variables.GFX942_TEST_POOL }}
+      gfx90a:
+        JOB_GPU_TARGET: gfx90a
+        JOB_TEST_POOL: ${{ variables.GFX90A_TEST_POOL }}
   steps:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:

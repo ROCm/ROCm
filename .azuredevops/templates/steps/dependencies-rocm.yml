@@ -222,13 +222,13 @@ parameters:
       hasGpuTarget: false
     rocm-examples:
       pipelineId: $(ROCM_EXAMPLES_PIPELINE_ID)
-      stagingBranch: develop
-      mainlineBranch: develop
+      stagingBranch: amd-staging
+      mainlineBranch: amd-mainline
       hasGpuTarget: true
     rocminfo:
       pipelineId: $(ROCMINFO_PIPELINE_ID)
       stagingBranch: amd-staging
-      mainlineBranch: amd-master
+      mainlineBranch: amd-mainline
       hasGpuTarget: false
     rocMLIR:
       pipelineId: $(ROCMLIR_PIPELINE_ID)
@@ -288,7 +288,7 @@ parameters:
     ROCR-Runtime:
       pipelineId: $(ROCR_RUNTIME_PIPELINE_ID)
       stagingBranch: amd-staging
-      mainlineBranch: amd-master
+      mainlineBranch: amd-mainline
       hasGpuTarget: false
     rocRAND:
       pipelineId: $(ROCRAND_PIPELINE_ID)

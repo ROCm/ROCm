@@ -10,7 +10,7 @@ parameters:
   default: 'ctest'
 - name: testParameters
   type: string
-  default: '-VV --output-on-failure --force-new-ctest-process --output-junit test_output.xml'
+  default: '--output-on-failure --force-new-ctest-process --output-junit test_output.xml'
 - name: testOutputFile
   type: string
   default: test_output.xml
@@ -33,7 +33,6 @@ parameters:
     - aomp
     - HIPIFY
     - MIVisionX
-    - rocm-cmake
     - rocm_smi_lib
     - rocprofiler-sdk
     - roctracer

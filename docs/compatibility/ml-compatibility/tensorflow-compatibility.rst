@@ -4,6 +4,8 @@
     :description: TensorFlow compatibility
     :keywords: GPU, TensorFlow compatibility
 
+.. version-set:: rocm_version latest
+
 *******************************************************************************
 TensorFlow compatibility
 *******************************************************************************
@@ -117,7 +119,8 @@ Critical ROCm libraries for TensorFlow
 TensorFlow depends on multiple components and the supported features of those
 components can affect the TensorFlow ROCm supported feature set. The versions
 in the following table refer to the first TensorFlow version where the ROCm
-library was introduced as a dependency.
+library was introduced as a dependency. The versions described
+are available in ROCm :version:`rocm_version`.
 
 .. list-table::
     :widths: 25, 10, 35, 30
@@ -128,43 +131,43 @@ library was introduced as a dependency.
       - Purpose
       - Used in
     * - `hipBLAS <https://github.com/ROCm/hipBLAS>`_
-      - 2.3.0
+      - :version-ref:`hipBLAS rocm_version`
       - Provides GPU-accelerated Basic Linear Algebra Subprograms (BLAS) for
         matrix and vector operations.
       - Accelerates operations like ``tf.matmul``, ``tf.linalg.matmul``, and
         other matrix multiplications commonly used in neural network layers.
     * - `hipBLASLt <https://github.com/ROCm/hipBLASLt>`_
-      - 0.10.0
+      - :version-ref:`hipBLASLt rocm_version`
       - Extends hipBLAS with additional optimizations like fused kernels and
         integer tensor cores.
       - Optimizes matrix multiplications and linear algebra operations used in
         layers like dense, convolutional, and RNNs in TensorFlow.
     * - `hipCUB <https://github.com/ROCm/hipCUB>`_
-      - 3.3.0
+      - :version-ref:`hipCUB rocm_version`
       - Provides a C++ template library for parallel algorithms for reduction,
         scan, sort and select.
       - Supports operations like ``tf.reduce_sum``, ``tf.cumsum``, ``tf.sort``
         and other tensor operations in TensorFlow, especially those involving
         scanning, sorting, and filtering.
     * - `hipFFT <https://github.com/ROCm/hipFFT>`_
-      - 1.0.17
+      - :version-ref:`hipFFT rocm_version`
       - Accelerates Fast Fourier Transforms (FFT) for signal processing tasks.
       - Used for operations like signal processing, image filtering, and
         certain types of neural networks requiring FFT-based transformations.
     * - `hipSOLVER <https://github.com/ROCm/hipSOLVER>`_
-      - 2.3.0
+      - :version-ref:`hipSOLVER rocm_version`
       - Provides GPU-accelerated direct linear solvers for dense and sparse
         systems.
       - Optimizes linear algebra functions such as solving systems of linear
         equations, often used in optimization and training tasks.
     * - `hipSPARSE <https://github.com/ROCm/hipSPARSE>`_
-      - 3.1.2
+      - :version-ref:`hipSPARSE rocm_version`
       - Optimizes sparse matrix operations for efficient computations on sparse
         data.
       - Accelerates sparse matrix operations in models with sparse weight
         matrices or activations, commonly used in neural networks.
     * - `MIOpen <https://github.com/ROCm/MIOpen>`_
-      - 3.3.0
+      - :version-ref:`MIOpen rocm_version`
       - Provides optimized deep learning primitives such as convolutions,
         pooling,
         normalization, and activation functions.
@@ -172,13 +175,13 @@ library was introduced as a dependency.
         in TensorFlow for layers like ``tf.nn.conv2d``, ``tf.nn.relu``, and
         ``tf.nn.lstm_cell``.
     * - `RCCL <https://github.com/ROCm/rccl>`_
-      - 2.21.5
+      - :version-ref:`RCCL rocm_version`
       - Optimizes for multi-GPU communication for operations like AllReduce and
         Broadcast.
       - Distributed data parallel training (``tf.distribute.MirroredStrategy``).
         Handles communication in multi-GPU setups.
     * - `rocThrust <https://github.com/ROCm/rocThrust>`_
-      - 3.3.0
+      - :version-ref:`rocThrust rocm_version`
       - Provides a C++ template library for parallel algorithms like sorting,
         reduction, and scanning.
       - Reduction operations like ``tf.reduce_sum``, ``tf.cumsum`` for computing

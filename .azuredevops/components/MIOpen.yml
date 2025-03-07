@@ -141,6 +141,9 @@ jobs:
       gfx942:
         JOB_GPU_TARGET: gfx942
         JOB_TEST_POOL: ${{ variables.GFX942_TEST_POOL }}
+      gfx90a:
+        JOB_GPU_TARGET: gfx90a
+        JOB_TEST_POOL: ${{ variables.GFX90A_TEST_POOL }}
   steps:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
@@ -196,7 +199,7 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
     parameters:
       componentName: MIOpen
-      testParameters: '-VV --output-on-failure --force-new-ctest-process --output-junit test_output.xml --exclude-regex test_rnn_seq_api'
+      testParameters: '--output-on-failure --force-new-ctest-process --output-junit test_output.xml --exclude-regex test_rnn_seq_api'
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}

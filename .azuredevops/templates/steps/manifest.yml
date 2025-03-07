@@ -77,11 +77,11 @@ steps:
 
       dependencies_rows=$(cat $manifest_json | \
         jq -r '
-          .dependencies[] | 
-          "<tr><td>" + .buildNumber + "</td>" + 
-          "<td><a href=\"https://dev.azure.com/ROCm-CI/ROCm-CI/_build/results?buildId=" + .buildId + "\">" + .buildId + "</a></td>" + 
-          "<td><a href=\"" + .repoUrl + "\">" + .repoName + "</a></td>" + 
-          "<td><a href=\"" + .repoUrl + "/tree/" + .repoRef + "\">" + .repoRef + "</a></td>" + 
+          .dependencies[] |
+          "<tr><td>" + .buildNumber + "</td>" +
+          "<td><a href=\"https://dev.azure.com/ROCm-CI/ROCm-CI/_build/results?buildId=" + .buildId + "\">" + .buildId + "</a></td>" +
+          "<td><a href=\"" + .repoUrl + "\">" + .repoName + "</a></td>" +
+          "<td><a href=\"" + .repoUrl + "/tree/" + .repoRef + "\">" + .repoRef + "</a></td>" +
           "<td><a href=\"" + .repoUrl + "/commit/" + .repoVersion + "\">" + .repoVersion + "</a></td></tr>"
         ')
       dependencies_rows=$(echo $dependencies_rows)
@@ -129,6 +129,11 @@ steps:
       </table>
       </html>
       EOF
+
+      sed -i -e 's|</tr> <tr>|</tr>\n<tr>|g' \
+        -e 's|</td><td>|</td>\n  <td>|g' \
+        -e 's|<tr><td>|<tr>\n  <td>|g' \
+        -e 's|</td></tr>|</td>\n</tr>|g' $manifest_html
 
       cat $manifest_html
 - task: PublishHtmlReport@1

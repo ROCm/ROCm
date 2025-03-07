@@ -107,7 +107,7 @@ steps:
 # dynamically write to a Dockerfile
 # first is to do base setup of users, groups
   - task: Bash@3
-    condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+    condition: or(and(failed(), not(contains(variables['DOCKER_SKIP_GFX'], variables['JOB_GPU_TARGET']))), ${{ eq(parameters.forceDockerCreation, true) }})
     displayName: Create start of Dockerfile
     inputs:
       workingDirectory: $(Pipeline.Workspace)
@@ -126,7 +126,7 @@ steps:
 # for test jobs, setup GPU-related users and group
   - ${{ if eq(parameters.environment, 'test') }}:
     - task: Bash@3
-      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      condition: or(and(failed(), not(contains(variables['DOCKER_SKIP_GFX'], variables['JOB_GPU_TARGET']))), ${{ eq(parameters.forceDockerCreation, true) }})
       displayName: GPU setup of Dockerfile
       inputs:
         workingDirectory: $(Pipeline.Workspace)
@@ -137,7 +137,7 @@ steps:
 # now install a common set of packages through apt
   - ${{ if gt(length(parameters.baseAptPackages), 0) }}:
     - task: Bash@3
-      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      condition: or(and(failed(), not(contains(variables['DOCKER_SKIP_GFX'], variables['JOB_GPU_TARGET']))), ${{ eq(parameters.forceDockerCreation, true) }})
       displayName: Base Apt Packages to Dockerfile
       inputs:
         workingDirectory: $(Pipeline.Workspace)
@@ -146,7 +146,7 @@ steps:
 # iterate through possible apt repos that might need to be added to the docker container
   - ${{ if eq(parameters.registerROCmPackages, true) }}:
     - task: Bash@3
-      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      condition: or(and(failed(), not(contains(variables['DOCKER_SKIP_GFX'], variables['JOB_GPU_TARGET']))), ${{ eq(parameters.forceDockerCreation, true) }})
       displayName: Register ROCm packages to Dockerfile
       inputs:
         workingDirectory: $(Pipeline.Workspace)
@@ -160,7 +160,7 @@ steps:
           echo "RUN DEBIAN_FRONTEND=noninteractive apt-get --yes update" >> Dockerfile
   - ${{ if eq(parameters.registerCUDAPackages, true) }}:
     - task: Bash@3
-      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      condition: or(and(failed(), not(contains(variables['DOCKER_SKIP_GFX'], variables['JOB_GPU_TARGET']))), ${{ eq(parameters.forceDockerCreation, true) }})
       displayName: Register CUDA packages to Dockerfile
       inputs:
         workingDirectory: $(Pipeline.Workspace)
@@ -172,7 +172,7 @@ steps:
           echo 'RUN DEBIAN_FRONTEND=noninteractive apt-get --yes update' >> Dockerfile
   - ${{ if eq(parameters.registerJPEGPackages, true) }}:
     - task: Bash@3
-      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      condition: or(and(failed(), not(contains(variables['DOCKER_SKIP_GFX'], variables['JOB_GPU_TARGET']))), ${{ eq(parameters.forceDockerCreation, true) }})
       displayName: Register libjpeg-turbo packages to Dockerfile
       inputs:
         workingDirectory: $(Pipeline.Workspace)
@@ -185,7 +185,7 @@ steps:
 # install AOCL to docker container, if needed
   - ${{ if eq(parameters.installAOCL, true) }}:
     - task: Bash@3
-      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      condition: or(and(failed(), not(contains(variables['DOCKER_SKIP_GFX'], variables['JOB_GPU_TARGET']))), ${{ eq(parameters.forceDockerCreation, true) }})
       displayName: aocl install to Dockerfile
       inputs:
         workingDirectory: $(Pipeline.Workspace)
@@ -197,7 +197,7 @@ steps:
 # since apt repo list is updated, install the extra apt packages
   - ${{ if gt(length(parameters.aptPackages), 0) }}:
     - task: Bash@3
-      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      condition: or(and(failed(), not(contains(variables['DOCKER_SKIP_GFX'], variables['JOB_GPU_TARGET']))), ${{ eq(parameters.forceDockerCreation, true) }})
       displayName: Extra Apt Packages to Dockerfile
       inputs:
         workingDirectory: $(Pipeline.Workspace)
@@ -206,7 +206,7 @@ steps:
 # install latest cmake to docker container, if needed
   - ${{ if eq(parameters.installLatestCMake, true) }}:
     - task: Bash@3
-      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      condition: or(and(failed(), not(contains(variables['DOCKER_SKIP_GFX'], variables['JOB_GPU_TARGET']))), ${{ eq(parameters.forceDockerCreation, true) }})
       displayName: latest cmake install to Dockerfile
       inputs:
         workingDirectory: $(Pipeline.Workspace)
@@ -216,7 +216,7 @@ steps:
             echo "RUN pip install cmake --upgrade" >> Dockerfile
 # setup workspace where binaries, sources, and dependencies from the job will be copied to
   - task: Bash@3
-    condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+    condition: or(and(failed(), not(contains(variables['DOCKER_SKIP_GFX'], variables['JOB_GPU_TARGET']))), ${{ eq(parameters.forceDockerCreation, true) }})
     displayName: Workspace setup of Dockerfile
     inputs:
       workingDirectory: $(Pipeline.Workspace)
@@ -228,7 +228,7 @@ steps:
 # pip install is done here as non-root
   - ${{ if gt(length(parameters.pipModules), 0) }}:
     - task: Bash@3
-      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      condition: or(and(failed(), not(contains(variables['DOCKER_SKIP_GFX'], variables['JOB_GPU_TARGET']))), ${{ eq(parameters.forceDockerCreation, true) }})
       displayName: Extra Python Modules to Dockerfile
       inputs:
         workingDirectory: $(Pipeline.Workspace)
@@ -236,7 +236,7 @@ steps:
         script: echo "RUN pip install -v ${{ join(' ', parameters.pipModules) }}" >> Dockerfile
 # copy common directories
   - task: Bash@3
-    condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+    condition: or(and(failed(), not(contains(variables['DOCKER_SKIP_GFX'], variables['JOB_GPU_TARGET']))), ${{ eq(parameters.forceDockerCreation, true) }})
     displayName: Copy base directories to Dockerfile
     inputs:
       workingDirectory: $(Pipeline.Workspace)
@@ -254,7 +254,7 @@ steps:
 # copy extra directories, if applicable to the job
   - ${{ each extraCopyDirectory in parameters.extraCopyDirectories }}:
     - task: Bash@3
-      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      condition: or(and(failed(), not(contains(variables['DOCKER_SKIP_GFX'], variables['JOB_GPU_TARGET']))), ${{ eq(parameters.forceDockerCreation, true) }})
       displayName: Copy ${{ extraCopyDirectory }} to Dockerfile
       inputs:
         workingDirectory: $(Pipeline.Workspace)
@@ -265,7 +265,7 @@ steps:
           fi
 # setup ldconfig
   - task: Bash@3
-    condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+    condition: or(and(failed(), not(contains(variables['DOCKER_SKIP_GFX'], variables['JOB_GPU_TARGET']))), ${{ eq(parameters.forceDockerCreation, true) }})
     displayName: ldconfig to Dockerfile
     inputs:
       workingDirectory: $(Pipeline.Workspace)
@@ -279,7 +279,7 @@ steps:
 # create /opt/rocm symbolic link, if needed
   - ${{ if eq(parameters.optSymLink, true) }}:
     - task: Bash@3
-      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      condition: or(and(failed(), not(contains(variables['DOCKER_SKIP_GFX'], variables['JOB_GPU_TARGET']))), ${{ eq(parameters.forceDockerCreation, true) }})
       displayName: /opt/rocm symbolic link to Dockerfile
       inputs:
         workingDirectory: $(Pipeline.Workspace)
@@ -290,7 +290,7 @@ steps:
 # set environment variables needed for some python-based components
   - ${{ if eq(parameters.pythonEnvVars, true) }}:
     - task: Bash@3
-      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      condition: or(and(failed(), not(contains(variables['DOCKER_SKIP_GFX'], variables['JOB_GPU_TARGET']))), ${{ eq(parameters.forceDockerCreation, true) }})
       displayName: python environment variables
       inputs:
         workingDirectory: $(Pipeline.Workspace)
@@ -303,7 +303,7 @@ steps:
 # add to PATH environment variable
   - ${{ if ne(parameters.extraPaths, '') }}:
     - task: Bash@3
-      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      condition: or(and(failed(), not(contains(variables['DOCKER_SKIP_GFX'], variables['JOB_GPU_TARGET']))), ${{ eq(parameters.forceDockerCreation, true) }})
       displayName: Add to PATH in Dockerfile
       inputs:
         workingDirectory: $(Pipeline.Workspace)
@@ -313,21 +313,21 @@ steps:
 # use ::: as delimiter to allow for colons to be in the environment variable values
   - ${{ each extraEnvVar in parameters.extraEnvVars }}:
     - task: Bash@3
-      condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+      condition: or(and(failed(), not(contains(variables['DOCKER_SKIP_GFX'], variables['JOB_GPU_TARGET']))), ${{ eq(parameters.forceDockerCreation, true) }})
       displayName: Set ${{ extraEnvVar }} to Dockerfile
       inputs:
         workingDirectory: $(Pipeline.Workspace)
         targetType: inline
         script: echo "ENV ${{ split(extraEnvVar, ':::')[0] }}='${{ split(extraEnvVar, ':::')[1] }}'" >> Dockerfile
   - task: Bash@3
-    condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+    condition: or(and(failed(), not(contains(variables['DOCKER_SKIP_GFX'], variables['JOB_GPU_TARGET']))), ${{ eq(parameters.forceDockerCreation, true) }})
     displayName: Print Dockerfile
     inputs:
       workingDirectory: $(Pipeline.Workspace)
       targetType: inline
       script: cat Dockerfile
   - task: Docker@2
-    condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+    condition: or(and(failed(), not(contains(variables['DOCKER_SKIP_GFX'], variables['JOB_GPU_TARGET']))), ${{ eq(parameters.forceDockerCreation, true) }})
     inputs:
       containerRegistry: 'ContainerService'
       ${{ if ne(parameters.gpuTarget, '') }}:
@@ -337,7 +337,7 @@ steps:
       Dockerfile: '$(Pipeline.Workspace)/Dockerfile'
       buildContext: '$(Pipeline.Workspace)'
   - task: Bash@3
-    condition: or(failed(), ${{ eq(parameters.forceDockerCreation, true) }})
+    condition: or(and(failed(), not(contains(variables['DOCKER_SKIP_GFX'], variables['JOB_GPU_TARGET']))), ${{ eq(parameters.forceDockerCreation, true) }})
     displayName: "!! Docker Image URL !!"
     inputs:
       workingDirectory: $(Pipeline.Workspace)
