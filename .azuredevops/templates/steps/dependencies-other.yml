@@ -34,7 +34,12 @@ steps:
   displayName: 'sudo apt-get update'
   inputs:
     targetType: inline
-    script: sudo DEBIAN_FRONTEND=noninteractive apt-get --yes update
+    script: |
+      echo "deb http://archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list.d/default.list
+      echo "deb http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list.d/default.list
+      echo "deb http://archive.ubuntu.com/ubuntu/ jammy-backports main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list.d/default.list
+      echo "deb http://archive.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list.d/default.list
+      sudo DEBIAN_FRONTEND=noninteractive apt-get --yes update
 - task: Bash@3
   displayName: 'sudo apt-get upgrade'
   inputs:
@@ -50,7 +55,7 @@ steps:
     displayName: 'sudo apt-get install ...'
     inputs:
       targetType: inline
-      script: sudo DEBIAN_FRONTEND=noninteractive apt-get --yes install ${{ join(' ', parameters.aptPackages) }}
+      script: sudo DEBIAN_FRONTEND=noninteractive apt-get --yes --fix-missing install ${{ join(' ', parameters.aptPackages) }}
 - ${{ if gt(length(parameters.pipModules), 0) }}:
   - task: Bash@3
     displayName: 'pip install  ...'
