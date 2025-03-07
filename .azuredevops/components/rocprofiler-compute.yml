@@ -160,7 +160,7 @@ jobs:
     parameters:
       componentName: rocprofiler-compute
       testDir: $(Build.BinariesDirectory)/libexec/rocprofiler-compute
-      testExecutable: ROCPROFCOMPUTE_ARCH_OVERRIDE="MI300X" ROCM_PATH=$(Agent.BuildDirectory)/rocm ctest
+      testExecutable: ROCM_PATH=$(Agent.BuildDirectory)/rocm ctest
   - task: Bash@3
     displayName: Remove ROCm binaries from PATH
     condition: always()
