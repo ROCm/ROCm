@@ -120,9 +120,11 @@ jobs:
       gfx942:
         JOB_GPU_TARGET: gfx942
         JOB_TEST_POOL: ${{ variables.GFX942_TEST_POOL }}
+        TEST_CONF_DIR: MI300X
       gfx90a:
         JOB_GPU_TARGET: gfx90a
         JOB_TEST_POOL: ${{ variables.GFX90A_TEST_POOL }}
+        TEST_CONF_DIR: MI210
   steps:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
@@ -141,7 +143,7 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
     parameters:
       componentName: ROCmValidationSuite
-      testExecutable: $(Agent.BuildDirectory)/rocm/bin/rvs -c $(Agent.BuildDirectory)/rocm/share/rocm-validation-suite/conf/MI300X/gst_single.conf
+      testExecutable: $(Agent.BuildDirectory)/rocm/bin/rvs -c $(Agent.BuildDirectory)/rocm/share/rocm-validation-suite/conf/$(TEST_CONF_DIR)/gst_single.conf
       testParameters: ''
       testDir: $(Agent.BuildDirectory)
       testPublishResults: false
