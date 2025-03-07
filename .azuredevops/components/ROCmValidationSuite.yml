@@ -60,7 +60,8 @@ jobs:
     value: $(Agent.BuildDirectory)/rocm
   - name: HIP_INC_DIR
     value: $(Agent.BuildDirectory)/rocm
-  pool: ${{ variables.LOW_BUILD_POOL }}
+  pool: 
+    vmImage: ${{ variables.BASE_BUILD_POOL }}
   workspace:
     clean: all
   strategy:
@@ -97,14 +98,14 @@ jobs:
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
-    parameters:
-      aptPackages: ${{ parameters.aptPackages }}
-      gpuTarget: $(JOB_GPU_TARGET)
-      extraEnvVars:
-        - HIP_ROCCLR_HOME:::/home/user/workspace/rocm
-        - ROCM_PATH:::/home/user/workspace/rocm
-        - HIP_INC_DIR:::/home/user/workspace/rocm
+  # - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+  #   parameters:
+  #     aptPackages: ${{ parameters.aptPackages }}
+  #     gpuTarget: $(JOB_GPU_TARGET)
+  #     extraEnvVars:
+  #       - HIP_ROCCLR_HOME:::/home/user/workspace/rocm
+  #       - ROCM_PATH:::/home/user/workspace/rocm
+  #       - HIP_INC_DIR:::/home/user/workspace/rocm
 
 - job: ROCmValidationSuite_testing
   dependsOn: ROCmValidationSuite
