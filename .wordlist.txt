@@ -503,8 +503,6 @@ bilinear
 bitcode
 bitsandbytes
 blit
-blocklist
-blocklisted
 bootloader
 boson
 bosons
