@@ -308,6 +308,24 @@ Otherwise, if the system has Intel host CPUs add this instead to
 
    intel_iommu=on iommu=pt
 
+``modprobe.blacklist=amdgpu``
+  For some system configurations, the ``amdgpu`` driver needs to be blocked during kernel initialization to avoid an issue where after boot, the GPUs are not listed when running the command ``rocm-smi`` or ``amd-smi``.
+
+  Alternatively, configuring the AMD recommended system optimized BIOS settings might remove the need for using this setting. Some manufacturers and users might not implement the recommended system optimized BIOS settings.
+
+If you experience the mentioned issue, then add this to ``GRUB_CMDLINE_LINUX``:
+
+.. code-block:: text
+
+  modprobe.blacklist=amdgpu
+
+After the change, the ``amdgpu`` module must be loaded to support the ROCm framework
+software tools and utilities. Run the following command to load the ``amdgpu`` module:
+
+.. code-block:: text
+
+  sudo modprobe amdgpu
+
 Update GRUB
 -----------
 
