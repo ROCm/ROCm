@@ -41,7 +41,8 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  pool: ${{ variables.LOW_BUILD_POOL }}
+  pool: 
+    vmImage: ${{ variables.BASE_BUILD_POOL }}
   workspace:
     clean: all
   steps:
@@ -85,18 +86,19 @@ jobs:
     parameters:
       artifactName: amd
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
-    parameters:
-      aptPackages: ${{ parameters.aptPackages }}
-      pipModules: ${{ parameters.pipModules }}
-      environment: amd
+  # - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+  #   parameters:
+  #     aptPackages: ${{ parameters.aptPackages }}
+  #     pipModules: ${{ parameters.pipModules }}
+  #     environment: amd
 
 # HIP with Nvidia backend
 - job: hip_clr_combined_nvidia
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  pool: ${{ variables.LOW_BUILD_POOL }}
+  pool: 
+    vmImage: ${{ variables.BASE_BUILD_POOL }}
   workspace:
     clean: all
   steps:
@@ -139,8 +141,8 @@ jobs:
     parameters:
       artifactName: nvidia
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
-    parameters:
-      aptPackages: ${{ parameters.aptPackages }}
-      pipModules: ${{ parameters.pipModules }}
-      environment: nvidia
+  # - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+  #   parameters:
+  #     aptPackages: ${{ parameters.aptPackages }}
+  #     pipModules: ${{ parameters.pipModules }}
+  #     environment: nvidia

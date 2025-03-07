@@ -42,7 +42,8 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  pool: ${{ variables.LOW_BUILD_POOL }}
+  pool: 
+    vmImage: ${{ variables.BASE_BUILD_POOL }}
   workspace:
     clean: all
   strategy:
@@ -137,12 +138,12 @@ jobs:
           echo $(basename "$whlFile") >> pipelineArtifacts.txt
         fi
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
-    parameters:
-      aptPackages: ${{ parameters.aptPackages }}
-      pipModules: ${{ parameters.pipModules }}
-      gpuTarget: $(JOB_GPU_TARGET)
-      optSymLink: true
+  # - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+  #   parameters:
+  #     aptPackages: ${{ parameters.aptPackages }}
+  #     pipModules: ${{ parameters.pipModules }}
+  #     gpuTarget: $(JOB_GPU_TARGET)
+  #     optSymLink: true
 
 - job: rocPyDecode_testing
   dependsOn: rocPyDecode

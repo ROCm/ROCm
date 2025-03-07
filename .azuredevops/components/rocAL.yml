@@ -66,7 +66,8 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  pool: ${{ variables.LOW_BUILD_POOL }}
+  pool: 
+    vmImage: ${{ variables.BASE_BUILD_POOL }}
   workspace:
     clean: all
   strategy:
@@ -157,14 +158,14 @@ jobs:
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
-    parameters:
-      aptPackages: ${{ parameters.aptPackages }}
-      pipModules: ${{ parameters.pipModules }}
-      registerJPEGPackages: true
-      gpuTarget: $(JOB_GPU_TARGET)
-      extraCopyDirectories:
-        - /opt/libjpeg-turbo
+  # - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+  #   parameters:
+  #     aptPackages: ${{ parameters.aptPackages }}
+  #     pipModules: ${{ parameters.pipModules }}
+  #     registerJPEGPackages: true
+  #     gpuTarget: $(JOB_GPU_TARGET)
+  #     extraCopyDirectories:
+  #       - /opt/libjpeg-turbo
 
 - job: rocAL_testing
   dependsOn: rocAL

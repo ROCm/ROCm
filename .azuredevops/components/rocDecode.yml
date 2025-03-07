@@ -45,7 +45,8 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  pool: ${{ variables.LOW_BUILD_POOL }}
+  pool:
+    vmImage: ${{ variables.BASE_BUILD_POOL }}
   workspace:
     clean: all
   steps:
@@ -71,10 +72,10 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
-    parameters:
-      aptPackages: ${{ parameters.aptPackages }}
-      registerROCmPackages: true
+  # - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+  #   parameters:
+  #     aptPackages: ${{ parameters.aptPackages }}
+  #     registerROCmPackages: true
 
 - job: rocDecode_testing
   dependsOn: rocDecode

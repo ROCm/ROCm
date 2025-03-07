@@ -38,7 +38,8 @@ jobs:
   - template: /.azuredevops/variables-global.yml
   - name: HIP_ROCCLR_HOME
     value: $(Build.BinariesDirectory)/rocm
-  pool: ${{ variables.LOW_BUILD_POOL }}
+  pool: 
+    vmImage: ${{ variables.BASE_BUILD_POOL }}
   workspace:
     clean: all
   strategy:
@@ -75,12 +76,12 @@ jobs:
     parameters:
       gpuTarget: $(JOB_GPU_TARGET)
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
-    parameters:
-      aptPackages: ${{ parameters.aptPackages }}
-      gpuTarget: $(JOB_GPU_TARGET)
-      extraEnvVars:
-        - HIP_ROCCLR_HOME:::/home/user/workspace/rocm
+  # - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+  #   parameters:
+  #     aptPackages: ${{ parameters.aptPackages }}
+  #     gpuTarget: $(JOB_GPU_TARGET)
+  #     extraEnvVars:
+  #       - HIP_ROCCLR_HOME:::/home/user/workspace/rocm
 
 - job: rocRAND_testing
   dependsOn: rocRAND
