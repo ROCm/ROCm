@@ -28,15 +28,15 @@ parameters:
   default:
     testList:
       - gfx942:
-          target: gfx942
-          conditions:
-            - eq(variables.ENABLE_GFX942_TESTS, 'true')
-            - not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName']))
+        target: gfx942
+        conditions:
+          - eq(variables.ENABLE_GFX942_TESTS, 'true')
+          - not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName']))
       - gfx90a:
-          target: gfx90a
-          conditions:
-            - eq(variables.ENABLE_GFX90A_TESTS, 'true')
-            - not(containsValue(split(variables.DISABLED_GFX90A_TESTS, ','), variables['Build.DefinitionName']))
+        target: gfx90a
+        conditions:
+          - eq(variables.ENABLE_GFX90A_TESTS, 'true')
+          - not(containsValue(split(variables.DISABLED_GFX90A_TESTS, ','), variables['Build.DefinitionName']))
 
 jobs:
 - job: rocminfo_build_all
@@ -70,14 +70,14 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
 
-- ${{ each testInst in parameters.compileTimeMatrix.testList }}:
-  - job: rocminfo_test_${{ testInst.target }}
+- ${{ each testJob in parameters.compileTimeMatrix.testList }}:
+  - job: rocminfo_test_${{ testestJobtInst.target }}
     dependsOn: rocminfo_build_all
-    condition: succeeded()
+    condition: and(succeeded(), ${{ testJob.conditions }})
     variables:
     - group: common
     - template: /.azuredevops/variables-global.yml
-    pool: ${{ testInst.target }}_test_pool
+    pool: ${{ testJob.target }}_test_pool
     workspace:
       clean: all
     steps:
@@ -90,7 +90,7 @@ jobs:
       parameters:
         checkoutRef: ${{ parameters.checkoutRef }}
         dependencyList: ${{ parameters.rocmTestDependencies }}
-        gpuTarget: ${{ testInst.target }}
+        gpuTarget: ${{ testJob.target }}
     - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
       parameters:
         runRocminfo: false
@@ -113,4 +113,4 @@ jobs:
         aptPackages: ${{ parameters.aptPackages }}
         registerROCmPackages: true
         environment: test
-        gpuTarget: ${{ testInst.target }}
+        gpuTarget: ${{ testJob.target }}
