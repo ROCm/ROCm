@@ -29,14 +29,8 @@ parameters:
     testList:
       - gfx942:
         target: gfx942
-        conditions:
-          - eq(variables.ENABLE_GFX942_TESTS, 'true')
-          - not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName']))
       - gfx90a:
         target: gfx90a
-        conditions:
-          - eq(variables.ENABLE_GFX90A_TESTS, 'true')
-          - not(containsValue(split(variables.DISABLED_GFX90A_TESTS, ','), variables['Build.DefinitionName']))
 
 jobs:
 - job: rocminfo_build_all
