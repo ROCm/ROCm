@@ -9,16 +9,14 @@
 Data types and precision support
 *************************************************************
 
-This topic lists the supported data types of AMD GPUs and ROCm libraries.
-Corresponding :doc:`HIP <hip:index>` data types are also noted. 
+This topic lists the data types support on AMD GPUs, ROCm libraries along
+with corresponding :doc:`HIP <hip:index>` data types.
 
 Integral types
-==========================================
+==============
 
 The signed and unsigned integral types supported by ROCm are listed in
-the following table, along with their corresponding HIP type and a short
-description.
-
+the following table.
 
 .. list-table::
     :header-rows: 1
@@ -48,10 +46,9 @@ description.
 .. _precision_support_floating_point_types:
 
 Floating-point types
-==========================================
+====================
 
-The floating-point types supported by ROCm are listed in the following
-table, along with their corresponding HIP type and a short description.
+The floating-point types supported by ROCm are listed in the following table.
 
 .. image:: ../data/about/compatibility/floating-point-data-types.png
     :alt: Supported floating-point types
@@ -66,18 +63,18 @@ table, along with their corresponding HIP type and a short description.
       - Description
     *
       - float8 (E4M3)
-      - ``-``
+      - ``__hip_fp8_e4m3_fnuz``
       - An 8-bit floating-point number that mostly follows IEEE-754 conventions
-        and **S1E4M3** bit layout, as described in `8-bit Numerical Formats for Deep Neural Networks <https://arxiv.org/abs/2206.02915>`_ ,
-        with expanded range and no infinity or signed zero. NaN is
-        represented as negative zero.
+        and **S1E4M3** bit layout, as described in `8-bit Numerical Formats for Deep Neural Networks <https://arxiv.org/abs/2206.02915>`_,
+        with expanded range and no infinity or signed zero. NaN is represented
+        as negative zero.
     *
       - float8 (E5M2)
-      - ``-``
+      - ``__hip_fp8_e5m2_fnuz``
       - An 8-bit floating-point number mostly following IEEE-754 conventions and
-        **S1E5M2** bit layout, as described in `8-bit Numerical Formats for Deep Neural Networks <https://arxiv.org/abs/2206.02915>`_ ,
-        with expanded range and no infinity or signed zero. NaN is
-        represented as negative zero.
+        **S1E5M2** bit layout, as described in `8-bit Numerical Formats for Deep Neural Networks <https://arxiv.org/abs/2206.02915>`_,
+        with expanded range and no infinity or signed zero. NaN is represented
+        as negative zero.
     *
       - float16
       - ``half``
@@ -90,7 +87,7 @@ table, along with their corresponding HIP type and a short description.
         format.
     *
       - tensorfloat32
-      - ``-``
+      - Not available
       - A floating-point number that occupies 32 bits or less of storage,
         providing improved range compared to half (16-bit) format, at
         (potentially) greater throughput than single-precision (32-bit) formats.
@@ -117,12 +114,15 @@ table, along with their corresponding HIP type and a short description.
 
   * In some AMD documents and articles, float8 (E5M2) is referred to as bfloat8.
 
-ROCm support icons
-==========================================
+  * The :doc:`low precision floating point types page <hip:reference/low_fp_types>`
+    describes how to use these types in HIP with examples.
 
-In the following sections, icons represent the level of support. These
-icons, described in the following table, are also used in the library data type
-support pages.
+Level of support definitions
+============================
+
+In the following sections, icons represent the level of support. These icons,
+described in the following table, are also used in the library data type support
+pages.
 
 .. list-table::
     :header-rows: 1
@@ -130,6 +130,11 @@ support pages.
     *
       -  Icon
       - Definition
+
+    *
+      - NA
+      - Not applicable
+
     *
       - ❌
       - Not supported
@@ -158,16 +163,15 @@ support pages.
   * Any type can be emulated by software, but this page does not cover such
     cases.
 
-Hardware data type support
+Data type support by Hardware Architecture
 ==========================================
 
-The following tables provide information about AMD Instinct accelerators support
-for various data types. The MI200 series GPUs, which include MI210, MI250, and
-MI250X, are based on the CDNA2 architecture. The MI300 series GPUs, consisting
-of MI300A, MI300X, and MI325X, are built on the CDNA3 architecture.
+The MI200 series GPUs, which include MI210, MI250, and MI250X, are based on the
+CDNA2 architecture. The MI300 series GPUs, consisting of MI300A, MI300X, and
+MI325X, are based on the CDNA3 architecture.
 
 Compute units support
--------------------------------------------------------------------------------
+---------------------
 
 The following table lists data type support for compute units.
 
@@ -248,7 +252,7 @@ The following table lists data type support for compute units.
         - ✅
 
 Matrix core support
--------------------------------------------------------------------------------
+-------------------
 
 The following table lists data type support for AMD GPU matrix cores.
 
@@ -329,7 +333,7 @@ The following table lists data type support for AMD GPU matrix cores.
         - ✅
 
 Atomic operations support
--------------------------------------------------------------------------------
+-------------------------
 
 The following table lists data type support for atomic operations.
 
@@ -416,14 +420,14 @@ The following table lists data type support for atomic operations.
   performance impact when they frequently access the same memory address.
 
 Data type support in ROCm libraries
-==========================================
+===================================
 
 ROCm library support for int8, float8 (E4M3), float8 (E5M2), int16, float16,
 bfloat16, int32, tensorfloat32, float32, int64, and float64 is listed in the
 following tables.
 
 Libraries input/output type support
--------------------------------------------------------------------------------
+-----------------------------------
 
 The following tables list ROCm library support for specific input and output
 data types. Refer to the corresponding library data type support page for a
@@ -444,37 +448,37 @@ detailed description.
         - int32
         - int64
       *
-        - hipSPARSELt (:doc:`details <hipsparselt:reference/data-type-support>`)
+        - :doc:`hipSPARSELt <hipsparselt:reference/data-type-support>`
         - ✅/✅
         - ❌/❌
         - ❌/❌
         - ❌/❌
       *
-        - rocRAND (:doc:`details <rocrand:api-reference/data-type-support>`)
-        - -/✅
-        - -/✅
-        - -/✅
-        - -/✅
+        - :doc:`rocRAND <rocrand:api-reference/data-type-support>`
+        - NA/✅
+        - NA/✅
+        - NA/✅
+        - NA/✅
       *
-        - hipRAND (:doc:`details <hiprand:api-reference/data-type-support>`)
-        - -/✅
-        - -/✅
-        - -/✅
-        - -/✅
+        - :doc:`hipRAND <hiprand:api-reference/data-type-support>`
+        - NA/✅
+        - NA/✅
+        - NA/✅
+        - NA/✅
       *
-        - rocPRIM (:doc:`details <rocprim:reference/data-type-support>`)
-        - ✅/✅
-        - ✅/✅
-        - ✅/✅
-        - ✅/✅
-      *
-        - hipCUB (:doc:`details <hipcub:api-reference/data-type-support>`)
+        -  :doc:`rocPRIM <rocprim:reference/data-type-support>`
         - ✅/✅
         - ✅/✅
         - ✅/✅
         - ✅/✅
       *
-        - rocThrust (:doc:`details <rocthrust:data-type-support>`)
+        - :doc:`hipCUB <hipcub:api-reference/data-type-support>`
+        - ✅/✅
+        - ✅/✅
+        - ✅/✅
+        - ✅/✅
+      *
+        - :doc:`rocThrust <rocthrust:data-type-support>`
         - ✅/✅
         - ✅/✅
         - ✅/✅
@@ -496,7 +500,7 @@ detailed description.
         - float32
         - float64
       *
-        - hipSPARSELt (:doc:`details <hipsparselt:reference/data-type-support>`)
+        - :doc:`hipSPARSELt <hipsparselt:reference/data-type-support>`
         - ❌/❌
         - ❌/❌
         - ✅/✅
@@ -505,34 +509,25 @@ detailed description.
         - ❌/❌
         - ❌/❌
       *
-        - rocRAND (:doc:`details <rocrand:api-reference/data-type-support>`)
-        - -/❌
-        - -/❌
-        - -/✅
-        - -/❌
-        - -/❌
-        - -/✅
-        - -/✅
+        - :doc:`rocRAND <rocrand:api-reference/data-type-support>`
+        - NA/❌
+        - NA/❌
+        - NA/✅
+        - NA/❌
+        - NA/❌
+        - NA/✅
+        - NA/✅
       *
-        - hipRAND (:doc:`details <hiprand:api-reference/data-type-support>`)
-        - -/❌
-        - -/❌
-        - -/✅
-        - -/❌
-        - -/❌
-        - -/✅
-        - -/✅
+        - :doc:`hipRAND <hiprand:api-reference/data-type-support>`
+        - NA/❌
+        - NA/❌
+        - NA/✅
+        - NA/❌
+        - NA/❌
+        - NA/✅
+        - NA/✅
       *
-        - rocPRIM (:doc:`details <rocprim:reference/data-type-support>`)
-        - ❌/❌
-        - ❌/❌
-        - ✅/✅
-        - ✅/✅
-        - ❌/❌
-        - ✅/✅
-        - ✅/✅
-      *
-        - hipCUB (:doc:`details <hipcub:api-reference/data-type-support>`)
+        - :doc:`rocPRIM <rocprim:reference/data-type-support>`
         - ❌/❌
         - ❌/❌
         - ✅/✅
@@ -541,7 +536,16 @@ detailed description.
         - ✅/✅
         - ✅/✅
       *
-        - rocThrust (:doc:`details <rocthrust:data-type-support>`)
+        - :doc:`hipCUB <hipcub:api-reference/data-type-support>`
+        - ❌/❌
+        - ❌/❌
+        - ✅/✅
+        - ✅/✅
+        - ❌/❌
+        - ✅/✅
+        - ✅/✅
+      *
+        - :doc:`rocThrust <rocthrust:data-type-support>`
         - ❌/❌
         - ❌/❌
         - ⚠️/⚠️
@@ -550,9 +554,14 @@ detailed description.
         - ✅/✅
         - ✅/✅
 
+.. note::
+   
+  As random number generation libraries, rocRAND and hipRAND only specify output
+  data types for the random values they generate, with no need for input data
+  types.
 
 Libraries internal calculations type support
--------------------------------------------------------------------------------
+--------------------------------------------
 
 The following tables list ROCm library support for specific internal data types.
 Refer to the corresponding library data type support page for a detailed
@@ -573,7 +582,7 @@ description.
         - int32
         - int64
       *
-        - hipSPARSELt (:doc:`details <hipsparselt:reference/data-type-support>`)
+        - :doc:`hipSPARSELt <hipsparselt:reference/data-type-support>`
         - ❌
         - ❌
         - ✅
@@ -596,7 +605,7 @@ description.
         - float32
         - float64
       *
-        - hipSPARSELt (:doc:`details <hipsparselt:reference/data-type-support>`)
+        - :doc:`hipSPARSELt <hipsparselt:reference/data-type-support>`
         - ❌
         - ❌
         - ❌
