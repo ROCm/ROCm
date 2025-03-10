@@ -23,8 +23,25 @@ parameters:
     - ROCR-Runtime
     - rocprofiler-register
 
+- name: compileTimeMatrix
+  type: object
+  default:
+    testList:
+      - gfx942:
+          target: gfx942
+          pool: ${{ variables.GFX942_TEST_POOL }}
+          conditions:
+            - eq(variables.ENABLE_GFX942_TESTS, 'true')
+            - not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName']))
+      - gfx90a:
+          target: gfx90a
+          pool: ${{ variables.GFX90A_TEST_POOL }}
+          conditions:
+            - eq(variables.ENABLE_GFX90A_TESTS, 'true')
+            - not(containsValue(split(variables.DISABLED_GFX90A_TESTS, ','), variables['Build.DefinitionName']))
+
 jobs:
-- job: rocminfo
+- job: rocminfo_build_all
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
@@ -54,59 +71,48 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
-  # - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
-  #   parameters:
-  #     aptPackages: ${{ parameters.aptPackages }}
-  #     registerROCmPackages: true
 
-- job: rocminfo_testing
-  dependsOn: rocminfo
-  condition: and(succeeded(), eq(variables.ENABLE_GFX942_TESTS, 'true'), not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])))
-  variables:
-  - group: common
-  - template: /.azuredevops/variables-global.yml
-  pool: $(JOB_TEST_POOL)
-  workspace:
-    clean: all
-  strategy:
-    matrix:
-      gfx942:
-        JOB_GPU_TARGET: gfx942
-        JOB_TEST_POOL: ${{ variables.GFX942_TEST_POOL }}
-      gfx90a:
-        JOB_GPU_TARGET: gfx90a
-        JOB_TEST_POOL: ${{ variables.GFX90A_TEST_POOL }}
-  steps:
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
-    parameters:
-      aptPackages: ${{ parameters.aptPackages }}
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/local-artifact-download.yml
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
-    parameters:
-      checkoutRef: ${{ parameters.checkoutRef }}
-      dependencyList: ${{ parameters.rocmTestDependencies }}
-      gpuTarget: $(JOB_GPU_TARGET)
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
-    parameters:
-      runRocminfo: false
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
-    parameters:
-      componentName: rocminfo
-      testDir: '$(Agent.BuildDirectory)'
-      testExecutable: './rocm/bin/rocminfo'
-      testParameters: ''
-      testPublishResults: false
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
-    parameters:
-      componentName: rocm_agent_enumerator
-      testDir: '$(Agent.BuildDirectory)'
-      testExecutable: './rocm/bin/rocm_agent_enumerator'
-      testParameters: ''
-      testPublishResults: false
-  - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
-    parameters:
-      aptPackages: ${{ parameters.aptPackages }}
-      registerROCmPackages: true
-      environment: test
-      gpuTarget: $(JOB_GPU_TARGET)
+- ${{ each testInst in parameters.compileTimeMatrix.testList }}:
+  - job: rocminfo_test_${{ testInst.target }}
+    dependsOn: rocminfo_build_all
+    condition: and(succeeded(), ${{ testInst.conditions }})
+    variables:
+    - group: common
+    - template: /.azuredevops/variables-global.yml
+    pool: ${{ testInst.pool }}
+    workspace:
+      clean: all
+    steps:
+    - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
+      parameters:
+        aptPackages: ${{ parameters.aptPackages }}
+    - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
+    - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/local-artifact-download.yml
+    - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-rocm.yml
+      parameters:
+        checkoutRef: ${{ parameters.checkoutRef }}
+        dependencyList: ${{ parameters.rocmTestDependencies }}
+        gpuTarget: ${{ testInst.target }}
+    - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
+      parameters:
+        runRocminfo: false
+    - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
+      parameters:
+        componentName: rocminfo
+        testDir: '$(Agent.BuildDirectory)'
+        testExecutable: './rocm/bin/rocminfo'
+        testParameters: ''
+        testPublishResults: false
+    - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
+      parameters:
+        componentName: rocm_agent_enumerator
+        testDir: '$(Agent.BuildDirectory)'
+        testExecutable: './rocm/bin/rocm_agent_enumerator'
+        testParameters: ''
+        testPublishResults: false
+    - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
+      parameters:
+        aptPackages: ${{ parameters.aptPackages }}
+        registerROCmPackages: true
+        environment: test
+        gpuTarget: ${{ testInst.target }}
