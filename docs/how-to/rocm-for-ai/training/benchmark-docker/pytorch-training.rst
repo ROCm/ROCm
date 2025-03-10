@@ -371,14 +371,15 @@ benchmarking, see the version-specific documentation.
    :header-rows: 1
    :stub-columns: 1
 
-   * - ROCm version
-     - Megatron-LM version
+   * - Image version
+     - ROCm version
      - PyTorch version
      - Resources
 
-   * - 6.1
+   * - v25.3
+     - 6.1
      - 24.12-dev
      - 2.4.0
      - 
        * `Documentation <https://rocm.docs.amd.com/en/docs-6.3.2/how-to/rocm-for-ai/training/benchmark-docker/pytorch-training.html>`_
-       * `Docker Hub <https://hub.docker.com/layers/rocm/megatron-lm/24.12-dev/images/sha256-5818c50334ce3d69deeeb8f589d83ec29003817da34158ebc9e2d112b929bf2e>`_
+       * `Docker Hub <https://hub.docker.com/layers/rocm/pytorch-training/v25.3/images/sha256-0ffdde1b590fd2787b1c7adf5686875b100980b0f314090901387c44253e709b>`_
