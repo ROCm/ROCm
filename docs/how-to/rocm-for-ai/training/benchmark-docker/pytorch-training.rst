@@ -283,7 +283,7 @@ Options and available models
 
    * -
      - ``HF_finetune_lora``
-     - Benchmark LoRA fine-tuning with Hugging Face PEFT (Llama 3.1 70B with BF16)
+     - Benchmark LoRA fine-tuning with Hugging Face PEFT (Llama 2 70B with BF16)
 
    * - ``$datatype``
      - ``FP8`` or ``BF16``
@@ -296,6 +296,10 @@ Options and available models
    * - 
      - ``Llama-3.1-70B``
      - `Llama 3.1 70B <https://huggingface.co/meta-llama/Llama-3.1-70B-Instruct>`_
+
+   * - 
+     - ``Llama-2-70B``
+     - `Llama 2 70B <https://huggingface.co/meta-llama/Llama-2-70B>`_
 
    * - 
      - ``Flux``
