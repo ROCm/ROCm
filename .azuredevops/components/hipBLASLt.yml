@@ -158,7 +158,7 @@ jobs:
         - deps
 
 - job: hipBLASLt_testing
-  timeoutInMinutes: 120
+  timeoutInMinutes: 180
   dependsOn: hipBLASLt
   condition: and(succeeded(), eq(variables.ENABLE_GFX942_TESTS, 'true'), not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])))
   variables:
