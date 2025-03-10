@@ -283,7 +283,7 @@ or ``${DATA_DIR}/tokenizer_llama2``.
       :sync: llama
 
       To train any of the Llama 2 models that :ref:`this Docker image supports <amd-megatron-lm-model-support>`, use the ``Llama2Tokenizer``
-      or the default``HuggingFaceTokenizer``.
+      or the default ``HuggingFaceTokenizer``.
 
       To train any of Llama 3 and Llama 3.1 models that this Docker image supports, use the ``HuggingFaceTokenizer``.
       Set the Hugging Face model path in the ``TOKENIZER_MODEL`` variable.
