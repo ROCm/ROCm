@@ -229,6 +229,8 @@ Along with the following datasets:
 
 * `WikiText <https://huggingface.co/datasets/Salesforce/wikitext>`_
 
+* `UltraChat 200k <https://huggingface.co/datasets/HuggingFaceH4/ultrachat_200k>`_
+
 * `bghira/pseudo-camera-10k <https://huggingface.co/datasets/bghira/pseudo-camera-10k>`_
 
 Start training on AMD Instinct accelerators
@@ -309,10 +311,7 @@ with the WikiText dataset using the AMD fork of `torchtune <https://github.com/A
 
    ./pytorch_benchmark_report.sh -t {finetune_fw, finetune_lora} -p BF16 -m Llama-3.1-70B
 
-To start the fine-tuning benchmark, use the following command. It will run the benchmarking example of Llama 3.1 70B
-with the WikiText dataset using the AMD fork of `torchtune <https://github.com/AMD-AIG-AIMA/torchtune>`_.
-
-Use the following command to run the benchmarking example of Llama 2 70B with the WikiText dataset using
+Use the following command to run the benchmarking example of Llama 2 70B with the UltraChat 200k dataset using
 `Hugging Face PEFT <https://huggingface.co/docs/peft/en/index>`_.
 
 .. code-block:: shell
@@ -354,7 +353,7 @@ Here are some examples of how to use the command.
 
      ./pytorch_benchmark_report.sh -t finetune_lora -p BF16 -m Llama-3.1-70B
 
-* Example 6: Hugging Face PEFT LoRA fine-tuning (Llama 2 70B)
+* Example 6: Hugging Face PEFT LoRA fine-tuning with Llama 2 70B
 
   .. code-block:: shell
 
