@@ -71,7 +71,7 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
 
 - ${{ each testJob in parameters.compileTimeMatrix.testList }}:
-  - job: rocminfo_test_${{ testestJobtInst.target }}
+  - job: rocminfo_test_${{ testJob.target }}
     dependsOn: rocminfo_build_all
     condition: and(succeeded(), ${{ testJob.conditions }})
     variables:
