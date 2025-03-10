@@ -9,7 +9,7 @@ Training a model with PyTorch for ROCm
 PyTorch is an open-source machine learning framework that is widely used for
 model training with GPU-optimized components for transformer-based models.
 
-The PyTorch for ROCm training Docker (``rocm/pytorch-training:v25.3``) image
+The PyTorch for ROCm training Docker (``rocm/pytorch-training:v25.4``) image
 provides a prebuilt optimized environment for fine-tuning and pretraining a
 model on AMD Instinct MI325X and MI300X accelerators. It includes the following
 software components to accelerate training workloads:
@@ -42,6 +42,8 @@ The following models are pre-optimized for performance on the AMD Instinct MI300
 * Llama 3.1 8B
 
 * Llama 3.1 70B
+
+* Llama 2 70B
 
 * FLUX.1-dev
 
@@ -89,13 +91,13 @@ Download the Docker image
 
    .. code-block:: shell
 
-      docker pull rocm/pytorch-training:v25.3
+      docker pull rocm/pytorch-training:v25.4
 
 2. Run the Docker container.
 
    .. code-block:: shell
 
-      docker run -it --device /dev/dri --device /dev/kfd --network host --ipc host --group-add video --cap-add SYS_PTRACE --security-opt seccomp=unconfined --privileged -v $HOME:$HOME -v  $HOME/.ssh:/root/.ssh --shm-size 64G --name training_env rocm/pytorch-training:v25.3
+      docker run -it --device /dev/dri --device /dev/kfd --network host --ipc host --group-add video --cap-add SYS_PTRACE --security-opt seccomp=unconfined --privileged -v $HOME:$HOME -v  $HOME/.ssh:/root/.ssh --shm-size 64G --name training_env rocm/pytorch-training:v25.4
 
 3. Use these commands if you exit the ``training_env`` container and need to return to it.
 
@@ -277,31 +279,45 @@ Options and available models
      - ``finetune_lora``
      - Benchmark LoRA fine-tuning (Llama 3.1 70B with BF16)
 
+   * -
+     - ``HF_finetune_lora``
+     - Benchmark LoRA fine-tuning with Hugging Face PEFT (Llama 3.1 70B with BF16)
+
    * - ``$datatype``
-     - FP8 or BF16
+     - ``FP8`` or ``BF16``
      - Only Llama 3.1 8B supports FP8 precision.
 
    * - ``$model_repo``
-     - Llama-3.1-8B
+     - ``Llama-3.1-8B``
      - `Llama 3.1 8B <https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct>`_
 
    * - 
-     - Llama-3.1-70B
+     - ``Llama-3.1-70B``
      - `Llama 3.1 70B <https://huggingface.co/meta-llama/Llama-3.1-70B-Instruct>`_
 
    * - 
-     - Flux
+     - ``Flux``
      - `FLUX.1 [dev] <https://huggingface.co/black-forest-labs/FLUX.1-dev>`_
 
 Fine-tuning
 -----------
 
-To start the fine-tuning benchmark, use the following command. It will run the benchmarking example of Llama 2 70B
+To start the fine-tuning benchmark, use the following command. It will run the benchmarking example of Llama 3.1 70B
 with the WikiText dataset using the AMD fork of `torchtune <https://github.com/AMD-AIG-AIMA/torchtune>`_.
 
 .. code-block:: shell
 
    ./pytorch_benchmark_report.sh -t {finetune_fw, finetune_lora} -p BF16 -m Llama-3.1-70B
+
+To start the fine-tuning benchmark, use the following command. It will run the benchmarking example of Llama 3.1 70B
+with the WikiText dataset using the AMD fork of `torchtune <https://github.com/AMD-AIG-AIMA/torchtune>`_.
+
+Use the following command to run the benchmarking example of Llama 2 70B with the WikiText dataset using
+`Hugging Face PEFT <https://huggingface.co/docs/peft/en/index>`_.
+
+.. code-block:: shell
+
+   ./pytorch_benchmark_report.sh -t HF_finetune_lora -p BF16 -m Llama-2-70B
 
 Benchmarking examples
 ---------------------
@@ -337,3 +353,32 @@ Here are some examples of how to use the command.
   .. code-block:: shell
 
      ./pytorch_benchmark_report.sh -t finetune_lora -p BF16 -m Llama-3.1-70B
+
+* Example 6: Hugging Face PEFT LoRA fine-tuning (Llama 2 70B)
+
+  .. code-block:: shell
+
+     ./pytorch_benchmark_report.sh -t HF_finetune_lora -p BF16 -m Llama-2-70B
+
+Previous versions
+=================
+
+This table lists previous versions of the ROCm PyTorch training Docker image for training
+performance validation. For detailed information about available models for
+benchmarking, see the version-specific documentation.
+
+.. list-table::
+   :header-rows: 1
+   :stub-columns: 1
+
+   * - ROCm version
+     - Megatron-LM version
+     - PyTorch version
+     - Resources
+
+   * - 6.1
+     - 24.12-dev
+     - 2.4.0
+     - 
+       * `Documentation <https://rocm.docs.amd.com/en/docs-6.3.2/how-to/rocm-for-ai/training/benchmark-docker/pytorch-training.html>`_
+       * `Docker Hub <https://hub.docker.com/layers/rocm/megatron-lm/24.12-dev/images/sha256-5818c50334ce3d69deeeb8f589d83ec29003817da34158ebc9e2d112b929bf2e>`_
