@@ -73,7 +73,7 @@ jobs:
 - ${{ each testJob in parameters.compileTimeMatrix.testList }}:
   - job: rocminfo_test_${{ testJob.target }}
     dependsOn: rocminfo_build_all
-    condition: and(succeeded(), ${{ testJob.conditions }})
+    condition: and(succeeded(), eq(variables['ENABLE_${{ upper(testJob.target) }}_TESTS'], 'true'), not(containsValue(split(variables['DISABLED_${{ upper(testJob.target) }}_TESTS'], ','), variables['Build.DefinitionName'])))
     variables:
     - group: common
     - template: /.azuredevops/variables-global.yml
