@@ -127,13 +127,13 @@ Download the Docker image
 
    .. code-block:: shell
 
-      docker pull rocm/megatron-lm:v25.3
+      docker pull rocm/megatron-lm-training-private:20250306
 
 2. Launch the Docker container.
 
    .. code-block:: shell
 
-      docker run -it --device /dev/dri --device /dev/kfd --network host --ipc host --group-add video --cap-add SYS_PTRACE --security-opt seccomp=unconfined --privileged -v $HOME:$HOME -v  $HOME/.ssh:/root/.ssh --shm-size 64G --name megatron_training_env rocm/megatron-lm:v25.3
+      docker run -it --device /dev/dri --device /dev/kfd --device /dev/infiniband --network host --ipc host --group-add video --cap-add SYS_PTRACE --security-opt seccomp=unconfined --privileged -v $HOME:$HOME -v  $HOME/.ssh:/root/.ssh --shm-size 64G --name megatron_training_env rocm/megatron-lm-training-private:20250306
 
 3. Use these commands if you exit the ``megatron_training_env`` container and need to return to it.
 
@@ -217,9 +217,17 @@ Dataset options
 
            MOCK_DATA=0
 
-           DATA_PATH=${DATA_PATH:-"/data/bookcorpus_text_sentence"}  # Change to where your dataset is stored
+           DATA_PATH="/data/bookcorpus_text_sentence"  # Change to where your dataset is stored
 
         Ensure that the files are accessible inside the Docker container.
+
+        To download the dataset, set the ``DATASET`` variable to the dataset you'd like to use. Two datasets are supported: ``DATASET=wiki`` and ``DATASET=bookcorpus``.
+        Use the following command to download the dataset.
+
+        .. code-block:: shell
+
+           DATASET=wiki bash examples/llama/prepare_dataset.sh # For wiki-en dataset
+           DATASET=bookcorpus bash examples/llama/prepare_dataset.sh # For bookcorpus dataset
 
    .. tab-item:: DeepSeek V2
       :sync: deepseek
@@ -265,21 +273,40 @@ a fixed vocabulary. The tokenizer is trained along with the model on a large cor
 fixed vocabulary that can represent a wide range of text from different domains. This allows Llama models to
 handle a variety of input sequences, including unseen words or domain-specific terms.
 
+You can assign the path of an existing tokenizer to the ``TOKENIZER_MODEL`` as shown in the following examples.
+If the tokenizer is not found, it'll be downloaded to the default tokenizer model path: ``${DATA_DIR}/tokenizer_llama3``
+or ``${DATA_DIR}/tokenizer_llama2``.
+
 .. tab-set::
 
    .. tab-item:: Llama
       :sync: llama
 
-      To train any of the Llama 2 models that :ref:`this Docker image supports <amd-megatron-lm-model-support>`, use the ``Llama2Tokenizer``.
+      To train any of the Llama 2 models that :ref:`this Docker image supports <amd-megatron-lm-model-support>`, use the ``Llama2Tokenizer``
+      or the default``HuggingFaceTokenizer``.
 
       To train any of Llama 3 and Llama 3.1 models that this Docker image supports, use the ``HuggingFaceTokenizer``.
-      Set the Hugging Face model link in the ``TOKENIZER_MODEL`` variable.
+      Set the Hugging Face model path in the ``TOKENIZER_MODEL`` variable.
 
       For example, if you're using the Llama 3.1 8B model:
 
       .. code-block:: shell
 
          TOKENIZER_MODEL=meta-llama/Llama-3.1-8B
+
+      .. note::
+
+         If you don't already have the Llama 3.1 tokenizer locally, set your
+         personal Hugging Face access token ``HF_TOKEN`` to download the
+         tokenizer. If you encounter the following error, set ``HF_TOKEN`` to
+         your access-authorized Hugging Face token.
+
+         .. code-block:: shell
+
+            OSError: You are trying to access a gated repo.
+
+            # pass your HF_TOKEN
+            export HF_TOKEN=$your_personal_hf_token
 
    .. tab-item:: DeepSeek V2
       :sync: deepseek
@@ -323,8 +350,13 @@ Multi-node training
            DATA_CACHE_PATH=/root/cache # Set to a common directory for multi-node runs
 
       * For multi-node runs, make sure the correct network drivers are installed on the nodes. If
-        inside a Docker, either install the drivers inside the Docker container or pass the network
+        inside a Docker container, either install the drivers inside the Docker container or pass the network
         drivers from the host while creating the Docker container.
+
+        .. code-block:: shell
+
+           # Specify which RDMA interfaces to use for communication
+           export NCCL_IB_HCA=rdma0,rdma1,rdma2,rdma3,rdma4,rdma5,rdma6,rdma7
 
 Start training on AMD Instinct accelerators
 ===========================================
@@ -356,6 +388,17 @@ accelerators with the AMD Megatron-LM Docker image.
             .. code-block:: shell
 
                TEE_OUTPUT=1 MBS=2 BS=128 TP=1 TE_FP8=1 SEQ_LENGTH=8192 MODEL_SIZE=8 bash examples/llama/train_llama3.sh
+
+            To run training with FSDP2 enabled, add the ``FSDP=1`` argument; for example:
+
+            .. code-block:: shell
+
+               TEE_OUTPUT=1 MBS=2 BS=16 TP=1 TE_FP8=0 FSDP=1 RECOMPUTE=1 SEQ_LENGTH=8192 MODEL_SIZE=70 bash examples/llama/train_llama3.sh
+
+            .. note::
+
+               It's suggested to use ``TP=1`` when FSDP is enabled for higher throughput. FSDP2 is not supported with pipeline parallelism,
+               expert parallelism, MCore's distributed optimizer, gradient accumulation fusion, and ``FP16`` precision.
 
          .. tab-item:: Multi-node training
             :sync: multi-node
@@ -401,13 +444,17 @@ The benchmark tests support the following sets of variables:
         ``1`` to enable training logs or ``0`` to disable.
 
       ``TE_FP8``
-        ``0`` for BP16 (default) or ``1`` for FP8 GEMMs.
+        ``0`` for B16 or ``1`` for FP8 -- ``0`` by default.
 
       ``GEMM_TUNING``
         ``1`` to enable GEMM tuning, which boosts performance by using the best GEMM kernels.
 
       ``USE_FLASH_ATTN``
         ``1`` to enable Flash Attention.
+
+      ``FSDP``
+        ``1`` to enable PyTorch FSDP2. If FSDP is enabled, ``--use-distributed-optimizer``,
+        ``--overlap-param-gather``, and ``--sequence-parallel`` are automaticallyu disabled.
 
       ``ENABLE_PROFILING``
         ``1`` to enable PyTorch profiling for performance analysis.
@@ -431,7 +478,7 @@ The benchmark tests support the following sets of variables:
         Global batch size.
 
       ``TP``
-        Tensor parallel (``1``, ``2``, ``4``, ``8``).
+        Tensor parallel (``1``, ``2``, ``4``, ``8``). ``TP`` is disabled when ``FSDP`` is turned on.
 
       ``SEQ_LENGTH``
         Input sequence length.
@@ -456,6 +503,12 @@ The benchmark tests support the following sets of variables:
 
       ``GBS``
         Global batch size.
+
+      ``SEQ_LENGTH``
+        Input sequence length.
+
+      ``AC``
+        Activation checkpointing (``none``, ``sel``, or ``full``) -- ``sel`` by default.
 
 Benchmarking examples
 ---------------------
@@ -532,7 +585,8 @@ benchmarking, see the version-specific documentation.
    :header-rows: 1
    :stub-columns: 1
 
-   * - ROCm version
+   * - Image version
+     - ROCm version
      - Megatron-LM version
      - PyTorch version
      - Resources
