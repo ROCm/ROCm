@@ -73,7 +73,7 @@ jobs:
 - ${{ each testInst in parameters.compileTimeMatrix.testList }}:
   - job: rocminfo_test_${{ testInst.target }}
     dependsOn: rocminfo_build_all
-    condition: and(succeeded())
+    condition: succeeded()
     variables:
     - group: common
     - template: /.azuredevops/variables-global.yml
