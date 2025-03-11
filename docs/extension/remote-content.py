@@ -29,6 +29,7 @@ class BranchAwareRemoteContent(Directive):
         'repo': str,
         'path': str,
         'default_branch': str,  # Branch to use when not on a release tag
+        'start_line': int,      # Include the file from a specific line
         'tag_prefix': str,      # Prefix for release tags (e.g., 'Docs/')
     }
 
@@ -73,10 +74,15 @@ class BranchAwareRemoteContent(Directive):
         response.raise_for_status()
         content = response.text
 
+        start_line = self.options.get('start_line', 0)
+
         # Create ViewList for parsing
+        line_count = 0
         content_list = ViewList()
         for line_no, line in enumerate(content.splitlines()):
-            content_list.append(line, source_path, line_no)
+            if line_count >= start_line:
+                content_list.append(line, source_path, line_no)
+            line_count+=1 
 
         # Create a section node and parse content
         node = nodes.section()

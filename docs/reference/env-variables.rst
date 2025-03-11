@@ -45,7 +45,7 @@ The following tables list the HIP environment variables:
    :repo: ROCm/HIP
    :path: docs/data/env_variables_hip.rst
    :default_branch: docs/develop
-   :tag_prefix: Docs/
+   :tag_prefix: docs/
 
 ROCR-Runtime environment variables
 ==================================
@@ -56,4 +56,14 @@ The following table lists the ROCR-Runtime environment variables:
    :repo: ROCm/ROCR-Runtime
    :path: runtime/docs/data/env_variables.rst
    :default_branch: amd-staging
-   :tag_prefix: Docs/
+   :tag_prefix: docs/
+
+HIPCC environment variables
+=========================
+
+.. remote-content::
+   :repo: ROCm/llvm-project
+   :path: amd/hipcc/docs/env.rst
+   :default_branch: amd-staging
+   :start_line: 10
+   :tag_prefix: docs/
