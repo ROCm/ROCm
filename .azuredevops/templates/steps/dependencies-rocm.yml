@@ -143,7 +143,7 @@ parameters:
     llvm-project:
       pipelineId: $(LLVM_PROJECT_PIPELINE_ID)
       stagingBranch: amd-staging
-      mainlineBranch: amd-mainline-open
+      mainlineBranch: amd-mainline
       hasGpuTarget: false
     MIOpen:
       pipelineId: $(MIOpen_PIPELINE_ID)
