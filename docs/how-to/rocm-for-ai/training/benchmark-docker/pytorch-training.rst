@@ -54,28 +54,30 @@ The following models are pre-optimized for performance on the AMD Instinct MI300
    Some models, such as Llama 3, require an external license agreement through
    a third party (for example, Meta).
 
+.. _amd-pytorch-training-performance-measurements:
+
+Performance measurements
+========================
+
+To evaluate performance, the
+`Performance results with AMD ROCm software <https://www.amd.com/en/developer/resources/rocm-hub/dev-ai/performance-results.html#tabs-a8deaeb413-item-21cea50186-tab>`_
+page provides reference throughput and latency measurements for training
+popular AI models.
+
+.. note::
+
+   The performance data presented in
+   `Performance results with AMD ROCm software <https://www.amd.com/en/developer/resources/rocm-hub/dev-ai/performance-results.html#tabs-a8deaeb413-item-21cea50186-tab>`_
+   should not be interpreted as the peak performance achievable by AMD
+   Instinct MI300X series accelerators or ROCm software.
+
 System validation
 =================
 
-If you have already validated your system settings, skip this step. Otherwise,
-complete the :ref:`system validation and optimization steps <train-a-model-system-validation>`
-to set up your system before starting training.
-
-Disable NUMA auto-balancing
----------------------------
-
-Generally, application performance can benefit from disabling NUMA auto-balancing. However,
-it might be detrimental to performance with certain types of workloads.
-
-Run the command ``cat /proc/sys/kernel/numa_balancing`` to check your current NUMA (Non-Uniform
-Memory Access) settings. Output ``0`` indicates this setting is disabled. If there is no output or
-the output is ``1``, run the following command to disable NUMA auto-balancing.
-
-.. code-block:: shell
-
-   sudo sh -c 'echo 0 > /proc/sys/kernel/numa_balancing'
-
-See :ref:`mi300x-disable-numa` for more information.
+If you have already validated your system settings, including NUMA
+auto-balancing, skip this step. Otherwise, complete the :ref:`system validation
+and optimization steps <train-a-model-system-validation>` to set up your system
+before starting training.
 
 Environment setup
 =================
