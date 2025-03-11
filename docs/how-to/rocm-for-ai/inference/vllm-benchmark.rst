@@ -3,9 +3,9 @@
                  ROCm vLLM Docker image.
    :keywords: model, MAD, automation, dashboarding, validate
 
-***********************************************************
-LLM inference performance validation on AMD Instinct MI300X
-***********************************************************
+********************************************************
+LLM inference performance testing on AMD Instinct MI300X
+********************************************************
 
 .. _vllm-benchmark-unified-docker:
 

@@ -527,7 +527,7 @@ Previous versions
 =================
 
 This table lists previous versions of the ROCm Megatron-LM Docker image for training
-performance validation. For detailed information about available models for
+performance testing. For detailed information about available models for
 benchmarking, see the version-specific documentation.
 
 .. list-table::
