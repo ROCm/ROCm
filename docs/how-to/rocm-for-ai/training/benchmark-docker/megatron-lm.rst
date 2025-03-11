@@ -127,7 +127,7 @@ Download the Docker image
 
    .. code-block:: shell
 
-      docker pull rocm/megatron-lm-training-private:20250306
+      docker pull rocm/megatron-lm:v25.4
 
 2. Launch the Docker container.
 
