@@ -37,7 +37,7 @@ software components to accelerate training workloads:
 Supported models
 ================
 
-The following models are pre-optimized for performance on the AMD Instinct MI300X accelerator.
+The following models are pre-optimized for performance on the AMD Instinct MI325X and MI300X accelerators.
 
 * Llama 3.1 8B
 
@@ -69,7 +69,7 @@ popular AI models.
    The performance data presented in
    `Performance results with AMD ROCm software <https://www.amd.com/en/developer/resources/rocm-hub/dev-ai/performance-results.html#tabs-a8deaeb413-item-21cea50186-tab>`_
    should not be interpreted as the peak performance achievable by AMD
-   Instinct MI300X series accelerators or ROCm software.
+   Instinct MI325X and MI300X accelerators or ROCm software.
 
 System validation
 =================
@@ -246,7 +246,7 @@ can expect the container to perform in the model configurations described in
 the following section, but other configurations are not validated by AMD.
 
 Use the following instructions to set up the environment, configure the script
-to train models, and reproduce the benchmark results on MI300X series
+to train models, and reproduce the benchmark results on MI325X and MI300X
 accelerators with the AMD PyTorch training Docker image.
 
 Once your environment is set up, use the following commands and examples to start benchmarking.
