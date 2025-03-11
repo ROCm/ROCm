@@ -26,9 +26,9 @@ LLM inference performance validation on AMD Instinct MI300X
 
    * `PyTorch {{ unified_docker.pytorch_version }} <https://github.com/pytorch/pytorch>`_
 
-   With this Docker image, you can quickly validate the expected inference
-   performance numbers for the MI300X accelerator. This topic also provides tips on
-   optimizing performance with popular AI models.
+   With this Docker image, you can quickly validate the :ref:`expected
+   inference performance numbers <vllm-benchmark-performance-measurements>` for
+   the MI300X accelerator.
 
    .. _vllm-benchmark-available-models:
 
@@ -79,13 +79,29 @@ LLM inference performance validation on AMD Instinct MI300X
       {% endfor %}
    {% endfor %}
 
-
    .. note::
 
       vLLM is a toolkit and library for LLM inference and serving. AMD implements
       high-performance custom kernels and modules in vLLM to enhance performance.
       See :ref:`fine-tuning-llms-vllm` and :ref:`mi300x-vllm-optimization` for
       more information.
+
+   .. _vllm-benchmark-performance-measurements:
+
+   Performance measurements
+   ========================
+
+   To evaluate performance, the
+   `Performance results with AMD ROCm software <https://www.amd.com/en/developer/resources/rocm-hub/dev-ai/performance-results.html>`_
+   page provides reference throughput and latency measurements for inferencing
+   popular AI models.
+
+   .. note::
+
+      The performance data presented in
+      `Performance results with AMD ROCm software <https://www.amd.com/en/developer/resources/rocm-hub/dev-ai/performance-results.html>`_
+      should not be interpreted as the peak performance achievable by AMD
+      Instinct MI300X series accelerators or ROCm software.
 
    Getting started
    ===============
