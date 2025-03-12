@@ -36,14 +36,16 @@ class BranchAwareRemoteContent(Directive):
     def get_current_version(self):
         """Get current version/branch being built"""
         env = self.state.document.settings.env
-        config = env.config
+        html_context = env.config.html_context
 
         # Check if building from a tag
-        if hasattr(config, 'version'):
-            # Remove any 'v' prefix
-            version = config.version.lstrip('v')
-            if re.match(r'^\d+\.\d+\.\d+$', version):
-                return version
+        if "official_branch" in html_context:
+            if html_context["official_branch"] == 0:
+                if "version" in html_context:
+                    # Remove any 'v' prefix
+                    version = html_context["version"]
+                    if re.match(r'^\d+\.\d+\.\d+$', version):
+                        return version
 
         # Not a version tag, so we'll use the default branch
         return None
