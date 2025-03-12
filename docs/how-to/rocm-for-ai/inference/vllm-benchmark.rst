@@ -16,9 +16,9 @@ LLM inference performance testing on AMD Instinct MI300X
 
    The `ROCm vLLM Docker <{{ unified_docker.docker_hub_url }}>`_ image offers
    a prebuilt, optimized environment for validating large language model (LLM)
-   inference performance on the AMD Instinct™ MI300X accelerator. This ROCm vLLM
-   Docker image integrates vLLM and PyTorch tailored specifically for the MI300X
-   accelerator and includes the following components:
+   inference performance on AMD Instinct™ MI300X series accelerator. This ROCm vLLM
+   Docker image integrates vLLM and PyTorch tailored specifically for MI300X series
+   accelerators and includes the following components:
 
    * `ROCm {{ unified_docker.rocm_version }} <https://github.com/ROCm/ROCm>`_
 
@@ -103,7 +103,7 @@ LLM inference performance testing on AMD Instinct MI300X
       The performance data presented in
       `Performance results with AMD ROCm software <https://www.amd.com/en/developer/resources/rocm-hub/dev-ai/performance-results.html>`_
       should not be interpreted as the peak performance achievable by AMD
-      Instinct MI300X series accelerators or ROCm software.
+      Instinct MI325X and MI300X accelerators or ROCm software.
 
    Advanced features and known issues
    ==================================
