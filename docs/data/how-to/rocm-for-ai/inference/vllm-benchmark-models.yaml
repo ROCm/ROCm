@@ -43,7 +43,7 @@ vllm_benchmark:
         precision: float16
       - model: Llama 3.1 8B FP8
         mad_tag: pyt_vllm_llama-3.1-8b_fp8
-        model_repo: meta-llama/Llama-3.1-8B-Instruct
+        model_repo: amd/Llama-3.1-8B-Instruct-FP8-KV
         url: https://huggingface.co/amd/Llama-3.1-8B-Instruct-FP8-KV
         precision: float8
       - model: Llama 3.1 70B FP8
