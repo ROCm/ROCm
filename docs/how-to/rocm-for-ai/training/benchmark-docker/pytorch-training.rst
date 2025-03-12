@@ -382,8 +382,8 @@ benchmarking, see the version-specific documentation.
      - Resources
 
    * - v25.3
-     - 6.1
-     - 2.4.0
+     - 6.3.0
+     - 2.7.0a0+git637433
      - 
        * `Documentation <https://rocm.docs.amd.com/en/docs-6.3.2/how-to/rocm-for-ai/training/benchmark-docker/pytorch-training.html>`_
        * `Docker Hub <https://hub.docker.com/layers/rocm/pytorch-training/v25.3/images/sha256-0ffdde1b590fd2787b1c7adf5686875b100980b0f314090901387c44253e709b>`_
