@@ -1706,7 +1706,7 @@ efficiency and throughput of various computational kernels.
    Occupancy related to VGPRs usage on an Instinct MI300X accelerator
 
 For example, according to the table, the available VGPR is 512 per Execution
-Unit (EU), and VGPU is allocated at the unit of 16. If the current VGPR usage
+Unit (EU), and VGPR is allocated at the unit of 16. If the current VGPR usage
 is 170, the actual requested VGPR will be 176, so the occupancy is only 2
 waves per EU since :math:`176 \times 3 > 512`. So, if you set
 ``waves_per_eu`` to 3, the LLVM backend tries to bring VGPR usage down so
