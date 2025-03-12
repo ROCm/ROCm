@@ -26,9 +26,11 @@ LLM inference performance testing on AMD Instinct MI300X
 
    * `PyTorch {{ unified_docker.pytorch_version }} <https://github.com/pytorch/pytorch>`_
 
-   With this Docker image, you can quickly validate the :ref:`expected
+   * `hipBLASLt {{ unified_docker.hipblaslt_version }} <https://github.com/ROCm/hipBLASLt>`_
+
+   With this Docker image, you can quickly test the :ref:`expected
    inference performance numbers <vllm-benchmark-performance-measurements>` for
-   the MI300X accelerator.
+   MI300X series accelerators.
 
    .. _vllm-benchmark-available-models:
 
@@ -102,6 +104,12 @@ LLM inference performance testing on AMD Instinct MI300X
       `Performance results with AMD ROCm software <https://www.amd.com/en/developer/resources/rocm-hub/dev-ai/performance-results.html>`_
       should not be interpreted as the peak performance achievable by AMD
       Instinct MI300X series accelerators or ROCm software.
+
+   Advanced features and known issues
+   ==================================
+
+   For information on experimental features and known issues related to ROCm optimization efforts on vLLM,
+   see the developer's guide at `<https://github.com/ROCm/vllm/blob/main/docs/dev-docker/README.md>`__.
 
    Getting started
    ===============
@@ -178,13 +186,13 @@ LLM inference performance testing on AMD Instinct MI300X
          .. tab-item:: Standalone benchmarking
 
             Run the vLLM benchmark tool independently by starting the
-            `Docker container <https://hub.docker.com/layers/rocm/vllm/rocm6.3.1_mi300_ubuntu22.04_py3.12_vllm_0.6.6/images/sha256-9a12ef62bbbeb5a4c30a01f702c8e025061f575aa129f291a49fbd02d6b4d6c9>`_
+            `Docker container <{{ unified_docker.docker_hub_url }}>`_
             as shown in the following snippet.
 
             .. code-block::
 
-               docker pull rocm/vllm:rocm6.3.1_mi300_ubuntu22.04_py3.12_vllm_0.6.6
-               docker run -it --device=/dev/kfd --device=/dev/dri --group-add video --shm-size 16G --security-opt seccomp=unconfined --security-opt apparmor=unconfined --cap-add=SYS_PTRACE -v $(pwd):/workspace --env HUGGINGFACE_HUB_CACHE=/workspace --name vllm_v0.6.6 rocm/vllm:rocm6.3.1_mi300_ubuntu22.04_py3.12_vllm_0.6.6
+               docker pull {{ unified_docker.pull_tag }}
+               docker run -it --device=/dev/kfd --device=/dev/dri --group-add video --shm-size 16G --security-opt seccomp=unconfined --security-opt apparmor=unconfined --cap-add=SYS_PTRACE -v $(pwd):/workspace --env HUGGINGFACE_HUB_CACHE=/workspace --name test {{ unified_docker.pull_tag }}
 
             In the Docker container, clone the ROCm MAD repository and navigate to the
             benchmark scripts directory at ``~/MAD/scripts/vllm``.

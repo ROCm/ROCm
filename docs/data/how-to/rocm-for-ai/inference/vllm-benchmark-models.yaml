@@ -1,11 +1,12 @@
 vllm_benchmark:
   unified_docker:
     latest:
-      pull_tag: rocm/vllm:rocm6.3.1_mi300_ubuntu22.04_py3.12_vllm_0.6.6
-      docker_hub_url: https://hub.docker.com/layers/rocm/vllm/rocm6.3.1_mi300_ubuntu22.04_py3.12_vllm_0.6.6/images/sha256-9a12ef62bbbeb5a4c30a01f702c8e025061f575aa129f291a49fbd02d6b4d6c9
+      pull_tag: rocm/vllm:instinct_main
+      docker_hub_url: https://hub.docker.com/layers/rocm/vllm/rocm6.3.1_instinct_vllm0.7.3_20250311/images/sha256-de0a2649b735f45b7ecab8813eb7b19778ae1f40591ca1196b07bc29c42ed4a3
       rocm_version: 6.3.1
-      vllm_version: 0.6.6
-      pytorch_version: 2.7.0 (2.7.0a0+git3a58512)
+      vllm_version: 0.7.3
+      pytorch_version: 2.7.0 (dev nightly)
+      hipblaslt_version: 0.13
   model_groups:
     - group: Llama
       tag: llama
@@ -40,6 +41,11 @@ vllm_benchmark:
         model_repo: meta-llama/Llama-2-70b-chat-hf
         url: https://huggingface.co/meta-llama/Llama-2-70b-chat-hf
         precision: float16
+      - model: Llama 3.1 8B FP8
+        mad_tag: pyt_vllm_llama-3.1-8b_fp8
+        model_repo: meta-llama/Llama-3.1-8B-Instruct
+        url: https://huggingface.co/amd/Llama-3.1-8B-Instruct-FP8-KV
+        precision: float8
       - model: Llama 3.1 70B FP8
         mad_tag: pyt_vllm_llama-3.1-70b_fp8
         model_repo: amd/Llama-3.1-70B-Instruct-FP8-KV
