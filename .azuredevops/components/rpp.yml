@@ -102,8 +102,8 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  - name: LD_LIBRARY_PATH
-    value: $(ROCM_PATH)/lib;$(ROCM_PATH)/llvm/lib
+  # - name: LD_LIBRARY_PATH
+  #   value: $(ROCM_PATH)/lib;$(ROCM_PATH)/llvm/lib
   pool: $(JOB_TEST_POOL)
   workspace:
     clean: all
@@ -166,8 +166,6 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        # sudo rm -rf /opt/rocm
-        # sudo ln -s $(ROCM_PATH) /opt/rocm
         mkdir rpp-tests
         cd rpp-tests
         cmake $(ROCM_PATH)/share/rpp/test \
@@ -179,8 +177,6 @@ jobs:
       componentName: rpp
       testExecutable: 'CMAKE_VERBOSE_MAKEFILE=ON VERBOSE=1 ctest'
       testDir: 'rpp-tests'
-  # - script: sudo rm /opt/rocm
-  #   condition: always()
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
