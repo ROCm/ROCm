@@ -59,8 +59,6 @@ jobs:
       targetType: inline
       script: python3 setup.py bdist_wheel
       workingDirectory: $(Build.SourcesDirectory)
-    env:
-      ROCM_PATH: $(Agent.BuildDirectory)/rocm
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-prepare-package.yml
     parameters:
       sourceDir: $(Build.SourcesDirectory)/dist
@@ -138,25 +136,12 @@ jobs:
     inputs:
       targetType: inline
       script: |
-        sudo rm -rf /opt/rocm
-        sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
-  - task: Bash@3
-    displayName: Add Python site-packages binaries to path
-    inputs:
-      targetType: inline
-      script: |
+        # sudo rm -rf /opt/rocm
+        # sudo ln -s $(ROCM_PATH) /opt/rocm
         USER_BASE=$(python3 -m site --user-base)
         echo "##vso[task.prependpath]$USER_BASE/bin"
-  - task: Bash@3
-    displayName: Add ROCm binaries to PATH
-    inputs:
-      targetType: inline
-      script: echo "##vso[task.prependpath]$(Agent.BuildDirectory)/rocm/bin"
-  - task: Bash@3
-    displayName: Add ROCm compilers to PATH
-    inputs:
-      targetType: inline
-      script: echo "##vso[task.prependpath]$(Agent.BuildDirectory)/rocm/llvm/bin"
+        echo "##vso[task.prependpath]$(ROCM_PATH)/bin"
+        echo "##vso[task.prependpath]$(ROCM_PATH)/llvm/bin"
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
   - task: Bash@3
     displayName: tox test
@@ -164,30 +149,22 @@ jobs:
       targetType: inline
       script: tox run -v -e ci -- -m pre_checkin
       workingDirectory: $(Build.SourcesDirectory)
-  - task: Bash@3
-    displayName: Remove Python site-packages binaries from path
-    inputs:
-      targetType: inline
-      script: |
-        USER_BASE=$(python3 -m site --user-base)
-        echo "##vso[task.setvariable variable=PATH]$(echo $PATH | sed -e 's;:$USER_BASE/bin;;' -e 's;^/;;' -e 's;/$;;')"
-  - task: Bash@3
-    displayName: Remove ROCm binaries from PATH
-    inputs:
-      targetType: inline
-      script: echo "##vso[task.setvariable variable=PATH]$(echo $PATH | sed -e 's;:$(Agent.BuildDirectory)/rocm/bin;;' -e 's;^/;;' -e 's;/$;;')"
-  - task: Bash@3
-    displayName: Remove ROCm compilers from PATH
-    inputs:
-      targetType: inline
-      script: echo "##vso[task.setvariable variable=PATH]$(echo $PATH | sed -e 's;:$(Agent.BuildDirectory)/rocm/llvm/bin;;' -e 's;^/;;' -e 's;/$;;')"
+  # - task: Bash@3
+  #   displayName: Tear down test environment
+  #   inputs:
+  #     targetType: inline
+  #     script: |
+  #       USER_BASE=$(python3 -m site --user-base)
+  #       echo "##vso[task.setvariable variable=PATH]$(echo $PATH | sed -e 's;:$USER_BASE/bin;;' -e 's;^/;;' -e 's;/$;;')"
+  #       echo "##vso[task.setvariable variable=PATH]$(echo $PATH | sed -e 's;:$(ROCM_PATH)/bin;;' -e 's;^/;;' -e 's;/$;;')"
+  #       echo "##vso[task.setvariable variable=PATH]$(echo $PATH | sed -e 's;:$(ROCM_PATH)/llvm/bin;;' -e 's;^/;;' -e 's;/$;;')"
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
       pipModules: ${{ parameters.pipModules }}
       environment: test
       gpuTarget: $(JOB_GPU_TARGET)
-      optSymLink: true
+      # optSymLink: true
       pythonEnvVars: true
       extraPaths: /home/user/workspace/rocm/llvm/bin:/home/user/workspace/rocm/bin
 # docker image will not have python site-packages in path, but the env vars will make it easier
