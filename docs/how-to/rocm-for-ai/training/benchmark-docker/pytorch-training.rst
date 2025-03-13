@@ -108,19 +108,25 @@ Download the Docker image
       docker start training_env
       docker exec -it training_env bash
 
-4. In the Docker container, clone the `<https://github.com/ROCm/MAD>`__ repository and navigate to the benchmark scripts directory.
+4. In the Docker container, clone the `<https://github.com/ROCm/MAD>`__
+   repository and navigate to the benchmark scripts directory
+   `/workspace/MAD/scripts/pytorch_train`.
 
    .. code-block:: shell
 
       git clone https://github.com/ROCm/MAD
-      cd MAD/scripts/pytorch-train
+      cd MAD/scripts/pytorch_train
 
 Prepare training datasets and dependencies
 ------------------------------------------
 
-The following benchmarking examples may require downloading models and datasets
+The following benchmarking examples require downloading models and datasets
 from Hugging Face. To ensure successful access to gated repos, set your
 ``HF_TOKEN``.
+
+.. code-block:: shell
+
+   export HF_TOKEN=$your_personal_hugging_face_access_token
 
 Run the setup script to install libraries and datasets needed for benchmarking.
 
@@ -235,8 +241,8 @@ Along with the following datasets:
 
 * `bghira/pseudo-camera-10k <https://huggingface.co/datasets/bghira/pseudo-camera-10k>`_
 
-Start training on AMD Instinct accelerators
-===========================================
+Getting started
+===============
 
 The prebuilt PyTorch with ROCm training environment allows users to quickly validate
 system performance, conduct training benchmarks, and achieve superior
@@ -306,6 +312,18 @@ Options and available models
    * - 
      - ``Flux``
      - `FLUX.1 [dev] <https://huggingface.co/black-forest-labs/FLUX.1-dev>`_
+
+   * - ``$sequence_length``
+     - Sequence length for the language model.
+     - Between 2048 and 8192. 8192 by default.
+
+.. note::
+
+   Occasionally, downloading the Flux dataset might fail. In the event of this
+   error, manually download it from Hugging Face at
+   `black-forest-labs/FLUX.1-dev <https://huggingface.co/black-forest-labs/FLUX.1-dev>`_
+   and save it to `/workspace/FluxBenchmark`. This ensures that the test script can access
+   the required dataset.
 
 Fine-tuning
 -----------
