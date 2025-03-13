@@ -58,6 +58,8 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
+  - name: ROCM_DIR
+    value: $(ROCM_PATH)
   pool: ${{ variables.MEDIUM_BUILD_POOL }}
   workspace:
     clean: all
@@ -125,6 +127,8 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
+  - name: ROCM_DIR
+    value: $(ROCM_PATH)
   pool: $(JOB_TEST_POOL)
   workspace:
     clean: all
