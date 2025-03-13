@@ -136,8 +136,7 @@ jobs:
     inputs:
       targetType: inline
       script: |
-        # sudo rm -rf /opt/rocm
-        # sudo ln -s $(ROCM_PATH) /opt/rocm
+        sudo ln -s $(ROCM_PATH) /opt/rocm
         USER_BASE=$(python3 -m site --user-base)
         echo "##vso[task.prependpath]$USER_BASE/bin"
         echo "##vso[task.prependpath]$(ROCM_PATH)/bin"
@@ -149,22 +148,13 @@ jobs:
       targetType: inline
       script: tox run -v -e ci -- -m pre_checkin
       workingDirectory: $(Build.SourcesDirectory)
-  # - task: Bash@3
-  #   displayName: Tear down test environment
-  #   inputs:
-  #     targetType: inline
-  #     script: |
-  #       USER_BASE=$(python3 -m site --user-base)
-  #       echo "##vso[task.setvariable variable=PATH]$(echo $PATH | sed -e 's;:$USER_BASE/bin;;' -e 's;^/;;' -e 's;/$;;')"
-  #       echo "##vso[task.setvariable variable=PATH]$(echo $PATH | sed -e 's;:$(ROCM_PATH)/bin;;' -e 's;^/;;' -e 's;/$;;')"
-  #       echo "##vso[task.setvariable variable=PATH]$(echo $PATH | sed -e 's;:$(ROCM_PATH)/llvm/bin;;' -e 's;^/;;' -e 's;/$;;')"
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
       pipModules: ${{ parameters.pipModules }}
       environment: test
       gpuTarget: $(JOB_GPU_TARGET)
-      # optSymLink: true
+      optSymLink: true
       pythonEnvVars: true
       extraPaths: /home/user/workspace/rocm/llvm/bin:/home/user/workspace/rocm/bin
 # docker image will not have python site-packages in path, but the env vars will make it easier
