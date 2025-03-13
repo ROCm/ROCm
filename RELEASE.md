@@ -96,7 +96,7 @@ Click {fab}`github` to go to the component's source code on GitHub.
             <tr>
                 <td><a href="https://rocm.docs.amd.com/projects/rocAL/en/docs-6.1.5">rocAL</a></td>
                 <td>1.0.0</td>
-                <td><a href="https://github.com/ROCm/rocAL/releases/"><i
+                <td><a href="https://github.com/ROCm/rocAL/releases/tag/rocm-6.1.5"><i
                             class="fab fa-github fa-lg"></i></a></td>
             </tr>
             <tr>
