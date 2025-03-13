@@ -89,8 +89,8 @@ jobs:
       checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
-  - script: sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
-    displayName: ROCm symbolic link
+  # - script: sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
+  #   displayName: ROCm symbolic link
 # Build and install gtest, lapack, hipBLAS-common
 # $(Pipeline.Workspace)/deps is a temporary folder for the build process
 # $(Pipeline.Workspace)/s/deps is part of the hipBLASLt repo

@@ -78,8 +78,6 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  - name: ROCM_PATH
-    value: $(Agent.BuildDirectory)/rocm
   pool: $(JOB_TEST_POOL)
   workspace:
     clean: all
@@ -106,13 +104,13 @@ jobs:
       checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
-  # - task: Bash@3
-  #   displayName: ROCm symbolic link
-  #   inputs:
-  #     targetType: inline
-  #     script: |
-  #       sudo rm -rf /opt/rocm
-  #       sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
+  - task: Bash@3
+    displayName: ROCm symbolic link
+    inputs:
+      targetType: inline
+      script: |
+        sudo rm -rf /opt/rocm
+        sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
       installEnabled: false

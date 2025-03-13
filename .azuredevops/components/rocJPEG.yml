@@ -87,6 +87,8 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
+  - name: ROCM_PATH
+    value: $(Agent.BuildDirectory)/rocm
   pool:
     name: $(JOB_TEST_POOL)
     demands: firstRenderDeviceAccess
@@ -116,8 +118,8 @@ jobs:
   # anything in /opt may be persistent across runs
   # so we need to remove the symlink if it already exists
   - script: |
-      sudo rm -rf /opt/rocm
-      sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
+      # sudo rm -rf /opt/rocm
+      # sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
       mkdir rocJPEG-tests
       cd rocJPEG-tests
       cmake $(Agent.BuildDirectory)/rocm/share/rocjpeg/test
@@ -126,8 +128,8 @@ jobs:
     parameters:
       componentName: rocJPEG
       testDir: 'rocJPEG-tests'
-  - script: sudo rm /opt/rocm
-    condition: always()
+  # - script: sudo rm /opt/rocm
+  #   condition: always()
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
