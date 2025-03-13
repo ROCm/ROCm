@@ -47,7 +47,7 @@ Validating vLLM performance
 ROCm provides a prebuilt optimized Docker image for validating the performance of LLM inference with vLLM 
 on the MI300X accelerator. The Docker image includes ROCm, vLLM, PyTorch, and tuning files in the CSV 
 format. For more information, see the guide to 
-`LLM inference performance validation with vLLM on the AMD Instinct™ MI300X accelerator <https://github.com/ROCm/MAD/blob/develop/benchmark/vllm/README.md>`_ 
+`LLM inference performance testing with vLLM on the AMD Instinct™ MI300X accelerator <https://github.com/ROCm/MAD/blob/develop/benchmark/vllm/README.md>`_ 
 on the ROCm GitHub repository.
 
 .. _rocm-for-ai-serve-hugging-face-tgi:
