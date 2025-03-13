@@ -102,7 +102,6 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
       extraBuildFlags: >-
-        -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm
         -DGRPC_ROOT="$(Build.SourcesDirectory)/bin"
         -DBUILD_RVS=ON
         -DBUILD_PROFILER=ON
@@ -156,11 +155,11 @@ jobs:
     inputs:
       targetType: inline
       script: |
-        sudo rm -rf /opt/rocm
-        sudo rm -rf /usr/sbin/rdcd
-        sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
-        sudo ln -s $(Agent.BuildDirectory)/rocm/bin/rdcd /usr/sbin/rdcd
-        echo $(Agent.BuildDirectory)/rocm/lib/rdc/grpc/lib | sudo tee /etc/ld.so.conf.d/grpc.conf
+        # sudo rm -rf /opt/rocm
+        # sudo rm -rf /usr/sbin/rdcd
+        # sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
+        # sudo ln -s $(Agent.BuildDirectory)/rocm/bin/rdcd /usr/sbin/rdcd
+        echo $(ROCM_PATH)/lib/rdc/grpc/lib | sudo tee /etc/ld.so.conf.d/grpc.conf
         sudo ldconfig -v
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
   - task: Bash@3
@@ -168,7 +167,7 @@ jobs:
     inputs:
       targetType: inline
       script: >-
-        $(Agent.BuildDirectory)/rocm/share/rdc/rdctst_tests/rdctst
+        $(ROCM_PATH)/share/rdc/rdctst_tests/rdctst
         --batch_mode
         --start_rdcd
         --unauth_comm
