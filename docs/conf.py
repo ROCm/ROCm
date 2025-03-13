@@ -8,7 +8,6 @@ import shutil
 
 # Keep capitalization due to similar linking on GitHub's markdown preview.
 shutil.copy2("../RELEASE.md", "./about/release-notes.md")
-shutil.copy2("../CHANGELOG.md", "./about/changelog.md")
 
 latex_engine = "xelatex"
 latex_elements = {
@@ -22,17 +21,17 @@ latex_elements = {
 # configurations for PDF output by Read the Docs
 project = "ROCm Documentation"
 author = "Advanced Micro Devices, Inc."
-copyright = "Copyright (c) 2024 Advanced Micro Devices, Inc. All rights reserved."
-version = "6.1.2"
-release = "6.1.2"
+copyright = "Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved."
+version = "6.1.5"
+release = "6.1.5"
 setting_all_article_info = True
 all_article_info_os = ["linux", "windows"]
 all_article_info_author = ""
 
 # pages with specific settings
 article_pages = [
-    {"file": "about/release-notes", "os": ["linux", "windows"], "date": "2024-06-04"},
-    {"file": "about/changelog", "os": ["linux", "windows"], "date": "2024-06-04"},
+    {"file": "about/release-notes", "os": ["linux"], "date": "2025-03-04"},
+    {"file": "compatibility/compatibility-matrix", "os": ["linux"]},
     {"file": "how-to/deep-learning-rocm", "os": ["linux"]},
     {"file": "how-to/rocm-for-ai/index", "os": ["linux"]},
     {"file": "how-to/rocm-for-ai/install", "os": ["linux"]},
@@ -97,7 +96,7 @@ html_theme = "rocm_docs_theme"
 html_theme_options = {"flavor": "rocm-docs-home"}
 
 html_static_path = ["sphinx/static/css"]
-html_css_files = ["rocm_custom.css"]
+html_css_files = ["rocm_custom.css", "rocm_rn.css"]
 
 html_title = "ROCm Documentation"
 

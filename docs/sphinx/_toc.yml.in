@@ -9,10 +9,6 @@ subtrees:
   - file: what-is-rocm.rst
   - file: about/release-notes.md
     title: Release notes
-    subtrees:
-    - entries:
-      - file: about/changelog.md
-        title: Changelog
   - url: https://github.com/ROCm/ROCm/labels/Verified%20Issue
     title: Known issues
 

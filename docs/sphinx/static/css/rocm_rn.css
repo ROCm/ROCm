@@ -1,0 +1,126 @@
+#rocm-rn-components col {
+  width: 6rem;
+}
+#rocm-rn-components col:nth-child(2) {
+  width: 12rem;
+}
+#rocm-rn-components td {
+  white-space: nowrap;
+}
+#rocm-rn-components td:last-of-type {
+  text-align: center;
+}
+#rocm-rn-components a svg {
+  color: var(--pst-color-text-base);
+}
+#rocm-rn-components a svg:hover {
+  color: var(--pst-color-link-hover);
+}
+#rocm-rn-components .tbody-reverse-zebra tr:nth-child(2n + 1) td {
+  background-color: var(--pst-color-table-row-zebra-high-bg);
+}
+#rocm-rn-components .tbody-reverse-zebra tr:nth-child(2n) td {
+  background-color: var(--pst-color-table-row-zebra-low-bg);
+}
+
+#rocm-rn-components:has(tbody.rocm-components-libs th[rowspan]:first-of-type:hover) .rocm-components-libs,
+#rocm-rn-components:has(tbody.rocm-components-libs th[rowspan]:first-of-type:hover) .rocm-components-libs td,
+#rocm-rn-components:has(tbody.rocm-components-libs th[rowspan]:first-of-type:hover) tbody.rocm-components-libs th {
+  background-color: var(--pst-color-table-row-hover-bg);
+}
+#rocm-rn-components:has(tbody.rocm-components-tools th[rowspan]:first-of-type:hover) .rocm-components-tools,
+#rocm-rn-components:has(tbody.rocm-components-tools th[rowspan]:first-of-type:hover) .rocm-components-tools td,
+#rocm-rn-components:has(tbody.rocm-components-tools th[rowspan]:first-of-type:hover) tbody.rocm-components-tools th {
+  background-color: var(--pst-color-table-row-hover-bg);
+}
+#rocm-rn-components:has(tbody.rocm-components-compilers th[rowspan]:first-of-type:hover) .rocm-components-compilers,
+#rocm-rn-components:has(tbody.rocm-components-compilers th[rowspan]:first-of-type:hover) .rocm-components-compilers td {
+  background-color: var(--pst-color-table-row-hover-bg);
+}
+#rocm-rn-components:has(tbody.rocm-components-runtimes th[rowspan]:first-of-type:hover) .rocm-components-runtimes,
+#rocm-rn-components:has(tbody.rocm-components-runtimes th[rowspan]:first-of-type:hover) .rocm-components-runtimes td {
+  background-color: var(--pst-color-table-row-hover-bg);
+}
+
+#rocm-rn-components:has(tbody.rocm-components-tools th[rowspan]:first-of-type:hover) .rocm-components-tools td {
+  background-color: var(--pst-color-table-row-hover-bg);
+}
+#rocm-rn-components:has(tbody.rocm-components-compilers th[rowspan]:first-of-type:hover) .rocm-components-compilers td {
+  background-color: var(--pst-color-table-row-hover-bg);
+}
+#rocm-rn-components:has(tbody.rocm-components-runtimes th[rowspan]:first-of-type:hover) .rocm-components-runtimes td {
+  background-color: var(--pst-color-table-row-hover-bg);
+}
+
+#rocm-rn-components:has(tbody.rocm-components-ml th[rowspan]:nth-of-type(2):hover) .rocm-components-ml td,
+#rocm-rn-components:has(tbody.rocm-components-ml th[rowspan]:nth-of-type(2):hover) .rocm-components-libs th:first-of-type {
+  background-color: var(--pst-color-table-row-hover-bg);
+}
+#rocm-rn-components:has(tbody.rocm-components-communication th[rowspan]:nth-of-type(2):hover) .rocm-components-communication td,
+#rocm-rn-components:has(tbody.rocm-components-communication th[rowspan]:nth-of-type(2):hover) .rocm-components-libs th:first-of-type {
+  background-color: var(--pst-color-table-row-hover-bg);
+}
+#rocm-rn-components:has(tbody.rocm-components-math th[rowspan]:nth-of-type(2):hover) .rocm-components-math td,
+#rocm-rn-components:has(tbody.rocm-components-math th[rowspan]:nth-of-type(2):hover) .rocm-components-libs th:first-of-type {
+  background-color: var(--pst-color-table-row-hover-bg);
+}
+#rocm-rn-components:has(tbody.rocm-components-primitives th[rowspan]:nth-of-type(2):hover) .rocm-components-primitives td,
+#rocm-rn-components:has(tbody.rocm-components-primitives th[rowspan]:nth-of-type(2):hover) .rocm-components-libs th:first-of-type {
+  background-color: var(--pst-color-table-row-hover-bg);
+}
+#rocm-rn-components:has(tbody.rocm-components-dev th[rowspan]:nth-of-type(2):hover) .rocm-components-dev td,
+#rocm-rn-components:has(tbody.rocm-components-dev th[rowspan]:nth-of-type(2):hover) .rocm-components-tools th:first-of-type {
+  background-color: var(--pst-color-table-row-hover-bg);
+}
+#rocm-rn-components:has(tbody.rocm-components-perf th[rowspan]:nth-of-type(2):hover) .rocm-components-perf td,
+#rocm-rn-components:has(tbody.rocm-components-perf th[rowspan]:nth-of-type(2):hover) .rocm-components-tools th:first-of-type {
+  background-color: var(--pst-color-table-row-hover-bg);
+}
+#rocm-rn-components:has(tbody.rocm-components-system th[rowspan]:nth-of-type(2):hover) .rocm-components-system td,
+#rocm-rn-components:has(tbody.rocm-components-system th[rowspan]:nth-of-type(2):hover) .rocm-components-tools th:first-of-type {
+  background-color: var(--pst-color-table-row-hover-bg);
+}
+
+#rocm-rn-components:has(tbody.rocm-components-ml td:hover) .rocm-components-ml th,
+#rocm-rn-components:has(tbody.rocm-components-ml td:hover) .rocm-components-libs th:first-of-type,
+#rocm-rn-components:has(tbody.rocm-components-ml td:hover) tr:hover > td {
+  background-color: var(--pst-color-table-row-hover-bg);
+}
+#rocm-rn-components:has(tbody.rocm-components-communication td:hover) .rocm-components-communication th,
+#rocm-rn-components:has(tbody.rocm-components-communication td:hover) .rocm-components-libs th:first-of-type,
+#rocm-rn-components:has(tbody.rocm-components-communication td:hover) tr:hover > td {
+  background-color: var(--pst-color-table-row-hover-bg);
+}
+#rocm-rn-components:has(tbody.rocm-components-math td:hover) .rocm-components-math th,
+#rocm-rn-components:has(tbody.rocm-components-math td:hover) .rocm-components-libs th:first-of-type,
+#rocm-rn-components:has(tbody.rocm-components-math td:hover) tr:hover > td {
+  background-color: var(--pst-color-table-row-hover-bg);
+}
+#rocm-rn-components:has(tbody.rocm-components-primitives td:hover) .rocm-components-primitives th,
+#rocm-rn-components:has(tbody.rocm-components-primitives td:hover) .rocm-components-libs th:first-of-type,
+#rocm-rn-components:has(tbody.rocm-components-primitives td:hover) tr:hover > td {
+  background-color: var(--pst-color-table-row-hover-bg);
+}
+#rocm-rn-components:has(tbody.rocm-components-dev td:hover) .rocm-components-dev th,
+#rocm-rn-components:has(tbody.rocm-components-dev td:hover) .rocm-components-tools th:first-of-type,
+#rocm-rn-components:has(tbody.rocm-components-dev td:hover) tr:hover > td {
+  background-color: var(--pst-color-table-row-hover-bg);
+}
+#rocm-rn-components:has(tbody.rocm-components-perf td:hover) .rocm-components-perf th,
+#rocm-rn-components:has(tbody.rocm-components-perf td:hover) .rocm-components-tools th:first-of-type,
+#rocm-rn-components:has(tbody.rocm-components-perf td:hover) tr:hover > td {
+  background-color: var(--pst-color-table-row-hover-bg);
+}
+#rocm-rn-components:has(tbody.rocm-components-system td:hover) .rocm-components-system th,
+#rocm-rn-components:has(tbody.rocm-components-system td:hover) .rocm-components-tools th:first-of-type,
+#rocm-rn-components:has(tbody.rocm-components-system td:hover) tr:hover > td {
+  background-color: var(--pst-color-table-row-hover-bg);
+}
+#rocm-rn-components:has(tbody.rocm-components-compilers td:hover) .rocm-components-compilers th:first-of-type,
+#rocm-rn-components:has(tbody.rocm-components-compilers td:hover) tr:hover > td {
+  background-color: var(--pst-color-table-row-hover-bg);
+}
+#rocm-rn-components:has(tbody.rocm-components-runtimes td:hover) .rocm-components-runtimes th:first-of-type,
+#rocm-rn-components:has(tbody.rocm-components-runtimes td:hover) tr:hover > td {
+  background-color: var(--pst-color-table-row-hover-bg);
+}
