@@ -46,13 +46,18 @@ parameters:
     - ROCR-Runtime
     - rocprofiler-register
     - roctracer
+# set to true if doing full build of ROCm stack
+# and dependencies are pulled from same pipeline
+- name: aggregatePipeline
+  type: boolean
+  default: false
 
 jobs:
 - job: rocprofiler_sdk
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  pool: 
+  pool:
     vmImage: ${{ variables.BASE_BUILD_POOL }}
   workspace:
     clean: all
@@ -78,6 +83,7 @@ jobs:
       checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
+      aggregatePipeline: ${{ parameters.aggregatePipeline }}
   - task: Bash@3
     displayName: Add Python site-packages binaries to path
     inputs:
@@ -110,7 +116,13 @@ jobs:
 
 - job: rocprofiler_sdk_testing
   dependsOn: rocprofiler_sdk
-  condition: and(succeeded(), eq(variables.ENABLE_GFX942_TESTS, 'true'), not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])))
+  condition:
+    and(
+      succeeded(),
+      eq(variables.ENABLE_GFX942_TESTS, 'true'),
+      not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])),
+      ${{ eq(parameters.aggregatePipeline, false) }}
+    )
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml

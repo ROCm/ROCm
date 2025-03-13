@@ -45,6 +45,11 @@ parameters:
     - rocprofiler-register
     - ROCR-Runtime
     - roctracer
+# set to true if doing full build of ROCm stack
+# and dependencies are pulled from same pipeline
+- name: aggregatePipeline
+  type: boolean
+  default: false
 
 jobs:
 - job: hipSPARSELt
@@ -83,6 +88,7 @@ jobs:
       checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
+      aggregatePipeline: ${{ parameters.aggregatePipeline }}
 # Build and install gtest and lapack
 # $(Pipeline.Workspace)/deps is a temporary folder for the build process
 # $(Pipeline.Workspace)/s/deps is part of the hipSPARSELt repo
@@ -138,7 +144,13 @@ jobs:
 
 - job: hipSPARSELt_testing
   dependsOn: hipSPARSELt
-  condition: and(succeeded(), eq(variables.ENABLE_GFX942_TESTS, 'true'), not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])))
+  condition:
+    and(
+      succeeded(),
+      eq(variables.ENABLE_GFX942_TESTS, 'true'),
+      not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])),
+      ${{ eq(parameters.aggregatePipeline, false) }}
+    )
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml

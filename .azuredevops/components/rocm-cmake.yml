@@ -20,13 +20,18 @@ parameters:
     - cmake==3.20.5
     - ninja
     - rocm-docs-core
+# set to true if doing full build of ROCm stack
+# and dependencies are pulled from same pipeline
+- name: aggregatePipeline
+  type: boolean
+  default: false
 
 jobs:
 - job: rocm_cmake
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  pool: 
+  pool:
     vmImage: ${{ variables.BASE_BUILD_POOL }}
   workspace:
     clean: all

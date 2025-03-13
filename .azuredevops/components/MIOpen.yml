@@ -54,13 +54,18 @@ parameters:
     - rocprofiler-register
     - rocRAND
     - roctracer
+# set to true if doing full build of ROCm stack
+# and dependencies are pulled from same pipeline
+- name: aggregatePipeline
+  type: boolean
+  default: false
 
 jobs:
 - job: MIOpen
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  pool: ${{ variables.MEDIUM_BUILD_POOL }}
+  pool: ${{ variables.HIGH_BUILD_POOL }}
   workspace:
     clean: all
   strategy:
@@ -86,6 +91,7 @@ jobs:
       checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
+      aggregatePipeline: ${{ parameters.aggregatePipeline }}
   - task: Bash@3
     displayName: Build and install other dependencies
     inputs:
@@ -95,7 +101,7 @@ jobs:
         sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
         sed -i '/composable_kernel/d' requirements.txt
         mkdir -p $(Agent.BuildDirectory)/miopen-deps
-        cmake -P install_deps.cmake --prefix $(Agent.BuildDirectory)/miopen-deps
+        cmake -P install_deps.cmake --prefix $(Agent.BuildDirectory)/miopen-deps -G Ninja
         sudo rm -rf /opt/rocm
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
@@ -127,7 +133,13 @@ jobs:
 - job: MIOpen_testing
   timeoutInMinutes: 180
   dependsOn: MIOpen
-  condition: and(succeeded(), eq(variables.ENABLE_GFX942_TESTS, 'true'), not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])))
+  condition:
+    and(
+      succeeded(),
+      eq(variables.ENABLE_GFX942_TESTS, 'true'),
+      not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])),
+      ${{ eq(parameters.aggregatePipeline, false) }}
+    )
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml

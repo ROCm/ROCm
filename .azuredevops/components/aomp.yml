@@ -68,6 +68,11 @@ parameters:
     - rocprofiler-register
     - ROCR-Runtime
     - roctracer
+# set to true if doing full build of ROCm stack
+# and dependencies are pulled from same pipeline
+- name: aggregatePipeline
+  type: boolean
+  default: false
 
 jobs:
 - job: aomp
@@ -99,6 +104,7 @@ jobs:
     parameters:
       checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmDependencies }}
+      aggregatePipeline: ${{ parameters.aggregatePipeline }}
 # Because clang is not being rebuilt and to separate downloaded ROCm
 # dependencies from the new artifacts, we use temporary symbolic links
 # for the compilation and installation to go through.
@@ -444,7 +450,13 @@ jobs:
 
 - job: aomp_testing
   dependsOn: aomp
-  condition: and(succeeded(), eq(variables.ENABLE_GFX942_TESTS, 'true'), not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])))
+  condition:
+    and(
+      succeeded(),
+      eq(variables.ENABLE_GFX942_TESTS, 'true'),
+      not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])),
+      ${{ eq(parameters.aggregatePipeline, false) }}
+    )
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml

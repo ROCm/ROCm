@@ -31,6 +31,11 @@ parameters:
 - name: setupHIPLibrarySymlinks
   type: boolean
   default: false
+# set to true if doing full build of ROCm stack
+# and dependencies are pulled from same pipeline
+- name: aggregatePipeline
+  type: boolean
+  default: false
 
 - name: componentVarList
   type: object
@@ -354,6 +359,7 @@ steps:
       parameters:
         componentName: ${{ split(dependency, ':')[0] }}
         pipelineId: ${{ parameters.componentVarList[split(dependency, ':')[0]].pipelineId }}
+        aggregatePipeline: ${{ parameters.aggregatePipeline }}
         ${{ if parameters.componentVarList[split(dependency, ':')[0]].hasGpuTarget }}:
           fileFilter: "${{ split(dependency, ':')[1] }}*${{ parameters.gpuTarget }}"
         # dependencySource = staging
@@ -383,6 +389,7 @@ steps:
       parameters:
         componentName: ${{ dependency }}
         pipelineId: ${{ parameters.componentVarList[dependency].pipelineId }}
+        aggregatePipeline: ${{ parameters.aggregatePipeline }}
         ${{ if parameters.componentVarList[dependency].hasGpuTarget }}:
           fileFilter: ${{ parameters.gpuTarget }}
         # dependencySource = staging
