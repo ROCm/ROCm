@@ -1,5 +1,3 @@
-:orphan:
-
 .. meta::
    :description: How to train a model using Megatron-LM for ROCm.
    :keywords: ROCm, AI, LLM, train, Megatron-LM, megatron, Llama, tutorial, docker, torch
@@ -527,7 +525,7 @@ Previous versions
 =================
 
 This table lists previous versions of the ROCm Megatron-LM Docker image for training
-performance validation. For detailed information about available models for
+performance testing. For detailed information about available models for
 benchmarking, see the version-specific documentation.
 
 .. list-table::

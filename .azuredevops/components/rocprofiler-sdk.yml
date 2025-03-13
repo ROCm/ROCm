@@ -13,6 +13,7 @@ parameters:
     - libdrm-dev
     - libdw-dev
     - libelf-dev
+    - libva-dev
     - pkg-config
     - python3-pip
 - name: pipModules
@@ -44,6 +45,7 @@ parameters:
     - rocminfo
     - ROCR-Runtime
     - rocprofiler-register
+    - roctracer
 
 jobs:
 - job: rocprofiler_sdk
@@ -140,12 +142,13 @@ jobs:
       dependencyList: ${{ parameters.rocmDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
   - task: Bash@3
-    displayName: Add Python site-packages binaries to path
+    displayName: Add Python and ROCm binaries to path
     inputs:
       targetType: inline
       script: |
         USER_BASE=$(python3 -m site --user-base)
         echo "##vso[task.prependpath]$USER_BASE/bin"
+        echo "##vso[task.prependpath]$(Agent.BuildDirectory)/rocm/bin"
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
       extraBuildFlags: >-
@@ -155,6 +158,7 @@ jobs:
         -DROCPROFILER_BUILD_RELEASE=ON
         -DGPU_TARGETS=$(JOB_GPU_TARGET)
       multithreadFlag: -- -j16
+  - template: ${{ variables.CI_TEMPLATE_PATH}}/steps/gpu-diagnostics.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
     parameters:
       componentName: rocprofiler-sdk

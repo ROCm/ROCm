@@ -73,7 +73,7 @@ subtrees:
           - file: how-to/rocm-for-ai/inference/llm-inference-frameworks.rst
             title: LLM inference frameworks
           - file: how-to/rocm-for-ai/inference/vllm-benchmark.rst
-            title: Performance validation
+            title: Performance testing
           - file: how-to/rocm-for-ai/inference/deploy-your-model.rst
             title: Deploy your model
 

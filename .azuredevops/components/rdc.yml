@@ -85,7 +85,7 @@ jobs:
     displayName: 'git clone grpc'
     inputs:
       targetType: inline
-      script: git clone -b v1.61.0 https://github.com/grpc/grpc --depth=1 --shallow-submodules --recurse-submodules
+      script: git clone -b v1.67.1 https://github.com/grpc/grpc --depth=1 --shallow-submodules --recurse-submodules
       workingDirectory: $(Build.SourcesDirectory)
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:

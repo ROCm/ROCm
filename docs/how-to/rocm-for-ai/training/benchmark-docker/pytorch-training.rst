@@ -1,5 +1,3 @@
-:orphan:
-
 .. meta::
    :description: How to train a model using PyTorch for ROCm.
    :keywords: ROCm, AI, LLM, train, PyTorch, torch, Llama, flux, tutorial, docker
@@ -11,7 +9,7 @@ Training a model with PyTorch for ROCm
 PyTorch is an open-source machine learning framework that is widely used for
 model training with GPU-optimized components for transformer-based models.
 
-The PyTorch for ROCm training Docker (``rocm/pytorch-training:v25.3``) image
+The PyTorch for ROCm training Docker (``rocm/pytorch-training:v25.4``) image
 provides a prebuilt optimized environment for fine-tuning and pretraining a
 model on AMD Instinct MI325X and MI300X accelerators. It includes the following
 software components to accelerate training workloads:
@@ -39,11 +37,13 @@ software components to accelerate training workloads:
 Supported models
 ================
 
-The following models are pre-optimized for performance on the AMD Instinct MI300X accelerator.
+The following models are pre-optimized for performance on the AMD Instinct MI325X and MI300X accelerators.
 
 * Llama 3.1 8B
 
 * Llama 3.1 70B
+
+* Llama 2 70B
 
 * FLUX.1-dev
 
@@ -54,28 +54,30 @@ The following models are pre-optimized for performance on the AMD Instinct MI300
    Some models, such as Llama 3, require an external license agreement through
    a third party (for example, Meta).
 
+.. _amd-pytorch-training-performance-measurements:
+
+Performance measurements
+========================
+
+To evaluate performance, the
+`Performance results with AMD ROCm software <https://www.amd.com/en/developer/resources/rocm-hub/dev-ai/performance-results.html#tabs-a8deaeb413-item-21cea50186-tab>`_
+page provides reference throughput and latency measurements for training
+popular AI models.
+
+.. note::
+
+   The performance data presented in
+   `Performance results with AMD ROCm software <https://www.amd.com/en/developer/resources/rocm-hub/dev-ai/performance-results.html#tabs-a8deaeb413-item-21cea50186-tab>`_
+   should not be interpreted as the peak performance achievable by AMD
+   Instinct MI325X and MI300X accelerators or ROCm software.
+
 System validation
 =================
 
-If you have already validated your system settings, skip this step. Otherwise,
-complete the :ref:`system validation and optimization steps <train-a-model-system-validation>`
-to set up your system before starting training.
-
-Disable NUMA auto-balancing
----------------------------
-
-Generally, application performance can benefit from disabling NUMA auto-balancing. However,
-it might be detrimental to performance with certain types of workloads.
-
-Run the command ``cat /proc/sys/kernel/numa_balancing`` to check your current NUMA (Non-Uniform
-Memory Access) settings. Output ``0`` indicates this setting is disabled. If there is no output or
-the output is ``1``, run the following command to disable NUMA auto-balancing.
-
-.. code-block:: shell
-
-   sudo sh -c 'echo 0 > /proc/sys/kernel/numa_balancing'
-
-See :ref:`mi300x-disable-numa` for more information.
+If you have already validated your system settings, including NUMA
+auto-balancing, skip this step. Otherwise, complete the :ref:`system validation
+and optimization steps <train-a-model-system-validation>` to set up your system
+before starting training.
 
 Environment setup
 =================
@@ -91,13 +93,13 @@ Download the Docker image
 
    .. code-block:: shell
 
-      docker pull rocm/pytorch-training:v25.3
+      docker pull rocm/pytorch-training:v25.4
 
 2. Run the Docker container.
 
    .. code-block:: shell
 
-      docker run -it --device /dev/dri --device /dev/kfd --network host --ipc host --group-add video --cap-add SYS_PTRACE --security-opt seccomp=unconfined --privileged -v $HOME:$HOME -v  $HOME/.ssh:/root/.ssh --shm-size 64G --name training_env rocm/pytorch-training:v25.3
+      docker run -it --device /dev/dri --device /dev/kfd --network host --ipc host --group-add video --cap-add SYS_PTRACE --security-opt seccomp=unconfined --privileged -v $HOME:$HOME -v  $HOME/.ssh:/root/.ssh --shm-size 64G --name training_env rocm/pytorch-training:v25.4
 
 3. Use these commands if you exit the ``training_env`` container and need to return to it.
 
@@ -106,19 +108,25 @@ Download the Docker image
       docker start training_env
       docker exec -it training_env bash
 
-4. In the Docker container, clone the `<https://github.com/ROCm/MAD>`__ repository and navigate to the benchmark scripts directory.
+4. In the Docker container, clone the `<https://github.com/ROCm/MAD>`__
+   repository and navigate to the benchmark scripts directory
+   ``/workspace/MAD/scripts/pytorch_train``.
 
    .. code-block:: shell
 
       git clone https://github.com/ROCm/MAD
-      cd MAD/scripts/pytorch-train
+      cd MAD/scripts/pytorch_train
 
 Prepare training datasets and dependencies
 ------------------------------------------
 
-The following benchmarking examples may require downloading models and datasets
+The following benchmarking examples require downloading models and datasets
 from Hugging Face. To ensure successful access to gated repos, set your
 ``HF_TOKEN``.
+
+.. code-block:: shell
+
+   export HF_TOKEN=$your_personal_hugging_face_access_token
 
 Run the setup script to install libraries and datasets needed for benchmarking.
 
@@ -229,10 +237,12 @@ Along with the following datasets:
 
 * `WikiText <https://huggingface.co/datasets/Salesforce/wikitext>`_
 
+* `UltraChat 200k <https://huggingface.co/datasets/HuggingFaceH4/ultrachat_200k>`_
+
 * `bghira/pseudo-camera-10k <https://huggingface.co/datasets/bghira/pseudo-camera-10k>`_
 
-Start training on AMD Instinct accelerators
-===========================================
+Getting started
+===============
 
 The prebuilt PyTorch with ROCm training environment allows users to quickly validate
 system performance, conduct training benchmarks, and achieve superior
@@ -242,7 +252,7 @@ can expect the container to perform in the model configurations described in
 the following section, but other configurations are not validated by AMD.
 
 Use the following instructions to set up the environment, configure the script
-to train models, and reproduce the benchmark results on MI300X series
+to train models, and reproduce the benchmark results on MI325X and MI300X
 accelerators with the AMD PyTorch training Docker image.
 
 Once your environment is set up, use the following commands and examples to start benchmarking.
@@ -279,31 +289,58 @@ Options and available models
      - ``finetune_lora``
      - Benchmark LoRA fine-tuning (Llama 3.1 70B with BF16)
 
+   * -
+     - ``HF_finetune_lora``
+     - Benchmark LoRA fine-tuning with Hugging Face PEFT (Llama 2 70B with BF16)
+
    * - ``$datatype``
-     - FP8 or BF16
+     - ``FP8`` or ``BF16``
      - Only Llama 3.1 8B supports FP8 precision.
 
    * - ``$model_repo``
-     - Llama-3.1-8B
+     - ``Llama-3.1-8B``
      - `Llama 3.1 8B <https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct>`_
 
    * - 
-     - Llama-3.1-70B
+     - ``Llama-3.1-70B``
      - `Llama 3.1 70B <https://huggingface.co/meta-llama/Llama-3.1-70B-Instruct>`_
 
    * - 
-     - Flux
+     - ``Llama-2-70B``
+     - `Llama 2 70B <https://huggingface.co/meta-llama/Llama-2-70B>`_
+
+   * - 
+     - ``Flux``
      - `FLUX.1 [dev] <https://huggingface.co/black-forest-labs/FLUX.1-dev>`_
+
+   * - ``$sequence_length``
+     - Sequence length for the language model.
+     - Between 2048 and 8192. 8192 by default.
+
+.. note::
+
+   Occasionally, downloading the Flux dataset might fail. In the event of this
+   error, manually download it from Hugging Face at
+   `black-forest-labs/FLUX.1-dev <https://huggingface.co/black-forest-labs/FLUX.1-dev>`_
+   and save it to `/workspace/FluxBenchmark`. This ensures that the test script can access
+   the required dataset.
 
 Fine-tuning
 -----------
 
-To start the fine-tuning benchmark, use the following command. It will run the benchmarking example of Llama 2 70B
+To start the fine-tuning benchmark, use the following command. It will run the benchmarking example of Llama 3.1 70B
 with the WikiText dataset using the AMD fork of `torchtune <https://github.com/AMD-AIG-AIMA/torchtune>`_.
 
 .. code-block:: shell
 
    ./pytorch_benchmark_report.sh -t {finetune_fw, finetune_lora} -p BF16 -m Llama-3.1-70B
+
+Use the following command to run the benchmarking example of Llama 2 70B with the UltraChat 200k dataset using
+`Hugging Face PEFT <https://huggingface.co/docs/peft/en/index>`_.
+
+.. code-block:: shell
+
+   ./pytorch_benchmark_report.sh -t HF_finetune_lora -p BF16 -m Llama-2-70B
 
 Benchmarking examples
 ---------------------
@@ -339,3 +376,32 @@ Here are some examples of how to use the command.
   .. code-block:: shell
 
      ./pytorch_benchmark_report.sh -t finetune_lora -p BF16 -m Llama-3.1-70B
+
+* Example 6: Hugging Face PEFT LoRA fine-tuning with Llama 2 70B
+
+  .. code-block:: shell
+
+     ./pytorch_benchmark_report.sh -t HF_finetune_lora -p BF16 -m Llama-2-70B
+
+Previous versions
+=================
+
+This table lists previous versions of the ROCm PyTorch training Docker image for training
+performance validation. For detailed information about available models for
+benchmarking, see the version-specific documentation.
+
+.. list-table::
+   :header-rows: 1
+   :stub-columns: 1
+
+   * - Image version
+     - ROCm version
+     - PyTorch version
+     - Resources
+
+   * - v25.3
+     - 6.3.0
+     - 2.7.0a0+git637433
+     - 
+       * `Documentation <https://rocm.docs.amd.com/en/docs-6.3.2/how-to/rocm-for-ai/training/benchmark-docker/pytorch-training.html>`_
+       * `Docker Hub <https://hub.docker.com/layers/rocm/pytorch-training/v25.3/images/sha256-0ffdde1b590fd2787b1c7adf5686875b100980b0f314090901387c44253e709b>`_
