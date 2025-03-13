@@ -42,8 +42,6 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  - name: ROCM_PATH
-    value: $(Agent.BuildDirectory)/rocm
   pool: 
     vmImage: ${{ variables.BASE_BUILD_POOL }}
   workspace:
@@ -68,13 +66,6 @@ jobs:
       checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
-  # - task: Bash@3
-  #   displayName: 'ROCm symbolic link'
-  #   inputs:
-  #     targetType: inline
-  #     script: |
-  #       sudo rm -rf /opt/rocm
-  #       sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
   - task: Bash@3
     displayName: 'Save Python Package Paths'
     inputs:
@@ -87,8 +78,7 @@ jobs:
     parameters:
       installEnabled: false
       extraBuildFlags: >-
-        -DROCM_PATH=$(Agent.BuildDirectory)/rocm
-        -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm;$(PYTHON_USER_SITE)/pybind11;$(PYTHON_DIST_PACKAGES)/pybind11;$(PYBIND11_PATH)
+        -DCMAKE_PREFIX_PATH=$(ROCM_PATH);$(PYTHON_USER_SITE)/pybind11;$(PYTHON_DIST_PACKAGES)/pybind11;$(PYBIND11_PATH)
         -DCMAKE_BUILD_TYPE=Release
         -DGPU_TARGETS=$(JOB_GPU_TARGET)
         -DCMAKE_INSTALL_PREFIX_PYTHON=$(Build.BinariesDirectory)
@@ -113,8 +103,7 @@ jobs:
     inputs:
       targetType: inline
       script: |
-        export ROCM_PATH=$(Agent.BuildDirectory)/rocm
-        export HIP_INCLUDE_DIRS=$(Agent.BuildDirectory)/rocm/include/hip
+        export HIP_INCLUDE_DIRS=$(ROCM_PATH)/include/hip
         sudo python3 setup.py bdist_wheel
         sudo chown -R $(whoami):$(id -gn) $(find . -name "*.whl")
       workingDirectory: $(Build.SourcesDirectory)
@@ -145,7 +134,6 @@ jobs:
   #     aptPackages: ${{ parameters.aptPackages }}
   #     pipModules: ${{ parameters.pipModules }}
   #     gpuTarget: $(JOB_GPU_TARGET)
-  #     optSymLink: true
 
 - job: rocPyDecode_testing
   dependsOn: rocPyDecode
@@ -153,8 +141,6 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  - name: ROCM_PATH
-    value: $(Agent.BuildDirectory)/rocm
   pool:
     name: $(JOB_TEST_POOL)
     demands: firstRenderDeviceAccess
@@ -213,8 +199,6 @@ jobs:
     inputs:
       targetType: inline
       script: |
-        # sudo rm -rf /opt/rocm
-        # sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
         echo "##vso[task.setvariable variable=PYTHON_USER_SITE;]$(python3 -m site --user-site)"
         echo "##vso[task.setvariable variable=PYTHON_DIST_PACKAGES;]$(python3 -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')"
         echo "##vso[task.setvariable variable=PYBIND11_PATH;]$(python3 -c 'import pybind11; print(pybind11.get_cmake_dir())')"
@@ -222,8 +206,7 @@ jobs:
     displayName: 'rocPyDecode Test CMake Flags'
     inputs:
       cmakeArgs: >-
-        -DROCM_PATH=$(Agent.BuildDirectory)/rocm
-        -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm;$(PYTHON_USER_SITE)/pybind11;$(PYTHON_DIST_PACKAGES)/pybind11;$(PYBIND11_PATH)
+        -DCMAKE_PREFIX_PATH=$(ROCM_PATH);$(PYTHON_USER_SITE)/pybind11;$(PYTHON_DIST_PACKAGES)/pybind11;$(PYBIND11_PATH)
         -DCMAKE_BUILD_TYPE=Release
         -DGPU_TARGETS=$(JOB_GPU_TARGET)
         ..
