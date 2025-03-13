@@ -110,7 +110,7 @@ Download the Docker image
 
 4. In the Docker container, clone the `<https://github.com/ROCm/MAD>`__
    repository and navigate to the benchmark scripts directory
-   `/workspace/MAD/scripts/pytorch_train`.
+   ``/workspace/MAD/scripts/pytorch_train``.
 
    .. code-block:: shell
 
