@@ -104,6 +104,7 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
       extraBuildFlags: >-
+        -DCMAKE_PREFIX_PATH=$(ROCM_PATH)
         -DGRPC_ROOT="$(Build.SourcesDirectory)/bin"
         -DBUILD_RVS=ON
         -DBUILD_PROFILER=ON
