@@ -362,7 +362,7 @@ Click {fab}`github` to go to the component's source code on GitHub.
             <tr>
                 <td><a href="https://rocm.docs.amd.com/projects/ROCR-Runtime/en/docs-6.1.5">ROCr Runtime</a></td>
                 <td>1.13.0</td>
-                <td><a href="https://github.com/ROCm/ROCR-Runtime/releases/tag/rocm-6.1.5"><i
+                <td><a href="https://github.com/ROCm/ROCR-Runtime"><i
                             class="fab fa-github fa-lg"></i></a></td>
             </tr>
         </tbody>
