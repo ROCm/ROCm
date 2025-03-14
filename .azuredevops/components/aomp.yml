@@ -103,7 +103,7 @@ jobs:
 # dependencies from the new artifacts, we use temporary symbolic links
 # for the compilation and installation to go through.
   - script: |
-      sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
+      # sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
       mkdir -p $(Build.BinariesDirectory)/lib/llvm/bin
       ln -s $(Agent.BuildDirectory)/rocm/llvm/bin/clang $(Build.BinariesDirectory)/lib/llvm/bin/clang
       ln -s $(Agent.BuildDirectory)/rocm/llvm/bin/clang++ $(Build.BinariesDirectory)/lib/llvm/bin/clang++
@@ -469,13 +469,13 @@ jobs:
     parameters:
       checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmDependencies }}
-  - task: Bash@3
-    displayName: ROCm symbolic link
-    inputs:
-      targetType: inline
-      script: |
-        sudo rm -rf /opt/rocm
-        sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
+  # - task: Bash@3
+  #   displayName: ROCm symbolic link
+  #   inputs:
+  #     targetType: inline
+  #     script: |
+  #       sudo rm -rf /opt/rocm
+  #       sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/checkout.yml
     parameters:
       checkoutRepo: ${{ parameters.checkoutRepo }}
