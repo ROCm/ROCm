@@ -70,16 +70,14 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
       extraBuildFlags: >-
-        -DROCM_PATH=$(Agent.BuildDirectory)/rocm
         -DCMAKE_BUILD_TYPE=Release
-        -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm;$(Agent.BuildDirectory)/rocm/llvm
         -DHIPFORT_INSTALL_DIR=$(Build.BinariesDirectory)
-        -DHIPFORT_COMPILER=$(Agent.BuildDirectory)/rocm/llvm/bin/flang
+        -DHIPFORT_COMPILER=$(ROCM_PATH)/llvm/bin/amdflang
         -DCMAKE_Fortran_FLAGS="-Mfree -fPIC"
         -DCMAKE_Fortran_FLAGS_DEBUG=""
         -DHIPFORT_COMPILER_FLAGS="-cpp"
-        -DHIPFORT_AR=$(Agent.BuildDirectory)/rocm/llvm/bin/llvm-ar
-        -DHIPFORT_RANLIB=$(Agent.BuildDirectory)/rocm/llvm/bin/llvm-ranlib
+        -DHIPFORT_AR=$(ROCM_PATH)/llvm/bin/llvm-ar
+        -DHIPFORT_RANLIB=$(ROCM_PATH)/llvm/bin/llvm-ranlib
         -DAMDGPU_TARGETS=$(JOB_GPU_TARGET)
         -DBUILD_TESTING=ON
         -GNinja
@@ -130,24 +128,15 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/checkout.yml
     parameters:
       checkoutRepo: ${{ parameters.checkoutRepo }}
-  - task: Bash@3
-    displayName: 'ROCm symbolic link'
-    inputs:
-      targetType: inline
-      script: |
-        sudo rm -rf /opt/rocm
-        sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
-      workingDirectory: $(Build.SourcesDirectory)
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
   - task: Bash@3
     displayName: 'Test hipfort'
     inputs:
       targetType: inline
-      script: PATH=$(Agent.BuildDirectory)/rocm/bin:$PATH make run_all
+      script: make run_all
       workingDirectory: $(Build.SourcesDirectory)/test
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
       environment: test
       gpuTarget: $(JOB_GPU_TARGET)
-      optSymLink: true
