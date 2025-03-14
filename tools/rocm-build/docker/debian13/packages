@@ -1,0 +1,293 @@
+#
+# Like ubuntu24
+#
+apt-utils
+aria2
+autoconf
+automake
+bc
+bison
+bridge-utils
+build-essential
+bzip2
+check
+chrpath
+cifs-utils
+cmake
+cpio
+curl
+devscripts
+dos2unix
+doxygen
+fakeroot
+flex
+freeglut3-dev
+g++
+g++-multilib
+gawk
+gcc
+gcc-multilib
+gfortran
+git-lfs
+gnupg
+#googletest see later int this file
+graphviz
+kernel-wedge
+kmod
+lbzip2
+less
+libass-dev
+libatlas-base-dev
+libbabeltrace-dev
+libboost-all-dev
+libboost-dev
+libboost-filesystem-dev
+libboost-program-options-dev
+libboost-system-dev
+libbz2-dev
+libc++-dev
+libc++1
+libc++abi-dev
+libc++abi1
+libc6-dev-i386
+libcap-dev
+libcurl4-openssl-dev
+libdw-dev
+#libdw1 replaced by conflicting one
+libdwarf-dev
+libelf-dev
+#libelf1 replaced by conflicting one
+libexpat1-dev
+libfftw3-dev
+libfile-find-rule-perl
+libgflags-dev
+libglew-dev
+libgmp-dev
+libgoogle-glog-dev
+libgtk2.0-dev
+libhdf5-dev
+libjpeg-dev
+libleveldb-dev
+liblmdb-dev
+liblzma-dev
+libmpfr-dev
+libmpich-dev
+#libmsgpack-dev for hipblaslt
+libmsgpack-dev=4.0.0-3
+libncurses-dev
+libnuma-dev
+libomp-dev
+libopenblas-dev
+libopencv-dev
+libpci-dev
+libpci3
+libpciaccess-dev
+libpciaccess0
+libprotobuf-dev
+libpython3-dev
+libreadline-dev
+libsnappy-dev
+libssl-dev
+libsuitesparse-dev
+libsystemd-dev
+libtool
+liburi-encode-perl
+libvirt-clients
+libvirt-daemon-system
+libyaml-cpp-dev
+llvm
+llvm-dev
+llvm-runtime
+mesa-common-dev
+mpich
+ocaml
+ocaml-findlib
+ocl-icd-libopencl1
+ocl-icd-opencl-dev
+patchelf
+pigz
+pkg-config
+protobuf-compiler
+python-is-python3
+# Cause failure in hipblaslt build because of python3-termcolor incompatible dep in dirty build
+# python3-barectf
+python3-dev
+python3-pip
+python3-pip-whl
+python3-requests
+python3-venv
+re2c
+redis-tools
+rpm
+rsync
+ssh
+strace
+sudo
+systemtap-sdt-dev
+texinfo
+texlive
+texlive-extra-utils
+texlive-plain-generic
+texlive-xetex
+unzip
+vim
+wget
+xsltproc
+xxd
+zlib1g-dev
+#
+# From prerequisites
+#
+# FROM
+#
+# pip3 install CppHeaderParser argparse lxml recommonmark jinja2==3.0.0 \
+#    websockets matplotlib numpy scipy minimal msgpack pytest sphinx joblib PyYAML rocm-docs-core cmake==3.25.2 pandas 
+#    myst-parser setuptools lit
+#TODO CppHeaderParser See python/CppHeaderParser/
+#TODO argparse See python/argparse
+# lxml
+libxml2-dev
+# recommonmark
+python3-recommonmark
+# jinja2==3.0.0
+python3-jinja2
+# websockets
+python3-websockets
+# matplotlib
+python3-matplotlib
+# numpy
+python3-numpy
+# scipy
+python3-scipy
+# minimal
+python3-minimal
+# msgpack
+python3-msgpack
+# pytest
+python3-pytest
+# sphinx
+python3-sphinx
+# joblib
+python3-joblib
+# PyYAML
+python3-yaml
+#TODO rocm-docs-core See python/rocm-docs-core
+# cmake==3.25.2
+cmake-curses-gui
+# pandas
+python3-pandas
+# myst-parser
+python3-myst-parser
+# setuptools
+python3-setuptools
+#TODO lit See python/lit/
+#
+# FROM
+#
+# wget https://repo.radeon.com/amdgpu-install/6.3/ubuntu/noble/amdgpu-install_6.3.60300-1_all.deb
+#apt install -y ./amdgpu-install_6.3.60300-1_all.deb
+#apt update
+#apt install -y libva-amdgpu-dev libdrm-amdgpu-dev
+#rm -rf /etc/apt/sources.list.d/amdgpu.list /etc/apt/sources.list.d/amdgpu-proprietary.list ./amdgpu-install_6.3.60300-1_all.deb
+#apt autoremove -y --purge amdgpu-install
+#apt update
+libva-dev
+libdrm-dev
+#
+# FROM
+#
+# Build ccache from the source
+ccache
+# Install OCaml packages (TOSEE libcompiler-libs-ocaml-dev libstdlib-ocaml-dev)
+#make fail tests# ocamlfind: Package `ctypes-foreign' not found - required by `ctypes.foreign'
+#make fail tests# libctypes-ocaml-dev
+#make fail tests# libctypes-ocaml
+# Install and modify git-repo (repo is in contrib)
+repo
+# hwlock from source ? 
+hwloc
+# Install googletest from source ?
+# Test build fails because of missing header: See https://github.com/ROCm/rccl/issues/1455
+googletest=1.12.1-0.2
+libgtest-dev=1.12.1-0.2
+libgmock-dev=1.12.1-0.2
+ament-cmake-googletest=1.5.2-2
+# Install gRPC from source: rdc requires grpc 1.61
+#libgrpc-dev
+#libgrpc++-dev
+# Download prebuilt AMD multithreaded blis (2.0) to build ?
+libblis-pthread-dev
+libblis-openmp-dev
+# Download aocl-linux-aocc-4.0_1_amd64
+# TODO see libflame as a replacement
+libflame-dev
+# lapack(3.9.1v) ?
+liblapack64-dev
+# FMT(7.1.3v) ?
+libfmt-dev
+# Build and install libjpeg-turbo ?
+libjpeg62-turbo-dev
+libjpeg62-turbo
+# Get released ninja from source ? Kitware version mandatory ?
+ninja-build
+# Build NASM
+nasm
+# Build YASM
+yasm
+# Build x264
+x264
+# Build x265
+x265
+# Build fdk-aac
+libfdk-aac2
+# Build FFmpeg
+ffmpeg
+# Install Google Benchmark
+libbenchmark-dev
+#
+# OTHERS
+#
+wget
+ca-certificates
+# Make 4.4 fails to build rocprofiler-systems (external papi)
+# See WORKSPACE/rocprofiler-systems/.gitmodules
+# Code that fails is here https://github.com/icl-utk-edu/papi.git
+# Should take package libpapi-dev instead of building
+make=4.3-4.1
+#libltdl-dev
+python3-ply
+#python3-pydata-sphinx-theme
+python3-breathe
+python3-fastjsonschema
+#python3-git
+#python3-github
+mesa-va-drivers
+#libscalapack64-openmpi-dev
+file
+vim
+libzstd-dev
+#libclang-19-dev
+##libedit-dev
+filecheck
+#
+# Found from log
+#
+valgrind
+g++-13
+g++-13-multilib
+gcc-13
+gcc-13-multilib
+help2man
+# required by rocblas ?
+libblis64-dev
+# required by rocAL 
+libdlpack-dev
+pybind11-dev
+#libturbojpeg0-dev doesn't work, have to build from source
+#rapidjson-dev doesn't work, have to build from source, done in rocAL
+# Need to downgrade the followings
+libavutil-dev=7:5.1.6-0+deb12u1
+libavformat-dev=7:5.1.6-0+deb12u1
+libavcodec-dev=7:5.1.6-0+deb12u1
+libswresample-dev=7:5.1.6-0+deb12u1
+libswscale-dev=7:5.1.6-0+deb12u1
