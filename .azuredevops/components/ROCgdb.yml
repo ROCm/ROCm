@@ -37,7 +37,7 @@ jobs:
   - group: common
   - template: /.azuredevops/variables-global.yml
   - name: PKG_CONFIG_PATH
-    value: $(Agent.BuildDirectory)/rocm/share/pkgconfig
+    value: $(ROCM_PATH)/share/pkgconfig
   pool: $(JOB_TEST_POOL)
   workspace:
     clean: all
@@ -79,8 +79,8 @@ jobs:
         --with-babeltrace
         --with-lzma
         --with-python=python3
-        --with-rocm-dbgapi=$(Agent.BuildDirectory)/rocm
-        LDFLAGS="-Wl,--enable-new-dtags,-rpath=$(Agent.BuildDirectory)/rocm/lib"
+        --with-rocm-dbgapi=$(ROCM_PATH)
+        LDFLAGS="-Wl,--enable-new-dtags,-rpath=$(ROCM_PATH)/lib"
       makeCallPrefix: LD_RUN_PATH='${ORIGIN}/../lib'
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-upload.yml
@@ -89,9 +89,7 @@ jobs:
     inputs:
       targetType: inline
       script: |
-        sudo rm -rf /opt/rocm
-        sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
-        echo "##vso[task.prependpath]/opt/rocm/bin"
+        echo "##vso[task.prependpath]$(ROCM_PATH)/bin"
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-links.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
   - task: Bash@3
