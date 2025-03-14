@@ -18,6 +18,7 @@
 | [6.2.2](https://rocm.docs.amd.com/en/docs-6.2.2/) | September 27, 2024 |
 | [6.2.1](https://rocm.docs.amd.com/en/docs-6.2.1/) | September 20, 2024 |
 | [6.2.0](https://rocm.docs.amd.com/en/docs-6.2.0/) | August 2, 2024 |
+| [6.1.5](https://rocm.docs.amd.com/en/docs-6.1.5/) | March 13, 2025 |
 | [6.1.2](https://rocm.docs.amd.com/en/docs-6.1.2/) | June 4, 2024 |
 | [6.1.1](https://rocm.docs.amd.com/en/docs-6.1.1/) | May 8, 2024 |
 | [6.1.0](https://rocm.docs.amd.com/en/docs-6.1.0/) | Apr 16, 2024 |
