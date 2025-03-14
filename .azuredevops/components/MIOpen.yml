@@ -94,9 +94,9 @@ jobs:
       script: |
         sed -i '/composable_kernel/d' requirements.txt
         mkdir -p $(Agent.BuildDirectory)/miopen-deps
-        cmake -P install_deps.cmake --prefix $(Agent.BuildDirectory)/miopen-deps \
-          -DCMAKE_CXX_COMPILER=$(ROCM_PATH)/llvm/bin/amdclang++ \
-          -DCMAKE_C_COMPILER=$(ROCM_PATH)/llvm/bin/amdclang
+        export CXX=$(ROCM_PATH)/llvm/bin/amdclang++
+        export CC=$(ROCM_PATH)/llvm/bin/amdclang
+        cmake -P install_deps.cmake --prefix $(Agent.BuildDirectory)/miopen-deps
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
       extraBuildFlags: >-
@@ -168,9 +168,9 @@ jobs:
       script: |
         sed -i '/composable_kernel/d' requirements.txt
         mkdir -p $(Agent.BuildDirectory)/miopen-deps
-        cmake -P install_deps.cmake --prefix $(Agent.BuildDirectory)/miopen-deps \
-          -DCMAKE_CXX_COMPILER=$(ROCM_PATH)/llvm/bin/amdclang++ \
-          -DCMAKE_C_COMPILER=$(ROCM_PATH)/llvm/bin/amdclang
+        export CXX=$(ROCM_PATH)/llvm/bin/amdclang++
+        export CC=$(ROCM_PATH)/llvm/bin/amdclang
+        cmake -P install_deps.cmake --prefix $(Agent.BuildDirectory)/miopen-deps
   - task: CMake@1
     displayName: 'MIOpen Test CMake Flags'
     inputs:
