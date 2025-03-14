@@ -72,8 +72,8 @@ jobs:
       extraBuildFlags: >-
         -DCMAKE_BUILD_TYPE=Release
         -DHIPFORT_INSTALL_DIR=$(Build.BinariesDirectory)
-        -DHIPFORT_COMPILER=$(ROCM_PATH)/llvm/bin/amdflang
-        -DCMAKE_Fortran_FLAGS="-Mfree -fPIC"
+        -DHIPFORT_COMPILER=$(ROCM_PATH)/llvm/bin/flang
+        -DCMAKE_Fortran_FLAGS="-fPIC"
         -DCMAKE_Fortran_FLAGS_DEBUG=""
         -DHIPFORT_COMPILER_FLAGS="-cpp"
         -DHIPFORT_AR=$(ROCM_PATH)/llvm/bin/llvm-ar
