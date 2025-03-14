@@ -30,7 +30,6 @@ Our documentation is organized into the following categories:
 :padding: 2
 
 * Linux
-  * {doc}`Quick start guide<rocm-install-on-linux:tutorial/quick-start>`
   * {doc}`Linux install guide<rocm-install-on-linux:how-to/native-install/index>`
   * {doc}`Package manager integration<rocm-install-on-linux:how-to/native-install/package-manager-integration>`
   * {doc}`Install Docker containers<rocm-install-on-linux:how-to/docker>`
@@ -57,7 +56,6 @@ Our documentation is organized into the following categories:
 * {doc}`Docker<rocm-install-on-linux:reference/docker-image-support-matrix>`
 * [OpenMP](./about/compatibility/openmp.md)
 * [Precision support](./compatibility/precision-support.rst)
-* {doc}`ROCm on Radeon GPUs<radeon:index>`
 :::
 
 <!-- markdownlint-disable MD051 -->
