@@ -58,11 +58,9 @@ jobs:
   - name: HIP_ROCCLR_HOME
     value: $(Build.BinariesDirectory)/rocm
   - name: TENSILE_ROCM_ASSEMBLER_PATH
-    value: $(Agent.BuildDirectory)/rocm/llvm/bin/amdclang
+    value: $(ROCM_PATH)/llvm/bin/amdclang
   - name: TENSILE_ROCM_OFFLOAD_BUNDLER_PATH
-    value: $(Agent.BuildDirectory)/rocm/llvm/bin/clang-offload-bundler
-  - name: ROCM_PATH
-    value: $(Agent.BuildDirectory)/rocm
+    value: $(ROCM_PATH)/llvm/bin/clang-offload-bundler
   - name: DAY_STRING
     value: $[format('{0:ddMMyyyy}', pipeline.startTime)]
   pool: ${{ variables.ULTRA_BUILD_POOL }}
@@ -89,8 +87,6 @@ jobs:
       checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
-  - script: sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
-    displayName: ROCm symbolic link
 # Build and install gtest, lapack, hipBLAS-common
 # $(Pipeline.Workspace)/deps is a temporary folder for the build process
 # $(Pipeline.Workspace)/s/deps is part of the hipBLASLt repo
@@ -114,7 +110,7 @@ jobs:
   - task: Cache@2
     displayName: Ccache caching
     inputs:
-      key: hipBLASLt | $(Agent.OS) | $(JOB_GPU_TARGET) | $(DAY_STRING) | $(Agent.BuildDirectory)/rocm/llvm/bin/amdclang++
+      key: hipBLASLt | $(Agent.OS) | $(JOB_GPU_TARGET) | $(DAY_STRING) | $(ROCM_PATH)/llvm/bin/amdclang++
       path: $(CCACHE_DIR)
       restoreKeys: |
         hipBLASLt | $(Agent.OS) | $(JOB_GPU_TARGET) | $(DAY_STRING)
@@ -123,16 +119,16 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
       extraBuildFlags: >-
-        -DCMAKE_BUILD_TYPE=Release
-        -DCMAKE_CXX_COMPILER=$(Agent.BuildDirectory)/rocm/llvm/bin/amdclang++
-        -DCMAKE_C_COMPILER=$(Agent.BuildDirectory)/rocm/llvm/bin/amdclang
+        -DCMAKE_PREFIX_PATH=$(ROCM_PATH)
+        -DCMAKE_CXX_COMPILER=$(ROCM_PATH)/llvm/bin/amdclang++
+        -DCMAKE_C_COMPILER=$(ROCM_PATH)/llvm/bin/amdclang
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
         -DCMAKE_C_COMPILER_LAUNCHER=ccache
+        -DCMAKE_BUILD_TYPE=Release
         -DAMDGPU_TARGETS=$(JOB_GPU_TARGET)
         -DTensile_LOGIC=
         -DTensile_CPU_THREADS=
         -DTensile_LIBRARY_FORMAT=msgpack
-        -DCMAKE_PREFIX_PATH="$(Agent.BuildDirectory)/rocm"
         -DBUILD_CLIENTS_TESTS=ON
         -GNinja
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
@@ -194,7 +190,7 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
     parameters:
       componentName: hipBLASLt
-      testDir: '$(Agent.BuildDirectory)/rocm/bin'
+      testDir: '$(ROCM_PATH)/bin'
       testExecutable: './hipblaslt-test'
       testParameters: '--gtest_output=xml:./test_output.xml --gtest_color=yes --gtest_filter=*pre_checkin*'
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
