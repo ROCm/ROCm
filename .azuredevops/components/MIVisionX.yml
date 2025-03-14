@@ -163,4 +163,3 @@ jobs:
       pipModules: ${{ parameters.pipModules }}
       environment: test
       gpuTarget: $(JOB_GPU_TARGET)
-      optSymLink: true
