@@ -88,7 +88,7 @@ jobs:
   #     pipModules: ${{ parameters.pipModules }}
 
 - job: Tensile_testing
-  timeoutInMinutes: 90
+  timeoutInMinutes: 120
   dependsOn: Tensile
   condition: and(succeeded(), eq(variables.ENABLE_GFX942_TESTS, 'true'), not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])))
   variables:

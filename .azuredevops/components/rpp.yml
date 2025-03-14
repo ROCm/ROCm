@@ -102,8 +102,6 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  # - name: LD_LIBRARY_PATH
-  #   value: $(ROCM_PATH)/lib;$(ROCM_PATH)/llvm/lib
   pool: $(JOB_TEST_POOL)
   workspace:
     clean: all
