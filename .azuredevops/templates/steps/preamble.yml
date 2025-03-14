@@ -12,21 +12,8 @@ steps:
   inputs:
     targetType: inline
     script: python3 --version
-- task: Bash@3
+- script: pip list -v
   displayName: 'list python packages'
-  inputs:
-    targetType: inline
-    script: 'pip list -v'
-- task: Bash@3
-  displayName: 'set git parallelism'
-  inputs:
-    targetType: inline
-    script: |
-      CORES=$(nproc)
-      THREADS=$((CORES * 2))
-      git config --global pack.threads $THREADS
-      git config --global delta.parallel $THREADS
-      git config --global index.threads $CORES
 - task: DeleteFiles@1
   displayName: 'Cleanup checkout space'
   inputs:
