@@ -92,17 +92,17 @@ jobs:
       targetType: inline
       workingDirectory: $(Build.SourcesDirectory)
       script: |
-        sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
         sed -i '/composable_kernel/d' requirements.txt
         mkdir -p $(Agent.BuildDirectory)/miopen-deps
-        cmake -P install_deps.cmake --prefix $(Agent.BuildDirectory)/miopen-deps
-        sudo rm -rf /opt/rocm
+        cmake -P install_deps.cmake --prefix $(Agent.BuildDirectory)/miopen-deps \
+          -DCMAKE_CXX_COMPILER=$(ROCM_PATH)/llvm/bin/amdclang++ \
+          -DCMAKE_C_COMPILER=$(ROCM_PATH)/llvm/bin/amdclang
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
       extraBuildFlags: >-
         -DMIOPEN_BACKEND=HIP
-        -DCMAKE_CXX_COMPILER=$(Agent.BuildDirectory)/rocm/llvm/bin/amdclang++
-        -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm;$(Agent.BuildDirectory)/miopen-deps
+        -DCMAKE_CXX_COMPILER=$(ROCM_PATH)/llvm/bin/amdclang++
+        -DCMAKE_PREFIX_PATH=$(ROCM_PATH);$(Agent.BuildDirectory)/miopen-deps
         -DGPU_TARGETS=$(JOB_GPU_TARGET)
         -DMIOPEN_ENABLE_AI_KERNEL_TUNING=OFF
         -DMIOPEN_ENABLE_AI_IMMED_MODE_FALLBACK=OFF
@@ -131,8 +131,6 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  - name: ROCM_PATH
-    value: $(Agent.BuildDirectory)/rocm
   pool: $(JOB_TEST_POOL)
   workspace:
     clean: all
@@ -168,19 +166,19 @@ jobs:
       targetType: inline
       workingDirectory: $(Build.SourcesDirectory)
       script: |
-        sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
         sed -i '/composable_kernel/d' requirements.txt
         mkdir -p $(Agent.BuildDirectory)/miopen-deps
-        cmake -P install_deps.cmake --prefix $(Agent.BuildDirectory)/miopen-deps
-        sudo rm -rf /opt/rocm
+        cmake -P install_deps.cmake --prefix $(Agent.BuildDirectory)/miopen-deps \
+          -DCMAKE_CXX_COMPILER=$(ROCM_PATH)/llvm/bin/amdclang++ \
+          -DCMAKE_C_COMPILER=$(ROCM_PATH)/llvm/bin/amdclang
   - task: CMake@1
     displayName: 'MIOpen Test CMake Flags'
     inputs:
       cmakeArgs: >-
-        -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm;$(Build.SourcesDirectory)/bin;$(Agent.BuildDirectory)/miopen-deps
-        -DCMAKE_INSTALL_PREFIX=$(Agent.BuildDirectory)/rocm
-        -DCMAKE_CXX_COMPILER=$(Agent.BuildDirectory)/rocm/llvm/bin/amdclang++
-        -DCMAKE_C_COMPILER=$(Agent.BuildDirectory)/rocm/llvm/bin/amdclang
+        -DCMAKE_PREFIX_PATH=$(ROCM_PATH);$(Build.SourcesDirectory)/bin;$(Agent.BuildDirectory)/miopen-deps
+        -DCMAKE_INSTALL_PREFIX=$(ROCM_PATH)
+        -DCMAKE_CXX_COMPILER=$(ROCM_PATH)/llvm/bin/amdclang++
+        -DCMAKE_C_COMPILER=$(ROCM_PATH)/llvm/bin/amdclang
         -DMIOPEN_BACKEND=HIP
         -DMIOPEN_TEST_FLAGS=" --disable-verification-cache"
         -DCMAKE_BUILD_TYPE=release
