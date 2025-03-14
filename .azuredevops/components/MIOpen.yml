@@ -101,7 +101,7 @@ jobs:
         sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
         sed -i '/composable_kernel/d' requirements.txt
         mkdir -p $(Agent.BuildDirectory)/miopen-deps
-        cmake -P install_deps.cmake --prefix $(Agent.BuildDirectory)/miopen-deps -G Ninja
+        cmake -P install_deps.cmake --prefix $(Agent.BuildDirectory)/miopen-deps --generator Ninja
         sudo rm -rf /opt/rocm
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
