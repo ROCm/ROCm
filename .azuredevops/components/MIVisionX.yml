@@ -98,7 +98,6 @@ jobs:
     parameters:
       extraBuildFlags: >-
         -DCMAKE_BUILD_TYPE=Release
-        -DROCM_PATH=$(Agent.BuildDirectory)/rocm
         -DROCM_DEP_ROCMCORE=ON
         -GNinja
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
@@ -148,11 +147,11 @@ jobs:
   # anything in /opt may be persistent across runs
   # so we need to remove the symlink if it already exists
   - script: |
-      sudo rm -f /opt/rocm
-      sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
+      # sudo rm -f /opt/rocm
+      # sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
       mkdir mivisionx-tests
       cd mivisionx-tests
-      cmake /opt/rocm/share/mivisionx/test
+      cmake $(ROCM_PATH)/share/mivisionx/test
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
     parameters:
