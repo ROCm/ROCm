@@ -48,6 +48,11 @@ parameters:
     - rocprofiler-register
     - ROCR-Runtime
     - roctracer
+# set to true if doing full build of ROCm stack
+# and dependencies are pulled from same pipeline
+- name: aggregatePipeline
+  type: boolean
+  default: false
 
 jobs:
 - job: rccl
@@ -57,7 +62,7 @@ jobs:
   - template: /.azuredevops/variables-global.yml
   - name: HIP_ROCCLR_HOME
     value: $(Build.BinariesDirectory)/rocm
-  pool: ${{ variables.MEDIUM_BUILD_POOL }}
+  pool: ${{ variables.HIGH_BUILD_POOL }}
   workspace:
     clean: all
   strategy:
@@ -81,6 +86,7 @@ jobs:
       checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
+      aggregatePipeline: ${{ parameters.aggregatePipeline }}
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
       extraBuildFlags: >-
@@ -111,7 +117,13 @@ jobs:
 - job: rccl_testing
   timeoutInMinutes: 120
   dependsOn: rccl
-  condition: and(succeeded(), eq(variables.ENABLE_GFX942_TESTS, 'true'), not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])))
+  condition:
+    and(
+      succeeded(),
+      eq(variables.ENABLE_GFX942_TESTS, 'true'),
+      not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])),
+      ${{ eq(parameters.aggregatePipeline, false) }}
+    )
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml

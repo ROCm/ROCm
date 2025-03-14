@@ -12,6 +12,11 @@ parameters:
 - name: fileFilter
   type: string
   default: ''
+# set to true if doing full build of ROCm stack
+# and dependencies are pulled from same pipeline
+- name: aggregatePipeline
+  type: boolean
+  default: false
 
 steps:
 - task: Bash@3
@@ -27,16 +32,22 @@ steps:
 - task: DownloadPipelineArtifact@2
   displayName: Download ${{ parameters.componentName }}
   inputs:
-    buildType: 'specific'
-    project: ROCm-CI
-    definition: ${{ parameters.pipelineId }}
-    specificBuildWithTriggering: true
-    itemPattern: '**/*${{ parameters.fileFilter }}*'
-    ${{ if notIn(parameters.componentName, 'aomp') }}: # remove this once these pipelines are functional + up-to-date
-      buildVersionToDownload: latestFromBranch # default is 'latest'
-    branchName: refs/heads/${{ parameters.branchName }}
-    allowPartiallySucceededBuilds: $(allowPartiallySucceededBuilds)
-    targetPath: '$(Pipeline.Workspace)/d'
+    ${{ if eq(parameters.aggregatePipeline, false) }}:
+      buildType: 'specific'
+      project: ROCm-CI
+      definition: ${{ parameters.pipelineId }}
+      specificBuildWithTriggering: true
+      itemPattern: '**/*${{ parameters.fileFilter }}*'
+      ${{ if notIn(parameters.componentName, 'aomp') }}: # remove this once these pipelines are functional + up-to-date
+        buildVersionToDownload: latestFromBranch # default is 'latest'
+      branchName: refs/heads/${{ parameters.branchName }}
+      allowPartiallySucceededBuilds: $(allowPartiallySucceededBuilds)
+      targetPath: '$(Pipeline.Workspace)/d'
+    ${{ else }}:
+      buildType: 'current'
+      itemPattern: '**/${{ parameters.componentName }}*${{ parameters.fileFilter }}*'
+      allowPartiallySucceededBuilds: $(allowPartiallySucceededBuilds)
+      targetPath: '$(Pipeline.Workspace)/d'
 - task: ExtractFiles@1
   displayName: Extract ${{ parameters.componentName }}
   inputs:

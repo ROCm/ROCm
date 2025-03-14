@@ -54,7 +54,7 @@ steps:
       fi
 
       echo "Downloading CK artifact from $ARTIFACT_URL"
-      wget -nv $ARTIFACT_URL -O $(System.ArtifactsDirectory)/ck.zip
+      wget --tries=5 --waitretry=10 --retry-connrefused -nv $ARTIFACT_URL -O $(System.ArtifactsDirectory)/ck.zip
       unzip $(System.ArtifactsDirectory)/ck.zip -d $(System.ArtifactsDirectory)
       mkdir -p $(Agent.BuildDirectory)/rocm
       tar -zxvf $(System.ArtifactsDirectory)/$ARTIFACT_NAME/*.tar.gz -C $(Agent.BuildDirectory)/rocm

@@ -59,6 +59,11 @@ parameters:
     - rocprofiler-register
     - rocprofiler-sdk
     - ROCR-Runtime
+# set to true if doing full build of ROCm stack
+# and dependencies are pulled from same pipeline
+- name: aggregatePipeline
+  type: boolean
+  default: false
 
 jobs:
 - job: rocprofiler_systems
@@ -90,6 +95,7 @@ jobs:
       checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
+      aggregatePipeline: ${{ parameters.aggregatePipeline }}
   - task: Bash@3
     displayName: ROCm symbolic link
     inputs:
@@ -143,7 +149,13 @@ jobs:
 
 - job: rocprofiler_systems_testing
   dependsOn: rocprofiler_systems
-  condition: and(succeeded(), eq(variables.ENABLE_GFX942_TESTS, 'true'), not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])))
+  condition:
+    and(
+      succeeded(),
+      eq(variables.ENABLE_GFX942_TESTS, 'true'),
+      not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])),
+      ${{ eq(parameters.aggregatePipeline, false) }}
+    )
   timeoutInMinutes: 180
   variables:
   - group: common

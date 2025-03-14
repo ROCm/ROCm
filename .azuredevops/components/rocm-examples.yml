@@ -62,6 +62,11 @@ parameters:
     - rocSPARSE
     - rocThrust
     - roctracer
+# set to true if doing full build of ROCm stack
+# and dependencies are pulled from same pipeline
+- name: aggregatePipeline
+  type: boolean
+  default: false
 
 jobs:
 - job: rocm_examples
@@ -90,6 +95,7 @@ jobs:
       checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
+      aggregatePipeline: ${{ parameters.aggregatePipeline }}
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
       # https://github.com/ROCm/HIP/issues/2203
@@ -121,7 +127,13 @@ jobs:
 
 - job: rocm_examples_testing
   dependsOn: rocm_examples
-  condition: and(succeeded(), eq(variables.ENABLE_GFX942_TESTS, 'true'), not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])))
+  condition:
+    and(
+      succeeded(),
+      eq(variables.ENABLE_GFX942_TESTS, 'true'),
+      not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])),
+      ${{ eq(parameters.aggregatePipeline, false) }}
+    )
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
