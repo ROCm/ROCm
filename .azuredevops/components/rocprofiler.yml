@@ -73,6 +73,7 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
       extraBuildFlags: >-
+        -DCMAKE_PREFIX_PATH=$(ROCM_PATH)
         -DCMAKE_MODULE_PATH=$(Build.SourcesDirectory)/cmake_modules
         -DENABLE_LDCONFIG=OFF
         -DUSE_PROF_API=1
