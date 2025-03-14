@@ -53,7 +53,6 @@ Use this matrix to view the ROCm compatibility across successive major and minor
       :doc:`MIGraphX <amdmigraphx:index>`,2.9.0,2.9.0,2.8.0
       :doc:`MIOpen <miopen:index>`,3.1.0,3.1.0,3.0.0
       :doc:`MIVisionX <mivisionx:index>`,2.5.0,2.5.0,2.5.0
-      :doc:`rocAL <rocal:index>`,1.0.0,1.0.0,1.0.0
       :doc:`rocDecode <rocdecode:index>`,0.6.0,0.6.0,N/A
       :doc:`RPP <rpp:index>`,1.5.0,1.5.0,1.4.0
       ,,,
