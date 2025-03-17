@@ -32,7 +32,8 @@ steps:
     definition: ${{ parameters.pipelineId }}
     specificBuildWithTriggering: true
     itemPattern: '**/*${{ parameters.fileFilter }}*'
-    ${{ if notIn(parameters.componentName, 'aomp') }}: # remove this once these pipelines are functional + up-to-date
+    # aomp is a special case, since the trigger file is under ROCm/ROCm instead of the component repo
+    ${{ if notIn(parameters.componentName, 'aomp') }}:
       buildVersionToDownload: latestFromBranch # default is 'latest'
     branchName: refs/heads/${{ parameters.branchName }}
     allowPartiallySucceededBuilds: $(allowPartiallySucceededBuilds)

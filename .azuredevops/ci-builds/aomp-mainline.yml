@@ -8,29 +8,29 @@ resources:
     type: github
     endpoint: ROCm
     name: ROCm/aomp
-    ref: amd-mainline-open
+    ref: amd-mainline
   - repository: aomp-extras_repo
     type: github
     endpoint: ROCm
     name: ROCm/aomp-extras
-    ref: amd-mainline-open
+    ref: amd-mainline
   - repository: flang_repo
     type: github
     endpoint: ROCm
     name: ROCm/flang
-    ref: amd-mainline-open
+    ref: amd-mainline
   - repository: llvm-project_repo
     type: github
     endpoint: ROCm
     name: ROCm/llvm-project
-    ref: amd-mainline-open
+    ref: amd-mainline
   pipelines:
   - pipeline: rocr-runtime_pipeline
     source: \ROCR-Runtime
     trigger:
       branches:
         include:
-        - amd-master
+        - amd-mainline
 # this job will only be triggered after successful build sequence of llvm-project and ROCR-Runtime
 
 trigger: none

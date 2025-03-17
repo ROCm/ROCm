@@ -38,7 +38,7 @@ parameters:
     AMDMIGraphX:
       pipelineId: $(AMDMIGRAPHX_PIPELINE_ID)
       stagingBranch: develop
-      mainlineBranch: mainline
+      mainlineBranch: master
       hasGpuTarget: true
     amdsmi:
       pipelineId: $(AMDSMI_PIPELINE_ID)
@@ -53,7 +53,7 @@ parameters:
     aomp:
       pipelineId: $(AOMP_PIPELINE_ID)
       stagingBranch: aomp-dev
-      mainlineBranch: amd-mainline-open
+      mainlineBranch: amd-mainline
       hasGpuTarget: false
     clr:
       pipelineId: $(CLR_PIPELINE_ID)
