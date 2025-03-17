@@ -61,4 +61,4 @@ steps:
     displayName: 'pip install  ...'
     inputs:
       targetType: inline
-      script: pip install -v ${{ join(' ', parameters.pipModules) }}
+      script: pip install -v --force-reinstall ${{ join(' ', parameters.pipModules) }}
