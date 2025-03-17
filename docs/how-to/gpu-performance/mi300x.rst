@@ -10,7 +10,7 @@ The following performance guides provide essential guidance on the necessary
 steps to properly :doc:`configure your system for AMD Instinct™ MI300X
 accelerators <../system-optimization/mi300x>`. They include detailed
 instructions on system settings and application :doc:`workload tuning
-<../rocm-for-ai/inference-optimization/workload>` suggestions to help you fully
+<../rocm-for-ai/inference-optimization/workload>` to help you
 leverage the capabilities of these accelerators and achieve superior
 performance.
 
