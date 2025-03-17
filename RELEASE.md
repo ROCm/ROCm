@@ -345,7 +345,7 @@ Click {fab}`github` to go to the component's source code on GitHub.
                             class="fab fa-github fa-lg"></i></a></td>
             </tr>
             <tr>
-                <td><a href="https://rocm.docs.amd.com/projects/llvm-project/en/docs-6.1.5">llvm-project</a></td>
+                <td><a href="https://github.com/ROCm/llvm-project/">llvm-project</a></td>
                 <td>17.0.0</td>
                 <td><a href="https://github.com/ROCm/llvm-project/releases/tag/rocm-6.1.5"><i
                             class="fab fa-github fa-lg"></i></a></td>
