@@ -126,6 +126,10 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
+  - name: ROCM_PATH
+    value: $(Agent.BuildDirectory)/rocm
+  - name: ROCM_DIR
+    value: $(Agent.BuildDirectory)/rocm
   pool: $(JOB_TEST_POOL)
   workspace:
     clean: all
@@ -156,9 +160,6 @@ jobs:
     inputs:
       targetType: inline
       script: |
-        sudo rm -rf /opt/rocm
-        sudo rm -rf /usr/sbin/rdcd
-        sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
         sudo ln -s $(Agent.BuildDirectory)/rocm/bin/rdcd /usr/sbin/rdcd
         echo $(Agent.BuildDirectory)/rocm/lib/rdc/grpc/lib | sudo tee /etc/ld.so.conf.d/grpc.conf
         sudo ldconfig -v

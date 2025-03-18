@@ -50,6 +50,8 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
+  - name: ROCM_PATH
+    value: $(Agent.BuildDirectory)/rocm
   pool: 
     vmImage: ${{ variables.BASE_BUILD_POOL }}
   workspace:
@@ -78,8 +80,6 @@ jobs:
       extraBuildFlags: >-
         -DCMAKE_CXX_COMPILER=$(Agent.BuildDirectory)/rocm/llvm/bin/amdclang++
         -DCMAKE_C_COMPILER=$(Agent.BuildDirectory)/rocm/llvm/bin/amdclang
-        -DROCM_PATH=$(Agent.BuildDirectory)/rocm
-        -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm
         -DHALF_INCLUDE_DIRS=$(Agent.BuildDirectory)/rocm/include
         -DCMAKE_BUILD_TYPE=Release
         -DGPU_TARGETS=$(JOB_GPU_TARGET)
@@ -104,8 +104,8 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
-  - name: LD_LIBRARY_PATH
-    value: $(Agent.BuildDirectory)/rocm/lib;$(Agent.BuildDirectory)/rocm/llvm/lib
+  - name: ROCM_PATH
+    value: $(Agent.BuildDirectory)/rocm
   pool: $(JOB_TEST_POOL)
   workspace:
     clean: all
@@ -168,21 +168,17 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        sudo rm -rf /opt/rocm
-        sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
         mkdir rpp-tests
         cd rpp-tests
-        cmake /opt/rocm/share/rpp/test \
+        cmake $(Agent.BuildDirectory)/rocm/share/rpp/test \
           -DCMAKE_CXX_COMPILER=$(Agent.BuildDirectory)/rocm/llvm/bin/amdclang++ \
           -DCMAKE_C_COMPILER=$(Agent.BuildDirectory)/rocm/llvm/bin/amdclang
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
     parameters:
       componentName: rpp
-      testExecutable: 'export PATH=$(Agent.BuildDirectory)/rocm/llvm/bin:$PATH; CC=$(Agent.BuildDirectory)/rocm/llvm/bin/amdclang CMAKE_VERBOSE_MAKEFILE=ON VERBOSE=1 ctest'
+      testExecutable: 'CMAKE_VERBOSE_MAKEFILE=ON VERBOSE=1 ctest'
       testDir: 'rpp-tests'
-  - script: sudo rm /opt/rocm
-    condition: always()
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}

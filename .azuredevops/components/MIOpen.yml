@@ -60,6 +60,8 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
+  - name: ROCM_PATH
+    value: $(Agent.BuildDirectory)/rocm
   pool: ${{ variables.MEDIUM_BUILD_POOL }}
   workspace:
     clean: all
@@ -92,11 +94,11 @@ jobs:
       targetType: inline
       workingDirectory: $(Build.SourcesDirectory)
       script: |
-        sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
         sed -i '/composable_kernel/d' requirements.txt
         mkdir -p $(Agent.BuildDirectory)/miopen-deps
+        export CXX=$(Agent.BuildDirectory)/rocm/llvm/bin/amdclang++
+        export CC=$(Agent.BuildDirectory)/rocm/llvm/bin/amdclang
         cmake -P install_deps.cmake --prefix $(Agent.BuildDirectory)/miopen-deps
-        sudo rm -rf /opt/rocm
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
       extraBuildFlags: >-
@@ -168,11 +170,11 @@ jobs:
       targetType: inline
       workingDirectory: $(Build.SourcesDirectory)
       script: |
-        sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
         sed -i '/composable_kernel/d' requirements.txt
         mkdir -p $(Agent.BuildDirectory)/miopen-deps
+        export CXX=$(Agent.BuildDirectory)/rocm/llvm/bin/amdclang++
+        export CC=$(Agent.BuildDirectory)/rocm/llvm/bin/amdclang
         cmake -P install_deps.cmake --prefix $(Agent.BuildDirectory)/miopen-deps
-        sudo rm -rf /opt/rocm
   - task: CMake@1
     displayName: 'MIOpen Test CMake Flags'
     inputs:

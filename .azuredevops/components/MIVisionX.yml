@@ -120,6 +120,8 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
+  - name: LD_LIBRARY_PATH
+    value: $(Agent.BuildDirectory)/rocm/lib:$(Agent.BuildDirectory)/rocm/include/mivisionx/VX
   pool: $(JOB_TEST_POOL)
   workspace:
     clean: all
@@ -145,14 +147,15 @@ jobs:
       checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmTestDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
-  # anything in /opt may be persistent across runs
-  # so we need to remove the symlink if it already exists
-  - script: |
-      sudo rm -f /opt/rocm
-      sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
-      mkdir mivisionx-tests
-      cd mivisionx-tests
-      cmake /opt/rocm/share/mivisionx/test
+  - task: Bash@3
+    displayName: Build MIVisionX tests
+    inputs:
+      targetType: inline
+      script: |
+        sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
+        mkdir mivisionx-tests
+        cd mivisionx-tests
+        cmake $(Agent.BuildDirectory)/rocm/share/mivisionx/test
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
     parameters:
