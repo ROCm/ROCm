@@ -45,6 +45,8 @@ jobs:
     value: $(Agent.BuildDirectory)/rocm/bin/hipcc
   - name: TENSILE_ROCM_OFFLOAD_BUNDLER_PATH
     value: $(Agent.BuildDirectory)/rocm/llvm/bin/clang-offload-bundler
+  environment:
+    name: rccl
   pool:
     vmImage: ${{ variables.BASE_BUILD_POOL }}
   workspace:
@@ -53,12 +55,6 @@ jobs:
     # Manual Approval Gate Before Continuing All Steps
     - script: echo "Waiting for manual approval before continuing."
       displayName: "Waiting for approval"
-    # Approval Gate - placed here, before any step runs
-    environment:
-      name: rccl  # Define the environment here for approval
-      approval:
-        approvers:
-          - joseph.macaranas@amd.com
     # After approval, the following steps will run
     - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
       parameters:
