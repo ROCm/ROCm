@@ -49,6 +49,16 @@ jobs:
   workspace:
     clean: all
   steps:
+  # Manual approval gate before any steps run
+  - deployment: WaitForApproval
+    environment:
+      name: rccl  # The environment where approval is set up
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - script: echo "Approval is required to continue the pipeline."
+              displayName: "Waiting for manual approval"
 # copy environment setup from https://github.com/pytorch/builder/blob/main/manywheel/Dockerfile
 # but instead of centos, use ubuntu environment
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
