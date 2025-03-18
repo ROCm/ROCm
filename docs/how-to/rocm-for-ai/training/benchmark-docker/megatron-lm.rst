@@ -64,23 +64,23 @@ Megatron-LM provides the following key features to train large language models e
 
 The following models are pre-optimized for performance on the AMD Instinct MI300X accelerator.
 
-* Llama 2 7B
+* Llama 3.1 8B
 
-* Llama 2 70B
+* Llama 3.1 70B
 
 * Llama 3 8B
 
 * Llama 3 70B
 
-* Llama 3.1 8B
+* Llama 2 7B
 
-* Llama 3.1 70B
+* Llama 2 70B
 
 * DeepSeek-V2-Lite
 
 .. note::
 
-   Some models, such as Llama 3, require an external license agreement through
+   Some models, such as Llama, require an external license agreement through
    a third party (for example, Meta).
 
 System validation
@@ -133,7 +133,7 @@ Download the Docker image
 
    .. code-block:: shell
 
-      docker run -it --device /dev/dri --device /dev/kfd --device /dev/infiniband --network host --ipc host --group-add video --cap-add SYS_PTRACE --security-opt seccomp=unconfined --privileged -v $HOME:$HOME -v  $HOME/.ssh:/root/.ssh --shm-size 64G --name megatron_training_env rocm/megatron-lm-training-private:20250306
+      docker run -it --device /dev/dri --device /dev/kfd --device /dev/infiniband --network host --ipc host --group-add video --cap-add SYS_PTRACE --security-opt seccomp=unconfined --privileged -v $HOME:$HOME -v  $HOME/.ssh:/root/.ssh --shm-size 64G --name megatron_training_env rocm/megatron-lm:v25.4
 
 3. Use these commands if you exit the ``megatron_training_env`` container and need to return to it.
 
@@ -142,7 +142,7 @@ Download the Docker image
       docker start megatron_training_env
       docker exec -it megatron_training_env bash
 
-The Docker container includes a pre-installed, verified version of Megatron-LM from the `release branch <https://github.com/ROCm/Megatron-LM/tree/megatron_release_v25.3>`_.
+The Docker container includes a pre-installed, verified version of the Megatron-LM for ROCm development branch `<https://github.com/ROCm/Megatron-LM/tree/rocm_dev>`__.
 
 .. _amd-megatron-lm-environment-setup:
 
@@ -156,7 +156,7 @@ Configuration scripts
 
       If you're working with Llama 2 7B or Llama 2 70 B, use the ``train_llama2.sh`` configuration
       script in the ``examples/llama`` directory of
-      `<https://github.com/ROCm/Megatron-LM/tree/megatron_release_v25.3/examples/llama>`__.
+      `<https://github.com/ROCm/Megatron-LM/tree/rocm_dev/examples/llama>`__.
       Likewise, if you're working with Llama 3 or Llama 3.1, then use ``train_llama3.sh`` and update
       the configuration script accordingly.
 
@@ -382,18 +382,46 @@ accelerators with the AMD Megatron-LM Docker image.
          .. tab-item:: Single node training
             :sync: single-node
 
-            To run training on a single node, navigate to the Megatron-LM folder and use the
-            following command:
+            To run training on a single node, navigate to the Megatron-LM folder and use one of the
+            following commands.
 
-            .. code-block:: shell
+            - For Llama 3.1 8B FP8:
 
-               TEE_OUTPUT=1 MBS=2 BS=128 TP=1 TE_FP8=1 SEQ_LENGTH=8192 MODEL_SIZE=8 bash examples/llama/train_llama3.sh
+              .. code-block:: shell
 
-            To run training with FSDP2 enabled, add the ``FSDP=1`` argument; for example:
+                 TEE_OUTPUT=1 MBS=2 BS=128 TP=1 TE_FP8=1 SEQ_LENGTH=8192 MODEL_SIZE=8 TOTAL_ITERS=50 bash examples/llama/train_llama3.sh
 
-            .. code-block:: shell
+            - For Llama 3.1 8B BF16:
 
-               TEE_OUTPUT=1 MBS=2 BS=16 TP=1 TE_FP8=0 FSDP=1 RECOMPUTE=1 SEQ_LENGTH=8192 MODEL_SIZE=70 bash examples/llama/train_llama3.sh
+              .. code-block:: shell
+
+                 TEE_OUTPUT=1 MBS=2 BS=128 TP=1 TE_FP8=0 SEQ_LENGTH=8192 MODEL_SIZE=8 TOTAL_ITERS=50 bash examples/llama/train_llama3.sh
+
+            - For Llama 2 7B FP8:
+
+              .. code-block:: shell
+
+                 TEE_OUTPUT=1 MBS=4 BS=256 TP=1 TE_FP8=1 SEQ_LENGTH=4096 MODEL_SIZE=7 TOTAL_ITERS=50 bash examples/llama/train_llama2.sh
+
+            - For Llama 2 7B BF16:
+
+              .. code-block:: shell
+
+                 TEE_OUTPUT=1 MBS=4 BS=256 TP=1 TE_FP8=0 SEQ_LENGTH=4096 MODEL_SIZE=7 TOTAL_ITERS=50 bash examples/llama/train_llama2.sh
+
+            To run training with FSDP2 enabled, add the ``FSDP=1`` argument. For example:
+
+            - For Llama 3 70B BF16:
+
+              .. code-block:: shell
+
+                 TEE_OUTPUT=1 MBS=3 BS=24 TP=1 TE_FP8=0 FSDP=1 RECOMPUTE=1 SEQ_LENGTH=8192 MODEL_SIZE=70 TOTAL_ITERS=50 bash examples/llama/train_llama3.sh
+
+            - For Llama 2 70B BF16:
+
+              .. code-block:: shell
+
+                 TEE_OUTPUT=1 MBS=3 BS=56 TP=1 TE_FP8=0 FSDP=1 RECOMPUTE=1 SEQ_LENGTH=4096 MODEL_SIZE=70 TOTAL_ITERS=50 bash examples/llama/train_llama2.sh
 
             .. note::
 
@@ -426,7 +454,7 @@ accelerators with the AMD Megatron-LM Docker image.
       .. code-block:: shell
 
          cd /workspace/Megatron-LM
-         GEMM_TUNING=1 PR=bf16 MBS=4 AC=none bash examples/deepseek_v2/train_deepseekv2.sh
+         GEMM_TUNING=1 PR=bf16 MBS=4 AC=none SEQ_LEN=4096 PAD_LEN=4096 TRAIN_ITERS=50 bash examples/deepseek_v2/train_deepseekv2.sh
 
 Key options
 -----------
@@ -469,7 +497,7 @@ The benchmark tests support the following sets of variables:
         The total number of iterations -- ``10`` by default.
 
       ``MOCK_DATA``
-        ``1`` to use mock data or ``0`` to use real data provided by you.
+        ``1`` to use mock data or ``0`` to use real data you provide.
 
       ``MBS``
         Micro batch size.
@@ -492,11 +520,11 @@ The benchmark tests support the following sets of variables:
       ``GEMM_TUNING``
         ``1`` to enable GEMM tuning, which boosts performance by using the best GEMM kernels.
 
-      ``TOTAL_ITERS``
-        The total number of iterations -- ``10`` by default.
+      ``TRAIN_ITERS``
+        The total number of iterations.
 
       ``MOCK_DATA``
-        ``1`` to use mock data or ``0`` to use real data provided by you.
+        ``1`` to use mock data or ``0`` to use real data you provide.
 
       ``MBS``
         Micro batch size.
@@ -504,7 +532,7 @@ The benchmark tests support the following sets of variables:
       ``GBS``
         Global batch size.
 
-      ``SEQ_LENGTH``
+      ``SEQ_LEN``
         Input sequence length.
 
       ``AC``
