@@ -135,7 +135,7 @@ jobs:
     inputs:
       targetType: inline
       script: |
-        sudo rm -rf /opt/rocm
+        # Assuming that /opt is no longer persistent across runs, test environments are fully ephemeral
         sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
       workingDirectory: $(Build.SourcesDirectory)
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml

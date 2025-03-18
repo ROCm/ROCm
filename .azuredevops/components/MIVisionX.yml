@@ -152,6 +152,7 @@ jobs:
     inputs:
       targetType: inline
       script: |
+        # Assuming that /opt is no longer persistent across runs, test environments are fully ephemeral
         sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
         mkdir mivisionx-tests
         cd mivisionx-tests

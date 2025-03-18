@@ -103,6 +103,7 @@ jobs:
 # dependencies from the new artifacts, we use temporary symbolic links
 # for the compilation and installation to go through.
   - script: |
+      # Assuming that /opt is no longer persistent across runs, test environments are fully ephemeral
       sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
       mkdir -p $(Build.BinariesDirectory)/lib/llvm/bin
       ln -s $(Agent.BuildDirectory)/rocm/llvm/bin/clang $(Build.BinariesDirectory)/lib/llvm/bin/clang
@@ -474,7 +475,7 @@ jobs:
     inputs:
       targetType: inline
       script: |
-        sudo rm -rf /opt/rocm
+        # Assuming that /opt is no longer persistent across runs, test environments are fully ephemeral
         sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/checkout.yml
     parameters:

@@ -140,6 +140,7 @@ jobs:
     inputs:
       targetType: inline
       script: |
+        # Assuming that /opt is no longer persistent across runs, test environments are fully ephemeral
         sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
         USER_BASE=$(python3 -m site --user-base)
         echo "##vso[task.prependpath]$USER_BASE/bin"
