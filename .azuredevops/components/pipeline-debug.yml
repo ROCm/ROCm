@@ -31,7 +31,10 @@ trigger: none
 pr: none
 
 jobs:
-- deployment: pipeline_debug_deployment  # Deployment job (this is required for approval gates)
+- deployment: pipeline_debug_approval  # Deployment job (this is required for approval gates)
+  displayName: "Requires approval"
+  environment: rccl
+- job: pipeline_debug_job
   displayName: 'Pipeline Debug Deployment'
   timeoutInMinutes: 120
   variables:
@@ -45,7 +48,6 @@ jobs:
     value: $(Agent.BuildDirectory)/rocm/bin/hipcc
   - name: TENSILE_ROCM_OFFLOAD_BUNDLER_PATH
     value: $(Agent.BuildDirectory)/rocm/llvm/bin/clang-offload-bundler
-  environment: rccl
   pool:
     vmImage: ${{ variables.BASE_BUILD_POOL }}
   workspace:
