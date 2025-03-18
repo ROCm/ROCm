@@ -7,20 +7,23 @@ steps:
 - task: Bash@3
   inputs:
     targetType: inline
-    script: |
-      echo 1
-      ${{ if eq(parameters.testParam, 'gfx942') }}:
+    ${{ if eq(parameters.testParam, 'gfx942') }}:
+      script: |
         echo "gfx942"
-      echo 2
-      ${{ if eq(parameters.testParam, 'gfx90a') }}:
+        echo ${{ parameters.testParam }}
+        echo $(JOB_GPU_TARGET)
+    ${{ if eq(parameters.testParam, 'gfx90a') }}:
+      script: |
         echo "gfx90a"
-      echo 3
-      ${{ if eq(parameters.testParam, '') }}:
-        echo "none"
-      echo 4
-      ${{ if eq(parameters.testParam, '$(JOB_GPU_TARGET)') }}:
+        echo ${{ parameters.testParam }}
+        echo $(JOB_GPU_TARGET)
+    ${{ if eq(parameters.testParam, '') }}:
+      script: |
+        echo "empty"
+        echo ${{ parameters.testParam }}
+        echo $(JOB_GPU_TARGET)
+    ${{ if eq(parameters.testParam, '$(JOB_GPU_TARGET)') }}:
+      script: |
         echo "literal"
-      echo 5
-      echo "${{ parameters.testParam }}"
-      echo 6
-      echo "$(JOB_GPU_TARGET)"
+        echo ${{ parameters.testParam }}
+        echo $(JOB_GPU_TARGET)
