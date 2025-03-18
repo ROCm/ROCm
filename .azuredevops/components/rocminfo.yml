@@ -37,10 +37,10 @@ jobs:
       inputs:
         targetType: inline
         script: |
-          echo ${{ variables.RESOURCES_REPOSITORIES }}
-          echo $(RESOURCES_REPOSITORIES)
-          echo ${{ variables.CI_ROOT_PATH }}
-          echo $(CI_ROOT_PATH)
+          echo "${{ variables.RESOURCES_REPOSITORIES }}"
+          echo "$(RESOURCES_REPOSITORIES)"
+          echo "${{ variables.CI_ROOT_PATH }}"
+          echo "$(CI_ROOT_PATH)"
   # - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
   #   parameters:
   #     aptPackages: ${{ parameters.aptPackages }}
