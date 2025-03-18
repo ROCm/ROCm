@@ -45,8 +45,7 @@ jobs:
     value: $(Agent.BuildDirectory)/rocm/bin/hipcc
   - name: TENSILE_ROCM_OFFLOAD_BUNDLER_PATH
     value: $(Agent.BuildDirectory)/rocm/llvm/bin/clang-offload-bundler
-  environment:
-    name: rccl
+  environment: rccl
   pool:
     vmImage: ${{ variables.BASE_BUILD_POOL }}
   workspace:
