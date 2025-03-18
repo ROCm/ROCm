@@ -4,25 +4,25 @@ parameters:
   default: ''
 
 steps:
-- ${{ if eq(parameters.testParam, "gfx942") }}:
+- ${{ if eq(parameters.testParam, 'gfx942') }}:
   - task: Bash@3
     inputs:
       targetType: inline
       script: |
         echo "gfx942"
-- ${{ if eq(parameters.testParam, "gfx90a") }}:
+- ${{ if eq(parameters.testParam, 'gfx90a') }}:
   - task: Bash@3
     inputs:
       targetType: inline
       script: |
         echo "gfx90a"
-- ${{ if eq(parameters.testParam, "") }}:
+- ${{ if eq(parameters.testParam, '') }}:
   - task: Bash@3
     inputs:
       targetType: inline
       script: |
         echo "none"
-- ${{ if eq(parameters.testParam, "$(JOB_GPU_TARGET)") }}:
+- ${{ if eq(parameters.testParam, '$(JOB_GPU_TARGET)') }}:
   - task: Bash@3
     inputs:
       targetType: inline
