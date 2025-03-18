@@ -14,7 +14,7 @@ It is purpose-built to support models like Llama 2, Llama 3, Llama 3.1, and
 DeepSeek, enabling developers to train next-generation AI models more
 efficiently. See the GitHub repository at `<https://github.com/ROCm/Megatron-LM>`__.
 
-AMD provides a ready-to-use Docker image for MI300X accelerators containing
+AMD provides a ready-to-use Docker image for MI300X series accelerators containing
 essential components, including PyTorch, ROCm libraries, and Megatron-LM
 utilities. It contains the following software components to accelerate training
 workloads:
@@ -62,7 +62,7 @@ Megatron-LM provides the following key features to train large language models e
 
 .. _amd-megatron-lm-model-support:
 
-The following models are pre-optimized for performance on the AMD Instinct MI300X accelerator.
+The following models are pre-optimized for performance on AMD Instinct MI300X series accelerators.
 
 * Llama 3.1 8B
 
@@ -82,6 +82,23 @@ The following models are pre-optimized for performance on the AMD Instinct MI300
 
    Some models, such as Llama, require an external license agreement through
    a third party (for example, Meta).
+
+.. _amd-megatron-lm-performance-measurements:
+
+Performance measurements
+========================
+
+To evaluate performance, the
+`Performance results with AMD ROCm software <https://www.amd.com/en/developer/resources/rocm-hub/dev-ai/performance-results.html#tabs-a8deaeb413-item-21cea50186-tab>`_
+page provides reference throughput and latency measurements for training
+popular AI models.
+
+.. note::
+
+   The performance data presented in
+   `Performance results with AMD ROCm software <https://www.amd.com/en/developer/resources/rocm-hub/dev-ai/performance-results.html#tabs-a8deaeb413-item-21cea50186-tab>`_
+   should not be interpreted as the peak performance achievable by AMD
+   Instinct MI325X and MI300X accelerators or ROCm software.
 
 System validation
 =================
@@ -115,7 +132,7 @@ The pre-built ROCm Megatron-LM environment allows users to quickly validate syst
 training benchmarks, and achieve superior performance for models like Llama 3.1, Llama 2, and DeepSeek V2.
 
 Use the following instructions to set up the environment, configure the script to train models, and
-reproduce the benchmark results on the MI300X accelerators with the AMD Megatron-LM Docker
+reproduce the benchmark results on MI300X series accelerators with the AMD Megatron-LM Docker
 image.
 
 .. _amd-megatron-lm-requirements:
