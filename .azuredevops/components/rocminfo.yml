@@ -37,9 +37,13 @@ jobs:
       inputs:
         targetType: inline
         script: |
+          echo 1
           echo "${{ variables.RESOURCES_REPOSITORIES }}"
+          echo 2
           echo "$(RESOURCES_REPOSITORIES)"
+          echo 3
           echo "${{ variables.CI_ROOT_PATH }}"
+          echo 4
           echo "$(CI_ROOT_PATH)"
   # - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
   #   parameters:
