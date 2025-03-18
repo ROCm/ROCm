@@ -26,6 +26,8 @@ parameters:
 jobs:
 - job: rocminfo
   variables:
+  - name: system.debug
+    value: true
   - group: common
   - template: /.azuredevops/variables-global.yml
   pool: 
