@@ -35,6 +35,8 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
+  - name: ROCM_PATH
+    value: $(Agent.BuildDirectory)/rocm
   pool: 
     vmImage: ${{ variables.BASE_BUILD_POOL }}
   workspace:
@@ -59,8 +61,6 @@ jobs:
       targetType: inline
       script: python3 setup.py bdist_wheel
       workingDirectory: $(Build.SourcesDirectory)
-    env:
-      ROCM_PATH: $(Agent.BuildDirectory)/rocm
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/artifact-prepare-package.yml
     parameters:
       sourceDir: $(Build.SourcesDirectory)/dist
@@ -90,12 +90,14 @@ jobs:
   #     pipModules: ${{ parameters.pipModules }}
 
 - job: Tensile_testing
-  timeoutInMinutes: 90
+  timeoutInMinutes: 120
   dependsOn: Tensile
   condition: and(succeeded(), eq(variables.ENABLE_GFX942_TESTS, 'true'), not(containsValue(split(variables.DISABLED_GFX942_TESTS, ','), variables['Build.DefinitionName'])))
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
+  - name: ROCM_PATH
+    value: $(Agent.BuildDirectory)/rocm
   pool: $(JOB_TEST_POOL)
   workspace:
     clean: all
@@ -138,25 +140,12 @@ jobs:
     inputs:
       targetType: inline
       script: |
-        sudo rm -rf /opt/rocm
+        # Assuming that /opt is no longer persistent across runs, test environments are fully ephemeral
         sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
-  - task: Bash@3
-    displayName: Add Python site-packages binaries to path
-    inputs:
-      targetType: inline
-      script: |
         USER_BASE=$(python3 -m site --user-base)
         echo "##vso[task.prependpath]$USER_BASE/bin"
-  - task: Bash@3
-    displayName: Add ROCm binaries to PATH
-    inputs:
-      targetType: inline
-      script: echo "##vso[task.prependpath]$(Agent.BuildDirectory)/rocm/bin"
-  - task: Bash@3
-    displayName: Add ROCm compilers to PATH
-    inputs:
-      targetType: inline
-      script: echo "##vso[task.prependpath]$(Agent.BuildDirectory)/rocm/llvm/bin"
+        echo "##vso[task.prependpath]$(Agent.BuildDirectory)/rocm/bin"
+        echo "##vso[task.prependpath]$(Agent.BuildDirectory)/rocm/llvm/bin"
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
   - task: Bash@3
     displayName: tox test
@@ -164,23 +153,6 @@ jobs:
       targetType: inline
       script: tox run -v -e ci -- -m pre_checkin
       workingDirectory: $(Build.SourcesDirectory)
-  - task: Bash@3
-    displayName: Remove Python site-packages binaries from path
-    inputs:
-      targetType: inline
-      script: |
-        USER_BASE=$(python3 -m site --user-base)
-        echo "##vso[task.setvariable variable=PATH]$(echo $PATH | sed -e 's;:$USER_BASE/bin;;' -e 's;^/;;' -e 's;/$;;')"
-  - task: Bash@3
-    displayName: Remove ROCm binaries from PATH
-    inputs:
-      targetType: inline
-      script: echo "##vso[task.setvariable variable=PATH]$(echo $PATH | sed -e 's;:$(Agent.BuildDirectory)/rocm/bin;;' -e 's;^/;;' -e 's;/$;;')"
-  - task: Bash@3
-    displayName: Remove ROCm compilers from PATH
-    inputs:
-      targetType: inline
-      script: echo "##vso[task.setvariable variable=PATH]$(echo $PATH | sed -e 's;:$(Agent.BuildDirectory)/rocm/llvm/bin;;' -e 's;^/;;' -e 's;/$;;')"
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}

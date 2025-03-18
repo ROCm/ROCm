@@ -105,12 +105,13 @@ jobs:
       dependencyList: ${{ parameters.rocmDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
   - task: Bash@3
-    displayName: ROCm symbolic link
+    displayName: Symlink rocm_agent_enumerator
     inputs:
       targetType: inline
       script: |
-        sudo rm -rf /opt/rocm
-        sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
+        # Assuming that /opt is no longer persistent across runs, test environments are fully ephemeral
+        sudo mkdir -p /opt/rocm/bin
+        sudo ln -s $(Agent.BuildDirectory)/rocm/bin/rocm_agent_enumerator /opt/rocm/bin/rocm_agent_enumerator
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
       installEnabled: false

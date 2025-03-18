@@ -45,6 +45,8 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
+  - name: ROCM_PATH
+    value: $(Agent.BuildDirectory)/rocm
   pool:
     vmImage: ${{ variables.BASE_BUILD_POOL }}
   workspace:
@@ -65,8 +67,6 @@ jobs:
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/build-cmake.yml
     parameters:
       extraBuildFlags: >-
-        -DROCM_PATH=$(Agent.BuildDirectory)/rocm
-        -DCMAKE_PREFIX_PATH=$(Agent.BuildDirectory)/rocm
         -DCMAKE_BUILD_TYPE=Release
         -GNinja
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/manifest.yml
@@ -83,6 +83,8 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
+  - name: ROCM_PATH
+    value: $(Agent.BuildDirectory)/rocm
   pool:
     name: $(JOB_TEST_POOL)
     demands: firstRenderDeviceAccess
@@ -109,21 +111,19 @@ jobs:
       checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmTestDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
-  # anything in /opt may be persistent across runs
-  # so we need to remove the symlink if it already exists
-  - script: |
-      sudo rm -rf /opt/rocm
-      sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
-      mkdir rocDecode-tests
-      cd rocDecode-tests
-      cmake /opt/rocm/share/rocdecode/test
+  - task: Bash@3
+    displayName: Build rocDecode tests
+    inputs:
+      targetType: inline
+      script: |
+        mkdir rocDecode-tests
+        cd rocDecode-tests
+        cmake $(Agent.BuildDirectory)/rocm/share/rocdecode/test
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
     parameters:
       componentName: rocDecode
       testDir: 'rocDecode-tests'
-  - script: sudo rm /opt/rocm
-    condition: always()
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}

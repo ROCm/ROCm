@@ -106,6 +106,10 @@ jobs:
   variables:
   - group: common
   - template: /.azuredevops/variables-global.yml
+  - name: ROCM_PATH
+    value: $(Agent.BuildDirectory)/rocm
+  - name: LD_LIBRARY_PATH
+    value: $(Agent.BuildDirectory)/rocm/lib/rocprofiler:$(Agent.BuildDirectory)/rocm/share/rocprofiler/tests-v1/test:$(Agent.BuildDirectory)/rocm/share/rocprofiler/tests
   pool: $(JOB_TEST_POOL)
   workspace:
     clean: all
@@ -131,31 +135,23 @@ jobs:
       checkoutRef: ${{ parameters.checkoutRef }}
       dependencyList: ${{ parameters.rocmDependencies }}
       gpuTarget: $(JOB_GPU_TARGET)
-  - task: Bash@3
-    displayName: Setup test environment
-    inputs:
-      targetType: inline
-      script: |
-        sudo rm -rf /opt/rocm
-        sudo ln -s $(Agent.BuildDirectory)/rocm /opt/rocm
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/gpu-diagnostics.yml
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
     parameters:
       componentName: rocprofilerV1
-      testExecutable: LD_LIBRARY_PATH="$(Agent.BuildDirectory)/rocm/lib/rocprofiler:$(Agent.BuildDirectory)/rocm/share/rocprofiler/tests-v1/test" ./run.sh
       testDir: $(Agent.BuildDirectory)/rocm/share/rocprofiler/tests-v1
+      testExecutable:  ./run.sh
       testParameters: ''
       testPublishResults: false
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/test.yml
     parameters:
       componentName: rocprofilerV2
-      testExecutable: LD_LIBRARY_PATH="$(Agent.BuildDirectory)/rocm/lib/rocprofiler:$(Agent.BuildDirectory)/rocm/share/rocprofiler/tests" share/rocprofiler/tests/runUnitTests
-      testParameters: '--gtest_output=xml:./test_output.xml --gtest_color=yes'
       testDir: $(Agent.BuildDirectory)/rocm
+      testExecutable:  share/rocprofiler/tests/runUnitTests
+      testParameters: '--gtest_output=xml:./test_output.xml --gtest_color=yes'
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
       pipModules: ${{ parameters.pipModules }}
       environment: test
       gpuTarget: $(JOB_GPU_TARGET)
-      optSymLink: true
