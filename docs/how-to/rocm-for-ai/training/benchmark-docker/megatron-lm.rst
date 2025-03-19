@@ -635,16 +635,16 @@ benchmarking, see the version-specific documentation.
      - PyTorch version
      - Resources
 
-   * - 6.3
+   * - 6.3.0
      - 25.3
      - 2.7.0a0+git637433 
      - 
        * `Documentation <https://rocm.docs.amd.com/en/docs-6.3.3/how-to/rocm-for-ai/training/benchmark-docker/megatron-lm.html>`_
        * `Docker Hub <https://hub.docker.com/layers/rocm/megatron-lm/v25.3/images/sha256-1e6ed9bdc3f4ca397300d5a9907e084ab5e8ad1519815ee1f868faf2af1e04e2>`_
 
-   * - 6.1
+   * - 6.1.0
      - 24.12-dev
      - 2.4.0
      - 
-       * `Documentation <https://rocm.docs.amd.com/en/docs-6.3.0/how-to/rocm-for-ai/training/benchmark-docker/megatron-lm.html>`_
+       * `Documentation <https://rocm.docs.amd.com/en/docs-6.3.0/how-to/rocm-for-ai/train-a-model.html>`_
        * `Docker Hub <https://hub.docker.com/layers/rocm/megatron-lm/24.12-dev/images/sha256-5818c50334ce3d69deeeb8f589d83ec29003817da34158ebc9e2d112b929bf2e>`_
