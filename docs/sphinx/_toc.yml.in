@@ -90,7 +90,7 @@ subtrees:
           - file: how-to/rocm-for-ai/inference-optimization/profiling-and-debugging.rst
             title: Profile and debug
           - file: how-to/rocm-for-ai/inference-optimization/workload.rst
-            title: Workload tuning
+            title: Workload optimization
 
       - url: https://rocm.docs.amd.com/projects/ai-developer-hub/en/latest/
         title: AI tutorials
