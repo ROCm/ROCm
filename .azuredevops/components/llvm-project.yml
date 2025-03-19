@@ -76,6 +76,11 @@ jobs:
         -DCMAKE_CXX_STANDARD=17
         -DROCM_LLVM_BACKWARD_COMPAT_LINK=$(Build.BinariesDirectory)/llvm
         -DROCM_LLVM_BACKWARD_COMPAT_LINK_TARGET=./lib/llvm
+        -DFLANG_RUNTIME_F128_MATH_LIB=libquadmath
+        -DLIBOMPTARGET_BUILD_DEVICE_FORTRT=ON
+        -DFLANG_INCLUDE_DOCS=OFF
+        -DLLVM_INSTALL_UTILS=ON
+        -DCOMPILER_RT_DEBUG=OFF
         -GNinja
 #        -DCMAKE_VERBOSE_MAKEFILE=1
 #       -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=FALSE
@@ -92,11 +97,6 @@ jobs:
 #        '-DCMAKE_SHARED_LINKER_FLAGS=-Wl,--enable-new-dtags,--build-id=sha1,--rpath,\$ORIGIN'
 #        -DROCM_LLVM_BACKWARD_COMPAT_LINK=/opt/rocm-6.5.0/llvm
 #        -DROCM_LLVM_BACKWARD_COMPAT_LINK_TARGET=./lib/llvm
-        -DFLANG_RUNTIME_F128_MATH_LIB=libquadmath
-        -DLIBOMPTARGET_BUILD_DEVICE_FORTRT=ON
-        -DFLANG_INCLUDE_DOCS=OFF
-        -DLLVM_INSTALL_UTILS=ON
-        -DCOMPILER_RT_DEBUG=OFF
 #        '-DLLVM_LIT_ARGS=-sv -j16' /jenkins/workspace/compiler-psdb-amd-staging/repos/llvm-project/llvm
       cmakeBuildDir: 'llvm/build'
       installDir: '$(Build.BinariesDirectory)/llvm'
