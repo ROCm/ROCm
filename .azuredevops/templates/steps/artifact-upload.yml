@@ -36,6 +36,7 @@ steps:
 # then publish it
 - ${{ if parameters.publish }}:
   - task: PublishPipelineArtifact@1
+    condition: always()
     displayName: '${{ parameters.artifactName }} Publish'
     retryCountOnTaskFailure: 3
     inputs:
