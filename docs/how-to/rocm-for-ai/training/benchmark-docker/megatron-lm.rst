@@ -128,7 +128,7 @@ See :ref:`mi300x-disable-numa` for more information.
 Environment setup
 =================
 
-The pre-built ROCm Megatron-LM environment allows users to quickly validate system performance, conduct
+The prebuilt ROCm Megatron-LM environment allows users to quickly validate system performance, conduct
 training benchmarks, and achieve superior performance for models like Llama 3.1, Llama 2, and DeepSeek V2.
 
 Use the following instructions to set up the environment, configure the script to train models, and
@@ -174,7 +174,7 @@ Configuration scripts
       If you're working with Llama 2 7B or Llama 2 70 B, use the ``train_llama2.sh`` configuration
       script in the ``examples/llama`` directory of
       `<https://github.com/ROCm/Megatron-LM/tree/rocm_dev/examples/llama>`__.
-      Likewise, if you're working with Llama 3 or Llama 3.1, then use ``train_llama3.sh`` and update
+      Likewise, if you're working with Llama 3 or Llama 3.1, use ``train_llama3.sh`` and update
       the configuration script accordingly.
 
    .. tab-item:: DeepSeek V2
