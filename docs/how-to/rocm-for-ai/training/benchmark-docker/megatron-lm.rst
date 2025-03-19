@@ -103,25 +103,10 @@ popular AI models.
 System validation
 =================
 
-If you have already validated your system settings, skip this step. Otherwise,
-complete the :ref:`system validation and optimization steps <train-a-model-system-validation>`
-to set up your system before starting training.
-
-Disable NUMA auto-balancing
----------------------------
-
-Generally, application performance can benefit from disabling NUMA auto-balancing. However,
-it might be detrimental to performance with certain types of workloads.
-
-Run the command ``cat /proc/sys/kernel/numa_balancing`` to check your current NUMA (Non-Uniform
-Memory Access) settings. Output ``0`` indicates this setting is disabled. If there is no output or
-the output is ``1``, run the following command to disable NUMA auto-balancing.
-
-.. code-block:: shell
-
-   sudo sh -c 'echo 0 > /proc/sys/kernel/numa_balancing'
-
-See :ref:`mi300x-disable-numa` for more information.
+If you have already validated your system settings, including NUMA
+auto-balancing, skip this step. Otherwise, complete the :ref:`system validation
+and optimization steps <train-a-model-system-validation>` to set up your system
+before starting training.
 
 .. _mi300x-amd-megatron-lm-training:
 
