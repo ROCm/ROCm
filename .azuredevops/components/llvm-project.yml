@@ -77,6 +77,27 @@ jobs:
         -DROCM_LLVM_BACKWARD_COMPAT_LINK=$(Build.BinariesDirectory)/llvm
         -DROCM_LLVM_BACKWARD_COMPAT_LINK_TARGET=./lib/llvm
         -GNinja
+#        -DCMAKE_VERBOSE_MAKEFILE=1
+#       -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=FALSE
+#        -DLLVM_ENABLE_ASSERTIONS=1
+#        -DCLANG_DEFAULT_PIE_ON_LINUX=0
+#        -DCLANG_DEFAULT_UNWINDLIB=libgcc
+#        -DCLANG_ENABLE_AMDCLANG=ON
+#        -DLLVM_BUILD_LLVM_DYLIB=OFF
+#        -DLLVM_LINK_LLVM_DYLIB=OFF
+#        -DLLVM_ENABLE_LIBCXX=OFF
+#        -DCMAKE_SKIP_BUILD_RPATH=TRUE
+#        -DCMAKE_SKIP_INSTALL_RPATH=TRUE
+#        '-DCMAKE_EXE_LINKER_FLAGS=-Wl,--enable-new-dtags,--build-id=sha1,--rpath,\$ORIGIN/../lib:\$ORIGIN/../../../lib'
+#        '-DCMAKE_SHARED_LINKER_FLAGS=-Wl,--enable-new-dtags,--build-id=sha1,--rpath,\$ORIGIN'
+#        -DROCM_LLVM_BACKWARD_COMPAT_LINK=/opt/rocm-6.5.0/llvm
+#        -DROCM_LLVM_BACKWARD_COMPAT_LINK_TARGET=./lib/llvm
+        -DFLANG_RUNTIME_F128_MATH_LIB=libquadmath
+        -DLIBOMPTARGET_BUILD_DEVICE_FORTRT=ON
+        -DFLANG_INCLUDE_DOCS=OFF
+        -DLLVM_INSTALL_UTILS=ON
+        -DCOMPILER_RT_DEBUG=OFF
+#        '-DLLVM_LIT_ARGS=-sv -j16' /jenkins/workspace/compiler-psdb-amd-staging/repos/llvm-project/llvm
       cmakeBuildDir: 'llvm/build'
       installDir: '$(Build.BinariesDirectory)/llvm'
 # use llvm-lit to run unit tests for llvm, clang, and lld
