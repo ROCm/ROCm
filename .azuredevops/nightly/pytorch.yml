@@ -201,7 +201,7 @@ jobs:
         sudo apt update
         apt-cache show libjpeg-turbo-official | grep Version
   - task: Bash@3
-    displayName: 'Remove system's python3 setuptools'
+    displayName: 'Remove system python3 setuptools'
     inputs:
       targetType: inline
       script: |
