@@ -205,7 +205,7 @@ jobs:
     inputs:
       targetType: inline
       script: |
-        sudo apt remove --purge --yes python3-setuptools
+        sudo DEBIAN_FRONTEND=noninteractive apt remove --purge --yes python3-setuptools
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
