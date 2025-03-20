@@ -200,6 +200,12 @@ jobs:
         echo "deb [signed-by=/etc/apt/trusted.gpg.d/libjpeg-turbo.gpg] https://packagecloud.io/dcommander/libjpeg-turbo/any/ any main" | sudo tee /etc/apt/sources.list.d/libjpeg-turbo.list
         sudo apt update
         apt-cache show libjpeg-turbo-official | grep Version
+  - task: Bash@3
+    displayName: 'Remove system's python3 setuptools'
+    inputs:
+      targetType: inline
+      script: |
+        sudo apt remove --purge python3-setuptools
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
