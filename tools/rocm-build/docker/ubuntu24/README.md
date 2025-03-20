@@ -1,27 +1,29 @@
-## Steps to build the Docker Image
+## Steps to build the ROCm Docker image
 
-1. Clone this repositry
+1. Clone this repository.
 
    ```bash
    git clone -b <release_branch> https://github.com/ROCm/ROCm.git
    ```
 
-2. Go into the OS specific docker directory in build-infra
+2. Navigate to the Ubuntu 24 Docker directory.
 
     ```bash
-    cd rocm-build/build/docker/ubuntu24
+    cd ROCm/tools/rocm-build/docker/ubuntu24
     ```
 
-3. Build the docker image
+3. Build the Docker image.
 
     ```bash
-    docker build -t <docker Image Name> .
+   docker build -t rocm-ubuntu24
     ```
 
-    replace the `<docker Image Name>` with the new Docker image Name of your choice,
+   You can replace `rocm-ubuntu24` with any name you prefer for your Docker image.
 
-4. After successful build, verify your \<docker Image Name\> in the list all available docker images.
+4. Verify the image was created successfully.
 
     ```bash
     docker images
     ```
+
+   Look for your image name in the list of available Docker images. You should see your newly created image with the name specified in step 3.
