@@ -74,7 +74,7 @@ parameters:
     - psutil
     - pyyaml
     - requests
-    - setuptools==75.8.2
+    - setuptools==75.8.0
     - types-dataclasses
     - typing-extensions>=4.8.0
     - sympy>=1.13.0
