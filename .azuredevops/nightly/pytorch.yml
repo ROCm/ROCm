@@ -201,11 +201,11 @@ jobs:
         sudo apt update
         apt-cache show libjpeg-turbo-official | grep Version
   - task: Bash@3
-    displayName: 'Remove system python3 setuptools'
+    displayName: 'System-wide update of python3 setuptools'
     inputs:
       targetType: inline
       script: |
-        sudo DEBIAN_FRONTEND=noninteractive apt remove --purge --yes python3-setuptools
+        sudo  pip install -v --force-reinstall --upgrade setuptools==75.8.0
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/dependencies-other.yml
     parameters:
       aptPackages: ${{ parameters.aptPackages }}
