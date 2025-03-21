@@ -90,7 +90,7 @@ subtrees:
           - file: how-to/rocm-for-ai/inference-optimization/profiling-and-debugging.rst
             title: Profile and debug
           - file: how-to/rocm-for-ai/inference-optimization/workload.rst
-            title: Workload tuning
+            title: Workload optimization
 
       - url: https://rocm.docs.amd.com/projects/ai-developer-hub/en/latest/
         title: AI tutorials
@@ -111,8 +111,8 @@ subtrees:
         title: AMD Instinct MI100
       - file: how-to/system-optimization/w6000-v620.md
         title: AMD RDNA 2
-  - file: how-to/tuning-guides/mi300x/index.rst
-    title: AMD MI300X performance validation and tuning
+  - file: how-to/gpu-performance/mi300x.rst
+    title: AMD Instinct MI300X performance guides
   - file: how-to/system-debugging.md
   - file: conceptual/compiler-topics.md
     title: Use advanced compiler features
