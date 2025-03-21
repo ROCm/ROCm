@@ -74,7 +74,7 @@ parameters:
     - psutil
     - pyyaml
     - requests
-    - setuptools
+    - setuptools==75.8.0
     - types-dataclasses
     - typing-extensions>=4.8.0
     - sympy>=1.13.0
@@ -170,11 +170,11 @@ jobs:
   - template: /.azuredevops/variables-global.yml
 # various flags/parameters expected by bash scripts in pytorch repo's .ci directory
   - name: ROCM_VERSION
-    value: 6.3.0
+    value: 6.4.0
   - name: ROCM_PATH
     value: /opt/rocm
   - name: DESIRED_CUDA
-    value: 6.3.0
+    value: 6.4.0
   - name: MKLROOT
     value: /opt/intel
   - name: DESIRED_PYTHON
@@ -218,6 +218,7 @@ jobs:
       dependencyList: ${{ parameters.rocmDependencies }}
       dependencySource: staging
       gpuTarget: $(JOB_GPU_TARGET)
+      setupHIPLibrarySymlinks: true
   - task: Bash@3
     displayName: ROCm symbolic link
     inputs:
@@ -279,6 +280,7 @@ jobs:
       targetType: inline
       script: >-
         sudo
+        PYTHONPATH=/home/AzDevOps/.local/lib/python3.10/site-packages:/usr/lib/python3/dist-packages
         DESIRED_CUDA=$(DESIRED_CUDA)
         PYTORCH_ROCM_ARCH=$(JOB_GPU_TARGET)
         GPU_TARGET=$(JOB_GPU_TARGET)
