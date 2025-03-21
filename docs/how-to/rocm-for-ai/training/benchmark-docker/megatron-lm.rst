@@ -144,7 +144,8 @@ Download the Docker image
       docker start megatron_training_env
       docker exec -it megatron_training_env bash
 
-The Docker container includes a pre-installed, verified version of the Megatron-LM for ROCm development branch `<https://github.com/ROCm/Megatron-LM/tree/rocm_dev>`__.
+The Docker container includes a pre-installed, verified version of the ROCm Megatron-LM development branch `<https://github.com/ROCm/Megatron-LM/tree/rocm_dev>`__
+(commit `fd6f01 <https://github.com/ROCm/Megatron-LM/tree/fd6f0d11d7f9480ace32f22eb7e4dab5314fa350>`_).
 
 .. _amd-megatron-lm-environment-setup:
 
@@ -167,7 +168,7 @@ Configuration scripts
 
       Use the ``train_deepseek_v2.sh`` configuration script in the ``examples/deepseek_v2``
       directory of
-      `<https://github.com/ROCm/Megatron-LM/tree/megatron_release_v25.3/examples/deepseek_v2>`__
+      `<https://github.com/ROCm/Megatron-LM/tree/rocm_dev/examples/deepseek_v2>`__
       and update the configuration script accordingly.
 
 Network interface
@@ -615,20 +616,21 @@ benchmarking, see the version-specific documentation.
    :header-rows: 1
    :stub-columns: 1
 
-   * - ROCm version
-     - Megatron-LM version
+   * - Image version
+     - ROCm version
      - PyTorch version
      - Resources
 
-   * - 6.3.0
+   * - 25.3
+     - 6.3.0
      - 25.3
      - 2.7.0a0+git637433 
      - 
        * `Documentation <https://rocm.docs.amd.com/en/docs-6.3.3/how-to/rocm-for-ai/training/benchmark-docker/megatron-lm.html>`_
        * `Docker Hub <https://hub.docker.com/layers/rocm/megatron-lm/v25.3/images/sha256-1e6ed9bdc3f4ca397300d5a9907e084ab5e8ad1519815ee1f868faf2af1e04e2>`_
 
-   * - 6.1.0
-     - 24.12-dev
+   * - 24.12-dev
+     - 6.1.0
      - 2.4.0
      - 
        * `Documentation <https://rocm.docs.amd.com/en/docs-6.3.0/how-to/rocm-for-ai/train-a-model.html>`_
