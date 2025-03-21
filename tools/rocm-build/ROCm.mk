@@ -19,6 +19,13 @@ export INFRA_REPO:=ROCm/tools/rocm-build
 
 OUT_DIR:=$(shell . ${INFRA_REPO}/envsetup.sh >/dev/null 2>&1 ; echo $${OUT_DIR})
 ROCM_INSTALL_PATH:=$(shell . ${INFRA_REPO}/envsetup.sh >/dev/null 2>&1 ; echo $${ROCM_INSTALL_PATH})
+PKGTYPE:=$(shell . ${INFRA_REPO}/envsetup.sh >/dev/null 2>&1 ; echo $${PKGTYPE})
+DISTRO_NAME:=$(shell . ${INFRA_REPO}/envsetup.sh >/dev/null 2>&1 ; echo $${DISTRO_NAME})
+
+ifeq (${PKGTYPE},)
+    # PKGTYPE was not set correctly (probably unsupported distro), error out before scripts fail downstream
+    $(error No package type is defined in envsetup.sh for distro name "$(DISTRO_NAME)")
+endif
 
 $(info OUT_DIR=${OUT_DIR})
 $(info ROCM_INSTALL_PATH=${ROCM_INSTALL_PATH})
