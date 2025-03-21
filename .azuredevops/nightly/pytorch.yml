@@ -205,12 +205,6 @@ jobs:
       aptPackages: ${{ parameters.aptPackages }}
       pipModules: ${{ parameters.pipModules }}
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/preamble.yml
-  - task: Bash@3
-    displayName: 'System-wide update of python3 setuptools'
-    inputs:
-      targetType: inline
-      script: |
-        sudo pip install -v --force-reinstall --upgrade setuptools==75.8.0
 # wheel install location different on azure agent compared to where wheel is assumed to be installed on upstream script
   - task: Bash@3
     displayName: wheel install path symlink
@@ -286,6 +280,7 @@ jobs:
       targetType: inline
       script: >-
         sudo
+        PYTHONPATH=/home/AzDevOps/.local/lib/python3.10/site-packages:/usr/lib/python3/dist-packages
         DESIRED_CUDA=$(DESIRED_CUDA)
         PYTORCH_ROCM_ARCH=$(JOB_GPU_TARGET)
         GPU_TARGET=$(JOB_GPU_TARGET)
