@@ -147,7 +147,6 @@ jobs:
       testParameters: '--gtest_filter="*checkin*" --gtest_output=xml:./test_output.xml --gtest_color=yes'
   - template: ${{ variables.CI_TEMPLATE_PATH }}/steps/docker-container.yml
     parameters:
-      aptPackages: ${{ parameters.aptPackages }}
       environment: test
       gpuTarget: $(JOB_GPU_TARGET)
       forceDockerCreation: true
