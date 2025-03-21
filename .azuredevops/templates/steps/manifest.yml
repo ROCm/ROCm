@@ -8,7 +8,7 @@ parameters:
 
 steps:
 - task: Bash@3
-  displayName: Set up current_repo values
+  displayName: Create manifest.json
   condition: always()
   continueOnError: true
   inputs:
@@ -24,56 +24,68 @@ steps:
       cat resources.repositories
 
       IS_TAG_BUILD=$(jq 'has("release_repo")' resources.repositories)
-      if [ "$IS_TAG_BUILD" = "true" ]; then
-        REPO_TYPE="release_repo" # Triggered by a ROCm/ROCm tag-builds file
+      IS_AOMP_BUILD=$(jq 'has("aomp_repo")' resources.repositories)
+
+      if [ "$IS_TAG_BUILD" = "true" ] || [ "$IS_AOMP_BUILD" = "true" ]; then
+        exclude_keys=("pipelines_repo" "self") # Triggered by a file under ROCm/ROCm
       else
-        REPO_TYPE="self" # Triggered by component repo's rocm-ci.yml file
+        exclude_keys=("pipelines_repo") # Triggered by a file under a component repo
       fi
 
-      echo "##vso[task.setvariable variable=current_repo.id;]$(jq .$REPO_TYPE.id resources.repositories | tr -d '"')"
-      echo "##vso[task.setvariable variable=current_repo.name;]$(jq .$REPO_TYPE.name resources.repositories | tr -d '"')"
-      echo "##vso[task.setvariable variable=current_repo.ref;]$(jq .$REPO_TYPE.ref resources.repositories | tr -d '"')"
-      echo "##vso[task.setvariable variable=current_repo.url;]$(jq .$REPO_TYPE.url resources.repositories | tr -d '"')"
-      echo "##vso[task.setvariable variable=current_repo.version;]$(jq .$REPO_TYPE.version resources.repositories | tr -d '"')"
-- task: Bash@3
-  displayName: Create manifest.json
-  condition: always()
-  continueOnError: true
-  inputs:
-    targetType: inline
-    script: |
+      exclude_keys_string=$(printf '"%s", ' "${exclude_keys[@]}")
+      exclude_keys_string=${exclude_keys_string%, }
+
+      current=$(jq --argjson exclude "[$exclude_keys_string]" '
+        reduce to_entries[] as $entry (
+          [];
+          if ($exclude | index($entry.key) | not)
+          then . + [
+            {
+              buildNumber: "$(Build.BuildNumber)",
+              buildId: "$(Build.BuildId)",
+              repoId: $entry.value.id,
+              repoName: $entry.value.name,
+              repoRef: $entry.value.ref,
+              repoUrl: $entry.value.url,
+              repoVersion: $entry.value.version
+            }
+          ]
+          else .
+          end
+        )
+      ' resources.repositories)
+
       manifest_json=$(Build.ArtifactStagingDirectory)/manifest_$(Build.DefinitionName)_$(Build.SourceBranchName)_$(Build.BuildId)_$(Build.BuildNumber)_ubuntu2204_${{ parameters.artifactName }}_${{ parameters.gpuTarget }}.json
 
       dependencies=()
       for manifest_file in $(Pipeline.Workspace)/d/**/manifest_*.json; do
         echo "Processing $manifest_file"
-        cat $manifest_file
-        current=$(jq '.current' "$manifest_file")
-        dependencies+=("$current")
+        file=$(jq -c '.current | if type=="array" then .[] else . end' "$manifest_file")
+        while IFS= read -r line; do
+          dependencies+=("$line")
+        done <<< "$file"
       done
       dependencies_json=$(printf '%s\n' "${dependencies[@]}" | jq -s '.')
 
       jq -n \
-        --arg buildNumber "$(Build.BuildNumber)" \
-        --arg buildId "$(Build.BuildId)" \
-        --arg repoId "$(current_repo.id)" \
-        --arg repoName "$(current_repo.name)" \
-        --arg repoRef "$(current_repo.ref)" \
-        --arg repoUrl "$(current_repo.url)" \
-        --arg repoVersion "$(current_repo.version)" \
+        --argjson current "$current" \
         --argjson dependencies "$dependencies_json" \
         '{
-          current: {
-            buildNumber: $buildNumber,
-            buildId: $buildId,
-            repoId: $repoId,
-            repoName: $repoName,
-            repoRef: $repoRef,
-            repoUrl: $repoUrl,
-            repoVersion: $repoVersion
-          },
+          current: $current,
           dependencies: $dependencies
         }' > $manifest_json
+
+      current_rows=$(cat $manifest_json | \
+        jq -r '
+          .current[] |
+          "<tr><td>" + .buildNumber + "</td>" +
+          "<td><a href=\"https://dev.azure.com/ROCm-CI/ROCm-CI/_build/results?buildId=" + .buildId + "\">" + .buildId + "</a></td>" +
+          "<td><a href=\"" + .repoUrl + "\">" + .repoName + "</a></td>" +
+          "<td><a href=\"" + .repoUrl + "/tree/" + .repoRef + "\">" + .repoRef + "</a></td>" +
+          "<td><a href=\"" + .repoUrl + "/commit/" + .repoVersion + "\">" + .repoVersion + "</a></td></tr>"
+        ')
+      current_rows=$(echo $current_rows)
+      echo "##vso[task.setvariable variable=current_rows;]$current_rows"
 
       dependencies_rows=$(cat $manifest_json | \
         jq -r '
@@ -108,13 +120,7 @@ steps:
         <th>Repo Ref</th>
         <th>Repo Version</th>
       </tr>
-      <tr>
-        <td>$(Build.BuildNumber)</td>
-        <td><a href="https://dev.azure.com/ROCm-CI/ROCm-CI/_build/results?buildId=$(Build.BuildId)">$(Build.BuildId)</a></td>
-        <td><a href="$(current_repo.url)">$(current_repo.name)</a></td>
-        <td><a href="$(current_repo.url)/tree/$(current_repo.ref)">$(current_repo.ref)</a></td>
-        <td><a href="$(current_repo.url)/commit/$(current_repo.version)">$(current_repo.version)</a></td>
-      </tr>
+      $(current_rows)
       </table>
       <h2>Dependencies</h2>
       <table border="1">
