@@ -308,7 +308,7 @@ steps:
       inputs:
         workingDirectory: $(Pipeline.Workspace)
         targetType: inline
-        script: echo "ENV PATH='${{ parameters.extraPaths }}:\$PATH'" >> Dockerfile
+        script: echo "ENV PATH='$PATH:${{ parameters.extraPaths }}'" >> Dockerfile
 # set extra environment variables, if applicable to the job
 # use ::: as delimiter to allow for colons to be in the environment variable values
   - ${{ each extraEnvVar in parameters.extraEnvVars }}:
