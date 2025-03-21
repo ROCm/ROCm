@@ -31,10 +31,13 @@ steps:
       workingDirectory: $(Pipeline.Workspace)
       targetType: inline
       script: |
-        docker commit $(hostname) temp-image
-        echo "FROM temp-image" > Dockerfile
+        docker commit $(hostname) az-ci-temp-image:latest
+        echo "FROM az-ci-temp-image:latest" > Dockerfile
+        echo "RUN sudo groupmod -g $(getent group render | awk -F: '{print $3}') render" >> Dockerfile
+        echo "RUN sudo groupmod -g $(getent group docker | awk -F: '{print $3}') docker" >> Dockerfile
         echo "ENV PATH='$PATH:${{ parameters.extraPaths }}'" >> Dockerfile
         echo "ENTRYPOINT [\"/bin/bash\"]" >> Dockerfile
+        cat Dockerfile
   - task: Docker@2
     condition: or(and(failed(), not(contains(variables['DOCKER_SKIP_GFX'], variables['JOB_GPU_TARGET']))), ${{ eq(parameters.forceDockerCreation, true) }})
     inputs:
