@@ -625,7 +625,7 @@ benchmarking, see the version-specific documentation.
      - 6.3.0
      - 2.7.0a0+git637433 
      - 
-       * `Documentation <https://rocm.docs.amd.com/en/docs-6.3.3/how-to/rocm-for-ai/training/benchmark-docker/megatron-lm.html>`_
+       * `Documentation <https://rocm.docs.amd.com/en/docs-6.3.2/how-to/rocm-for-ai/training/benchmark-docker/megatron-lm.html>`_
        * `Docker Hub <https://hub.docker.com/layers/rocm/megatron-lm/v25.3/images/sha256-1e6ed9bdc3f4ca397300d5a9907e084ab5e8ad1519815ee1f868faf2af1e04e2>`_
 
    * - 24.12-dev
