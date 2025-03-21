@@ -623,7 +623,6 @@ benchmarking, see the version-specific documentation.
 
    * - 25.3
      - 6.3.0
-     - 25.3
      - 2.7.0a0+git637433 
      - 
        * `Documentation <https://rocm.docs.amd.com/en/docs-6.3.3/how-to/rocm-for-ai/training/benchmark-docker/megatron-lm.html>`_
