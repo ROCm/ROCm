@@ -14,7 +14,7 @@ It is purpose-built to support models like Llama 2, Llama 3, Llama 3.1, and
 DeepSeek, enabling developers to train next-generation AI models more
 efficiently. See the GitHub repository at `<https://github.com/ROCm/Megatron-LM>`__.
 
-AMD provides a ready-to-use Docker image for MI300X accelerators containing
+AMD provides a ready-to-use Docker image for MI300X series accelerators containing
 essential components, including PyTorch, ROCm libraries, and Megatron-LM
 utilities. It contains the following software components to accelerate training
 workloads:
@@ -62,60 +62,62 @@ Megatron-LM provides the following key features to train large language models e
 
 .. _amd-megatron-lm-model-support:
 
-The following models are pre-optimized for performance on the AMD Instinct MI300X accelerator.
-
-* Llama 2 7B
-
-* Llama 2 70B
-
-* Llama 3 8B
-
-* Llama 3 70B
+The following models are pre-optimized for performance on AMD Instinct MI300X series accelerators.
 
 * Llama 3.1 8B
 
 * Llama 3.1 70B
 
+* Llama 3 8B
+
+* Llama 3 70B
+
+* Llama 2 7B
+
+* Llama 2 70B
+
 * DeepSeek-V2-Lite
 
 .. note::
 
-   Some models, such as Llama 3, require an external license agreement through
+   Some models, such as Llama, require an external license agreement through
    a third party (for example, Meta).
+
+.. _amd-megatron-lm-performance-measurements:
+
+Performance measurements
+========================
+
+To evaluate performance, the
+`Performance results with AMD ROCm software <https://www.amd.com/en/developer/resources/rocm-hub/dev-ai/performance-results.html#tabs-a8deaeb413-item-21cea50186-tab>`_
+page provides reference throughput and latency measurements for training
+popular AI models.
+
+.. note::
+
+   The performance data presented in
+   `Performance results with AMD ROCm software <https://www.amd.com/en/developer/resources/rocm-hub/dev-ai/performance-results.html#tabs-a8deaeb413-item-21cea50186-tab>`_
+   should not be interpreted as the peak performance achievable by AMD
+   Instinct MI325X and MI300X accelerators or ROCm software.
 
 System validation
 =================
 
-If you have already validated your system settings, skip this step. Otherwise,
-complete the :ref:`system validation and optimization steps <train-a-model-system-validation>`
-to set up your system before starting training.
-
-Disable NUMA auto-balancing
----------------------------
-
-Generally, application performance can benefit from disabling NUMA auto-balancing. However,
-it might be detrimental to performance with certain types of workloads.
-
-Run the command ``cat /proc/sys/kernel/numa_balancing`` to check your current NUMA (Non-Uniform
-Memory Access) settings. Output ``0`` indicates this setting is disabled. If there is no output or
-the output is ``1``, run the following command to disable NUMA auto-balancing.
-
-.. code-block:: shell
-
-   sudo sh -c 'echo 0 > /proc/sys/kernel/numa_balancing'
-
-See :ref:`mi300x-disable-numa` for more information.
+If you have already validated your system settings, including NUMA
+auto-balancing, skip this step. Otherwise, complete the :ref:`system validation
+and optimization steps <train-a-model-system-validation>` to set up your system
+before starting training.
 
 .. _mi300x-amd-megatron-lm-training:
 
 Environment setup
 =================
 
-The pre-built ROCm Megatron-LM environment allows users to quickly validate system performance, conduct
+The prebuilt ROCm Megatron-LM environment allows users to quickly validate system performance, conduct
 training benchmarks, and achieve superior performance for models like Llama 3.1, Llama 2, and DeepSeek V2.
 
 Use the following instructions to set up the environment, configure the script to train models, and
-reproduce the benchmark results on the MI300X accelerators with the AMD Megatron-LM Docker
+reproduce the benchmark results on MI300X series accelerators with the AMD Megatron-LM Docker
 image.
 
 .. _amd-megatron-lm-requirements:
@@ -127,13 +129,13 @@ Download the Docker image
 
    .. code-block:: shell
 
-      docker pull rocm/megatron-lm:v25.3
+      docker pull rocm/megatron-lm:v25.4
 
 2. Launch the Docker container.
 
    .. code-block:: shell
 
-      docker run -it --device /dev/dri --device /dev/kfd --network host --ipc host --group-add video --cap-add SYS_PTRACE --security-opt seccomp=unconfined --privileged -v $HOME:$HOME -v  $HOME/.ssh:/root/.ssh --shm-size 64G --name megatron_training_env rocm/megatron-lm:v25.3
+      docker run -it --device /dev/dri --device /dev/kfd --device /dev/infiniband --network host --ipc host --group-add video --cap-add SYS_PTRACE --security-opt seccomp=unconfined --privileged -v $HOME:$HOME -v  $HOME/.ssh:/root/.ssh --shm-size 64G --name megatron_training_env rocm/megatron-lm:v25.4
 
 3. Use these commands if you exit the ``megatron_training_env`` container and need to return to it.
 
@@ -142,7 +144,8 @@ Download the Docker image
       docker start megatron_training_env
       docker exec -it megatron_training_env bash
 
-The Docker container includes a pre-installed, verified version of Megatron-LM from the `release branch <https://github.com/ROCm/Megatron-LM/tree/megatron_release_v25.3>`_.
+The Docker container includes a pre-installed, verified version of the ROCm Megatron-LM development branch `<https://github.com/ROCm/Megatron-LM/tree/rocm_dev>`__
+(commit `fd6f01 <https://github.com/ROCm/Megatron-LM/tree/fd6f0d11d7f9480ace32f22eb7e4dab5314fa350>`_).
 
 .. _amd-megatron-lm-environment-setup:
 
@@ -156,8 +159,8 @@ Configuration scripts
 
       If you're working with Llama 2 7B or Llama 2 70 B, use the ``train_llama2.sh`` configuration
       script in the ``examples/llama`` directory of
-      `<https://github.com/ROCm/Megatron-LM/tree/megatron_release_v25.3/examples/llama>`__.
-      Likewise, if you're working with Llama 3 or Llama 3.1, then use ``train_llama3.sh`` and update
+      `<https://github.com/ROCm/Megatron-LM/tree/rocm_dev/examples/llama>`__.
+      Likewise, if you're working with Llama 3 or Llama 3.1, use ``train_llama3.sh`` and update
       the configuration script accordingly.
 
    .. tab-item:: DeepSeek V2
@@ -165,7 +168,7 @@ Configuration scripts
 
       Use the ``train_deepseek_v2.sh`` configuration script in the ``examples/deepseek_v2``
       directory of
-      `<https://github.com/ROCm/Megatron-LM/tree/megatron_release_v25.3/examples/deepseek_v2>`__
+      `<https://github.com/ROCm/Megatron-LM/tree/rocm_dev/examples/deepseek_v2>`__
       and update the configuration script accordingly.
 
 Network interface
@@ -217,9 +220,17 @@ Dataset options
 
            MOCK_DATA=0
 
-           DATA_PATH=${DATA_PATH:-"/data/bookcorpus_text_sentence"}  # Change to where your dataset is stored
+           DATA_PATH="/data/bookcorpus_text_sentence"  # Change to where your dataset is stored
 
         Ensure that the files are accessible inside the Docker container.
+
+        To download the dataset, set the ``DATASET`` variable to the dataset you'd like to use. Two datasets are supported: ``DATASET=wiki`` and ``DATASET=bookcorpus``.
+        Use the following command to download the dataset.
+
+        .. code-block:: shell
+
+           DATASET=wiki bash examples/llama/prepare_dataset.sh # For wiki-en dataset
+           DATASET=bookcorpus bash examples/llama/prepare_dataset.sh # For bookcorpus dataset
 
    .. tab-item:: DeepSeek V2
       :sync: deepseek
@@ -265,21 +276,40 @@ a fixed vocabulary. The tokenizer is trained along with the model on a large cor
 fixed vocabulary that can represent a wide range of text from different domains. This allows Llama models to
 handle a variety of input sequences, including unseen words or domain-specific terms.
 
+You can assign the path of an existing tokenizer to the ``TOKENIZER_MODEL`` as shown in the following examples.
+If the tokenizer is not found, it'll be downloaded to the default tokenizer model path: ``${DATA_DIR}/tokenizer_llama3``
+or ``${DATA_DIR}/tokenizer_llama2``.
+
 .. tab-set::
 
    .. tab-item:: Llama
       :sync: llama
 
-      To train any of the Llama 2 models that :ref:`this Docker image supports <amd-megatron-lm-model-support>`, use the ``Llama2Tokenizer``.
+      To train any of the Llama 2 models that :ref:`this Docker image supports <amd-megatron-lm-model-support>`, use the ``Llama2Tokenizer``
+      or the default ``HuggingFaceTokenizer``.
 
       To train any of Llama 3 and Llama 3.1 models that this Docker image supports, use the ``HuggingFaceTokenizer``.
-      Set the Hugging Face model link in the ``TOKENIZER_MODEL`` variable.
+      Set the Hugging Face model path in the ``TOKENIZER_MODEL`` variable.
 
       For example, if you're using the Llama 3.1 8B model:
 
       .. code-block:: shell
 
          TOKENIZER_MODEL=meta-llama/Llama-3.1-8B
+
+      .. note::
+
+         If you don't already have the Llama 3.1 tokenizer locally, set your
+         personal Hugging Face access token ``HF_TOKEN`` to download the
+         tokenizer. If you encounter the following error, set ``HF_TOKEN`` to
+         your access-authorized Hugging Face token.
+
+         .. code-block:: shell
+
+            OSError: You are trying to access a gated repo.
+
+            # pass your HF_TOKEN
+            export HF_TOKEN=$your_personal_hf_token
 
    .. tab-item:: DeepSeek V2
       :sync: deepseek
@@ -323,8 +353,13 @@ Multi-node training
            DATA_CACHE_PATH=/root/cache # Set to a common directory for multi-node runs
 
       * For multi-node runs, make sure the correct network drivers are installed on the nodes. If
-        inside a Docker, either install the drivers inside the Docker container or pass the network
+        inside a Docker container, either install the drivers inside the Docker container or pass the network
         drivers from the host while creating the Docker container.
+
+        .. code-block:: shell
+
+           # Specify which RDMA interfaces to use for communication
+           export NCCL_IB_HCA=rdma0,rdma1,rdma2,rdma3,rdma4,rdma5,rdma6,rdma7
 
 Start training on AMD Instinct accelerators
 ===========================================
@@ -350,12 +385,51 @@ accelerators with the AMD Megatron-LM Docker image.
          .. tab-item:: Single node training
             :sync: single-node
 
-            To run training on a single node, navigate to the Megatron-LM folder and use the
-            following command:
+            To run training on a single node, navigate to the Megatron-LM folder and use one of the
+            following commands.
 
-            .. code-block:: shell
+            - For Llama 3.1 8B FP8:
 
-               TEE_OUTPUT=1 MBS=2 BS=128 TP=1 TE_FP8=1 SEQ_LENGTH=8192 MODEL_SIZE=8 bash examples/llama/train_llama3.sh
+              .. code-block:: shell
+
+                 TEE_OUTPUT=1 MBS=2 BS=128 TP=1 TE_FP8=1 SEQ_LENGTH=8192 MODEL_SIZE=8 TOTAL_ITERS=50 bash examples/llama/train_llama3.sh
+
+            - For Llama 3.1 8B BF16:
+
+              .. code-block:: shell
+
+                 TEE_OUTPUT=1 MBS=2 BS=128 TP=1 TE_FP8=0 SEQ_LENGTH=8192 MODEL_SIZE=8 TOTAL_ITERS=50 bash examples/llama/train_llama3.sh
+
+            - For Llama 2 7B FP8:
+
+              .. code-block:: shell
+
+                 TEE_OUTPUT=1 MBS=4 BS=256 TP=1 TE_FP8=1 SEQ_LENGTH=4096 MODEL_SIZE=7 TOTAL_ITERS=50 bash examples/llama/train_llama2.sh
+
+            - For Llama 2 7B BF16:
+
+              .. code-block:: shell
+
+                 TEE_OUTPUT=1 MBS=4 BS=256 TP=1 TE_FP8=0 SEQ_LENGTH=4096 MODEL_SIZE=7 TOTAL_ITERS=50 bash examples/llama/train_llama2.sh
+
+            To run training with FSDP2 enabled, add the ``FSDP=1`` argument. For example:
+
+            - For Llama 3 70B BF16:
+
+              .. code-block:: shell
+
+                 TEE_OUTPUT=1 MBS=3 BS=24 TP=1 TE_FP8=0 FSDP=1 RECOMPUTE=1 SEQ_LENGTH=8192 MODEL_SIZE=70 TOTAL_ITERS=50 bash examples/llama/train_llama3.sh
+
+            - For Llama 2 70B BF16:
+
+              .. code-block:: shell
+
+                 TEE_OUTPUT=1 MBS=3 BS=56 TP=1 TE_FP8=0 FSDP=1 RECOMPUTE=1 SEQ_LENGTH=4096 MODEL_SIZE=70 TOTAL_ITERS=50 bash examples/llama/train_llama2.sh
+
+            .. note::
+
+               It's suggested to use ``TP=1`` when FSDP is enabled for higher throughput. FSDP2 is not supported with pipeline parallelism,
+               expert parallelism, MCore's distributed optimizer, gradient accumulation fusion, and ``FP16`` precision.
 
          .. tab-item:: Multi-node training
             :sync: multi-node
@@ -383,7 +457,7 @@ accelerators with the AMD Megatron-LM Docker image.
       .. code-block:: shell
 
          cd /workspace/Megatron-LM
-         GEMM_TUNING=1 PR=bf16 MBS=4 AC=none bash examples/deepseek_v2/train_deepseekv2.sh
+         GEMM_TUNING=1 PR=bf16 MBS=4 AC=none SEQ_LEN=4096 PAD_LEN=4096 TRAIN_ITERS=50 bash examples/deepseek_v2/train_deepseekv2.sh
 
 Key options
 -----------
@@ -401,13 +475,17 @@ The benchmark tests support the following sets of variables:
         ``1`` to enable training logs or ``0`` to disable.
 
       ``TE_FP8``
-        ``0`` for BP16 (default) or ``1`` for FP8 GEMMs.
+        ``0`` for B16 or ``1`` for FP8 -- ``0`` by default.
 
       ``GEMM_TUNING``
         ``1`` to enable GEMM tuning, which boosts performance by using the best GEMM kernels.
 
       ``USE_FLASH_ATTN``
         ``1`` to enable Flash Attention.
+
+      ``FSDP``
+        ``1`` to enable PyTorch FSDP2. If FSDP is enabled, ``--use-distributed-optimizer``,
+        ``--overlap-param-gather``, and ``--sequence-parallel`` are automaticallyu disabled.
 
       ``ENABLE_PROFILING``
         ``1`` to enable PyTorch profiling for performance analysis.
@@ -422,7 +500,7 @@ The benchmark tests support the following sets of variables:
         The total number of iterations -- ``10`` by default.
 
       ``MOCK_DATA``
-        ``1`` to use mock data or ``0`` to use real data provided by you.
+        ``1`` to use mock data or ``0`` to use real data you provide.
 
       ``MBS``
         Micro batch size.
@@ -431,7 +509,7 @@ The benchmark tests support the following sets of variables:
         Global batch size.
 
       ``TP``
-        Tensor parallel (``1``, ``2``, ``4``, ``8``).
+        Tensor parallel (``1``, ``2``, ``4``, ``8``). ``TP`` is disabled when ``FSDP`` is turned on.
 
       ``SEQ_LENGTH``
         Input sequence length.
@@ -445,17 +523,23 @@ The benchmark tests support the following sets of variables:
       ``GEMM_TUNING``
         ``1`` to enable GEMM tuning, which boosts performance by using the best GEMM kernels.
 
-      ``TOTAL_ITERS``
-        The total number of iterations -- ``10`` by default.
+      ``TRAIN_ITERS``
+        The total number of iterations.
 
       ``MOCK_DATA``
-        ``1`` to use mock data or ``0`` to use real data provided by you.
+        ``1`` to use mock data or ``0`` to use real data you provide.
 
       ``MBS``
         Micro batch size.
 
       ``GBS``
         Global batch size.
+
+      ``SEQ_LEN``
+        Input sequence length.
+
+      ``AC``
+        Activation checkpointing (``none``, ``sel``, or ``full``) -- ``sel`` by default.
 
 Benchmarking examples
 ---------------------
@@ -532,13 +616,20 @@ benchmarking, see the version-specific documentation.
    :header-rows: 1
    :stub-columns: 1
 
-   * - ROCm version
-     - Megatron-LM version
+   * - Image version
+     - ROCm version
      - PyTorch version
      - Resources
 
-   * - 6.1
-     - 24.12-dev
+   * - 25.3
+     - 6.3.0
+     - 2.7.0a0+git637433 
+     - 
+       * `Documentation <https://rocm.docs.amd.com/en/docs-6.3.2/how-to/rocm-for-ai/training/benchmark-docker/megatron-lm.html>`_
+       * `Docker Hub <https://hub.docker.com/layers/rocm/megatron-lm/v25.3/images/sha256-1e6ed9bdc3f4ca397300d5a9907e084ab5e8ad1519815ee1f868faf2af1e04e2>`_
+
+   * - 24.12-dev
+     - 6.1.0
      - 2.4.0
      - 
        * `Documentation <https://rocm.docs.amd.com/en/docs-6.3.0/how-to/rocm-for-ai/train-a-model.html>`_
