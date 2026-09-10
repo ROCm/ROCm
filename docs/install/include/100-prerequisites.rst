@@ -693,6 +693,24 @@ Prerequisites
       membership or udev rules. Each method has its own advantages. The choice
       depends on your specific requirements and system management preferences.
 
+      .. note::
+
+         Configure group membership, udev rules, and any required reboot on the host
+         before you create a container. Don't run those host setup commands inside the
+         container.
+
+         When creating a Docker container, pass through both GPU devices and add the
+         host's ``video`` and ``render`` group IDs. For example:
+
+         .. code-block:: shell
+
+            docker run --device /dev/kfd --device /dev/dri \
+                --group-add "$(getent group video | cut -d: -f3)" \
+                --group-add "$(getent group render | cut -d: -f3)" <image>
+
+         Device mappings and supplementary groups can't be added to a running
+         container. Recreate the container to change them.
+
       .. tab-set::
 
          .. tab-item:: Group membership
@@ -737,6 +755,24 @@ Prerequisites
       There are two primary methods for configuring GPU access for ROCm: group
       membership or udev rules. Each method has its own advantages. The choice
       depends on your specific requirements and system management preferences.
+
+      .. note::
+
+         Configure group membership, udev rules, and any required reboot on the host
+         before you create a container. Don't run those host setup commands inside the
+         container.
+
+         When creating a Docker container, pass through both GPU devices and add the
+         host's ``video`` and ``render`` group IDs. For example:
+
+         .. code-block:: shell
+
+            docker run --device /dev/kfd --device /dev/dri \
+                --group-add "$(getent group video | cut -d: -f3)" \
+                --group-add "$(getent group render | cut -d: -f3)" <image>
+
+         Device mappings and supplementary groups can't be added to a running
+         container. Recreate the container to change them.
 
       .. tab-set::
 
