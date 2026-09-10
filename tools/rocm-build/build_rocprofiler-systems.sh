@@ -143,7 +143,6 @@ build_rocprofiler_systems() {
     git submodule status
     echo "Cached (old) submodule status"
     git submodule status --cached
-    cat .git/config
 
     echo "Updating submodules"
     git submodule init
@@ -154,7 +153,6 @@ build_rocprofiler_systems() {
 
     echo "Updated submodule status"
     git submodule status
-    cat .git/config
 
     echo "Build directory: $BUILD_DIR"
     pushd "$BUILD_DIR" || exit
