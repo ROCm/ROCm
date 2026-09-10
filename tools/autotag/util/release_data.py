@@ -238,7 +238,7 @@ class ReleaseBundle:
     """Stores data about all the libraries bundled in this release."""
 
     version: str = ""
-    libraries: Dict[str, ReleaseLib] = field(default_factory=ReleaseLib)
+    libraries: Dict[str, ReleaseLib] = field(default_factory=dict)
 
 
 class ReleaseBundleFactory:

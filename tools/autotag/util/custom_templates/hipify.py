@@ -21,7 +21,7 @@ def hipify_processor(data: ReleaseLib, template: str, _, __) -> bool:
     changelog = changelog.decoded_content.decode()
     pattern = re.compile(template)
     match = pattern.search(changelog)
-    lib_version  = match["rocm_version"]
+    lib_version = match["lib_version"] or match["rocm_version"]
 
     data.message = (
         f"HIPIFY for ROCm"
