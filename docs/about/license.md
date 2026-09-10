@@ -65,7 +65,7 @@ additional licenses. Please review individual repositories for more information.
 | [rocminfo](https://github.com/ROCm/rocm-systems/tree/develop/projects/rocminfo/) | [The University of Illinois/NCSA](https://github.com/ROCm/rocm-systems/blob/develop/projects/rocminfo/License.txt) |
 | [ROCm Bandwidth Test](https://github.com/ROCm/rocm_bandwidth_test/) | [MIT](https://github.com/ROCm/rocm_bandwidth_test/blob/master/LICENSE.txt) |
 | [ROCm CMake](https://github.com/ROCm/rocm-cmake/) | [MIT](https://github.com/ROCm/rocm-cmake/blob/develop/LICENSE) |
-| [ROCm Communication Collectives Library (RCCL)](https://github.com/ROCm/rccl/) | [Custom](https://github.com/ROCm/rccl/blob/develop/LICENSE.txt) |
+| [ROCm Communication Collectives Library (RCCL)](https://github.com/ROCm/rocm-systems/tree/develop/projects/rccl/) | [Custom](https://github.com/ROCm/rocm-systems/blob/develop/projects/rccl/LICENSE.txt) |
 | [ROCm-Core](https://github.com/ROCm/rocm-systems/tree/develop/projects/rocm-core/) | [MIT](https://github.com/ROCm/rocm-systems/blob/develop/projects/rocm-core/LICENSE.md) |
 | [ROCm Compute Profiler](https://github.com/ROCm/rocm-systems/tree/develop/projects/rocprofiler-compute/) | [MIT](https://github.com/ROCm/rocm-systems/blob/develop/projects/rocprofiler-compute/LICENSE.md) |
 | [ROCm Data Center (RDC)](https://github.com/ROCm/rocm-systems/tree/develop/projects/rdc/) | [MIT](https://github.com/ROCm/rocm-systems/blob/develop/projects/rdc/LICENSE.md) |

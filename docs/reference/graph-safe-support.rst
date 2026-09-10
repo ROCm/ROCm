@@ -56,7 +56,7 @@ The following table shows whether a ROCm library is graph-safe.
       - `MIOpen <https://github.com/ROCm/MIOpen>`_
       - ❌
     *
-      - `RCCL <https://github.com/ROCm/rccl>`_
+      - `RCCL <https://github.com/ROCm/rocm-systems/tree/develop/projects/rccl>`_
       - ✅
     *
       - `rocAL <https://github.com/ROCm/rocAL>`_
