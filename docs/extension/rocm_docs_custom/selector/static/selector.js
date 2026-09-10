@@ -615,6 +615,16 @@ domReady(() => {
     });
   });
 
+  // When the browser window loses focus, "blur" any focused TomSelect control.
+  // Prevents dropdown flicker when the window is refocused.
+  window.addEventListener("blur", () => {
+    for (const instances of dropdownInstances.values()) {
+      for (const ts of instances) {
+        ts.blur();
+      }
+    }
+  });
+
   for (const [key, value] of Object.entries(initialState)) {
     applySelectionByKey(key, value);
   }
